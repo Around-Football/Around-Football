@@ -13,6 +13,20 @@
 		273674542AC3061C003ADE3F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 273674522AC3061C003ADE3F /* Main.storyboard */; };
 		273674562AC3061E003ADE3F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 273674552AC3061E003ADE3F /* Assets.xcassets */; };
 		273674592AC3061E003ADE3F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 273674572AC3061E003ADE3F /* LaunchScreen.storyboard */; };
+		273674622AC306D6003ADE3F /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 273674612AC306D6003ADE3F /* SnapKit */; };
+		273674642AC306D6003ADE3F /* SnapKit-Dynamic in Frameworks */ = {isa = PBXBuildFile; productRef = 273674632AC306D6003ADE3F /* SnapKit-Dynamic */; };
+		273674672AC306F0003ADE3F /* Then in Frameworks */ = {isa = PBXBuildFile; productRef = 273674662AC306F0003ADE3F /* Then */; };
+		2736746A2AC3071A003ADE3F /* RxCocoa in Frameworks */ = {isa = PBXBuildFile; productRef = 273674692AC3071A003ADE3F /* RxCocoa */; };
+		2736746C2AC3071A003ADE3F /* RxSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 2736746B2AC3071A003ADE3F /* RxSwift */; };
+		2736746F2AC30786003ADE3F /* RxAlamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 2736746E2AC30786003ADE3F /* RxAlamofire */; };
+		273674722AC307D6003ADE3F /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 273674712AC307D6003ADE3F /* FirebaseAuth */; };
+		273674742AC307D6003ADE3F /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 273674732AC307D6003ADE3F /* FirebaseFirestore */; };
+		273674762AC307D6003ADE3F /* FirebaseFirestoreSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 273674752AC307D6003ADE3F /* FirebaseFirestoreSwift */; };
+		273674832AC308D1003ADE3F /* Recruit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 273674802AC308D1003ADE3F /* Recruit.swift */; };
+		273674842AC308D1003ADE3F /* Field.swift in Sources */ = {isa = PBXBuildFile; fileRef = 273674812AC308D1003ADE3F /* Field.swift */; };
+		273674852AC308D1003ADE3F /* PlaygroundList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 273674822AC308D1003ADE3F /* PlaygroundList.swift */; };
+		273674872AC30981003ADE3F /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 273674862AC30981003ADE3F /* GoogleService-Info.plist */; };
+		2736748A2AC309E7003ADE3F /* KakaoMapsSDK_SPM in Frameworks */ = {isa = PBXBuildFile; productRef = 273674892AC309E7003ADE3F /* KakaoMapsSDK_SPM */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +38,10 @@
 		273674552AC3061E003ADE3F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		273674582AC3061E003ADE3F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		2736745A2AC3061E003ADE3F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		273674802AC308D1003ADE3F /* Recruit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Recruit.swift; sourceTree = "<group>"; };
+		273674812AC308D1003ADE3F /* Field.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Field.swift; sourceTree = "<group>"; };
+		273674822AC308D1003ADE3F /* PlaygroundList.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaygroundList.swift; sourceTree = "<group>"; };
+		273674862AC30981003ADE3F /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -31,6 +49,16 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				273674622AC306D6003ADE3F /* SnapKit in Frameworks */,
+				273674672AC306F0003ADE3F /* Then in Frameworks */,
+				2736746C2AC3071A003ADE3F /* RxSwift in Frameworks */,
+				2736746F2AC30786003ADE3F /* RxAlamofire in Frameworks */,
+				2736746A2AC3071A003ADE3F /* RxCocoa in Frameworks */,
+				273674742AC307D6003ADE3F /* FirebaseFirestore in Frameworks */,
+				273674722AC307D6003ADE3F /* FirebaseAuth in Frameworks */,
+				2736748A2AC309E7003ADE3F /* KakaoMapsSDK_SPM in Frameworks */,
+				273674642AC306D6003ADE3F /* SnapKit-Dynamic in Frameworks */,
+				273674762AC307D6003ADE3F /* FirebaseFirestoreSwift in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -63,8 +91,20 @@
 				273674552AC3061E003ADE3F /* Assets.xcassets */,
 				273674572AC3061E003ADE3F /* LaunchScreen.storyboard */,
 				2736745A2AC3061E003ADE3F /* Info.plist */,
+				273674862AC30981003ADE3F /* GoogleService-Info.plist */,
+				2736747F2AC308D1003ADE3F /* Models */,
 			);
 			path = "Around-Football";
+			sourceTree = "<group>";
+		};
+		2736747F2AC308D1003ADE3F /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				273674802AC308D1003ADE3F /* Recruit.swift */,
+				273674812AC308D1003ADE3F /* Field.swift */,
+				273674822AC308D1003ADE3F /* PlaygroundList.swift */,
+			);
+			path = Models;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -83,6 +123,18 @@
 			dependencies = (
 			);
 			name = "Around-Football";
+			packageProductDependencies = (
+				273674612AC306D6003ADE3F /* SnapKit */,
+				273674632AC306D6003ADE3F /* SnapKit-Dynamic */,
+				273674662AC306F0003ADE3F /* Then */,
+				273674692AC3071A003ADE3F /* RxCocoa */,
+				2736746B2AC3071A003ADE3F /* RxSwift */,
+				2736746E2AC30786003ADE3F /* RxAlamofire */,
+				273674712AC307D6003ADE3F /* FirebaseAuth */,
+				273674732AC307D6003ADE3F /* FirebaseFirestore */,
+				273674752AC307D6003ADE3F /* FirebaseFirestoreSwift */,
+				273674892AC309E7003ADE3F /* KakaoMapsSDK_SPM */,
+			);
 			productName = "Around-Football";
 			productReference = 273674492AC3061C003ADE3F /* Around-Football.app */;
 			productType = "com.apple.product-type.application";
@@ -111,6 +163,14 @@
 				Base,
 			);
 			mainGroup = 273674402AC3061C003ADE3F;
+			packageReferences = (
+				273674602AC306D6003ADE3F /* XCRemoteSwiftPackageReference "SnapKit" */,
+				273674652AC306F0003ADE3F /* XCRemoteSwiftPackageReference "Then" */,
+				273674682AC3071A003ADE3F /* XCRemoteSwiftPackageReference "RxSwift" */,
+				2736746D2AC30786003ADE3F /* XCRemoteSwiftPackageReference "RxAlamofire" */,
+				273674702AC307D6003ADE3F /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				273674882AC309E7003ADE3F /* XCRemoteSwiftPackageReference "KakaoMapsSDK-SPM" */,
+			);
 			productRefGroup = 2736744A2AC3061C003ADE3F /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -126,6 +186,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				273674592AC3061E003ADE3F /* LaunchScreen.storyboard in Resources */,
+				273674872AC30981003ADE3F /* GoogleService-Info.plist in Resources */,
 				273674562AC3061E003ADE3F /* Assets.xcassets in Resources */,
 				273674542AC3061C003ADE3F /* Main.storyboard in Resources */,
 			);
@@ -138,8 +199,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				273674842AC308D1003ADE3F /* Field.swift in Sources */,
 				273674512AC3061C003ADE3F /* ViewController.swift in Sources */,
+				273674852AC308D1003ADE3F /* PlaygroundList.swift in Sources */,
 				2736744D2AC3061C003ADE3F /* AppDelegate.swift in Sources */,
+				273674832AC308D1003ADE3F /* Recruit.swift in Sources */,
 				2736744F2AC3061C003ADE3F /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -358,6 +422,110 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		273674602AC306D6003ADE3F /* XCRemoteSwiftPackageReference "SnapKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SnapKit/SnapKit.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.0.0;
+			};
+		};
+		273674652AC306F0003ADE3F /* XCRemoteSwiftPackageReference "Then" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/devxoul/Then";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 3.0.0;
+			};
+		};
+		273674682AC3071A003ADE3F /* XCRemoteSwiftPackageReference "RxSwift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/ReactiveX/RxSwift";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 6.0.0;
+			};
+		};
+		2736746D2AC30786003ADE3F /* XCRemoteSwiftPackageReference "RxAlamofire" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/RxSwiftCommunity/RxAlamofire";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 6.0.0;
+			};
+		};
+		273674702AC307D6003ADE3F /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 10.0.0;
+			};
+		};
+		273674882AC309E7003ADE3F /* XCRemoteSwiftPackageReference "KakaoMapsSDK-SPM" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/kakao-mapsSDK/KakaoMapsSDK-SPM.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		273674612AC306D6003ADE3F /* SnapKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 273674602AC306D6003ADE3F /* XCRemoteSwiftPackageReference "SnapKit" */;
+			productName = SnapKit;
+		};
+		273674632AC306D6003ADE3F /* SnapKit-Dynamic */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 273674602AC306D6003ADE3F /* XCRemoteSwiftPackageReference "SnapKit" */;
+			productName = "SnapKit-Dynamic";
+		};
+		273674662AC306F0003ADE3F /* Then */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 273674652AC306F0003ADE3F /* XCRemoteSwiftPackageReference "Then" */;
+			productName = Then;
+		};
+		273674692AC3071A003ADE3F /* RxCocoa */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 273674682AC3071A003ADE3F /* XCRemoteSwiftPackageReference "RxSwift" */;
+			productName = RxCocoa;
+		};
+		2736746B2AC3071A003ADE3F /* RxSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 273674682AC3071A003ADE3F /* XCRemoteSwiftPackageReference "RxSwift" */;
+			productName = RxSwift;
+		};
+		2736746E2AC30786003ADE3F /* RxAlamofire */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2736746D2AC30786003ADE3F /* XCRemoteSwiftPackageReference "RxAlamofire" */;
+			productName = RxAlamofire;
+		};
+		273674712AC307D6003ADE3F /* FirebaseAuth */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 273674702AC307D6003ADE3F /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAuth;
+		};
+		273674732AC307D6003ADE3F /* FirebaseFirestore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 273674702AC307D6003ADE3F /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseFirestore;
+		};
+		273674752AC307D6003ADE3F /* FirebaseFirestoreSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 273674702AC307D6003ADE3F /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseFirestoreSwift;
+		};
+		273674892AC309E7003ADE3F /* KakaoMapsSDK_SPM */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 273674882AC309E7003ADE3F /* XCRemoteSwiftPackageReference "KakaoMapsSDK-SPM" */;
+			productName = KakaoMapsSDK_SPM;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 273674412AC3061C003ADE3F /* Project object */;
 }
