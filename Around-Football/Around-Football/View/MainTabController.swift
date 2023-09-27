@@ -8,36 +8,57 @@
 import UIKit
 
 class MainTabController: UITabBarController {
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         configureUI()
         configureViewController()
     }
-
+    
     func configureUI() {
-        // TabBar UI
+        tabBar.tintColor = .black
+//        tabBar.barTintColor = .white
     }
     
     func configureViewController() {
         let homeViewController = HomeViewController()
-        let homeNavigation: UINavigationController = makeNavigationController(rootViewController: homeViewController, title: "Home")
+        let homeNavigation: UINavigationController = makeNavigationController(
+            rootViewController: homeViewController,
+            title: "Home",
+            tabbarImage: "house",
+            tag: 0
+        )
         
         let mapViewController = MapViewController()
-        let mapNavigation: UINavigationController = makeNavigationController(rootViewController: mapViewController, title: "Map")
+        let mapNavigation: UINavigationController = makeNavigationController(
+            rootViewController: mapViewController,
+            title: "Map",
+            tabbarImage: "map",
+            tag: 1
+        )
+        
         
         let infoViewController = InfoViewController()
-        let infoNavigation: UINavigationController = makeNavigationController(rootViewController: infoViewController, title: "Info")
+        let infoNavigation: UINavigationController = makeNavigationController(
+            rootViewController: infoViewController,
+            title: "Info",
+            tabbarImage: "info.square",
+            tag: 2
+        )
         
         viewControllers = [homeNavigation, mapNavigation, infoNavigation]
     }
     
-    func makeNavigationController(rootViewController: UIViewController, title: String) -> UINavigationController {
-        let navigation: UINavigationController = UINavigationController(rootViewController: rootViewController)
+    func makeNavigationController(rootViewController rootVC: UIViewController,
+                                  title: String,
+                                  tabbarImage: String,
+                                  tag: Int) -> UINavigationController {
+        let navigation: UINavigationController = UINavigationController(rootViewController: rootVC)
         // TODO: - SET TabBar Image (add image constant to function input area)
-        navigation.tabBarItem.image = UIImage(systemName: "folder")
-        navigation.tabBarItem.title = title
+        navigation.tabBarItem = UITabBarItem(title: title,
+                                             image: UIImage(systemName: tabbarImage),
+                                             tag: tag)
         
         return navigation
     }

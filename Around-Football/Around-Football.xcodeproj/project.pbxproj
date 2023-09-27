@@ -14,7 +14,6 @@
 		273674562AC3061E003ADE3F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 273674552AC3061E003ADE3F /* Assets.xcassets */; };
 		273674592AC3061E003ADE3F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 273674572AC3061E003ADE3F /* LaunchScreen.storyboard */; };
 		273674622AC306D6003ADE3F /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 273674612AC306D6003ADE3F /* SnapKit */; };
-		273674642AC306D6003ADE3F /* SnapKit-Dynamic in Frameworks */ = {isa = PBXBuildFile; productRef = 273674632AC306D6003ADE3F /* SnapKit-Dynamic */; };
 		273674672AC306F0003ADE3F /* Then in Frameworks */ = {isa = PBXBuildFile; productRef = 273674662AC306F0003ADE3F /* Then */; };
 		2736746A2AC3071A003ADE3F /* RxCocoa in Frameworks */ = {isa = PBXBuildFile; productRef = 273674692AC3071A003ADE3F /* RxCocoa */; };
 		2736746C2AC3071A003ADE3F /* RxSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 2736746B2AC3071A003ADE3F /* RxSwift */; };
@@ -65,7 +64,6 @@
 				273674742AC307D6003ADE3F /* FirebaseFirestore in Frameworks */,
 				273674722AC307D6003ADE3F /* FirebaseAuth in Frameworks */,
 				2736748A2AC309E7003ADE3F /* KakaoMapsSDK_SPM in Frameworks */,
-				273674642AC306D6003ADE3F /* SnapKit-Dynamic in Frameworks */,
 				273674762AC307D6003ADE3F /* FirebaseFirestoreSwift in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -169,7 +167,6 @@
 			name = "Around-Football";
 			packageProductDependencies = (
 				273674612AC306D6003ADE3F /* SnapKit */,
-				273674632AC306D6003ADE3F /* SnapKit-Dynamic */,
 				273674662AC306F0003ADE3F /* Then */,
 				273674692AC3071A003ADE3F /* RxCocoa */,
 				2736746B2AC3071A003ADE3F /* RxSwift */,
@@ -399,7 +396,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = K9NKZR257N;
+				DEVELOPMENT_TEAM = W6X76DS4Z7;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Around-Football/Info.plist";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -432,7 +429,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = K9NKZR257N;
+				DEVELOPMENT_TEAM = W6X76DS4Z7;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Around-Football/Info.plist";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -533,11 +530,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 273674602AC306D6003ADE3F /* XCRemoteSwiftPackageReference "SnapKit" */;
 			productName = SnapKit;
-		};
-		273674632AC306D6003ADE3F /* SnapKit-Dynamic */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 273674602AC306D6003ADE3F /* XCRemoteSwiftPackageReference "SnapKit" */;
-			productName = "SnapKit-Dynamic";
 		};
 		273674662AC306F0003ADE3F /* Then */ = {
 			isa = XCSwiftPackageProductDependency;
