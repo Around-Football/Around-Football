@@ -11,7 +11,8 @@ class MainTabController: UITabBarController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
+        configureUI()
         configureViewController()
     }
 
@@ -35,7 +36,7 @@ class MainTabController: UITabBarController {
     func makeNavigationController(rootViewController: UIViewController, title: String) -> UINavigationController {
         let navigation: UINavigationController = UINavigationController(rootViewController: rootViewController)
         // TODO: - SET TabBar Image (add image constant to function input area)
-        // navigation.tabBarItem.image = image
+        navigation.tabBarItem.image = UIImage(systemName: "folder")
         navigation.tabBarItem.title = title
         
         return navigation
