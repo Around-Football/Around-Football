@@ -21,21 +21,22 @@ class MainTabController: UITabBarController {
     
     func configureViewController() {
         let homeViewController = HomeViewController()
-        let homeNavigation: UINavigationController = makeNavigationController(rootViewController: homeViewController)
+        let homeNavigation: UINavigationController = makeNavigationController(rootViewController: homeViewController, title: "Home")
         
         let mapViewController = MapViewController()
-        let mapNavigation: UINavigationController = makeNavigationController(rootViewController: mapViewController)
+        let mapNavigation: UINavigationController = makeNavigationController(rootViewController: mapViewController, title: "Map")
         
         let infoViewController = InfoViewController()
-        let infoNavigation: UINavigationController = makeNavigationController(rootViewController: infoViewController)
+        let infoNavigation: UINavigationController = makeNavigationController(rootViewController: infoViewController, title: "Info")
         
         viewControllers = [homeNavigation, mapNavigation, infoNavigation]
     }
     
-    func makeNavigationController(rootViewController: UIViewController) -> UINavigationController {
+    func makeNavigationController(rootViewController: UIViewController, title: String) -> UINavigationController {
         let navigation: UINavigationController = UINavigationController(rootViewController: rootViewController)
         // TODO: - SET TabBar Image (add image constant to function input area)
-        //navigation.tabBarItem.image = image
+        // navigation.tabBarItem.image = image
+        navigation.tabBarItem.title = title
         
         return navigation
     }
