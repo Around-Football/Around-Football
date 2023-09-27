@@ -89,5 +89,8 @@ fastlane/test_output
 
 iOSInjectionProject/
 .DS_Store
+<<<<<<< HEAD
 Around-Football/.DS_Store
 .DS_Store
+=======
+>>>>>>> parent of f2eb937 (Chore: Codebase, Target Version)
