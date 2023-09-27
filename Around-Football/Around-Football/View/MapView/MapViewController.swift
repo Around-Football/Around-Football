@@ -7,7 +7,7 @@
 
 import UIKit
 
-class MapViewController: UITabBarController {
+class MapViewController: ViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -18,6 +18,7 @@ class MapViewController: UITabBarController {
 
     func configureUI() {
         view.backgroundColor = .systemBlue
+        
     }
 
 }
