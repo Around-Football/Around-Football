@@ -7,7 +7,7 @@
 
 import UIKit
 
-class InfoViewController: ViewController {
+class InfoViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
