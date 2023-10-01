@@ -25,7 +25,7 @@
 		273674842AC308D1003ADE3F /* Field.swift in Sources */ = {isa = PBXBuildFile; fileRef = 273674812AC308D1003ADE3F /* Field.swift */; };
 		273674852AC308D1003ADE3F /* PlaygroundList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 273674822AC308D1003ADE3F /* PlaygroundList.swift */; };
 		273674872AC30981003ADE3F /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 273674862AC30981003ADE3F /* GoogleService-Info.plist */; };
-		2736748A2AC309E7003ADE3F /* KakaoMapsSDK_SPM in Frameworks */ = {isa = PBXBuildFile; productRef = 273674892AC309E7003ADE3F /* KakaoMapsSDK_SPM */; };
+		6650C7372AC9ED6F00055571 /* KakaoMapsSDK_SPM in Frameworks */ = {isa = PBXBuildFile; productRef = 6650C7362AC9ED6F00055571 /* KakaoMapsSDK_SPM */; };
 		669674882AC3E82B0067FD48 /* MainTabController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 669674872AC3E82B0067FD48 /* MainTabController.swift */; };
 		6696748F2AC3E9CE0067FD48 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6696748E2AC3E9CE0067FD48 /* HomeViewController.swift */; };
 		669674912AC3E9D40067FD48 /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 669674902AC3E9D40067FD48 /* MapViewController.swift */; };
@@ -57,13 +57,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				273674622AC306D6003ADE3F /* SnapKit in Frameworks */,
+				6650C7372AC9ED6F00055571 /* KakaoMapsSDK_SPM in Frameworks */,
 				273674672AC306F0003ADE3F /* Then in Frameworks */,
 				2736746C2AC3071A003ADE3F /* RxSwift in Frameworks */,
 				2736746F2AC30786003ADE3F /* RxAlamofire in Frameworks */,
 				2736746A2AC3071A003ADE3F /* RxCocoa in Frameworks */,
 				273674742AC307D6003ADE3F /* FirebaseFirestore in Frameworks */,
 				273674722AC307D6003ADE3F /* FirebaseAuth in Frameworks */,
-				2736748A2AC309E7003ADE3F /* KakaoMapsSDK_SPM in Frameworks */,
 				273674762AC307D6003ADE3F /* FirebaseFirestoreSwift in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -174,7 +174,7 @@
 				273674712AC307D6003ADE3F /* FirebaseAuth */,
 				273674732AC307D6003ADE3F /* FirebaseFirestore */,
 				273674752AC307D6003ADE3F /* FirebaseFirestoreSwift */,
-				273674892AC309E7003ADE3F /* KakaoMapsSDK_SPM */,
+				6650C7362AC9ED6F00055571 /* KakaoMapsSDK_SPM */,
 			);
 			productName = "Around-Football";
 			productReference = 273674492AC3061C003ADE3F /* Around-Football.app */;
@@ -210,7 +210,7 @@
 				273674682AC3071A003ADE3F /* XCRemoteSwiftPackageReference "RxSwift" */,
 				2736746D2AC30786003ADE3F /* XCRemoteSwiftPackageReference "RxAlamofire" */,
 				273674702AC307D6003ADE3F /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
-				273674882AC309E7003ADE3F /* XCRemoteSwiftPackageReference "KakaoMapsSDK-SPM" */,
+				6650C7352AC9ED6F00055571 /* XCRemoteSwiftPackageReference "KakaoMapsSDK-SPM" */,
 			);
 			productRefGroup = 2736744A2AC3061C003ADE3F /* Products */;
 			projectDirPath = "";
@@ -515,7 +515,7 @@
 				minimumVersion = 10.0.0;
 			};
 		};
-		273674882AC309E7003ADE3F /* XCRemoteSwiftPackageReference "KakaoMapsSDK-SPM" */ = {
+		6650C7352AC9ED6F00055571 /* XCRemoteSwiftPackageReference "KakaoMapsSDK-SPM" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/kakao-mapsSDK/KakaoMapsSDK-SPM.git";
 			requirement = {
@@ -566,9 +566,9 @@
 			package = 273674702AC307D6003ADE3F /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseFirestoreSwift;
 		};
-		273674892AC309E7003ADE3F /* KakaoMapsSDK_SPM */ = {
+		6650C7362AC9ED6F00055571 /* KakaoMapsSDK_SPM */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 273674882AC309E7003ADE3F /* XCRemoteSwiftPackageReference "KakaoMapsSDK-SPM" */;
+			package = 6650C7352AC9ED6F00055571 /* XCRemoteSwiftPackageReference "KakaoMapsSDK-SPM" */;
 			productName = KakaoMapsSDK_SPM;
 		};
 /* End XCSwiftPackageProductDependency section */
