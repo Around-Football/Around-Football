@@ -18,7 +18,7 @@ final class GroundTitleView: UIView {
     }
     var groundNameLabel = UILabel().then {
         $0.text = "종합운동장"
-        $0.font = .systemFont(ofSize: 15, weight: .bold)
+        $0.font = .systemFont(ofSize: 15, weight: .regular)
     }
 
     override init(frame: CGRect) {
@@ -31,8 +31,7 @@ final class GroundTitleView: UIView {
     }
     
     private func configureUI() {
-        addSubview(groundTitleLabel)
-        addSubview(groundNameLabel)
+        addSubviews(groundTitleLabel, groundNameLabel)
         
         groundTitleLabel.snp.makeConstraints { make in
             make.top.leading.equalToSuperview().offset(10)

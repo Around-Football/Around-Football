@@ -69,9 +69,7 @@ final class DetailUserInfoView: UIView {
     }
     
     private func configureUI() {
-        addSubview(profileImageView)
-        addSubview(userNameLabel)
-        addSubview(userDetailInfoStackView)
+        addSubviews(profileImageView, userNameLabel, userDetailInfoStackView)
         
         profileImageView.snp.makeConstraints { make in
             make.top.leading.equalToSuperview().offset(20)
