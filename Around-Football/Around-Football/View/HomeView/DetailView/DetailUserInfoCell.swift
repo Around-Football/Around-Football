@@ -35,8 +35,7 @@ final class DetailUserInfoCell: UITableViewCell {
     
     private func configureUI() {
         selectionStyle = .none
-        addSubview(title)
-        addSubview(contents)
+        addSubviews(title, contents)
         
         title.snp.makeConstraints { make in
             make.centerY.equalToSuperview()

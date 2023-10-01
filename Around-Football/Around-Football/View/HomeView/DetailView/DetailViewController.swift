@@ -69,18 +69,14 @@ final class DetailViewController: UIViewController {
 
     private func configeUI() {
         view.backgroundColor = .white
-        let subViews = [mainImageView,
-                        groundLabel,
-                        groundAddressLabel,
-                        grayLineView1,
-                        detailUserInfoView,
-                        grayLineView2,
-                        detailTableView,
-                        sendMessageButton]
-        
-        subViews.forEach { subView in
-            view.addSubview(subView)
-        }
+        view.addSubviews(mainImageView,
+                         groundLabel,
+                         groundAddressLabel,
+                         grayLineView1,
+                         detailUserInfoView,
+                         grayLineView2,
+                         detailTableView,
+                         sendMessageButton)
         
         mainImageView.snp.makeConstraints { make in
             make.top.leading.trailing.equalToSuperview()
