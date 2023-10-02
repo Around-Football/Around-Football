@@ -19,6 +19,7 @@ final class GroundTitleView: UIView {
     var groundNameLabel = UILabel().then {
         $0.text = "종합운동장"
         $0.font = .systemFont(ofSize: 15, weight: .regular)
+        $0.numberOfLines = 0
     }
 
     override init(frame: CGRect) {
@@ -38,7 +39,7 @@ final class GroundTitleView: UIView {
         }
         
         groundNameLabel.snp.makeConstraints { make in
-            make.top.equalTo(groundTitleLabel.snp.bottom).offset(5)
+            make.top.equalTo(groundTitleLabel.snp.bottom).offset(10)
             make.leading.equalToSuperview()
             make.bottom.equalToSuperview().offset(10)
         }

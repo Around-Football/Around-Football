@@ -13,30 +13,26 @@ import Then
 final class InviteViewController: UIViewController {
     
     private let calender = Calendar.current
-    
-//    calender.dateComponents([.month, .day, .year], from: Date())
-//    calender.date(byAdding: DateComponents(month: 1, day: 1), to: Date())
+    private let dateFormatter = DateFormatter()
+    private lazy var components = calender.dateComponents([.month, .day, .year], from: Date())
+    private lazy var calanderDate = calender.date(from: components) ?? Date()
+    private var days: [String] = []
     
     private let placeView = GroundTitleView()
-    
     private let peopleView = PeopleCountView()
     
-    private let previousButton = UIButton().then {
+    private lazy var previousButton = UIButton().then {
         $0.setImage(UIImage(systemName: "chevron.left"), for: .normal)
-        
+        $0.addTarget(self, action: #selector(previousMonth), for: .touchUpInside)
     }
     
-    private let nextButton = UIButton().then {
+    private lazy var nextButton = UIButton().then {
         $0.setImage(UIImage(systemName: "chevron.right"), for: .normal)
+        $0.addTarget(self, action: #selector(nextMonth), for: .touchUpInside)
     }
     
-    private var titleLabel = UILabel().then {
-        let dateFormatter = DateFormatter()
-        dateFormatter.locale = Locale(identifier: "ko_kr")
-        dateFormatter.timeZone = TimeZone(abbreviation: "KST")
-        dateFormatter.dateFormat = "yyyy년 MM월"
-        let dateCreatedAt = Date(timeIntervalSinceNow: Date().timeIntervalSinceNow)
-        $0.text = dateFormatter.string(from: dateCreatedAt)
+    private lazy var titleLabel = UILabel().then {
+        $0.text = "2023년 12월"
     }
     
     private lazy var dayStackView = UIStackView().then {
@@ -77,6 +73,7 @@ final class InviteViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         configureUI()
+        updateCalender()
     }
     
     private func configureUI() {
@@ -105,18 +102,20 @@ final class InviteViewController: UIViewController {
         }
         
         titleLabel.snp.makeConstraints { make in
-            make.top.equalTo(placeView.snp.bottom).offset(40)
+            make.top.equalTo(placeView.snp.bottom).offset(50)
             make.leading.equalToSuperview().offset(20)
         }
         
         nextButton.snp.makeConstraints { make in
-            make.top.equalTo(peopleView.snp.bottom).offset(40)
-            make.trailing.equalToSuperview().offset(-40)
+            make.centerY.equalTo(titleLabel)
+            make.trailing.equalToSuperview().offset(-20)
+            make.width.height.equalTo(40)
         }
         
         previousButton.snp.makeConstraints { make in
-            make.top.equalTo(peopleView.snp.bottom).offset(40)
+            make.centerY.equalTo(titleLabel)
             make.trailing.equalTo(nextButton.snp.leading).offset(-20)
+            make.width.height.equalTo(40)
         }
         
         dayStackView.snp.makeConstraints { make in
@@ -132,16 +131,72 @@ final class InviteViewController: UIViewController {
             make.bottom.equalToSuperview().offset(-20)
         }
     }
+    
+    private func minusMonth() {
+        calanderDate = calender.date(byAdding: DateComponents(month: -1), to: calanderDate) ?? Date()
+        updateCalender()
+    }
+    
+    private func plusMonth() {
+        calanderDate = calender.date(byAdding: DateComponents(month: 1), to: calanderDate) ?? Date()
+        updateCalender()
+    }
+    
+    @objc private func previousMonth() {
+        minusMonth()
+    }
+    
+    @objc private func nextMonth() {
+        plusMonth()
+    }
+}
+
+extension InviteViewController {
+    private func startDayOfWeek() -> Int {
+        return calender.component(.weekday, from: calanderDate) - 1
+    }
+    
+    private func endDate() -> Int {
+        return calender.range(of: .day, in: .month, for: calanderDate)?.count ?? Int()
+    }
+    
+    private func updateTitle() {
+        dateFormatter.locale = Locale(identifier: "ko_kr")
+        dateFormatter.timeZone = TimeZone(abbreviation: "KST")
+        dateFormatter.dateFormat = "yyyy년 MM월"
+        let dateCreatedAt = Date(timeIntervalSinceNow: Date().timeIntervalSinceNow)
+        let date = dateFormatter.string(from: calanderDate)
+        titleLabel.text = date
+    }
+    
+    private func updateDays() {
+        days = []
+        let startDayOfWeek = startDayOfWeek()
+        let totalDays = startDayOfWeek + endDate()
+        for day in 0..<totalDays {
+            if day < startDayOfWeek {
+                days.append("")
+                continue
+            }
+            days.append("\(day - startDayOfWeek + 1)")
+        }
+        dateCollectionView.reloadData()
+    }
+    
+    private func updateCalender() {
+        updateTitle()
+        updateDays()
+    }
 }
 
 extension InviteViewController: UICollectionViewDelegateFlowLayout, UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        31
+        days.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: DateCell.cellID, for: indexPath) as! DateCell
-        cell.dateLabel.text = "1"
+        cell.dateLabel.text = days[indexPath.row]
         return cell
     }
     
