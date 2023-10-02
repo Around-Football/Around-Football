@@ -11,7 +11,6 @@ import SnapKit
 import Then
 
 final class InviteViewController: UIViewController {
-    
     private let calender = Calendar.current
     private let dateFormatter = DateFormatter()
     private lazy var components = calender.dateComponents([.month, .day, .year], from: Date())
@@ -20,6 +19,8 @@ final class InviteViewController: UIViewController {
     
     private let placeView = GroundTitleView()
     private let peopleView = PeopleCountView()
+    
+    var selectedIndexPath: IndexPath?
     
     private lazy var previousButton = UIButton().then {
         $0.setImage(UIImage(systemName: "chevron.left"), for: .normal)
@@ -203,5 +204,21 @@ extension InviteViewController: UICollectionViewDelegateFlowLayout, UICollection
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let width = (UIScreen.main.bounds.width - 40) / 7
         return CGSize(width: width, height: width * 1.3)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        if let previousSelectedIndexPath = selectedIndexPath,
+           let previousSelectedCell = collectionView.cellForItem(at: previousSelectedIndexPath) as? DateCell {
+            previousSelectedCell.isSelected = false
+            previousSelectedCell.backgroundColor = .clear
+            previousSelectedCell.dateLabel.textColor = .label
+        }
+        
+        selectedIndexPath = indexPath
+        if let selectedCell = collectionView.cellForItem(at: indexPath) as? DateCell {
+            selectedCell.isSelected = true
+            selectedCell.backgroundColor = .blue
+            selectedCell.dateLabel.textColor = .white
+        }
     }
 }
