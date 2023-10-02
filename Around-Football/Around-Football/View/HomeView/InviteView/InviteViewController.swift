@@ -22,6 +22,12 @@ final class InviteViewController: UIViewController {
     
     var selectedIndexPath: IndexPath?
     
+    private lazy var scrollView = UIScrollView().then {
+        $0.showsVerticalScrollIndicator = false
+    }
+    
+    let contentView = UIView()
+    
     private lazy var previousButton = UIButton().then {
         $0.setImage(UIImage(systemName: "chevron.left"), for: .normal)
         $0.addTarget(self, action: #selector(previousMonth), for: .touchUpInside)
@@ -32,7 +38,7 @@ final class InviteViewController: UIViewController {
         $0.addTarget(self, action: #selector(nextMonth), for: .touchUpInside)
     }
     
-    private lazy var titleLabel = UILabel().then {
+    private lazy var monthLabel = UILabel().then {
         $0.text = "2023년 12월"
     }
     
@@ -71,6 +77,26 @@ final class InviteViewController: UIViewController {
         return cv
     }()
     
+    private let timeLabel = UILabel().then {
+        $0.text = "Time"
+    }
+    
+    private var timePicker = UIDatePicker().then {
+        $0.datePickerMode = .time
+        $0.locale = Locale(identifier: "ko_kr")
+    }
+    
+    private let contentLabel = UILabel().then {
+        $0.text = "내용"
+    }
+    
+    private let contentTextField = UITextField().then {
+        $0.borderStyle = .roundedRect
+        $0.placeholder = "내용을 입력해주세요"
+    }
+    
+    private let addButton = CustomButton(frame: .zero, buttonTitle: "등록하기")
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         configureUI()
@@ -81,46 +107,68 @@ final class InviteViewController: UIViewController {
         view.backgroundColor = .white
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.title = "용병 구하기"
+        navigationItem.largeTitleDisplayMode = .always
         
-        view.addSubviews(placeView,
+        view.addSubview(scrollView)
+        scrollView.addSubview(contentView)
+        
+        scrollView.snp.makeConstraints { make in
+            make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
+            make.leading.trailing.bottom.equalToSuperview()
+        }
+        
+        contentView.snp.makeConstraints { make in
+            make.edges.equalTo(scrollView.snp.edges)
+//            make.height.greaterThanOrEqualTo(scrollView.snp.height)
+            make.width.equalTo(scrollView.snp.width)
+        }
+        
+        contentView.addSubviews(placeView,
                          peopleView,
-                         titleLabel,
+                         monthLabel,
                          nextButton,
                          previousButton,
                          dayStackView,
-                         dateCollectionView)
+                         dateCollectionView,
+                         timeLabel,
+                         timePicker,
+                         contentLabel,
+                         contentTextField,
+                         addButton)
         
         placeView.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide)
             make.leading.equalToSuperview().offset(20)
             make.width.equalTo(UIScreen.main.bounds.width * 2/3)
+            make.height.equalTo(50)
         }
         
         peopleView.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide)
             make.trailing.equalToSuperview().offset(-20)
             make.width.equalTo(UIScreen.main.bounds.width * 1/3)
+            make.height.equalTo(50)
         }
         
-        titleLabel.snp.makeConstraints { make in
-            make.top.equalTo(placeView.snp.bottom).offset(50)
+        monthLabel.snp.makeConstraints { make in
+            make.top.equalTo(placeView.snp.bottom).offset(10)
             make.leading.equalToSuperview().offset(20)
         }
         
         nextButton.snp.makeConstraints { make in
-            make.centerY.equalTo(titleLabel)
+            make.centerY.equalTo(monthLabel)
             make.trailing.equalToSuperview().offset(-20)
             make.width.height.equalTo(40)
         }
         
         previousButton.snp.makeConstraints { make in
-            make.centerY.equalTo(titleLabel)
+            make.centerY.equalTo(monthLabel)
             make.trailing.equalTo(nextButton.snp.leading).offset(-20)
             make.width.height.equalTo(40)
         }
         
         dayStackView.snp.makeConstraints { make in
-            make.top.equalTo(titleLabel.snp.bottom).offset(20)
+            make.top.equalTo(monthLabel.snp.bottom).offset(20)
             make.leading.equalToSuperview().offset(20)
             make.trailing.equalToSuperview().offset(-20)
         }
@@ -129,8 +177,44 @@ final class InviteViewController: UIViewController {
             make.top.equalTo(dayStackView.snp.bottom).offset(10)
             make.leading.equalToSuperview().offset(20)
             make.trailing.equalToSuperview().offset(-20)
-            make.bottom.equalToSuperview().offset(-20)
+            make.height.equalTo(((UIScreen.main.bounds.width - 40) / 7) * 6)
         }
+        
+        timeLabel.snp.makeConstraints { make in
+            make.top.equalTo(dateCollectionView.snp.bottom)
+            make.leading.equalToSuperview().offset(20)
+        }
+        
+        timePicker.snp.makeConstraints { make in
+            make.centerY.equalTo(timeLabel)
+            make.trailing.equalToSuperview().offset(-20)
+        }
+        
+        contentLabel.snp.makeConstraints { make in
+            make.top.equalTo(timeLabel.snp.bottom).offset(20)
+            make.leading.equalToSuperview().offset(20)
+        }
+        
+        contentTextField.snp.makeConstraints { make in
+            make.top.equalTo(contentLabel.snp.bottom).offset(5)
+            make.leading.equalToSuperview().offset(20)
+            make.trailing.equalToSuperview().offset(-20)
+            make.height.equalTo(150)
+        }
+        
+        addButton.snp.makeConstraints { make in
+            make.top.equalTo(contentTextField.snp.bottom).offset(10)
+            make.leading.equalToSuperview().offset(20)
+            make.trailing.bottom.equalToSuperview().offset(-20)
+            make.height.equalTo(40)
+        }
+        
+//        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTap))
+//        tapGesture.cancelsTouchesInView = false
+//        view.addGestureRecognizer(tapGesture)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     
     private func minusMonth() {
@@ -151,6 +235,32 @@ final class InviteViewController: UIViewController {
         plusMonth()
     }
 }
+extension InviteViewController: UITextFieldDelegate {
+    // 키보드가 나타날 때 호출되는 함수
+    @objc func keyboardWillShow(_ notification: Notification) {
+        if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
+            let keyboardHeight = keyboardSize.height
+            
+            scrollView.contentInset.bottom = keyboardHeight
+            scrollView.scrollIndicatorInsets.bottom = keyboardHeight
+
+//            if let activeField = contentTextField {
+//                let rect = activeField.convert(activeField.bounds, to: scrollView)
+//                scrollView.scrollRectToVisible(rect, animated: true)
+//            }
+        }
+    }
+
+    @objc func keyboardWillHide(_ notification: Notification) {
+        // UIScrollView의 contentInset을 원래대로 되돌립니다.
+        scrollView.contentInset = .zero
+        scrollView.scrollIndicatorInsets = .zero
+    }
+
+    @objc func dismissKeyboard() {
+        view.endEditing(true)
+    }
+}
 
 extension InviteViewController {
     private func startDayOfWeek() -> Int {
@@ -165,15 +275,15 @@ extension InviteViewController {
         dateFormatter.locale = Locale(identifier: "ko_kr")
         dateFormatter.timeZone = TimeZone(abbreviation: "KST")
         dateFormatter.dateFormat = "yyyy년 MM월"
-        let dateCreatedAt = Date(timeIntervalSinceNow: Date().timeIntervalSinceNow)
         let date = dateFormatter.string(from: calanderDate)
-        titleLabel.text = date
+        monthLabel.text = date
     }
     
     private func updateDays() {
         days = []
         let startDayOfWeek = startDayOfWeek()
         let totalDays = startDayOfWeek + endDate()
+        
         for day in 0..<totalDays {
             if day < startDayOfWeek {
                 days.append("")
@@ -181,6 +291,7 @@ extension InviteViewController {
             }
             days.append("\(day - startDayOfWeek + 1)")
         }
+        
         dateCollectionView.reloadData()
     }
     
@@ -203,7 +314,7 @@ extension InviteViewController: UICollectionViewDelegateFlowLayout, UICollection
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let width = (UIScreen.main.bounds.width - 40) / 7
-        return CGSize(width: width, height: width * 1.3)
+        return CGSize(width: width, height: width)
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
