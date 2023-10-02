@@ -31,25 +31,54 @@ final class InviteViewController: UIViewController {
     }
     
     private var titleLabel = UILabel().then {
-        $0.text = "2022년 01월"
+        let dateFormatter = DateFormatter()
+        dateFormatter.locale = Locale(identifier: "ko_kr")
+        dateFormatter.timeZone = TimeZone(abbreviation: "KST")
+        dateFormatter.dateFormat = "yyyy년 MM월"
+        let dateCreatedAt = Date(timeIntervalSinceNow: Date().timeIntervalSinceNow)
+        $0.text = dateFormatter.string(from: dateCreatedAt)
     }
     
     private lazy var dayStackView = UIStackView().then {
         $0.axis = .horizontal
         $0.distribution = .fillEqually
+        
+        let days = ["일", "월", "화", "수", "목", "금", "토"]
+        
+        for i in 0..<days.count {
+            let label = UILabel()
+            label.text = days[i]
+            label.textAlignment = .center
+            
+            switch i {
+            case _ where i == 0:
+                label.textColor = .red
+            case _ where i == 6:
+                label.textColor = .blue
+            default:
+                label.textColor = .gray
+            }
+            
+            $0.addArrangedSubview(label)
+        }
     }
     
-//    private lazy var dateCollectionView = UICollectionView().then {
-//        $0.delegate = self
-//        $0.dataSource = self
-//        $0.register(DateCell.self, forCellWithReuseIdentifier: DateCell.cellID)
-//    }
-
+    private lazy var dateCollectionView: UICollectionView = {
+        let layout = UICollectionViewFlowLayout()
+        layout.minimumLineSpacing = 0
+        layout.minimumInteritemSpacing = 0
+        let cv = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        cv.delegate = self
+        cv.dataSource = self
+        cv.register(DateCell.self, forCellWithReuseIdentifier: DateCell.cellID)
+        return cv
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         configureUI()
     }
-
+    
     private func configureUI() {
         view.backgroundColor = .white
         navigationController?.navigationBar.prefersLargeTitles = true
@@ -60,7 +89,8 @@ final class InviteViewController: UIViewController {
                          titleLabel,
                          nextButton,
                          previousButton,
-                         dayStackView)
+                         dayStackView,
+                         dateCollectionView)
         
         placeView.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide)
@@ -90,23 +120,33 @@ final class InviteViewController: UIViewController {
         }
         
         dayStackView.snp.makeConstraints { make in
-            make.top.equalTo(titleLabel.snp.bottom).offset(10)
+            make.top.equalTo(titleLabel.snp.bottom).offset(20)
             make.leading.equalToSuperview().offset(20)
             make.trailing.equalToSuperview().offset(-20)
         }
         
+        dateCollectionView.snp.makeConstraints { make in
+            make.top.equalTo(dayStackView.snp.bottom).offset(10)
+            make.leading.equalToSuperview().offset(20)
+            make.trailing.equalToSuperview().offset(-20)
+            make.bottom.equalToSuperview().offset(-20)
+        }
     }
 }
 
-extension InviteViewController: UICollectionViewDelegate, UICollectionViewDataSource {
+extension InviteViewController: UICollectionViewDelegateFlowLayout, UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        42
+        31
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: DateCell.cellID, for: indexPath) as! DateCell
+        cell.dateLabel.text = "1"
         return cell
     }
     
-    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        let width = (UIScreen.main.bounds.width - 40) / 7
+        return CGSize(width: width, height: width * 1.3)
+    }
 }

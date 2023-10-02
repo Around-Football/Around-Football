@@ -15,10 +15,12 @@ final class DateCell: UICollectionViewCell {
     
     var dateLabel = UILabel().then {
         $0.text = "0"
+        $0.font = .systemFont(ofSize: 12)
     }
     
     override init(frame: CGRect) {
         super.init(frame: frame)
+        configureUI()
     }
     
     required init?(coder: NSCoder) {
@@ -32,5 +34,4 @@ final class DateCell: UICollectionViewCell {
             make.top.equalToSuperview().offset(5)
         }
     }
-    
 }

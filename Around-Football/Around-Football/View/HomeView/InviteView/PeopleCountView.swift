@@ -24,7 +24,8 @@ class PeopleCountView: UIView {
     
     lazy var peopleCountLabel = UILabel().then {
         $0.text = "\(count) 명"
-        $0.font = .systemFont(ofSize: 10, weight: .regular)
+        $0.textAlignment = .center
+        $0.font = .systemFont(ofSize: 15)
     }
     
     private lazy var minusButton = UIButton().then {
@@ -44,7 +45,7 @@ class PeopleCountView: UIView {
     }
     
     @objc private func plusCount() {
-        count = count + 1
+        count = count < 25 ? count + 1 : count
     }
 
     override init(frame: CGRect) {
@@ -63,7 +64,7 @@ class PeopleCountView: UIView {
                     plusButton)
         
         peopleCountTitleLabel.snp.makeConstraints { make in
-            make.top.leading.equalToSuperview().offset(10)
+            make.top.leading.equalToSuperview()
         }
         
         peopleCountLabel.snp.makeConstraints { make in
@@ -74,14 +75,17 @@ class PeopleCountView: UIView {
         
         minusButton.snp.makeConstraints { make in
             make.top.equalTo(peopleCountTitleLabel.snp.bottom).offset(5)
+            make.leading.equalToSuperview()
             make.trailing.equalTo(peopleCountLabel.snp.leading).offset(-10)
             make.bottom.equalToSuperview().offset(10)
+            make.width.height.equalTo(35)
         }
         
         plusButton.snp.makeConstraints { make in
             make.top.equalTo(peopleCountTitleLabel.snp.bottom).offset(5)
-            make.leading.equalTo(peopleCountLabel.snp.trailing).offset(10)
+            make.trailing.equalToSuperview()
             make.bottom.equalToSuperview().offset(10)
+            make.width.height.equalTo(35)
         }
     }
 
