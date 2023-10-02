@@ -51,7 +51,7 @@ final class DetailViewController: UIViewController {
         $0.setTitle("메세지 보내기", for: .normal)
         $0.setTitleColor(.white, for: .normal)
         $0.backgroundColor = .black
-        $0.layer.cornerRadius = 10
+        $0.layer.cornerRadius = 5
         $0.clipsToBounds = true
         $0.addTarget(self, action: #selector(clickedMessage), for: .touchUpInside)
     }
