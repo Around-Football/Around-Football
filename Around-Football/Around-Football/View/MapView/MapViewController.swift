@@ -12,24 +12,13 @@ import SnapKit
 class MapViewController: UIViewController, MapControllerDelegate {
     
     // MARK: - Properties
-    private let mapContainer: KMViewContainer = {
-        let mapContainer = KMViewContainer()
-        return mapContainer
-    }()
-    
-//    var mapContainer: KMViewContainer?
+    private var mapContainer: KMViewContainer = KMViewContainer()
     var mapController: KMController?
     var _observerAdded: Bool = false
     var _auth: Bool = false
-    
+    var _appear = true
 
     // MARK: - Lifecycle
-//    required init?(coder aDecoder: NSCoder) {
-//        _observerAdded = false
-//        _auth = false
-//        super.init(coder: aDecoder)
-//    }
-
     deinit {
         mapController?.stopRendering()
         mapController?.stopEngine()
@@ -45,7 +34,8 @@ class MapViewController: UIViewController, MapControllerDelegate {
     
     override func viewWillAppear(_ animated: Bool) {
         addObservers()
-        if _auth {
+        _appear = true
+//        if _auth {
             if mapController?.engineStarted == false {
                 mapController?.startEngine()
             }
@@ -53,10 +43,11 @@ class MapViewController: UIViewController, MapControllerDelegate {
             if mapController?.rendering == false {
                 mapController?.startRendering()
             }
-        }
+//        }
     }
     
     override func viewWillDisappear(_ animated: Bool) {
+        _appear = false
         mapController?.stopRendering()  //렌더링 중지.
     }
 
@@ -65,10 +56,16 @@ class MapViewController: UIViewController, MapControllerDelegate {
         mapController?.stopEngine()     //엔진 정지. 추가되었던 ViewBase들이 삭제된다.
     }
     
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        mapController?.initEngine() //엔진 초기화. 엔진 내부 객체 생성 및 초기화가 진행된다.
+    }
+
     // MARK: - API
     // 인증 성공시 delegate 호출.
     func authenticationSucceeded() {
         _auth = true
+        print("인증 성공")
         mapController?.startEngine()    //엔진 시작 및 렌더링 준비. 준비가 끝나면 MapControllerDelegate의 addViews 가 호출된다.
         mapController?.startRendering() //렌더링 시작.
     }
@@ -97,20 +94,19 @@ class MapViewController: UIViewController, MapControllerDelegate {
     
     // MARK: - Helpers
     func configureMap() {
-//        mapContainer = self.view as? KMViewContainer
-        print("mapContainer: \(mapContainer)")
         //KMController 생성.
         mapController = KMController(viewContainer: mapContainer)!
         mapController!.delegate = self
         
-        mapController?.initEngine() //엔진 초기화. 엔진 내부 객체 생성 및 초기화가 진행된다.
+//        mapController?.initEngine() //엔진 초기화. 엔진 내부 객체 생성 및 초기화가 진행된다.
     }
 
     func configureUI() {
-//        view.backgroundColor = .systemBlue
+        view.backgroundColor = .systemBackground
         view.addSubview(mapContainer)
-        mapContainer.snp.makeConstraints { make in
-            make.center.equalToSuperview()
+        mapContainer.snp.makeConstraints {
+            $0.top.leading.trailing.equalTo(self.view)
+            $0.bottom.equalTo(self.view.safeAreaLayoutGuide)
         }
     }
     
@@ -118,8 +114,7 @@ class MapViewController: UIViewController, MapControllerDelegate {
         //여기에서 그릴 View(KakaoMap, Roadview)들을 추가한다.
         let defaultPosition: MapPoint = MapPoint(longitude: 127.108678, latitude: 37.402001)
         //지도(KakaoMap)를 그리기 위한 viewInfo를 생성
-        let mapviewInfo: MapviewInfo = MapviewInfo(viewName: "mapview", appName:"openmap", viewInfoName: "map", defaultPosition: defaultPosition, defaultLevel: 13)
-        
+        let mapviewInfo: MapviewInfo = MapviewInfo(viewName: "mapview", viewInfoName: "map", defaultPosition: defaultPosition, defaultLevel: 14)
         //KakaoMap 추가.
         if mapController?.addView(mapviewInfo) == Result.OK {
             print("OK") //추가 성공. 성공시 추가적으로 수행할 작업을 진행한다.
@@ -145,6 +140,4 @@ class MapViewController: UIViewController, MapControllerDelegate {
 
         _observerAdded = false
     }
-
-
 }
