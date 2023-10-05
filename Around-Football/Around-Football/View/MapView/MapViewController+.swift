@@ -82,6 +82,12 @@ extension MapViewController: MapControllerDelegate {
 
         _observerAdded = false
     }
+    
+    func moveCamera(latitude: Double, longitude: Double) {
+        guard let mapView: KakaoMap = mapController?.getView("mapview") as? KakaoMap else { return }
+        
+        mapView.moveCamera(CameraUpdate.make(target: MapPoint(longitude: longitude, latitude: latitude), zoomLevel: 14, mapView: mapView))
+    }
 
 }
 
@@ -94,7 +100,7 @@ extension MapViewController: CLLocationManagerDelegate {
         // 위치 사용 허용 알림
         locationManager.requestWhenInUseAuthorization()
         // 위치 사용 허용 여부 분기처리
-        if CLLocationManager.locationServicesEnabled() {
+        if locationManager.authorizationStatus == .authorizedAlways || locationManager.authorizationStatus == .authorizedWhenInUse {
             locationManager.startUpdatingLocation()
         } else {
             print("위치 서비스 허용 OFF")
@@ -102,11 +108,19 @@ extension MapViewController: CLLocationManagerDelegate {
     }
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        if let location = locations.first {
-            print("위치 업데이트")
-            print("위도: \(location.coordinate.latitude)")
-            print("경도: \(location.coordinate.longitude)")
+        guard let location = locations.first else { return }
+        print("현재 위치 업데이트")
+        print("위도: \(location.coordinate.latitude)")
+        print("경도: \(location.coordinate.longitude)")
+        
+        guard let viewModel = viewModel else { return }
+        // 현재 위치로 카메라 이동
+        if viewModel.isSearchCurrentLocation {
+            moveCamera(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude)
+            viewModel.isSearchCurrentLocation = false
         }
+        
+            
     }
     
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {

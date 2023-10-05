@@ -11,6 +11,7 @@ import FirebaseFirestore
 class MapViewModel {
     var currentLocation: GeoPoint
     var searchLocation: GeoPoint?
+    var isSearchCurrentLocation: Bool = true
     
     
     init(latitude: Double, longitude: Double, searchLocation: GeoPoint? = nil) {
