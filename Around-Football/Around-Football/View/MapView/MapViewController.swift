@@ -8,6 +8,7 @@
 import UIKit
 import KakaoMapsSDK
 import SnapKit
+import Then
 
 class MapViewController: UIViewController, MapControllerDelegate {
     
@@ -17,6 +18,12 @@ class MapViewController: UIViewController, MapControllerDelegate {
     var _observerAdded: Bool = false
     var _auth: Bool = false
     var _appear = true
+    
+    private let searchTextField = UISearchTextField().then {
+        $0.placeholder = "장소를 입력하세요."
+        $0.backgroundColor = .systemBackground
+        
+    }
 
     // MARK: - Lifecycle
     deinit {
@@ -107,6 +114,14 @@ class MapViewController: UIViewController, MapControllerDelegate {
         mapContainer.snp.makeConstraints {
             $0.top.leading.trailing.equalTo(self.view)
             $0.bottom.equalTo(self.view.safeAreaLayoutGuide)
+        }
+        
+        view.addSubview(searchTextField)
+        searchTextField.snp.makeConstraints {
+            $0.top.equalTo(self.view.safeAreaLayoutGuide).offset(5)
+            $0.leading.equalTo(self.view).offset(16)
+            $0.trailing.equalTo(self.view).offset(-16)
+            $0.height.equalTo(40)
         }
     }
     
