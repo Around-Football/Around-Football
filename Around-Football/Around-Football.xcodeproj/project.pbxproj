@@ -29,6 +29,7 @@
 		274C21BF2ACFC8E9005469E6 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 274C21BE2ACFC8E9005469E6 /* LoginViewController.swift */; };
 		274C21C22ACFC92D005469E6 /* SignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 274C21C12ACFC92D005469E6 /* SignUpViewController.swift */; };
 		274C21C42ACFE932005469E6 /* LoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 274C21C32ACFE932005469E6 /* LoginViewModel.swift */; };
+		274C21C72ACFF902005469E6 /* TextFieldDelegateHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 274C21C62ACFF901005469E6 /* TextFieldDelegateHandler.swift */; };
 		669674882AC3E82B0067FD48 /* MainTabController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 669674872AC3E82B0067FD48 /* MainTabController.swift */; };
 		6696748F2AC3E9CE0067FD48 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6696748E2AC3E9CE0067FD48 /* HomeViewController.swift */; };
 		669674912AC3E9D40067FD48 /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 669674902AC3E9D40067FD48 /* MapViewController.swift */; };
@@ -51,6 +52,7 @@
 		274C21BE2ACFC8E9005469E6 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		274C21C12ACFC92D005469E6 /* SignUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpViewController.swift; sourceTree = "<group>"; };
 		274C21C32ACFE932005469E6 /* LoginViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewModel.swift; sourceTree = "<group>"; };
+		274C21C62ACFF901005469E6 /* TextFieldDelegateHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldDelegateHandler.swift; sourceTree = "<group>"; };
 		669674872AC3E82B0067FD48 /* MainTabController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabController.swift; sourceTree = "<group>"; };
 		6696748E2AC3E9CE0067FD48 /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		669674902AC3E9D40067FD48 /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
@@ -96,6 +98,7 @@
 		2736744B2AC3061C003ADE3F /* Around-Football */ = {
 			isa = PBXGroup;
 			children = (
+				274C21C52ACFF8E7005469E6 /* Extension */,
 				6696748A2AC3E9740067FD48 /* View */,
 				2736744C2AC3061C003ADE3F /* AppDelegate.swift */,
 				2736744E2AC3061C003ADE3F /* SceneDelegate.swift */,
@@ -135,6 +138,14 @@
 				274C21C12ACFC92D005469E6 /* SignUpViewController.swift */,
 			);
 			path = SignUpView;
+			sourceTree = "<group>";
+		};
+		274C21C52ACFF8E7005469E6 /* Extension */ = {
+			isa = PBXGroup;
+			children = (
+				274C21C62ACFF901005469E6 /* TextFieldDelegateHandler.swift */,
+			);
+			path = Extension;
 			sourceTree = "<group>";
 		};
 		6696748A2AC3E9740067FD48 /* View */ = {
@@ -276,6 +287,7 @@
 				274C21C42ACFE932005469E6 /* LoginViewModel.swift in Sources */,
 				2736744D2AC3061C003ADE3F /* AppDelegate.swift in Sources */,
 				273674832AC308D1003ADE3F /* Recruit.swift in Sources */,
+				274C21C72ACFF902005469E6 /* TextFieldDelegateHandler.swift in Sources */,
 				2736744F2AC3061C003ADE3F /* SceneDelegate.swift in Sources */,
 				274C21BF2ACFC8E9005469E6 /* LoginViewController.swift in Sources */,
 			);
