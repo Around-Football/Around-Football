@@ -1,14 +1,15 @@
 //
-//  HomeViewController.swift
+//  SignUpViewController.swift
 //  Around-Football
 //
-//  Created by 진태영 on 2023/09/27.
+//  Created by 강창현 on 10/6/23.
 //
-// 홈(리스트)
+
+import Foundation
 import UIKit
 
-class HomeViewController: UIViewController {
-
+class SignUpViewController: UIViewController {
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
