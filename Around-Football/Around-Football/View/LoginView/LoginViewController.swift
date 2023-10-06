@@ -20,12 +20,12 @@ class LoginViewController: UIViewController {
         $0.contentMode = .scaleAspectFit
     }
     
-    private let emailTextField = UITextField().then {
+    let emailTextField = UITextField().then {
         $0.placeholder = "이메일"
         $0.borderStyle = .roundedRect
     }
     
-    private let passwordTextField = UITextField().then {
+    let passwordTextField = UITextField().then {
         $0.placeholder = "비밀번호"
         $0.borderStyle = .roundedRect
         $0.isSecureTextEntry = true
@@ -57,12 +57,15 @@ class LoginViewController: UIViewController {
         $0.distribution = .equalSpacing
     }
     
+    var textFieldDelegateHandler: TextFieldDelegateHandler?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        emailTextField.delegate = self
-        passwordTextField.delegate = self
-        
+        textFieldDelegateHandler = TextFieldDelegateHandler(viewController: self)
+        emailTextField.delegate = textFieldDelegateHandler
+        passwordTextField.delegate = textFieldDelegateHandler
+    
         configureUI()
     }
     
@@ -133,36 +136,6 @@ class LoginViewController: UIViewController {
         print("signUpButtonTapped!")
     }
 }
-
-extension LoginViewController: UITextFieldDelegate {
-    func textFieldDidBeginEditing(_ textField: UITextField) {
-        // TextField가 편집 모드에 들어갈 때 화면을 위로 이동
-        UIView.animate(withDuration: 0.3, animations: {
-            self.view.frame = CGRect(x: self.view.frame.origin.x, y: self.view.frame.origin.y - 200, width: self.view.frame.size.width, height: self.view.frame.size.height)
-        })
-    }
-    
-    func textFieldDidEndEditing(_ textField: UITextField) {
-        // TextField에서 편집이 끝날 때 화면을 원래 위치로 이동
-        UIView.animate(withDuration: 0.3, animations: {
-            self.view.frame = CGRect(x: self.view.frame.origin.x, y: 0, width: self.view.frame.size.width, height: self.view.frame.size.height)
-        })
-    }
-    
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        // Return 키를 누를 때 다음 TextField로 포커스 이동
-        if textField == emailTextField {
-            passwordTextField.becomeFirstResponder()
-        } else if textField == passwordTextField {
-            passwordTextField.resignFirstResponder()
-        }
-        return true
-    }
-}
-
-
-
-
 
 //#Preview {
 //    var controller = LoginViewController()
