@@ -17,7 +17,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         window?.windowScene = scene
 //        window?.rootViewController = MainTabController()
-        window?.rootViewController = LoginViewController()
+        // MARK: - View_Changhyun Test(Navigation)
+        let loginViewController = LoginViewController()
+        let navigationController = UINavigationController(rootViewController: loginViewController)
+        window = UIWindow(windowScene: scene)
+        window?.rootViewController = navigationController
+        
         window?.makeKeyAndVisible()
     }
 
