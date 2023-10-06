@@ -49,3 +49,13 @@ enum CustomPoiStyle {
         }
     }
 }
+
+//enum GuiButtonComponent: String {
+//    case trackingPosition
+//    
+//    var name: String {
+//        switch self {
+//        case .trackingPosition: return "trackingPosition"
+//        }
+//    }
+//}
