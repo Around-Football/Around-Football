@@ -28,6 +28,7 @@
 		2736748A2AC309E7003ADE3F /* KakaoMapsSDK_SPM in Frameworks */ = {isa = PBXBuildFile; productRef = 273674892AC309E7003ADE3F /* KakaoMapsSDK_SPM */; };
 		274C21BF2ACFC8E9005469E6 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 274C21BE2ACFC8E9005469E6 /* LoginViewController.swift */; };
 		274C21C22ACFC92D005469E6 /* SignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 274C21C12ACFC92D005469E6 /* SignUpViewController.swift */; };
+		274C21C42ACFE932005469E6 /* LoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 274C21C32ACFE932005469E6 /* LoginViewModel.swift */; };
 		669674882AC3E82B0067FD48 /* MainTabController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 669674872AC3E82B0067FD48 /* MainTabController.swift */; };
 		6696748F2AC3E9CE0067FD48 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6696748E2AC3E9CE0067FD48 /* HomeViewController.swift */; };
 		669674912AC3E9D40067FD48 /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 669674902AC3E9D40067FD48 /* MapViewController.swift */; };
@@ -49,6 +50,7 @@
 		273674862AC30981003ADE3F /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		274C21BE2ACFC8E9005469E6 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		274C21C12ACFC92D005469E6 /* SignUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpViewController.swift; sourceTree = "<group>"; };
+		274C21C32ACFE932005469E6 /* LoginViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewModel.swift; sourceTree = "<group>"; };
 		669674872AC3E82B0067FD48 /* MainTabController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabController.swift; sourceTree = "<group>"; };
 		6696748E2AC3E9CE0067FD48 /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		669674902AC3E9D40067FD48 /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
@@ -122,6 +124,7 @@
 			isa = PBXGroup;
 			children = (
 				274C21BE2ACFC8E9005469E6 /* LoginViewController.swift */,
+				274C21C32ACFE932005469E6 /* LoginViewModel.swift */,
 			);
 			path = LoginView;
 			sourceTree = "<group>";
@@ -270,6 +273,7 @@
 				669674912AC3E9D40067FD48 /* MapViewController.swift in Sources */,
 				274C21C22ACFC92D005469E6 /* SignUpViewController.swift in Sources */,
 				273674852AC308D1003ADE3F /* PlaygroundList.swift in Sources */,
+				274C21C42ACFE932005469E6 /* LoginViewModel.swift in Sources */,
 				2736744D2AC3061C003ADE3F /* AppDelegate.swift in Sources */,
 				273674832AC308D1003ADE3F /* Recruit.swift in Sources */,
 				2736744F2AC3061C003ADE3F /* SceneDelegate.swift in Sources */,
