@@ -47,15 +47,16 @@ extension MapViewController: MapControllerDelegate {
         //KMController 생성.
         mapController = KMController(viewContainer: mapContainer)!
         mapController!.delegate = self
-        
-//        mapController?.initEngine() //엔진 초기화. 엔진 내부 객체 생성 및 초기화가 진행된다.
+        mapController?.initEngine() //엔진 초기화. 엔진 내부 객체 생성 및 초기화가 진행된다.
     }
     
     func addViews() {
         //여기에서 그릴 View(KakaoMap, Roadview)들을 추가한다.
-        let currentLatitude = viewModel?.currentLocation.latitude
-        let currentLongitude = viewModel?.currentLocation.longitude
-        let defaultPosition: MapPoint = MapPoint(longitude: currentLongitude ?? 127.108678, latitude: currentLatitude ?? 37.402001)
+        guard let location = self.viewModel?.currentLocation else {
+            fatalError("Map AddView Failed")
+        }
+
+        let defaultPosition: MapPoint = MapPoint(longitude: location.longitude, latitude: location.latitude)
         //지도(KakaoMap)를 그리기 위한 viewInfo를 생성
         let mapviewInfo: MapviewInfo = MapviewInfo(viewName: "mapview", viewInfoName: "map", defaultPosition: defaultPosition, defaultLevel: 14)
         //KakaoMap 추가.
@@ -63,9 +64,13 @@ extension MapViewController: MapControllerDelegate {
             print("OK") //추가 성공. 성공시 추가적으로 수행할 작업을 진행한다.
             
             guard let location = self.viewModel?.currentLocation else { return }
+            // POI
             createLabelLayer(layerID: LayerID.currentPosition)
             createPoiStyle(style: CustomPoiStyle.currentPositionPoiStyle)
             createPois(layerID: LayerID.currentPosition, poiID: PoiID.currentPosition, style: CustomPoiStyle.currentPositionPoiStyle, mapPoint: MapPoint(longitude: location.longitude, latitude: location.latitude))
+            moveCamera(latitude: location.latitude, longitude: location.longitude)
+            // GUI
+//            createSpriteGUI()
 
         }
 
@@ -73,6 +78,9 @@ extension MapViewController: MapControllerDelegate {
     
     //Container 뷰가 리사이즈 되었을때 호출된다. 변경된 크기에 맞게 ViewBase들의 크기를 조절할 필요가 있는 경우 여기에서 수행한다.
     func containerDidResized(_ size: CGSize) {
+        print("---------------------")
+        print("resize: \(size)")
+        print("---------------------")
         let mapView: KakaoMap? = mapController?.getView("mapview") as? KakaoMap
         mapView?.viewRect = CGRect(origin: CGPoint(x: 0.0, y: 0.0), size: size)   //지도뷰의 크기를 리사이즈된 크기로 지정한다.
     }
@@ -94,7 +102,8 @@ extension MapViewController: MapControllerDelegate {
     func moveCamera(latitude: Double, longitude: Double) {
         guard let mapView: KakaoMap = mapController?.getView("mapview") as? KakaoMap else { return }
         
-        mapView.moveCamera(CameraUpdate.make(target: MapPoint(longitude: longitude, latitude: latitude), zoomLevel: 14, mapView: mapView))
+        let animationOptions = CameraAnimationOptions(autoElevation: true, consecutive: true, durationInMillis: 1000)
+        mapView.animateCamera(cameraUpdate: CameraUpdate.make(target: MapPoint(longitude: longitude, latitude: latitude), zoomLevel: 14, mapView: mapView), options: animationOptions)
     }
     
     // MARK: - POI
@@ -137,12 +146,55 @@ extension MapViewController: MapControllerDelegate {
         
         guard let location = self.viewModel?.currentLocation else { return }
         let newPoint = MapPoint(longitude: location.longitude, latitude: location.latitude)
-        poi?.moveAt(newPoint, duration: 2)
+        poi?.moveAt(newPoint, duration: 1000)
     }
     
-    // MARK: - SpriteGUI
-    
 }
+
+/*
+extension MapViewController: GuiEventDelegate {
+    // MARK: - SpriteGUI
+    func createSpriteGUI() {
+        guard let mapView: KakaoMap = mapController?.getView("mapview") as? KakaoMap else { return }
+        let guiManager = mapView.getGuiManager()
+        let spriteGui = SpriteGui("PositionToolSprite")
+        
+        spriteGui.arrangement = .horizontal
+        spriteGui.bgColor = UIColor.clear
+        spriteGui.splitLineColor = UIColor.white
+        spriteGui.origin = GuiAlignment(vAlign: .bottom, hAlign: .left)
+        spriteGui.position = CGPoint(x: 50, y: 50)
+        
+        let trackingButtonName: GuiButtonComponent = .trackingPosition
+        let currentPositionButton = GuiButton(trackingButtonName.name)
+        let locationImage = UIImage(systemName: "location")
+        currentPositionButton.image = UIImage(systemName: "location")
+        currentPositionButton.imageSize = GuiSize(width: 20, height: 20)
+        currentPositionButton.padding = GuiPadding(left: 10, right: 10, top: 10, bottom: 10)
+
+        spriteGui.addChild(currentPositionButton)
+        
+        guiManager.spriteGuiLayer.addSpriteGui(spriteGui)
+        spriteGui.delegate = self
+        spriteGui.show()
+    }
+
+    func guiDidTapped(_ gui: GuiBase, componentName: String) {
+        print("Gui: \(gui.name), Component: \(componentName) tapped")
+        
+        guard let viewModel = self.viewModel else { return }
+        
+        switch componentName {
+        case GuiButtonComponent.trackingPosition.name:
+            let location = viewModel.currentLocation
+            changeCurrentPoi()
+            moveCamera(latitude: location.latitude, longitude: location.longitude)
+        default: break
+        }
+        
+    }
+}
+*/
 
 extension MapViewController: CLLocationManagerDelegate {
     func setLocationManager() {
@@ -167,13 +219,13 @@ extension MapViewController: CLLocationManagerDelegate {
         print("경도: \(location.coordinate.longitude)")
         
         guard let viewModel = viewModel else { return }
-        // 현재 위치로 카메라 이동
-        if viewModel.isSearchCurrentLocation {
+//        // 현재 위치로 카메라 이동
+//        if viewModel.isSearchCurrentLocation {
         viewModel.setCurrentLocation(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude)
-            changeCurrentPoi()
-            moveCamera(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude)
-            viewModel.isSearchCurrentLocation = false
-        }
+//            changeCurrentPoi()
+//            moveCamera(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude)
+//            viewModel.isSearchCurrentLocation = false
+//        }
     }
     
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
