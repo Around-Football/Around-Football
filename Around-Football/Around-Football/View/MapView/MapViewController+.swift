@@ -10,6 +10,7 @@ import KakaoMapsSDK
 import CoreLocation
 
 extension MapViewController: MapControllerDelegate {
+    
     // MARK: - API
     // 인증 성공시 delegate 호출.
     func authenticationSucceeded() {
@@ -60,7 +61,14 @@ extension MapViewController: MapControllerDelegate {
         //KakaoMap 추가.
         if mapController?.addView(mapviewInfo) == Result.OK {
             print("OK") //추가 성공. 성공시 추가적으로 수행할 작업을 진행한다.
+            
+            guard let location = self.viewModel?.currentLocation else { return }
+            createLabelLayer(layerID: LayerID.currentPosition)
+            createPoiStyle(style: CustomPoiStyle.currentPositionPoiStyle)
+            createPois(layerID: LayerID.currentPosition, poiID: PoiID.currentPosition, style: CustomPoiStyle.currentPositionPoiStyle, mapPoint: MapPoint(longitude: location.longitude, latitude: location.latitude))
+
         }
+
     }
     
     //Container 뷰가 리사이즈 되었을때 호출된다. 변경된 크기에 맞게 ViewBase들의 크기를 조절할 필요가 있는 경우 여기에서 수행한다.
@@ -88,7 +96,52 @@ extension MapViewController: MapControllerDelegate {
         
         mapView.moveCamera(CameraUpdate.make(target: MapPoint(longitude: longitude, latitude: latitude), zoomLevel: 14, mapView: mapView))
     }
+    
+    // MARK: - POI
+    // Poi 생성을 위한 LabelLayer 생성 함수
+    func createLabelLayer(layerID: LayerID) {
+        let mapView: KakaoMap = mapController?.getView("mapview") as! KakaoMap
+        let manager = mapView.getLabelManager()
+        let layerOption = LabelLayerOptions(layerID: layerID.description, competitionType: .none, competitionUnit: .symbolFirst, orderType: .rank, zOrder: 5000)
+        let _ = manager.addLabelLayer(option: layerOption)
+    }
+    
+    func createPoiStyle(style: CustomPoiStyle) {
+        let mapView: KakaoMap = mapController?.getView("mapview") as! KakaoMap
+        let manager = mapView.getLabelManager()
+        let iconStyle = PoiIconStyle(symbol: style.poiImage, anchorPoint: CGPoint(x: 0, y: 0.5))
+        
+        let poiStyle = PoiStyle(styleID: style.id, styles: [
+            PerLevelPoiStyle(iconStyle: iconStyle, level: 0)
+        ])
+        manager.addPoiStyle(poiStyle)
+       
+    }
 
+    func createPois(layerID: LayerID, poiID: PoiID, style: CustomPoiStyle, mapPoint: MapPoint) {
+        let mapView: KakaoMap = mapController?.getView("mapview") as! KakaoMap
+        let manager = mapView.getLabelManager()
+        let layer = manager.getLabelLayer(layerID: layerID.description)
+        let poiOption = PoiOptions(styleID: style.id, poiID: poiID.description)
+        poiOption.rank = 0
+        
+        let poi1 = layer?.addPoi(option: poiOption, at: mapPoint)
+        poi1?.show()
+    }
+    
+    func changeCurrentPoi() {
+        guard let mapView: KakaoMap = mapController?.getView("mapview") as? KakaoMap else { return }
+        let manager = mapView.getLabelManager()
+        let layer = manager.getLabelLayer(layerID: LayerID.currentPosition.description)
+        let poi = layer?.getPoi(poiID: PoiID.currentPosition.description)
+        
+        guard let location = self.viewModel?.currentLocation else { return }
+        let newPoint = MapPoint(longitude: location.longitude, latitude: location.latitude)
+        poi?.moveAt(newPoint, duration: 2)
+    }
+    
+    // MARK: - SpriteGUI
+    
 }
 
 extension MapViewController: CLLocationManagerDelegate {
@@ -116,11 +169,11 @@ extension MapViewController: CLLocationManagerDelegate {
         guard let viewModel = viewModel else { return }
         // 현재 위치로 카메라 이동
         if viewModel.isSearchCurrentLocation {
+        viewModel.setCurrentLocation(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude)
+            changeCurrentPoi()
             moveCamera(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude)
             viewModel.isSearchCurrentLocation = false
         }
-        
-            
     }
     
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
