@@ -13,6 +13,8 @@ import Firebase
 
 class LoginViewController: UIViewController {
     
+    private var loginViewModel = LoginViewModel()
+    
     private let logoImageView = UIImageView().then {
         $0.image = UIImage(named: "App_logo")
         $0.contentMode = .scaleAspectFit
@@ -49,11 +51,10 @@ class LoginViewController: UIViewController {
     }
     
     private let signUpStackView = UIStackView().then {
-        //        $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.translatesAutoresizingMaskIntoConstraints = false
         $0.axis = .horizontal
         $0.alignment = .fill
         $0.distribution = .equalSpacing
-        //        $0.spacing = 8
     }
     
     override func viewDidLoad() {
@@ -63,10 +64,6 @@ class LoginViewController: UIViewController {
         passwordTextField.delegate = self
         
         configureUI()
-        
-        if navigationController == nil {
-            let navigationController = UINavigationController(rootViewController: self)
-        }
     }
     
     func configureUI() {
@@ -112,21 +109,19 @@ class LoginViewController: UIViewController {
         }
     }
     
+    // MARK: - 로그인 버튼 Tap
     @objc private func loginButtonTapped() {
-        guard let email = emailTextField.text, !email.isEmpty,
-              let password = passwordTextField.text, !password.isEmpty else {
-            // 필수 정보가 입력되지 않았을 때 처리할 코드
-            return
-        }
+        loginViewModel.email = emailTextField.text
+        loginViewModel.password = passwordTextField.text
         
-        Auth.auth().signIn(withEmail: email, password: password) { [weak self] (result, error) in
-            if let error = error {
-                // 로그인 실패 시 처리할 코드
-                print("로그인 실패: \(error.localizedDescription)")
-            } else {
-                // 로그인 성공 시 처리할 코드
+        loginViewModel.login { [weak self] success, error in
+            if success {
                 print("로그인 성공")
                 // 예를 들어 로그인 후 화면 전환 등을 수행할 수 있습니다.
+            } else {
+                if let error = error {
+                    print("로그인 실패: \(error.localizedDescription)")
+                }
             }
         }
     }
