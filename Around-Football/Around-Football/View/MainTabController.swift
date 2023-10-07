@@ -18,7 +18,6 @@ class MainTabController: UITabBarController {
     
     func configureUI() {
         tabBar.tintColor = .black
-//        tabBar.barTintColor = .white
     }
     
     func configureViewController() {
