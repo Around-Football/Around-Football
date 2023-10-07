@@ -5,15 +5,17 @@
 //  Created by 진태영 on 2023/09/27.
 //
 
+import CoreLocation
 import UIKit
+
 import KakaoMapsSDK
 import SnapKit
 import Then
-import CoreLocation
 
-class MapViewController: UIViewController {
+final class MapViewController: UIViewController {
     
     // MARK: - Properties
+    
     lazy var mapContainer: KMViewContainer = KMViewContainer(frame: self.view.frame)
     var mapController: KMController?
     var _observerAdded: Bool = false
@@ -49,6 +51,7 @@ class MapViewController: UIViewController {
     }
     
     // MARK: - Lifecycle
+    
     deinit {
         mapController?.stopRendering()
         mapController?.stopEngine()
@@ -97,6 +100,7 @@ class MapViewController: UIViewController {
     }
     
     // MARK: - Selectors
+    
     @objc func pressTrackingButton() {
         self.changeCurrentPoi()
         guard let location = viewModel?.currentLocation else { return }
@@ -104,6 +108,7 @@ class MapViewController: UIViewController {
     }
     
     // MARK: - Helpers
+    
     func configureUI() {
         view.backgroundColor = .systemBackground
         view.addSubview(mapContainer)

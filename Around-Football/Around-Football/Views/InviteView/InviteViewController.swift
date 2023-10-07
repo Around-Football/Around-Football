@@ -140,14 +140,14 @@ final class InviteViewController: UIViewController {
         
         placeView.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide)
-            make.leading.equalToSuperview().offset(20)
+            make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
             make.width.equalTo(UIScreen.main.bounds.width * 2/3)
             make.height.equalTo(50)
         }
         
         peopleView.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide)
-            make.trailing.equalToSuperview().offset(-20)
+            make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
             make.width.equalTo(UIScreen.main.bounds.width * 1/3)
             make.height.equalTo(50)
         }

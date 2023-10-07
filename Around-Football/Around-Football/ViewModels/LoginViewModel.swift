@@ -6,11 +6,17 @@
 //
 
 import Foundation
+
 import Firebase
 
 class LoginViewModel {
+    
+    // MARK: - Properties
+    
     var email: String?
     var password: String?
+    
+    // MARK: - Helpers
 
     func login(completion: @escaping (Bool, Error?) -> Void) {
         guard let email = email, let password = password else {
