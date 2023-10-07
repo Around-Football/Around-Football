@@ -17,7 +17,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         window?.windowScene = scene
 //        window?.rootViewController = MainTabController()
-//        window?.rootViewController = DetailViewController()
+//        let rootViewController = DetailViewController()
 //        window?.rootViewController = InviteViewController()
         
         let rootViewController = InviteViewController()

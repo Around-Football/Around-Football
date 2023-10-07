@@ -101,6 +101,9 @@ final class InviteViewController: UIViewController {
         super.viewDidLoad()
         configureUI()
         updateCalender()
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     
     private func configureUI() {
@@ -118,9 +121,8 @@ final class InviteViewController: UIViewController {
         }
         
         contentView.snp.makeConstraints { make in
-            make.edges.equalTo(scrollView.snp.edges)
-//            make.height.greaterThanOrEqualTo(scrollView.snp.height)
-            make.width.equalTo(scrollView.snp.width)
+            make.width.equalToSuperview()
+            make.centerX.top.bottom.equalToSuperview()
         }
         
         contentView.addSubviews(placeView,
@@ -206,15 +208,13 @@ final class InviteViewController: UIViewController {
             make.top.equalTo(contentTextField.snp.bottom).offset(10)
             make.leading.equalToSuperview().offset(20)
             make.trailing.bottom.equalToSuperview().offset(-20)
+            make.bottom.equalToSuperview().offset(-20)
             make.height.equalTo(40)
         }
         
-//        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTap))
-//        tapGesture.cancelsTouchesInView = false
-//        view.addGestureRecognizer(tapGesture)
-        
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        tapGesture.cancelsTouchesInView = false
+        view.addGestureRecognizer(tapGesture)
     }
     
     private func minusMonth() {
@@ -235,28 +235,27 @@ final class InviteViewController: UIViewController {
         plusMonth()
     }
 }
+
 extension InviteViewController: UITextFieldDelegate {
-    // 키보드가 나타날 때 호출되는 함수
     @objc func keyboardWillShow(_ notification: Notification) {
-        if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
-            let keyboardHeight = keyboardSize.height
-            
+        if let keyboardFrame = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
+            let keyboardHeight = keyboardFrame.height
+            print("keyboardHeight: \(keyboardHeight)")
             scrollView.contentInset.bottom = keyboardHeight
             scrollView.scrollIndicatorInsets.bottom = keyboardHeight
-
-//            if let activeField = contentTextField {
-//                let rect = activeField.convert(activeField.bounds, to: scrollView)
-//                scrollView.scrollRectToVisible(rect, animated: true)
-//            }
+            
+            // 스크롤뷰를 활성화합니다.
+            scrollView.isScrollEnabled = true
         }
     }
 
     @objc func keyboardWillHide(_ notification: Notification) {
-        // UIScrollView의 contentInset을 원래대로 되돌립니다.
+        print("contentInset: \(scrollView.contentInset)")
         scrollView.contentInset = .zero
         scrollView.scrollIndicatorInsets = .zero
+        print("contentInset: \(scrollView.contentInset)")
     }
-
+    
     @objc func dismissKeyboard() {
         view.endEditing(true)
     }
@@ -280,7 +279,7 @@ extension InviteViewController {
     }
     
     private func updateDays() {
-        days = []
+        days.removeAll()
         let startDayOfWeek = startDayOfWeek()
         let totalDays = startDayOfWeek + endDate()
         
