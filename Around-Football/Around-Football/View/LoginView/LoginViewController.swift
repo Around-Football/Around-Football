@@ -31,7 +31,7 @@ class LoginViewController: UIViewController {
         $0.isSecureTextEntry = true
     }
     
-    private let loginButton = UIButton().then {
+    private lazy var loginButton = UIButton().then {
         $0.setTitle("로그인", for: .normal)
         $0.backgroundColor = .black
         $0.setTitleColor(.white, for: .normal)
@@ -44,7 +44,7 @@ class LoginViewController: UIViewController {
         $0.backgroundColor = .clear
     }
     
-    private let signUpButton = UIButton().then {
+    private lazy var signUpButton = UIButton().then {
         $0.setTitle("회원가입", for: .normal)
         $0.setTitleColor(UIColor(named: "pointColor"), for: .normal)
         $0.addTarget(self, action: #selector(signUpButtonTapped), for: .touchUpInside)
@@ -57,7 +57,7 @@ class LoginViewController: UIViewController {
         $0.distribution = .equalSpacing
     }
     
-    var textFieldDelegateHandler: TextFieldDelegateHandler?
+    lazy var textFieldDelegateHandler = TextFieldDelegateHandler(viewController: self)
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -65,7 +65,8 @@ class LoginViewController: UIViewController {
         textFieldDelegateHandler = TextFieldDelegateHandler(viewController: self)
         emailTextField.delegate = textFieldDelegateHandler
         passwordTextField.delegate = textFieldDelegateHandler
-    
+        textFieldDelegateHandler.nextTextField = passwordTextField
+        
         configureUI()
     }
     
@@ -135,6 +136,10 @@ class LoginViewController: UIViewController {
         navigationController?.pushViewController(signUpVC, animated: true)
         print("signUpButtonTapped!")
     }
+}
+
+extension LoginViewController: UITextFieldDelegate {
+    
 }
 
 //#Preview {

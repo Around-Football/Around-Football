@@ -29,22 +29,21 @@ class SignUpViewController: UIViewController {
         $0.borderStyle = .roundedRect
     }
     
-    private let signUpButton = UIButton().then {
+    private lazy var signUpButton = UIButton().then {
         $0.setTitle("가입하기", for: .normal)
         $0.backgroundColor = .black
         $0.setTitleColor(.white, for: .normal)
         $0.addTarget(self, action: #selector(signUpButtonTapped), for: .touchUpInside)
     }
     
-    var textFieldDelegateHandler: TextFieldDelegateHandler?
+    lazy var textFieldDelegateHandler = TextFieldDelegateHandler(viewController: self)
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        textFieldDelegateHandler = TextFieldDelegateHandler(viewController: self)
         emailTextField.delegate = textFieldDelegateHandler
         passwordTextField.delegate = textFieldDelegateHandler
-        
+        textFieldDelegateHandler.nextTextField = passwordTextField
         configureUI()
     }
     
@@ -52,17 +51,15 @@ class SignUpViewController: UIViewController {
         view.backgroundColor = .white
         view.addSubview(titleLabel)
         titleLabel.snp.makeConstraints { make in
-            make.centerX.equalToSuperview()
-            make.centerY.equalToSuperview()
             make.leading.equalToSuperview().offset(20)
+            make.top.equalTo(view.safeAreaLayoutGuide).offset(20)
         }
         
         view.addSubview(emailTextField)
         emailTextField.snp.makeConstraints { make in
-            make.centerX.equalToSuperview()
             make.top.equalTo(titleLabel.snp.bottom).offset(20)
-            make.leading.equalTo(titleLabel)
-            make.width.equalToSuperview().multipliedBy(0.8)
+            make.leading.equalToSuperview().offset(20)
+            make.trailing.equalToSuperview().offset(-20)
         }
         
         view.addSubview(passwordTextField)
