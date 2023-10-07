@@ -25,6 +25,10 @@
 		273674842AC308D1003ADE3F /* Field.swift in Sources */ = {isa = PBXBuildFile; fileRef = 273674812AC308D1003ADE3F /* Field.swift */; };
 		273674852AC308D1003ADE3F /* PlaygroundList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 273674822AC308D1003ADE3F /* PlaygroundList.swift */; };
 		273674872AC30981003ADE3F /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 273674862AC30981003ADE3F /* GoogleService-Info.plist */; };
+		274C21BF2ACFC8E9005469E6 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 274C21BE2ACFC8E9005469E6 /* LoginViewController.swift */; };
+		274C21C22ACFC92D005469E6 /* SignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 274C21C12ACFC92D005469E6 /* SignUpViewController.swift */; };
+		274C21C42ACFE932005469E6 /* LoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 274C21C32ACFE932005469E6 /* LoginViewModel.swift */; };
+		274C21C72ACFF902005469E6 /* TextFieldDelegateHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 274C21C62ACFF901005469E6 /* TextFieldDelegateHandler.swift */; };
 		6609C5312ACD506100798632 /* TestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6609C5302ACD506100798632 /* TestViewController.swift */; };
 		6609C5332ACE8B0E00798632 /* MapViewController+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6609C5322ACE8B0E00798632 /* MapViewController+.swift */; };
 		6609C5352ACE8D3600798632 /* MapViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6609C5342ACE8D3600798632 /* MapViewModel.swift */; };
@@ -49,6 +53,10 @@
 		273674812AC308D1003ADE3F /* Field.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Field.swift; sourceTree = "<group>"; };
 		273674822AC308D1003ADE3F /* PlaygroundList.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaygroundList.swift; sourceTree = "<group>"; };
 		273674862AC30981003ADE3F /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		274C21BE2ACFC8E9005469E6 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
+		274C21C12ACFC92D005469E6 /* SignUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpViewController.swift; sourceTree = "<group>"; };
+		274C21C32ACFE932005469E6 /* LoginViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewModel.swift; sourceTree = "<group>"; };
+		274C21C62ACFF901005469E6 /* TextFieldDelegateHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldDelegateHandler.swift; sourceTree = "<group>"; };
 		6609C5302ACD506100798632 /* TestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestViewController.swift; sourceTree = "<group>"; };
 		6609C5322ACE8B0E00798632 /* MapViewController+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MapViewController+.swift"; sourceTree = "<group>"; };
 		6609C5342ACE8D3600798632 /* MapViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewModel.swift; sourceTree = "<group>"; };
@@ -98,6 +106,7 @@
 		2736744B2AC3061C003ADE3F /* Around-Football */ = {
 			isa = PBXGroup;
 			children = (
+				274C21C52ACFF8E7005469E6 /* Extension */,
 				6696748A2AC3E9740067FD48 /* View */,
 				2736744C2AC3061C003ADE3F /* AppDelegate.swift */,
 				2736744E2AC3061C003ADE3F /* SceneDelegate.swift */,
@@ -123,10 +132,37 @@
 			path = Models;
 			sourceTree = "<group>";
 		};
+		274C21BD2ACFC8C4005469E6 /* LoginView */ = {
+			isa = PBXGroup;
+			children = (
+				274C21BE2ACFC8E9005469E6 /* LoginViewController.swift */,
+				274C21C32ACFE932005469E6 /* LoginViewModel.swift */,
+			);
+			path = LoginView;
+			sourceTree = "<group>";
+		};
+		274C21C02ACFC91D005469E6 /* SignUpView */ = {
+			isa = PBXGroup;
+			children = (
+				274C21C12ACFC92D005469E6 /* SignUpViewController.swift */,
+			);
+			path = SignUpView;
+			sourceTree = "<group>";
+		};
+		274C21C52ACFF8E7005469E6 /* Extension */ = {
+			isa = PBXGroup;
+			children = (
+				274C21C62ACFF901005469E6 /* TextFieldDelegateHandler.swift */,
+			);
+			path = Extension;
+			sourceTree = "<group>";
+		};
 		6696748A2AC3E9740067FD48 /* View */ = {
 			isa = PBXGroup;
 			children = (
 				669674872AC3E82B0067FD48 /* MainTabController.swift */,
+				274C21BD2ACFC8C4005469E6 /* LoginView */,
+				274C21C02ACFC91D005469E6 /* SignUpView */,
 				6696748B2AC3E9810067FD48 /* HomeView */,
 				6696748C2AC3E9940067FD48 /* MapView */,
 				6696748D2AC3E9970067FD48 /* InfoView */,
@@ -261,10 +297,14 @@
 				6696748F2AC3E9CE0067FD48 /* HomeViewController.swift in Sources */,
 				669674932AC3E9DF0067FD48 /* InfoViewController.swift in Sources */,
 				669674912AC3E9D40067FD48 /* MapViewController.swift in Sources */,
+				274C21C22ACFC92D005469E6 /* SignUpViewController.swift in Sources */,
 				273674852AC308D1003ADE3F /* PlaygroundList.swift in Sources */,
+				274C21C42ACFE932005469E6 /* LoginViewModel.swift in Sources */,
 				2736744D2AC3061C003ADE3F /* AppDelegate.swift in Sources */,
 				273674832AC308D1003ADE3F /* Recruit.swift in Sources */,
+				274C21C72ACFF902005469E6 /* TextFieldDelegateHandler.swift in Sources */,
 				2736744F2AC3061C003ADE3F /* SceneDelegate.swift in Sources */,
+				274C21BF2ACFC8E9005469E6 /* LoginViewController.swift in Sources */,
 				6609C5332ACE8B0E00798632 /* MapViewController+.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -412,7 +452,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = W6X76DS4Z7;
+				DEVELOPMENT_TEAM = K9NKZR257N;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Around-Football/Info.plist";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -445,7 +485,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = W6X76DS4Z7;
+				DEVELOPMENT_TEAM = K9NKZR257N;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Around-Football/Info.plist";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
