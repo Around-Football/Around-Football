@@ -10,12 +10,12 @@ import UIKit
 
 class TextFieldDelegateHandler: NSObject, UITextFieldDelegate {
     weak var viewController: UIViewController?
-    
+    var nextTextField: UITextField?
+
     init(viewController: UIViewController) {
         self.viewController = viewController
         super.init()
     }
-    
     
     func textFieldDidBeginEditing(_ textField: UITextField) {
         // TextField가 편집 모드에 들어갈 때 화면을 위로 이동
@@ -34,17 +34,9 @@ class TextFieldDelegateHandler: NSObject, UITextFieldDelegate {
             }
         })
     }
-    
-    // FIXME: - SignUpViewController 작동 X
+
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        // Return 키를 누를 때 다음 TextField로 포커스 이동
-        if let viewController = self.viewController as? LoginViewController {
-            if textField == viewController.emailTextField {
-                viewController.passwordTextField.becomeFirstResponder()
-            } else if textField == viewController.passwordTextField {
-                viewController.passwordTextField.resignFirstResponder()
-            }
-        }
+        nextTextField?.becomeFirstResponder()
         return true
     }
 }
