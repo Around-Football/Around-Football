@@ -13,12 +13,12 @@ import Then
 final class DetailUserInfoCell: UITableViewCell {
     static let cellID = "DetailUserInfoCell"
     
-    var title = UILabel().then {
+    private var title = UILabel().then {
         $0.font = .systemFont(ofSize: 15)
         $0.textColor = .gray
     }
     
-    var contents = UILabel().then {
+    private var contents = UILabel().then {
         $0.font = .systemFont(ofSize: 15)
         $0.textColor = .black
         $0.numberOfLines = 0
@@ -31,6 +31,11 @@ final class DetailUserInfoCell: UITableViewCell {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    func setValues(title: String, contents: String) {
+        self.title.text = title
+        self.contents.text = contents
     }
     
     private func configureUI() {

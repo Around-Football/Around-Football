@@ -5,13 +5,15 @@
 //  Created by 강창현 on 10/6/23.
 //
 // 로그인
-import Foundation
 import UIKit
+
+import Firebase
 import SnapKit
 import Then
-import Firebase
 
 class LoginViewController: UIViewController {
+    
+    // MARK: - Properties
     
     private var loginViewModel = LoginViewModel()
     
@@ -119,6 +121,7 @@ class LoginViewController: UIViewController {
         loginViewModel.password = passwordTextField.text
         
         loginViewModel.login { [weak self] success, error in
+            guard let self else { return }
             if success {
                 print("로그인 성공")
                 // 예를 들어 로그인 후 화면 전환 등을 수행할 수 있습니다.
