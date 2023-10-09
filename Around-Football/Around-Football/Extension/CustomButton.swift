@@ -17,6 +17,7 @@ final class CustomButton: UIButton {
     init(frame: CGRect, buttonTitle: String) {
         self.buttonTitle = buttonTitle
         super.init(frame: frame)
+        
         configureUI()
     }
     
@@ -26,8 +27,8 @@ final class CustomButton: UIButton {
     
     // MARK: - Selectors
     
-    @objc func clickedButton() {
-        
+    @objc func buttonClicked() {
+        print("DEBUG: buttonClicked")
     }
     
     // MARK: - Helpers
@@ -38,6 +39,6 @@ final class CustomButton: UIButton {
         backgroundColor = .black
         layer.cornerRadius = 5
         clipsToBounds = true
-        addTarget(self, action: #selector(clickedButton), for: .touchUpInside)
+        addTarget(self, action: #selector(buttonClicked), for: .touchUpInside)
     }
 }
