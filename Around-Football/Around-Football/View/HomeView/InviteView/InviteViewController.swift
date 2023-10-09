@@ -11,6 +11,9 @@ import SnapKit
 import Then
 
 final class InviteViewController: UIViewController {
+    
+    // MARK: - Properties
+    
     private let calender = Calendar.current
     private let dateFormatter = DateFormatter()
     private lazy var components = calender.dateComponents([.month, .day, .year], from: Date())
@@ -97,6 +100,8 @@ final class InviteViewController: UIViewController {
     
     private let addButton = CustomButton(frame: .zero, buttonTitle: "등록하기")
     
+    // MARK: - Lifecycles
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         configureUI()
@@ -105,6 +110,18 @@ final class InviteViewController: UIViewController {
         
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
+    
+    // MARK: - Selectors
+    
+    @objc private func previousMonth() {
+        minusMonth()
+    }
+    
+    @objc private func nextMonth() {
+        plusMonth()
+    }
+    
+    // MARK: - Helpers
     
     private func configureUI() {
         view.backgroundColor = .white
@@ -225,14 +242,6 @@ final class InviteViewController: UIViewController {
     private func plusMonth() {
         calanderDate = calender.date(byAdding: DateComponents(month: 1), to: calanderDate) ?? Date()
         updateCalender()
-    }
-    
-    @objc private func previousMonth() {
-        minusMonth()
-    }
-    
-    @objc private func nextMonth() {
-        plusMonth()
     }
 }
 

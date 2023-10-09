@@ -11,6 +11,9 @@ import SnapKit
 import Then
 
 class PeopleCountView: UIView {
+    
+    // MARK: - Properties
+    
     private var count = 0 {
         didSet {
             peopleCountLabel.text = "\(count) 명"
@@ -40,14 +43,8 @@ class PeopleCountView: UIView {
         $0.addTarget(self, action: #selector(plusCount), for: .touchUpInside)
     }
     
-    @objc private func minusCount() {
-        count = count > 0 ? count - 1 : count
-    }
+    // MARK: - Lifecycles
     
-    @objc private func plusCount() {
-        count = count < 25 ? count + 1 : count
-    }
-
     override init(frame: CGRect) {
         super.init(frame: frame)
         configureUI()
@@ -56,6 +53,18 @@ class PeopleCountView: UIView {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
+    // MARK: - Selectors
+    
+    @objc private func minusCount() {
+        count = count > 0 ? count - 1 : count
+    }
+    
+    @objc private func plusCount() {
+        count = count < 25 ? count + 1 : count
+    }
+
+    // MARK: - Helpers
     
     private func configureUI() {
         addSubviews(peopleCountTitleLabel,
@@ -88,5 +97,4 @@ class PeopleCountView: UIView {
             make.width.height.equalTo(35)
         }
     }
-
 }
