@@ -16,12 +16,12 @@ final class DetailUserInfoCell: UITableViewCell {
     
     static let cellID = "DetailUserInfoCell"
     
-    var title = UILabel().then {
+    private var title = UILabel().then {
         $0.font = .systemFont(ofSize: 15)
         $0.textColor = .gray
     }
     
-    var contents = UILabel().then {
+    private var contents = UILabel().then {
         $0.font = .systemFont(ofSize: 15)
         $0.textColor = .black
         $0.numberOfLines = 0
