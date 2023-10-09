@@ -19,11 +19,10 @@ final class InviteViewController: UIViewController {
     private lazy var components = calender.dateComponents([.month, .day, .year], from: Date())
     private lazy var calanderDate = calender.date(from: components) ?? Date()
     private var days: [String] = []
-    
     private let placeView = GroundTitleView()
     private let peopleView = PeopleCountView()
     
-    var selectedIndexPath: IndexPath?
+    private var selectedIndexPath: IndexPath?
     
     private lazy var scrollView = UIScrollView().then {
         $0.showsVerticalScrollIndicator = false
@@ -119,6 +118,10 @@ final class InviteViewController: UIViewController {
     
     @objc private func nextMonth() {
         plusMonth()
+    }
+    
+    @objc func dismissKeyboard() {
+        view.endEditing(true)
     }
     
     // MARK: - Helpers
@@ -241,12 +244,6 @@ final class InviteViewController: UIViewController {
     private func plusMonth() {
         calanderDate = calender.date(byAdding: DateComponents(month: 1), to: calanderDate) ?? Date()
         updateCalender()
-    }
-}
-
-extension InviteViewController: UITextFieldDelegate {
-    @objc func dismissKeyboard() {
-        view.endEditing(true)
     }
 }
 
