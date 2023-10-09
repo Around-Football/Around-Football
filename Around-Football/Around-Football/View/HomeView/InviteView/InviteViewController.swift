@@ -100,15 +100,15 @@ final class InviteViewController: UIViewController {
     
     private let addButton = CustomButton(frame: .zero, buttonTitle: "등록하기")
     
+    lazy var textFieldDelegateHandler = TextFieldDelegateHandler(viewController: self)
+    
     // MARK: - Lifecycles
     
     override func viewDidLoad() {
         super.viewDidLoad()
         configureUI()
         updateCalender()
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
-        
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
+        contentTextField.delegate = textFieldDelegateHandler
     }
     
     // MARK: - Selectors
@@ -125,23 +125,12 @@ final class InviteViewController: UIViewController {
     
     private func configureUI() {
         view.backgroundColor = .white
-        navigationController?.navigationBar.prefersLargeTitles = true
+        navigationController?.navigationBar.prefersLargeTitles = false
         navigationItem.title = "용병 구하기"
         navigationItem.largeTitleDisplayMode = .always
         
         view.addSubview(scrollView)
         scrollView.addSubview(contentView)
-        
-        scrollView.snp.makeConstraints { make in
-            make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
-            make.leading.trailing.bottom.equalToSuperview()
-        }
-        
-        contentView.snp.makeConstraints { make in
-            make.width.equalToSuperview()
-            make.centerX.top.bottom.equalToSuperview()
-        }
-        
         contentView.addSubviews(placeView,
                          peopleView,
                          monthLabel,
@@ -154,6 +143,16 @@ final class InviteViewController: UIViewController {
                          contentLabel,
                          contentTextField,
                          addButton)
+        
+        scrollView.snp.makeConstraints { make in
+            make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
+            make.leading.trailing.bottom.equalToSuperview()
+        }
+        
+        contentView.snp.makeConstraints { make in
+            make.width.equalToSuperview()
+            make.centerX.top.bottom.equalToSuperview()
+        }
         
         placeView.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide)
@@ -222,10 +221,10 @@ final class InviteViewController: UIViewController {
         }
         
         addButton.snp.makeConstraints { make in
-            make.top.equalTo(contentTextField.snp.bottom).offset(10)
+//            make.top.equalTo(contentTextField.snp.bottom).offset(20)
             make.leading.equalToSuperview().offset(20)
             make.trailing.bottom.equalToSuperview().offset(-20)
-            make.bottom.equalToSuperview().offset(-20)
+            make.bottom.equalTo(view.snp.bottom).offset(-20)
             make.height.equalTo(40)
         }
         
@@ -246,25 +245,6 @@ final class InviteViewController: UIViewController {
 }
 
 extension InviteViewController: UITextFieldDelegate {
-    @objc func keyboardWillShow(_ notification: Notification) {
-        if let keyboardFrame = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
-            let keyboardHeight = keyboardFrame.height
-            print("keyboardHeight: \(keyboardHeight)")
-            scrollView.contentInset.bottom = keyboardHeight
-            scrollView.scrollIndicatorInsets.bottom = keyboardHeight
-            
-            // 스크롤뷰를 활성화합니다.
-            scrollView.isScrollEnabled = true
-        }
-    }
-
-    @objc func keyboardWillHide(_ notification: Notification) {
-        print("contentInset: \(scrollView.contentInset)")
-        scrollView.contentInset = .zero
-        scrollView.scrollIndicatorInsets = .zero
-        print("contentInset: \(scrollView.contentInset)")
-    }
-    
     @objc func dismissKeyboard() {
         view.endEditing(true)
     }

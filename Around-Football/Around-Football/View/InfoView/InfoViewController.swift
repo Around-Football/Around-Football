@@ -8,6 +8,10 @@
 import UIKit
 
 class InfoViewController: UIViewController {
+    
+    // MARK: - Properties
+    
+    // MARK: - Lifecycles
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -15,6 +19,7 @@ class InfoViewController: UIViewController {
         configureUI()
     }
     
+    // MARK: - Helpers
 
     func configureUI() {
         view.backgroundColor = .systemGreen

@@ -60,7 +60,9 @@ class MainTabController: UITabBarController {
         tag: Int
     ) -> UINavigationController {
         let navigation = UINavigationController(rootViewController: rootVC)
+        
         // TODO: - SET TabBar Image (add image constant to function input area)
+        
         navigation.tabBarItem = UITabBarItem(
             title: title,
             image: UIImage(systemName: tabbarImage),
