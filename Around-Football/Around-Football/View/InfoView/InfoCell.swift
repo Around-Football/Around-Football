@@ -7,7 +7,7 @@
 
 import UIKit
 
-class infoCell: UICollectionViewCell {
+class InfoCell: UICollectionViewCell {
     
     // MARK: - Properties
     
@@ -37,16 +37,20 @@ class infoCell: UICollectionViewCell {
     // MARK: - Helpers
 
     private func configureUI() {
+        layer.borderWidth = 1.0
+        layer.borderColor = UIColor.gray.cgColor
+        layer.cornerRadius = 10
+        
         addSubviews(icon, title)
         
         icon.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.centerY.equalToSuperview().offset(-10)
+            make.centerY.equalToSuperview().offset(-15)
         }
         
         title.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.centerY.equalToSuperview().offset(10)
+            make.centerY.equalToSuperview().offset(15)
         }
     }
     
