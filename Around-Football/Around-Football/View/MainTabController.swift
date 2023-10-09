@@ -9,12 +9,16 @@ import UIKit
 
 class MainTabController: UITabBarController {
     
+    // MARK: - Lifecycles
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         configureUI()
         configureViewController()
     }
+    
+    // MARK: - Helpers
     
     func configureUI() {
         tabBar.tintColor = .black
@@ -49,15 +53,19 @@ class MainTabController: UITabBarController {
         viewControllers = [homeNavigation, mapNavigation, infoNavigation]
     }
     
-    func makeNavigationController(rootViewController rootVC: UIViewController,
-                                  title: String,
-                                  tabbarImage: String,
-                                  tag: Int) -> UINavigationController {
-        let navigation: UINavigationController = UINavigationController(rootViewController: rootVC)
+    func makeNavigationController(
+        rootViewController rootVC: UIViewController,
+        title: String,
+        tabbarImage: String,
+        tag: Int
+    ) -> UINavigationController {
+        let navigation = UINavigationController(rootViewController: rootVC)
         // TODO: - SET TabBar Image (add image constant to function input area)
-        navigation.tabBarItem = UITabBarItem(title: title,
-                                             image: UIImage(systemName: tabbarImage),
-                                             tag: tag)
+        navigation.tabBarItem = UITabBarItem(
+            title: title,
+            image: UIImage(systemName: tabbarImage),
+            tag: tag
+        )
         
         return navigation
     }

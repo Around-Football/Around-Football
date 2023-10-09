@@ -11,6 +11,9 @@ import SnapKit
 import Then
 
 final class DetailUserInfoCell: UITableViewCell {
+    
+    // MARK: - Properties
+    
     static let cellID = "DetailUserInfoCell"
     
     var title = UILabel().then {
@@ -24,6 +27,8 @@ final class DetailUserInfoCell: UITableViewCell {
         $0.numberOfLines = 0
     }
     
+    // MARK: - Lifecycles
+    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         configureUI()
@@ -32,6 +37,8 @@ final class DetailUserInfoCell: UITableViewCell {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
+    // MARK: - Helpers
     
     private func configureUI() {
         selectionStyle = .none
@@ -49,6 +56,9 @@ final class DetailUserInfoCell: UITableViewCell {
             make.trailing.equalToSuperview()
         }
     }
-
     
+    func setValues(title: String, content: String) {
+        self.title.text = title
+        self.contents.text = content
+    }
 }

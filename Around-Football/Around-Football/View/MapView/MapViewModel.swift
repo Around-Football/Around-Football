@@ -13,7 +13,6 @@ class MapViewModel {
     var searchLocation: GeoPoint?
     var isSearchCurrentLocation: Bool = true
     
-    
     init(latitude: Double, longitude: Double, searchLocation: GeoPoint? = nil) {
         self.currentLocation = GeoPoint(latitude: latitude, longitude: longitude)
         self.searchLocation = searchLocation

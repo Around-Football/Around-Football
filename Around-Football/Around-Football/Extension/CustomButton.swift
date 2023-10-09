@@ -8,7 +8,11 @@
 import UIKit
 
 final class CustomButton: UIButton {
+    // MARK: - Properties
+    
     private var buttonTitle: String
+    
+    // MARK: - Lifecycles
     
     init(frame: CGRect, buttonTitle: String) {
         self.buttonTitle = buttonTitle
@@ -20,6 +24,14 @@ final class CustomButton: UIButton {
         fatalError("init(coder:) has not been implemented")
     }
     
+    // MARK: - Selectors
+    
+    @objc func clickedButton() {
+        
+    }
+    
+    // MARK: - Helpers
+    
     private func configureUI() {
         setTitle(buttonTitle, for: .normal)
         setTitleColor(.white, for: .normal)
@@ -28,9 +40,4 @@ final class CustomButton: UIButton {
         clipsToBounds = true
         addTarget(self, action: #selector(clickedButton), for: .touchUpInside)
     }
-    
-    @objc func clickedButton() {
-        
-    }
-    
 }
