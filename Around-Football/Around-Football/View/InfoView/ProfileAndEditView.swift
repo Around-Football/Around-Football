@@ -77,8 +77,9 @@ final class ProfileAndEditView: UIView {
         
         profileImageView.snp.makeConstraints { make in
             make.width.height.equalTo(50)
-            make.top.leading.equalTo(20)
-            make.leading.equalTo(20)
+            make.top.equalTo(20)
+            make.leading.equalToSuperview()
+            make.bottom.equalTo(-20)
         }
         
         userName.snp.makeConstraints { make in
@@ -95,7 +96,7 @@ final class ProfileAndEditView: UIView {
         settingButton.snp.makeConstraints { make in
             make.width.height.equalTo(20)
             make.centerY.equalTo(profileImageView.snp.centerY)
-            make.trailing.equalToSuperview().offset(-20)
+            make.trailing.equalToSuperview()
         }
     }
 }

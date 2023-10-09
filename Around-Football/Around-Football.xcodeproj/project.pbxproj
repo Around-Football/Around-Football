@@ -47,7 +47,8 @@
 		7CB21BA32AC94D36001D0058 /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CB21BA22AC94D36001D0058 /* DetailViewController.swift */; };
 		7CB21BA52AC94EE4001D0058 /* DetailUserInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CB21BA42AC94EE4001D0058 /* DetailUserInfoView.swift */; };
 		7CC619742AD433760085DF90 /* ProfileAndEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CC619732AD433760085DF90 /* ProfileAndEditView.swift */; };
-		7CC619762AD448A90085DF90 /* infoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CC619752AD448A90085DF90 /* infoCell.swift */; };
+		7CC619762AD448A90085DF90 /* InfoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CC619752AD448A90085DF90 /* InfoCell.swift */; };
+		7CC619782AD460D80085DF90 /* infoArrangedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CC619772AD460D80085DF90 /* infoArrangedView.swift */; };
 		7CE25AE62ACABF620014132F /* CustomButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CE25AE52ACABF620014132F /* CustomButton.swift */; };
 /* End PBXBuildFile section */
 
@@ -85,7 +86,8 @@
 		7CB21BA22AC94D36001D0058 /* DetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
 		7CB21BA42AC94EE4001D0058 /* DetailUserInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailUserInfoView.swift; sourceTree = "<group>"; };
 		7CC619732AD433760085DF90 /* ProfileAndEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileAndEditView.swift; sourceTree = "<group>"; };
-		7CC619752AD448A90085DF90 /* infoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = infoCell.swift; sourceTree = "<group>"; };
+		7CC619752AD448A90085DF90 /* InfoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoCell.swift; sourceTree = "<group>"; };
+		7CC619772AD460D80085DF90 /* infoArrangedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = infoArrangedView.swift; sourceTree = "<group>"; };
 		7CE25AE52ACABF620014132F /* CustomButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomButton.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -210,7 +212,8 @@
 			children = (
 				669674922AC3E9DF0067FD48 /* InfoViewController.swift */,
 				7CC619732AD433760085DF90 /* ProfileAndEditView.swift */,
-				7CC619752AD448A90085DF90 /* infoCell.swift */,
+				7CC619752AD448A90085DF90 /* InfoCell.swift */,
+				7CC619772AD460D80085DF90 /* infoArrangedView.swift */,
 			);
 			path = InfoView;
 			sourceTree = "<group>";
@@ -338,6 +341,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				7C5F77582AC96A7E004CE48F /* DetailUserInfoCell.swift in Sources */,
+				7CC619782AD460D80085DF90 /* infoArrangedView.swift in Sources */,
 				7CC619742AD433760085DF90 /* ProfileAndEditView.swift in Sources */,
 				7CE25AE62ACABF620014132F /* CustomButton.swift in Sources */,
 				7C5F775E2AC9CE8A004CE48F /* DateCell.swift in Sources */,
@@ -361,7 +365,7 @@
 				7C5F77602AC9DA08004CE48F /* GroundTitleView.swift in Sources */,
 				7CB21BA52AC94EE4001D0058 /* DetailUserInfoView.swift in Sources */,
 				273674832AC308D1003ADE3F /* Recruit.swift in Sources */,
-				7CC619762AD448A90085DF90 /* infoCell.swift in Sources */,
+				7CC619762AD448A90085DF90 /* InfoCell.swift in Sources */,
 				274C21C72ACFF902005469E6 /* TextFieldDelegateHandler.swift in Sources */,
 				2736744F2AC3061C003ADE3F /* SceneDelegate.swift in Sources */,
 				274C21BF2ACFC8E9005469E6 /* LoginViewController.swift in Sources */,
