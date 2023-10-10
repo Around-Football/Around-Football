@@ -13,7 +13,7 @@ import Then
 final class InviteViewController: UIViewController {
     
     // MARK: - Properties
-    
+
     private let calender = Calendar.current
     private let dateFormatter = DateFormatter()
     private lazy var components = calender.dateComponents([.month, .day, .year], from: Date())
@@ -21,14 +21,15 @@ final class InviteViewController: UIViewController {
     private var days: [String] = []
     private let placeView = GroundTitleView()
     private let peopleView = PeopleCountView()
-    
-    private var selectedIndexPath: IndexPath?
+
+    private var selectedIndexPath: IndexPath? //캘린더 선택cell
+    private var selectedDate: String? //캘린더에서 선택한 날짜
     
     private lazy var scrollView = UIScrollView().then {
         $0.showsVerticalScrollIndicator = false
     }
     
-    let contentView = UIView()
+    private let contentView = UIView()
     
     private lazy var previousButton = UIButton().then {
         $0.setImage(UIImage(systemName: "chevron.left"), for: .normal)
@@ -132,6 +133,7 @@ final class InviteViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
         //화면 탭해서 키보드 내리기
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        tapGesture.cancelsTouchesInView = false
         view.addGestureRecognizer(tapGesture)
     }
     
@@ -333,18 +335,23 @@ extension InviteViewController: UICollectionViewDelegateFlowLayout, UICollection
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        if let previousSelectedIndexPath = selectedIndexPath,
-           let previousSelectedCell = collectionView.cellForItem(at: previousSelectedIndexPath) as? DateCell {
-            previousSelectedCell.isSelected = false
-            previousSelectedCell.backgroundColor = .clear
-            previousSelectedCell.dateLabel.textColor = .label
+
+        
+        if let previousSelectedIndexPath = selectedIndexPath {
+            if let previousSelectedCell = collectionView.cellForItem(at: previousSelectedIndexPath) as? DateCell {
+                previousSelectedCell.isSelected = false
+                previousSelectedCell.backgroundColor = .clear
+                previousSelectedCell.dateLabel.textColor = .black
+            }
         }
         
+        guard let selectedCell = collectionView.cellForItem(at: indexPath) as? DateCell else { return }
+        selectedCell.isSelected = true
+        selectedCell.backgroundColor = .blue
+        selectedCell.dateLabel.textColor = .white
+        selectedDate = selectedCell.dateLabel.text
+        
+        // 선택한 셀의 indexPath를 저장합니다.
         selectedIndexPath = indexPath
-        if let selectedCell = collectionView.cellForItem(at: indexPath) as? DateCell {
-            selectedCell.isSelected = true
-            selectedCell.backgroundColor = .blue
-            selectedCell.dateLabel.textColor = .white
-        }
     }
 }
