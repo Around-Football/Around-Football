@@ -51,7 +51,13 @@ final class DetailUserInfoView: UIView {
     }
     
     private lazy var userDetailInfoStackView = UIStackView().then { view in
-        let subViews = [userDetailSex, createDotView(), userDetailReviewGrade, createDotView(), userDetailCareer, createDotView(), userDetailManner]
+        let subViews = [userDetailSex,
+                        createDotView(),
+                        userDetailReviewGrade,
+                        createDotView(),
+                        userDetailCareer,
+                        createDotView(),
+                        userDetailManner]
         
         view.axis = .horizontal
         view.spacing = 5

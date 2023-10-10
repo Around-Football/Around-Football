@@ -14,16 +14,17 @@ final class InviteViewController: UIViewController {
     
     // MARK: - Properties
 
+    //캘린더
     private let calender = Calendar.current
     private let dateFormatter = DateFormatter()
     private lazy var components = calender.dateComponents([.month, .day, .year], from: Date())
     private lazy var calanderDate = calender.date(from: components) ?? Date()
     private var days: [String] = []
-    private let placeView = GroundTitleView()
-    private let peopleView = PeopleCountView()
-
     private var selectedIndexPath: IndexPath? //캘린더 선택cell
     private var selectedDate: String? //캘린더에서 선택한 날짜
+    //UI
+    private let placeView = GroundTitleView()
+    private let peopleView = PeopleCountView()
     
     private lazy var scrollView = UIScrollView().then {
         $0.showsVerticalScrollIndicator = false
@@ -138,9 +139,19 @@ final class InviteViewController: UIViewController {
     // MARK: - Helpers
     
     private func keyboardController() {
-        //키보드 올리고, 내리고
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
+        //키보드 올리기, 내리기
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(keyboardWillShow(_:)),
+            name: UIResponder.keyboardWillShowNotification,
+            object: nil
+        )
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(keyboardWillHide(_:)),
+            name: UIResponder.keyboardWillHideNotification,
+            object: nil
+        )
         //화면 탭해서 키보드 내리기
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
         tapGesture.cancelsTouchesInView = false
@@ -252,11 +263,18 @@ final class InviteViewController: UIViewController {
     
     private func minusMonth() {
         calanderDate = calender.date(byAdding: DateComponents(month: -1), to: calanderDate) ?? Date()
+        if let index = selectedIndexPath {
+            collectionView(dateCollectionView, didSelectItemAt: index)
+        }
+        
         updateCalender()
     }
     
     private func plusMonth() {
         calanderDate = calender.date(byAdding: DateComponents(month: 1), to: calanderDate) ?? Date()
+        if let index = selectedIndexPath {
+            collectionView(dateCollectionView, didSelectItemAt: index)
+        }
         updateCalender()
     }
 }
@@ -283,6 +301,7 @@ extension InviteViewController {
 }
 
 // MARK: - TextViewDelegate
+
 extension InviteViewController: UITextViewDelegate {
     func textViewDidChange(_ textView: UITextView) {
         if textView.text.isEmpty {
@@ -358,13 +377,18 @@ extension InviteViewController: UICollectionViewDelegateFlowLayout, UICollection
             previousSelectedCell.dateLabel.textColor = .black
         }
         
-        guard let selectedCell = collectionView.cellForItem(at: indexPath) as? DateCell else { return }
+        guard let selectedCell = collectionView.cellForItem(at: indexPath) as? DateCell,
+              let yearAndMonth = monthLabel.text
+        else { return }
         selectedCell.isSelected = true
         selectedCell.backgroundColor = .blue
         selectedCell.dateLabel.textColor = .white
-        selectedDate = selectedCell.dateLabel.text
+        if let date = Int(selectedCell.dateLabel.text ?? "") {
+            selectedDate = "\(yearAndMonth) \(date)일"
+        }
         
-        // 선택한 셀의 indexPath를 저장합니다.
+        // 선택한 셀의 indexPath를 저장
         selectedIndexPath = indexPath
+        print(selectedDate)
     }
 }
