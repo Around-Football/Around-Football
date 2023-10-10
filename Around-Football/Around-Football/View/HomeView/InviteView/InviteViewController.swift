@@ -93,11 +93,21 @@ final class InviteViewController: UIViewController {
         $0.text = "내용"
     }
     
-    private lazy var contentTextField = UITextField().then {
-        $0.borderStyle = .roundedRect
-        $0.placeholder = "내용을 입력해주세요"
+    private lazy var contentTextView = UITextView().then {
         $0.delegate = self
-        $0.keyboardAppearance = .default
+        $0.layer.cornerRadius = 5
+        $0.layer.borderWidth = 1.0
+        $0.layer.borderColor = UIColor.gray.cgColor
+//        $0.placeholder = "내용을 입력해주세요"
+        $0.addSubview(placeHolderLabel)
+        placeHolderLabel.frame = CGRect(x: 5, y: 0, width: 300, height: 30)
+    }
+    
+    private let placeHolderLabel = UILabel().then {
+        $0.text = "내용을 입력해주세요"
+        $0.font = .systemFont(ofSize: 12)
+        $0.textColor = .gray
+        $0.textAlignment = .left
     }
     
     private let addButton = CustomButton(frame: .zero, buttonTitle: "등록하기")
@@ -153,7 +163,7 @@ final class InviteViewController: UIViewController {
                          timeLabel,
                          timePicker,
                          contentLabel,
-                         contentTextField,
+                         contentTextView,
                          addButton)
         
         scrollView.snp.makeConstraints { make in
@@ -225,7 +235,7 @@ final class InviteViewController: UIViewController {
             make.leading.equalToSuperview().offset(20)
         }
         
-        contentTextField.snp.makeConstraints { make in
+        contentTextView.snp.makeConstraints { make in
             make.top.equalTo(contentLabel.snp.bottom).offset(5)
             make.leading.equalToSuperview().offset(20)
             make.trailing.equalToSuperview().offset(-20)
@@ -233,7 +243,7 @@ final class InviteViewController: UIViewController {
         }
         
         addButton.snp.makeConstraints { make in
-            make.top.equalTo(contentTextField.snp.bottom).offset(20)
+            make.top.equalTo(contentTextView.snp.bottom).offset(20)
             make.leading.equalToSuperview().offset(20)
             make.trailing.bottom.equalToSuperview().offset(-20)
             make.height.equalTo(40)
@@ -251,29 +261,35 @@ final class InviteViewController: UIViewController {
     }
 }
 
-extension InviteViewController: UITextFieldDelegate {
-    func textFieldDidBeginEditing(_ textField: UITextField) {
-        textField.becomeFirstResponder()
-    }
-    
-    @objc func keyboardWillShow(_ notification: Notification) {
-        if let keyboardFrame = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
-            let keyboardHeight = keyboardFrame.height
+// MARK: - 키보드 관련 함수
 
-            // contentInset을 설정하여 스크롤뷰를 키보드 높이만큼 올림
-            scrollView.contentInset.bottom = keyboardHeight
-            scrollView.verticalScrollIndicatorInsets.bottom = keyboardHeight
+extension InviteViewController {
+    @objc func keyboardWillShow(_ notification: Notification) {
+        if let keyboardFrame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
+            let keyboardHeight = keyboardFrame.cgRectValue.height
+            UIView.animate(withDuration: 0.3) {
+                self.contentView.transform = CGAffineTransform(translationX: 0, y: -keyboardHeight)
+            }
         }
     }
-
+    
     @objc func keyboardWillHide(_ notification: Notification) {
-        // 키보드가 사라질 때 contentInset을 초기화하여 스크롤뷰를 원래대로
-        scrollView.contentInset = .zero
-        scrollView.scrollIndicatorInsets = .zero
+        self.contentView.transform = CGAffineTransform(translationX: 0, y: 0)
     }
     
     @objc func dismissKeyboard() {
         view.endEditing(true)
+    }
+}
+
+// MARK: - TextViewDelegate
+extension InviteViewController: UITextViewDelegate {
+    func textViewDidChange(_ textView: UITextView) {
+        if textView.text.isEmpty {
+            placeHolderLabel.isHidden = false
+        } else {
+            placeHolderLabel.isHidden = true
+        }
     }
 }
 
@@ -335,14 +351,11 @@ extension InviteViewController: UICollectionViewDelegateFlowLayout, UICollection
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-
-        
-        if let previousSelectedIndexPath = selectedIndexPath {
-            if let previousSelectedCell = collectionView.cellForItem(at: previousSelectedIndexPath) as? DateCell {
-                previousSelectedCell.isSelected = false
-                previousSelectedCell.backgroundColor = .clear
-                previousSelectedCell.dateLabel.textColor = .black
-            }
+        if let previousSelectedIndexPath = selectedIndexPath,
+           let previousSelectedCell = collectionView.cellForItem(at: previousSelectedIndexPath) as? DateCell {
+            previousSelectedCell.isSelected = false
+            previousSelectedCell.backgroundColor = .clear
+            previousSelectedCell.dateLabel.textColor = .black
         }
         
         guard let selectedCell = collectionView.cellForItem(at: indexPath) as? DateCell else { return }
