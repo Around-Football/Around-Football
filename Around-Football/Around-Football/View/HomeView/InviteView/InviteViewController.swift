@@ -128,9 +128,7 @@ final class InviteViewController: UIViewController {
     
     private func configureUI() {
         view.backgroundColor = .white
-        navigationController?.navigationBar.prefersLargeTitles = false
         navigationItem.title = "용병 구하기"
-        navigationItem.largeTitleDisplayMode = .always
         
         view.addSubview(scrollView)
         scrollView.addSubview(contentView)
@@ -148,24 +146,24 @@ final class InviteViewController: UIViewController {
                          addButton)
         
         scrollView.snp.makeConstraints { make in
-            make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
-            make.leading.trailing.bottom.equalToSuperview()
+            make.top.bottom.equalTo(view.safeAreaLayoutGuide)
+            make.leading.trailing.equalToSuperview()
         }
         
         contentView.snp.makeConstraints { make in
+            make.top.leading.trailing.bottom.equalToSuperview()
             make.width.equalToSuperview()
-            make.centerX.top.bottom.equalToSuperview()
         }
         
         placeView.snp.makeConstraints { make in
-            make.top.equalTo(view.safeAreaLayoutGuide)
+            make.top.equalTo(contentView.snp.top)
             make.leading.equalToSuperview().offset(20)
             make.width.equalTo(UIScreen.main.bounds.width * 2/3)
             make.height.equalTo(50)
         }
         
         peopleView.snp.makeConstraints { make in
-            make.top.equalTo(view.safeAreaLayoutGuide)
+            make.top.equalTo(contentView.snp.top)
             make.trailing.equalToSuperview().offset(-20)
             make.width.equalTo(UIScreen.main.bounds.width * 1/3)
             make.height.equalTo(50)
@@ -224,10 +222,9 @@ final class InviteViewController: UIViewController {
         }
         
         addButton.snp.makeConstraints { make in
-//            make.top.equalTo(contentTextField.snp.bottom).offset(20)
+            make.top.equalTo(contentTextField.snp.bottom).offset(20)
             make.leading.equalToSuperview().offset(20)
             make.trailing.bottom.equalToSuperview().offset(-20)
-            make.bottom.equalTo(view.snp.bottom).offset(-20)
             make.height.equalTo(40)
         }
         

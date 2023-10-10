@@ -14,8 +14,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let scene = scene as? UIWindowScene else { return }
         window?.windowScene = scene
-        let rootViewController = MainTabController()
-        window?.rootViewController = rootViewController
+        window?.rootViewController = MainTabController()
         window?.makeKeyAndVisible()
     }
 
