@@ -7,6 +7,10 @@
 
 import UIKit
 
+protocol InfoDelegate: AnyObject {
+    func moveToVc()
+}
+
 class InfoViewController: UIViewController {
     
     // MARK: - Properties
@@ -51,6 +55,7 @@ class InfoViewController: UIViewController {
         
         configureUI()
         configureStackView()
+        profileAndEditView.delegate = self
     }
     
     // MARK: - Helpers
@@ -91,9 +96,7 @@ class InfoViewController: UIViewController {
             make.trailing.equalToSuperview().offset(-20)
             make.height.equalTo(150)
         }
-        
     }
-
 }
 
 extension InfoViewController: UICollectionViewDelegateFlowLayout, UICollectionViewDataSource {
@@ -114,6 +117,11 @@ extension InfoViewController: UICollectionViewDelegateFlowLayout, UICollectionVi
                        title: iconAndImage[indexPath.item].title)
         return cell
     }
-    
-    
+}
+
+extension InfoViewController: InfoDelegate {
+    func moveToVc() {
+        let controller = InviteViewController()
+        navigationController?.pushViewController(controller, animated: true)
+    }
 }

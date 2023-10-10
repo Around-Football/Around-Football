@@ -14,6 +14,8 @@ final class ProfileAndEditView: UIView {
     
     // MARK: - Properties
     
+    weak var delegate: InfoDelegate?
+    
     private let profileImageView = UIImageView().then {
         $0.image = UIImage(systemName: "person")?.withRenderingMode(.alwaysOriginal)
         $0.tintColor = .label
@@ -60,6 +62,7 @@ final class ProfileAndEditView: UIView {
     
     @objc private func editButtonTapped() {
         print("DEBUG: editButtonTapped")
+        delegate?.moveToVc()
     }
     
     @objc private func settingButtonTapped() {
@@ -73,7 +76,8 @@ final class ProfileAndEditView: UIView {
             profileImageView,
             userName,
             editButton,
-            settingButton)
+            settingButton
+        )
         
         profileImageView.snp.makeConstraints { make in
             make.width.height.equalTo(50)
