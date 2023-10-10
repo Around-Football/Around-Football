@@ -92,14 +92,14 @@ final class InviteViewController: UIViewController {
         $0.text = "내용"
     }
     
-    private let contentTextField = UITextField().then {
+    private lazy var contentTextField = UITextField().then {
         $0.borderStyle = .roundedRect
         $0.placeholder = "내용을 입력해주세요"
+        $0.delegate = self
+        $0.keyboardAppearance = .default
     }
     
     private let addButton = CustomButton(frame: .zero, buttonTitle: "등록하기")
-    
-    lazy var textFieldDelegateHandler = TextFieldDelegateHandler(viewController: self)
     
     // MARK: - Lifecycles
     
@@ -107,7 +107,11 @@ final class InviteViewController: UIViewController {
         super.viewDidLoad()
         configureUI()
         updateCalender()
-        contentTextField.delegate = textFieldDelegateHandler
+        keyboardController()
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
     }
     
     // MARK: - Selectors
@@ -120,11 +124,16 @@ final class InviteViewController: UIViewController {
         plusMonth()
     }
     
-    @objc func dismissKeyboard() {
-        view.endEditing(true)
-    }
-    
     // MARK: - Helpers
+    
+    private func keyboardController() {
+        //키보드 올리고, 내리고
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
+        //화면 탭해서 키보드 내리기
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        view.addGestureRecognizer(tapGesture)
+    }
     
     private func configureUI() {
         view.backgroundColor = .white
@@ -227,10 +236,6 @@ final class InviteViewController: UIViewController {
             make.trailing.bottom.equalToSuperview().offset(-20)
             make.height.equalTo(40)
         }
-        
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
-        tapGesture.cancelsTouchesInView = false
-        view.addGestureRecognizer(tapGesture)
     }
     
     private func minusMonth() {
@@ -243,6 +248,34 @@ final class InviteViewController: UIViewController {
         updateCalender()
     }
 }
+
+extension InviteViewController: UITextFieldDelegate {
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        textField.becomeFirstResponder()
+    }
+    
+    @objc func keyboardWillShow(_ notification: Notification) {
+        if let keyboardFrame = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
+            let keyboardHeight = keyboardFrame.height
+
+            // contentInset을 설정하여 스크롤뷰를 키보드 높이만큼 올림
+            scrollView.contentInset.bottom = keyboardHeight
+            scrollView.verticalScrollIndicatorInsets.bottom = keyboardHeight
+        }
+    }
+
+    @objc func keyboardWillHide(_ notification: Notification) {
+        // 키보드가 사라질 때 contentInset을 초기화하여 스크롤뷰를 원래대로
+        scrollView.contentInset = .zero
+        scrollView.scrollIndicatorInsets = .zero
+    }
+    
+    @objc func dismissKeyboard() {
+        view.endEditing(true)
+    }
+}
+
+// MARK: - 달력 구현
 
 extension InviteViewController {
     private func startDayOfWeek() -> Int {
