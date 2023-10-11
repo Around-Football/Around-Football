@@ -6,8 +6,9 @@
 //
 
 import Foundation
-import KakaoMapsSDK
 import CoreLocation
+
+import KakaoMapsSDK
 
 extension MapViewController: MapControllerDelegate {
     
@@ -53,7 +54,8 @@ extension MapViewController: MapControllerDelegate {
     func addViews() {
         //여기에서 그릴 View(KakaoMap, Roadview)들을 추가한다.
         guard let location = self.viewModel?.currentLocation else {
-            fatalError("Map AddView Failed")
+            print("Map AddView Failed")
+            return
         }
         
         let defaultPosition: MapPoint = MapPoint(

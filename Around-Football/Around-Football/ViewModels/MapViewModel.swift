@@ -6,9 +6,10 @@
 //
 
 import Foundation
+
 import FirebaseFirestore
 
-class MapViewModel {
+final class MapViewModel {
     var currentLocation: GeoPoint
     var searchLocation: GeoPoint?
     var isSearchCurrentLocation: Bool = true
