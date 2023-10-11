@@ -111,13 +111,17 @@ final class MapViewController: UIViewController {
     
     func configureUI() {
         view.backgroundColor = .systemBackground
-        view.addSubview(mapContainer)
+        view.addSubviews(
+            mapContainer,
+            searchTextField,
+            trackingButton
+        )
+        
         mapContainer.snp.makeConstraints {
             $0.top.leading.trailing.equalTo(self.view)
             $0.bottom.equalTo(self.view.safeAreaLayoutGuide)
         }
         
-        view.addSubview(searchTextField)
         searchTextField.snp.makeConstraints {
             $0.top.equalTo(self.view.safeAreaLayoutGuide).offset(5)
             $0.leading.equalTo(self.view).offset(16)
@@ -125,7 +129,6 @@ final class MapViewController: UIViewController {
             $0.height.equalTo(40)
         }
         
-        view.addSubview(trackingButton)
         trackingButton.snp.makeConstraints {
             $0.leading.equalTo(mapContainer).offset(20)
             $0.bottom.equalTo(mapContainer).offset(-20)
