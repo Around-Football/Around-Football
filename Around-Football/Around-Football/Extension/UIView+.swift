@@ -13,11 +13,13 @@ extension UIView {
             addSubview(subview)
         }
     }
-    // MARK: - StackView 생성 시 add
+}
+
+// MARK: - StackView 생성 시 add
+extension UIStackView {
     func addArrangedSubviews(_ subviews: UIView...) {
         for subview in subviews {
-            addArrangedSubviews(subview)
+            addArrangedSubview(subview)
         }
     }
-    
 }
