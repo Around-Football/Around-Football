@@ -6,3 +6,17 @@
 //
 
 import Foundation
+
+import RxSwift
+import RxRelay
+
+class HomeViewModel {
+    
+    var recruitObservable: BehaviorRelay = BehaviorRelay<[Recruit]>(value: [])
+    
+    init() {
+        
+    }
+    
+
+}
