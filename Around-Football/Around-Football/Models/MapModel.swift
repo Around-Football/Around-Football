@@ -7,47 +7,54 @@
 
 import UIKit
 
-enum LayerID {
-    case currentPosition
-    case fieldPosition
+struct MapLabel {
+    let labelType: LabelType
+    let poi: Poi
     
-    var description: String {
-        switch self {
-        case .currentPosition: return "currentPosition"
-        case .fieldPosition: return "fieldPosition"
+    var layerID: String {
+        switch self .labelType {
+        case .currentPosition: return "currentLayer"
+        case .fieldPosition: return "fieldLayer"
         }
     }
-}
-// TODO: - Poi 객체 정의하여 PoiID + StyleID 묶기
-enum PoiID {
-    case currentPosition
-    case fieldPosition(String)
     
-    var description: String {
-        switch self {
+    var poiID: String {
+        switch self.poi {
         case .currentPosition: return "currentPosition"
-        case .fieldPosition(let id): return "\(id)"
-        }
-    }
-}
-
-enum CustomPoiStyle {
-    case currentPositionPoiStyle
-    case fieldPositionPoiStyle
-    
-    var id: String {
-        switch self {
-        case .currentPositionPoiStyle: return "currentPositionPoiStyle"
-        case .fieldPositionPoiStyle: return "fieldPositionPoiStyle"
+        case .fieldPosition(let id): return id
         }
     }
     
     var poiImage: UIImage? {
-        switch self {
-        case .currentPositionPoiStyle: return UIImage(named: "CurrentPositionMark50")
-        case .fieldPositionPoiStyle: return UIImage(named: "CurrentPositionMark50")
+        switch self.poi {
+        case .currentPosition: return UIImage(named: "CurrentPositionMark50")
+        case .fieldPosition(_): return UIImage(named: "CurrentPositionMark50")
         }
     }
+    
+    var poiStyle: String {
+        switch self.poi {
+        case .currentPosition: return "currentPositionPoiStyle"
+        case .fieldPosition(_): return "fieldPositionPoiStyle"
+        }
+    }
+    
+    var poiRank: Int {
+        switch self.poi {
+        case .currentPosition: return 0
+        case .fieldPosition(_): return 1
+        }
+    }
+}
+
+enum LabelType {
+    case currentPosition
+    case fieldPosition
+}
+// TODO: - Poi 객체 정의하여 PoiID + StyleID 묶기
+enum Poi {
+    case currentPosition
+    case fieldPosition(String)
 }
 
 //enum GuiButtonComponent: String {

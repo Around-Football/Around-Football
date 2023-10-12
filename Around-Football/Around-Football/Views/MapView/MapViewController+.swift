@@ -77,13 +77,12 @@ extension MapViewController: MapControllerDelegate {
             
             guard let location = self.viewModel?.currentLocation else { return }
             // POI
+            let currentMapLabel = MapLabel(labelType: .currentPosition, poi: .currentPosition)
             let mapPoint = MapPoint(longitude: location.longitude, latitude: location.latitude)
-            createLabelLayer(layerID: LayerID.currentPosition)
-            createPoiStyle(style: CustomPoiStyle.currentPositionPoiStyle)
+            createLabelLayer(label: currentMapLabel)
+            createPoiStyle(label: currentMapLabel)
             createPois(
-                layerID: LayerID.currentPosition,
-                poiID: PoiID.currentPosition,
-                style: CustomPoiStyle.currentPositionPoiStyle,
+                label: currentMapLabel,
                 mapPoint: mapPoint
             )
             moveCamera(latitude: location.latitude, longitude: location.longitude)
@@ -149,11 +148,11 @@ extension MapViewController: MapControllerDelegate {
     
     // MARK: - POI
     // Poi 생성을 위한 LabelLayer 생성 함수
-    func createLabelLayer(layerID: LayerID) {
+    func createLabelLayer(label: MapLabel) {
         let mapView: KakaoMap = mapController?.getView("mapview") as! KakaoMap
         let manager = mapView.getLabelManager()
         let layerOption = LabelLayerOptions(
-            layerID: layerID.description,
+            layerID: label.layerID,
             competitionType: .none,
             competitionUnit: .symbolFirst,
             orderType: .rank, zOrder: 5000
@@ -161,24 +160,24 @@ extension MapViewController: MapControllerDelegate {
         let _ = manager.addLabelLayer(option: layerOption)
     }
     
-    func createPoiStyle(style: CustomPoiStyle) {
+    func createPoiStyle(label: MapLabel) {
         let mapView: KakaoMap = mapController?.getView("mapview") as! KakaoMap
         let manager = mapView.getLabelManager()
-        let iconStyle = PoiIconStyle(symbol: style.poiImage, anchorPoint: CGPoint(x: 0, y: 0.5))
+        let iconStyle = PoiIconStyle(symbol: label.poiImage, anchorPoint: CGPoint(x: 0, y: 0.5))
         
-        let poiStyle = PoiStyle(styleID: style.id, styles: [
+        let poiStyle = PoiStyle(styleID: label.poiStyle, styles: [
             PerLevelPoiStyle(iconStyle: iconStyle, level: 0)
         ])
         manager.addPoiStyle(poiStyle)
         
     }
     
-    func createPois(layerID: LayerID, poiID: PoiID, style: CustomPoiStyle, mapPoint: MapPoint) {
+    func createPois(label: MapLabel, mapPoint: MapPoint) {
         let mapView: KakaoMap = mapController?.getView("mapview") as! KakaoMap
         let manager = mapView.getLabelManager()
-        let layer = manager.getLabelLayer(layerID: layerID.description)
-        let poiOption = PoiOptions(styleID: style.id, poiID: poiID.description)
-        poiOption.rank = 0
+        let layer = manager.getLabelLayer(layerID: label.layerID)
+        let poiOption = PoiOptions(styleID: label.poiStyle, poiID: label.poiID)
+        poiOption.rank = label.poiRank
         
         let poi1 = layer?.addPoi(option: poiOption, at: mapPoint)
         poi1?.show()
@@ -188,8 +187,9 @@ extension MapViewController: MapControllerDelegate {
         guard let mapView: KakaoMap = mapController?.getView("mapview") as? KakaoMap
         else { return }
         let manager = mapView.getLabelManager()
-        let layer = manager.getLabelLayer(layerID: LayerID.currentPosition.description)
-        let poi = layer?.getPoi(poiID: PoiID.currentPosition.description)
+        let mapLabel = MapLabel(labelType: .currentPosition, poi: .currentPosition)
+        let layer = manager.getLabelLayer(layerID: mapLabel.layerID)
+        let poi = layer?.getPoi(poiID: mapLabel.poiID)
         
         guard let location = self.viewModel?.currentLocation else { return }
         let newPoint = MapPoint(longitude: location.longitude, latitude: location.latitude)
