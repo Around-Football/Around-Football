@@ -10,16 +10,14 @@ import RxSwift
 
 class HomeViewController: UIViewController {
     
-    private var filterView = UIView()
-    private var tableView = UITableView()
-    
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         configureUI()
     }
     
     func configureUI() {
         view.backgroundColor = .systemRed
+        
     }
 }
