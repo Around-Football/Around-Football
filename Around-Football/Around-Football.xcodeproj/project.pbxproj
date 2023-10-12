@@ -30,6 +30,7 @@
 		274C21C42ACFE932005469E6 /* LoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 274C21C32ACFE932005469E6 /* LoginViewModel.swift */; };
 		274C21C72ACFF902005469E6 /* TextFieldDelegateHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 274C21C62ACFF901005469E6 /* TextFieldDelegateHandler.swift */; };
 		274C22112AD6D6EF005469E6 /* HomeTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 274C22102AD6D6EF005469E6 /* HomeTableViewCell.swift */; };
+		274C22132AD7C16A005469E6 /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 274C22122AD7C169005469E6 /* HomeViewModel.swift */; };
 		6609C5312ACD506100798632 /* TestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6609C5302ACD506100798632 /* TestViewController.swift */; };
 		6609C5332ACE8B0E00798632 /* MapViewController+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6609C5322ACE8B0E00798632 /* MapViewController+.swift */; };
 		6609C5352ACE8D3600798632 /* MapViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6609C5342ACE8D3600798632 /* MapViewModel.swift */; };
@@ -70,6 +71,7 @@
 		274C21C32ACFE932005469E6 /* LoginViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewModel.swift; sourceTree = "<group>"; };
 		274C21C62ACFF901005469E6 /* TextFieldDelegateHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldDelegateHandler.swift; sourceTree = "<group>"; };
 		274C22102AD6D6EF005469E6 /* HomeTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeTableViewCell.swift; sourceTree = "<group>"; };
+		274C22122AD7C169005469E6 /* HomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewModel.swift; sourceTree = "<group>"; };
 		6609C5302ACD506100798632 /* TestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestViewController.swift; sourceTree = "<group>"; };
 		6609C5322ACE8B0E00798632 /* MapViewController+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MapViewController+.swift"; sourceTree = "<group>"; };
 		6609C5342ACE8D3600798632 /* MapViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewModel.swift; sourceTree = "<group>"; };
@@ -250,6 +252,7 @@
 			isa = PBXGroup;
 			children = (
 				274C21C32ACFE932005469E6 /* LoginViewModel.swift */,
+				274C22122AD7C169005469E6 /* HomeViewModel.swift */,
 				6609C5342ACE8D3600798632 /* MapViewModel.swift */,
 			);
 			path = ViewModels;
@@ -385,6 +388,7 @@
 				274C21C72ACFF902005469E6 /* TextFieldDelegateHandler.swift in Sources */,
 				2736744F2AC3061C003ADE3F /* SceneDelegate.swift in Sources */,
 				274C21BF2ACFC8E9005469E6 /* LoginViewController.swift in Sources */,
+				274C22132AD7C16A005469E6 /* HomeViewModel.swift in Sources */,
 				6609C5332ACE8B0E00798632 /* MapViewController+.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
