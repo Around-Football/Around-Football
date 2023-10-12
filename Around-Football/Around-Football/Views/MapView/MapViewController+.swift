@@ -17,7 +17,9 @@ extension MapViewController: MapControllerDelegate {
     func authenticationSucceeded() {
         _auth = true
         print("인증 성공")
-        mapController?.startEngine()    //엔진 시작 및 렌더링 준비. 준비가 끝나면 MapControllerDelegate의 addViews 가 호출된다.
+        
+        //엔진 시작 및 렌더링 준비. 준비가 끝나면 MapControllerDelegate의 addViews 가 호출된다.
+        mapController?.startEngine()
         mapController?.startRendering() //렌더링 시작.
     }
     
@@ -92,13 +94,17 @@ extension MapViewController: MapControllerDelegate {
         
     }
     
-    //Container 뷰가 리사이즈 되었을때 호출된다. 변경된 크기에 맞게 ViewBase들의 크기를 조절할 필요가 있는 경우 여기에서 수행한다.
+    /**
+     Container 뷰가 리사이즈 되었을때 호출된다.
+     변경된 크기에 맞게 ViewBase들의 크기를 조절할 필요가 있는 경우 여기에서 수행한다.
+     **/
     func containerDidResized(_ size: CGSize) {
         print("---------------------")
         print("resize: \(size)")
         print("---------------------")
         let mapView: KakaoMap? = mapController?.getView("mapview") as? KakaoMap
-        mapView?.viewRect = CGRect(origin: CGPoint(x: 0.0, y: 0.0), size: size)   //지도뷰의 크기를 리사이즈된 크기로 지정한다.
+        //지도뷰의 크기를 리사이즈된 크기로 지정한다.
+        mapView?.viewRect = CGRect(origin: CGPoint(x: 0.0, y: 0.0), size: size)
     }
     
     func addObservers(){
@@ -124,16 +130,21 @@ extension MapViewController: MapControllerDelegate {
     }
     
     func moveCamera(latitude: Double, longitude: Double) {
-        guard let mapView: KakaoMap = mapController?.getView("mapview") as? KakaoMap else { return }
+        guard let mapView: KakaoMap = mapController?.getView("mapview") as? KakaoMap
+        else { return }
         
         let animationOptions = CameraAnimationOptions(
             autoElevation: true,
             consecutive: true,
             durationInMillis: 1000
         )
+        let mappoint = MapPoint(longitude: longitude, latitude: latitude)
         mapView.animateCamera(
-            cameraUpdate: CameraUpdate.make(target: MapPoint(longitude: longitude, latitude: latitude),
-                                            zoomLevel: 14, mapView: mapView), options: animationOptions)
+            cameraUpdate: CameraUpdate.make(
+                target: mappoint,
+                zoomLevel: 14, mapView: mapView),
+            options: animationOptions
+        )
     }
     
     // MARK: - POI
@@ -141,7 +152,12 @@ extension MapViewController: MapControllerDelegate {
     func createLabelLayer(layerID: LayerID) {
         let mapView: KakaoMap = mapController?.getView("mapview") as! KakaoMap
         let manager = mapView.getLabelManager()
-        let layerOption = LabelLayerOptions(layerID: layerID.description, competitionType: .none, competitionUnit: .symbolFirst, orderType: .rank, zOrder: 5000)
+        let layerOption = LabelLayerOptions(
+            layerID: layerID.description,
+            competitionType: .none,
+            competitionUnit: .symbolFirst,
+            orderType: .rank, zOrder: 5000
+        )
         let _ = manager.addLabelLayer(option: layerOption)
     }
     
@@ -169,7 +185,8 @@ extension MapViewController: MapControllerDelegate {
     }
     
     func changeCurrentPoi() {
-        guard let mapView: KakaoMap = mapController?.getView("mapview") as? KakaoMap else { return }
+        guard let mapView: KakaoMap = mapController?.getView("mapview") as? KakaoMap
+        else { return }
         let manager = mapView.getLabelManager()
         let layer = manager.getLabelLayer(layerID: LayerID.currentPosition.description)
         let poi = layer?.getPoi(poiID: PoiID.currentPosition.description)
@@ -235,7 +252,9 @@ extension MapViewController: CLLocationManagerDelegate {
         // 위치 사용 허용 알림
         locationManager.requestWhenInUseAuthorization()
         // 위치 사용 허용 여부 분기처리
-        if locationManager.authorizationStatus == .authorizedAlways || locationManager.authorizationStatus == .authorizedWhenInUse {
+        if locationManager.authorizationStatus == .authorizedAlways
+            ||
+            locationManager.authorizationStatus == .authorizedWhenInUse {
             locationManager.startUpdatingLocation()
         } else {
             print("위치 서비스 허용 OFF")
@@ -251,7 +270,10 @@ extension MapViewController: CLLocationManagerDelegate {
         guard let viewModel = viewModel else { return }
         //        // 현재 위치로 카메라 이동
         //        if viewModel.isSearchCurrentLocation {
-        viewModel.setCurrentLocation(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude)
+        viewModel.setCurrentLocation(
+            latitude: location.coordinate.latitude,
+            longitude: location.coordinate.longitude
+        )
         //            changeCurrentPoi()
         //            moveCamera(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude)
         //            viewModel.isSearchCurrentLocation = false

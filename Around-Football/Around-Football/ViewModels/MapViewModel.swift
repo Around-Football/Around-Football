@@ -10,15 +10,35 @@ import Foundation
 import FirebaseFirestore
 
 final class MapViewModel {
+    
+    // MARK: - Properties
+    
     var currentLocation: GeoPoint
     var searchLocation: GeoPoint?
     var isSearchCurrentLocation: Bool = true
+    private let firebaseAPI = FirebaseAPI.shared
+    var fields: [Field] = []
     
+    // MARK: - Lifecycles
     
     init(latitude: Double, longitude: Double, searchLocation: GeoPoint? = nil) {
         self.currentLocation = GeoPoint(latitude: latitude, longitude: longitude)
         self.searchLocation = searchLocation
     }
+    
+    // MARK: - API
+    
+    func fetchFields() {
+        firebaseAPI.fetchMockFieldsData { fields in
+            self.fields = fields
+            
+        }
+    }
+    
+    
+    
+    
+    // MARK: - Helpers
     
     func setCurrentLocation(latitude: Double, longitude: Double) {
         currentLocation = GeoPoint(latitude: latitude, longitude: longitude)
