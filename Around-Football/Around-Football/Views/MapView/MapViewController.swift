@@ -65,7 +65,14 @@ final class MapViewController: UIViewController {
         configureUI()
         setLocationManager()
         if let locationCoordinate = locationManager.location?.coordinate {
-            self.viewModel = MapViewModel(latitude: locationCoordinate.latitude, longitude: locationCoordinate.longitude)
+            self.viewModel = MapViewModel(
+                latitude: locationCoordinate.latitude,
+                                          longitude: locationCoordinate.longitude
+            )
+            
+            guard let viewModel = viewModel else { return }
+            
+            viewModel.fetchFields()
         }
         
     }
