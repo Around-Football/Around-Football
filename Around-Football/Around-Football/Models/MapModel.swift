@@ -18,17 +18,17 @@ struct MapLabel {
         }
     }
     
-    var poiID: String {
+    var poiID: [String] {
         switch self.poi {
-        case .currentPosition: return "currentPosition"
+        case .currentPosition: return ["currentPosition"]
         case .fieldPosition(let id): return id
         }
     }
     
     var poiImage: UIImage? {
         switch self.poi {
-        case .currentPosition: return UIImage(named: "CurrentPositionMark50")
-        case .fieldPosition(_): return UIImage(named: "CurrentPositionMark50")
+        case .currentPosition: return UIImage(named: "CurrentPositionMark")
+        case .fieldPosition(_): return UIImage(named: "FieldPositionMark")
         }
     }
     
@@ -54,7 +54,7 @@ enum LabelType {
 // TODO: - Poi 객체 정의하여 PoiID + StyleID 묶기
 enum Poi {
     case currentPosition
-    case fieldPosition(String)
+    case fieldPosition([String])
 }
 
 //enum GuiButtonComponent: String {

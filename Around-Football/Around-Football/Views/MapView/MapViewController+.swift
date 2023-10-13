@@ -10,7 +10,7 @@ import CoreLocation
 
 import KakaoMapsSDK
 
-extension MapViewController: MapControllerDelegate {
+extension MapViewController: MapControllerDelegate, KakaoMapEventDelegate {
     
     // MARK: - API
     // 인증 성공시 delegate 호출.
@@ -81,14 +81,17 @@ extension MapViewController: MapControllerDelegate {
             let mapPoint = MapPoint(longitude: location.longitude, latitude: location.latitude)
             createLabelLayer(label: currentMapLabel)
             createPoiStyle(label: currentMapLabel)
-            createPois(
-                label: currentMapLabel,
-                mapPoint: mapPoint
-            )
+            createPois(label: currentMapLabel, mapPoint: mapPoint)
             moveCamera(latitude: location.latitude, longitude: location.longitude)
             // GUI
             //            createSpriteGUI()
             
+            guard let fields = self.viewModel?.fields else { return }
+            let idArray = fields.map { $0.id }
+            let fieldsMapLabel = MapLabel(labelType: .fieldPosition, poi: .fieldPosition(idArray))
+            createLabelLayer(label: fieldsMapLabel)
+            createPoiStyle(label: fieldsMapLabel)
+            createPois(label: fieldsMapLabel, fields: fields)
         }
         
     }
@@ -151,20 +154,42 @@ extension MapViewController: MapControllerDelegate {
     func createLabelLayer(label: MapLabel) {
         let mapView: KakaoMap = mapController?.getView("mapview") as! KakaoMap
         let manager = mapView.getLabelManager()
-        let layerOption = LabelLayerOptions(
-            layerID: label.layerID,
-            competitionType: .none,
-            competitionUnit: .symbolFirst,
-            orderType: .rank, zOrder: 5000
-        )
-        let _ = manager.addLabelLayer(option: layerOption)
+        
+        switch label.labelType {
+        case .currentPosition:
+            let layerOptions = LabelLayerOptions(
+                layerID: label.layerID,
+                competitionType: .none,
+                competitionUnit: .symbolFirst,
+                orderType: .rank,
+                zOrder: 5000
+            )
+            let _ = manager.addLabelLayer(option: layerOptions)
+            
+        case .fieldPosition:
+            let layerOptions = LodLabelLayerOptions(
+                layerID: label.layerID,
+                competitionType: .none,
+                competitionUnit: .symbolFirst,
+                orderType: .rank,
+                zOrder: 0,
+                radius: 20.0
+            )
+            let _ = manager.addLodLabelLayer(option: layerOptions)
+        }
+        
     }
     
     func createPoiStyle(label: MapLabel) {
         let mapView: KakaoMap = mapController?.getView("mapview") as! KakaoMap
         let manager = mapView.getLabelManager()
-        let iconStyle = PoiIconStyle(symbol: label.poiImage, anchorPoint: CGPoint(x: 0, y: 0.5))
+        let anchorPoint: CGPoint
+        switch label.labelType {
+        case .currentPosition: anchorPoint = CGPoint(x: 0.5, y: 0.5)
+        case .fieldPosition: anchorPoint = CGPoint(x: 0.5, y: 1)
+        }
         
+        let iconStyle = PoiIconStyle(symbol: label.poiImage, anchorPoint: anchorPoint)
         let poiStyle = PoiStyle(styleID: label.poiStyle, styles: [
             PerLevelPoiStyle(iconStyle: iconStyle, level: 0)
         ])
@@ -172,15 +197,57 @@ extension MapViewController: MapControllerDelegate {
         
     }
     
-    func createPois(label: MapLabel, mapPoint: MapPoint) {
+    func createPois(label: MapLabel,
+                    mapPoint: MapPoint = MapPoint(longitude: 0, latitude: 0),
+                    fields: [Field] = []) {
         let mapView: KakaoMap = mapController?.getView("mapview") as! KakaoMap
         let manager = mapView.getLabelManager()
-        let layer = manager.getLabelLayer(layerID: label.layerID)
-        let poiOption = PoiOptions(styleID: label.poiStyle, poiID: label.poiID)
-        poiOption.rank = label.poiRank
         
-        let poi1 = layer?.addPoi(option: poiOption, at: mapPoint)
-        poi1?.show()
+        if label.labelType == .currentPosition {
+            let layer = manager.getLabelLayer(layerID: label.layerID)
+            let poiOption = PoiOptions(styleID: label.poiStyle, poiID: label.poiID[0])
+            poiOption.rank = label.poiRank
+            let poi1 = layer?.addPoi(option: poiOption, at: mapPoint)
+            poi1?.show()
+            
+            return
+        }
+        
+        if label.labelType == .fieldPosition {
+            let layer = manager.getLodLabelLayer(layerID: label.layerID)
+            let datas = getlodDatas(label: label, fields: fields)
+            let lodPois = layer?.addLodPois(options: datas.0, at: datas.1)
+            guard let lodPois = lodPois else { return }
+            let _ = lodPois.map {
+                let _ = $0.addPoiTappedEventHandler(
+                    target: self,
+                    handler: MapViewController.tapHandler
+                )
+            }
+            
+            layer?.showAllLodPois()
+        }
+        
+    }
+    
+    func getlodDatas( label: MapLabel, fields: [Field]) -> ([PoiOptions], [MapPoint]) {
+        var options: [PoiOptions] = []
+        var positions: [MapPoint] = []
+        
+        for field in fields {
+            let option = PoiOptions(styleID: label.poiStyle, poiID: field.id)
+            option.rank = label.poiRank
+            option.transformType = .decal
+            option.clickable = true
+            let position = MapPoint(
+                longitude: field.location.longitude,
+                latitude: field.location.latitude
+            )
+            options.append(option)
+            positions.append(position)
+        }
+        
+        return (options, positions)
     }
     
     func changeCurrentPoi() {
@@ -189,7 +256,7 @@ extension MapViewController: MapControllerDelegate {
         let manager = mapView.getLabelManager()
         let mapLabel = MapLabel(labelType: .currentPosition, poi: .currentPosition)
         let layer = manager.getLabelLayer(layerID: mapLabel.layerID)
-        let poi = layer?.getPoi(poiID: mapLabel.poiID)
+        let poi = layer?.getPoi(poiID: mapLabel.poiID[0])
         
         guard let location = self.viewModel?.currentLocation else { return }
         let newPoint = MapPoint(longitude: location.longitude, latitude: location.latitude)

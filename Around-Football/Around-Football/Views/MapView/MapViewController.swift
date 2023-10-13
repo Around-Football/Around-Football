@@ -67,7 +67,7 @@ final class MapViewController: UIViewController {
         if let locationCoordinate = locationManager.location?.coordinate {
             self.viewModel = MapViewModel(
                 latitude: locationCoordinate.latitude,
-                                          longitude: locationCoordinate.longitude
+                longitude: locationCoordinate.longitude
             )
             
             guard let viewModel = viewModel else { return }
@@ -113,6 +113,11 @@ final class MapViewController: UIViewController {
         guard let location = viewModel?.currentLocation else { return }
         self.moveCamera(latitude: location.latitude, longitude: location.longitude)
     }
+    
+    func tapHandler(_ param: PoiInteractionEventParam) {
+        print(param.poiItem.itemID)
+    }
+
     
     // MARK: - Helpers
     
