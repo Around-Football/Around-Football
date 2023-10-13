@@ -25,23 +25,23 @@ class HomeTableViewCell: UITableViewCell {
         $0.text = "Title Text"
     }
     
-    private var fieldAddress = UILabel().then {
+    var fieldAddress = UILabel().then {
         $0.text = "Field Address"
     }
     
-    private var dateLabel = UILabel().then {
+    var dateLabel = UILabel().then {
         $0.text = "DateLabel"
     }
     
-    private var timeLabel = UILabel().then {
+    var timeLabel = UILabel().then {
         $0.text = "TimeLabel"
     }
     
-    private var recruitLabel = UILabel().then {
+    var recruitLabel = UILabel().then {
         $0.text = "Recurit 0명"
     }
     
-    private var timelineStackView = UIStackView().then {
+    var timelineStackView = UIStackView().then {
         $0.axis = .horizontal
         $0.distribution = .fill
         $0.alignment = .fill
@@ -54,6 +54,7 @@ class HomeTableViewCell: UITableViewCell {
     }
     
     required init?(coder: NSCoder) {
+        
         fatalError("init(coder:) has not been implemented")
     }
     
