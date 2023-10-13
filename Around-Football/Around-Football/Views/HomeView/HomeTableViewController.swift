@@ -17,8 +17,6 @@ class HomeTableViewController: UITableViewController {
     private let homeViewModel = HomeViewModel()
     private let disposeBag = DisposeBag()
     
-    private var items: [String] = ["Item 1", "Item 2", "Item 3", "Item 4", "Item 5"]
-    
     private let filterOptions: [String] = ["모든 날짜", "모든 지역", "매치 유형"] // 필터 옵션
     
     private lazy var filterScrollView = UIScrollView().then {
@@ -64,10 +62,10 @@ class HomeTableViewController: UITableViewController {
         super.viewDidLoad()
         
         navigationController?.setNavigationBarHidden(true, animated: false)
-//        tableView.register(HomeTableViewCell.self, forCellReuseIdentifier: HomeTableViewCell.id)
-        tableView.delegate = nil
+        tableView.register(HomeTableViewCell.self, forCellReuseIdentifier: HomeTableViewCell.id)
+//        tableView.delegate = nil
         tableView.dataSource = nil
-        
+
         homeViewModel.recruitObservable
             .observe(on: MainScheduler.instance)
             .bind(to: tableView.rx.items(cellIdentifier: HomeTableViewCell.id, 
@@ -129,13 +127,13 @@ class HomeTableViewController: UITableViewController {
             // 여기에 필터링 로직을 추가하십시오.
         }
     }
-//    // UITableViewDataSource 메서드
+    // UITableViewDataSource 메서드
 //    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 //        return items.count
 //    }
-//    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-//        return 150
-//    }
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 150
+    }
 //    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 //        let cell = tableView.dequeueReusableCell(withIdentifier: HomeTableViewCell.id, for: indexPath) as! HomeTableViewCell
 //        cell.titleLabel.text = items[indexPath.row]
