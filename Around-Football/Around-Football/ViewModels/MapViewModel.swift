@@ -31,7 +31,6 @@ final class MapViewModel {
     func fetchFields() {
         firebaseAPI.fetchMockFieldsData { fields in
             self.fields = fields
-            
         }
     }
     
