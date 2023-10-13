@@ -333,7 +333,7 @@ extension MapViewController: CLLocationManagerDelegate {
         print("현재 위치 업데이트")
         print("위도: \(location.coordinate.latitude)")
         print("경도: \(location.coordinate.longitude)")
-        
+        // 현재 고유위치  37.253463   127.036306
         guard let viewModel = viewModel else { return }
         //        // 현재 위치로 카메라 이동
         //        if viewModel.isSearchCurrentLocation {

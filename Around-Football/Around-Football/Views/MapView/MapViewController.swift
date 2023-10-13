@@ -23,6 +23,7 @@ final class MapViewController: UIViewController {
     var _appear = true
     var locationManager = CLLocationManager()
     var viewModel: MapViewModel?
+    var modalViewController: FieldDetailViewController?
     
     private let searchTextField = UISearchTextField().then {
         $0.placeholder = "장소를 입력하세요."
@@ -115,7 +116,17 @@ final class MapViewController: UIViewController {
     }
     
     func tapHandler(_ param: PoiInteractionEventParam) {
-        print(param.poiItem.itemID)
+        let itemID = param.poiItem.itemID
+        guard let viewModel = self.viewModel else { return }
+        guard let field = viewModel.fields.filter({ $0.id == itemID }).first else { return }
+        
+        let fieldViewModel = FieldDetailViewModel(id: itemID)
+        self.modalViewController = FieldDetailViewController(viewModel: fieldViewModel)
+        
+        if let modalViewController = self.modalViewController {
+            let navigation = UINavigationController(rootViewController: modalViewController)
+            present(navigation, animated: true)
+        }
     }
 
     
