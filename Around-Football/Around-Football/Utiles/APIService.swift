@@ -8,7 +8,7 @@
 import Foundation
 import RxSwift
 
-let MOCKUP_URL = "https://mocki.io/v1/acd3f149-d024-4f71-850d-ad7eb108de50"
+let MOCKUP_URL = "https://mocki.io/v1/8f5cd61d-36f3-430a-9013-2f130ffb9cf8"
 
 class APIService {
     
