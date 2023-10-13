@@ -12,7 +12,7 @@ import RxRelay
 
 class HomeViewModel {
     
-    var recruitObservable: BehaviorSubject = BehaviorSubject<[Recruit]>(value: [])
+    var recruitObservable: BehaviorRelay = BehaviorRelay<[Recruit]>(value: [])
     
     init() {
         _ = APIService.fetchfetchRecruitRx()
