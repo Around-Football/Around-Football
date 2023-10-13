@@ -7,10 +7,16 @@
 
 import Foundation
 
-struct Recruit: Codable, Identifiable {
-    var id: String
-    var username: String
-    var people: String
-    var content: String
-    var matchDate: Date
+struct Recruit: Codable {
+    let id: Int
+    let userName: String
+    let people: Int
+    let content, matchDate, matchTime, fieldName: String
+    let fieldAddress: String
+
+    enum CodingKeys: String, CodingKey {
+        case id, userName, people, content, matchDate, matchTime
+        case fieldName = "FieldName"
+        case fieldAddress = "FieldAddress"
+    }
 }
