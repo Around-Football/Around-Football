@@ -7,11 +7,23 @@
 
 import UIKit
 
+import FirebaseAuth
+import FirebaseCore
+import FirebaseFirestore
+import KakaoSDKAuth
+import KakaoSDKCommon
+import KakaoSDKUser
+
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        //Firebase 구성
+        FirebaseApp.configure()
+        //kakao 초기화
+        KakaoSDK.initSDK(appKey: "0d5ef52f7c57c39af9576424a158bdb6")
+        
         return true
     }
 
@@ -28,7 +40,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // If any sessions were discarded while the application was not running, this will be called shortly after application:didFinishLaunchingWithOptions.
         // Use this method to release any resources that were specific to the discarded scenes, as they will not return.
     }
-
-
+    
+    
 }
-
