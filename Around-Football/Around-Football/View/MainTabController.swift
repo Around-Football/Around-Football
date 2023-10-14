@@ -7,7 +7,9 @@
 
 import UIKit
 
-class MainTabController: UITabBarController {
+import FirebaseAuth
+
+final class MainTabController: UITabBarController {
     
     // MARK: - Lifecycles
     
@@ -18,13 +20,27 @@ class MainTabController: UITabBarController {
         configureViewController()
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        isLogin()
+    }
+    
     // MARK: - Helpers
     
-    func configureUI() {
+    private func isLogin() {
+        if Auth.auth().currentUser?.uid == nil {
+            let controller = SocialLoginViewController()
+            present(controller, animated: true)
+            print("로그인화면으로")
+        } else {
+            print("자동로그인")
+        }
+    }
+    
+    private func configureUI() {
         tabBar.tintColor = .black
     }
     
-    func configureViewController() {
+    private func configureViewController() {
         let homeViewController = HomeViewController()
         let homeNavigation: UINavigationController = makeNavigationController(
             rootViewController: homeViewController,
@@ -53,7 +69,7 @@ class MainTabController: UITabBarController {
         viewControllers = [homeNavigation, mapNavigation, infoNavigation]
     }
     
-    func makeNavigationController(
+    private func makeNavigationController(
         rootViewController rootVC: UIViewController,
         title: String,
         tabbarImage: String,
