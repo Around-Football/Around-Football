@@ -12,3 +12,4 @@ import FirebaseFirestore
 let DB_REF = Firestore.firestore()
 
 let REF_FIELD = DB_REF.collection("Field")
+let REF_RECRUIT = DB_REF.collection("Recruit")

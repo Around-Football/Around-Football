@@ -10,14 +10,32 @@ import UIKit
 import Then
 import SnapKit
 
-class FieldDetailViewController: UIViewController {
+final class FieldDetailViewController: UIViewController {
     
     var viewModel: FieldDetailViewModel
-
+    
     // MARK: - Properties
     
-    private let labelView = UILabel().then {
-        $0.font = UIFont.boldSystemFont(ofSize: 11)
+    private let fieldNameLabel = UILabel().then {
+        $0.font = UIFont.boldSystemFont(ofSize: 18)
+        $0.numberOfLines = 0
+    }
+    
+    private let addressLabel = UILabel().then {
+        $0.font = UIFont.systemFont(ofSize: 14)
+        $0.numberOfLines = 0
+    }
+    
+    private let underlineView = UIView().then {
+        $0.backgroundColor = .black
+    }
+    
+    private let tableView = UITableView().then {
+        $0.register(
+            FieldRecruitTableViewCell.self,
+            forCellReuseIdentifier: FieldRecruitTableViewCell.cellID
+        )
+        $0.backgroundColor = .systemPink
     }
     
     // MARK: - Lifecycles
@@ -34,10 +52,9 @@ class FieldDetailViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         configurePresentStyle()
+        configure()
         configureUI()
-        
     }
-    
     
     // MARK: - Helpers
     
@@ -52,14 +69,48 @@ class FieldDetailViewController: UIViewController {
     
     func configureUI() {
         view.backgroundColor = .systemBackground
-        self.labelView.text = viewModel.id
-        view.addSubviews(labelView)
         
-        labelView.snp.makeConstraints {
-            $0.leading.equalTo(view.safeAreaLayoutGuide).offset(10)
-            $0.centerY.equalToSuperview()
+        let headerStackView = UIStackView(arrangedSubviews: [
+            fieldNameLabel,
+            addressLabel,
+            underlineView
+        ])
+        
+        headerStackView.axis = .vertical
+        headerStackView.spacing = 10
+        headerStackView.distribution = .equalSpacing
+        
+        view.addSubviews(
+            headerStackView,
+            tableView
+        )
+        
+        underlineView.snp.makeConstraints {
+            $0.height.equalTo(1)
         }
+        
+        headerStackView.snp.makeConstraints {
+            $0.leading.top.equalToSuperview().offset(20)
+            $0.trailing.equalToSuperview().offset(-20)
+        }
+        
+        tableView.snp.makeConstraints {
+            $0.top.equalTo(headerStackView.snp.bottom).offset(10)
+            $0.leading.equalToSuperview().offset(20)
+            $0.trailing.equalToSuperview().offset(-20)
+            $0.bottom.equalToSuperview().offset(-20)
+        }
+        
+//        fieldNameLabel.snp.makeConstraints {
+//            $0.leading.equalTo(view.safeAreaLayoutGuide).offset(10)
+//            $0.centerY.equalToSuperview()
+//        }
     }
-
-
+    
+    func configure() {
+        fieldNameLabel.text = "구장이름"
+        addressLabel.text = viewModel.field.fieldAddress
+    }
+    
+    
 }

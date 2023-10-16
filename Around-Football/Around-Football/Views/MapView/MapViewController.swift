@@ -120,7 +120,7 @@ final class MapViewController: UIViewController {
         guard let viewModel = self.viewModel else { return }
         guard let field = viewModel.fields.filter({ $0.id == itemID }).first else { return }
         
-        let fieldViewModel = FieldDetailViewModel(id: itemID)
+        let fieldViewModel = FieldDetailViewModel(field: field)
         self.modalViewController = FieldDetailViewController(viewModel: fieldViewModel)
         
         if let modalViewController = self.modalViewController {
