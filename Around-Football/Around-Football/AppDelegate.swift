@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Firebase
 
 import AuthenticationServices
 import FirebaseAuth
@@ -19,6 +20,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         
+        // MARK: - Firebase SetUp
+        FirebaseApp.configure()
+
         // MARK: - Apple Login SetUp
 //        var window: UIWindow?
 //        let appleIDProvider = ASAuthorizationAppleIDProvider()
@@ -35,10 +39,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 //                   break
 //               }
 //           }
-        
-        // MARK: - Firebase SetUp
-        FirebaseApp.configure()
-        
+    
         return true
     }
     

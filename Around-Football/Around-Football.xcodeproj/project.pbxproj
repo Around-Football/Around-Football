@@ -44,7 +44,14 @@
 		6609C5332ACE8B0E00798632 /* MapViewController+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6609C5322ACE8B0E00798632 /* MapViewController+.swift */; };
 		6609C5352ACE8D3600798632 /* MapViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6609C5342ACE8D3600798632 /* MapViewModel.swift */; };
 		6609C5372ACFCCCD00798632 /* MapModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6609C5362ACFCCCD00798632 /* MapModel.swift */; };
+		663417CA2AD682AB002FE2CA /* Firebase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 663417C92AD682AB002FE2CA /* Firebase.swift */; };
+		663417CC2AD68413002FE2CA /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 663417CB2AD68413002FE2CA /* Constants.swift */; };
+		663417CF2AD68794002FE2CA /* FieldMock.json in Resources */ = {isa = PBXBuildFile; fileRef = 663417CE2AD68794002FE2CA /* FieldMock.json */; };
+		663417D12AD695DE002FE2CA /* MockFields.swift in Sources */ = {isa = PBXBuildFile; fileRef = 663417D02AD695DE002FE2CA /* MockFields.swift */; };
 		6650C7372AC9ED6F00055571 /* KakaoMapsSDK_SPM in Frameworks */ = {isa = PBXBuildFile; productRef = 6650C7362AC9ED6F00055571 /* KakaoMapsSDK_SPM */; };
+		66656F9D2AD9219F00AE1AFA /* FieldDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66656F9C2AD9219F00AE1AFA /* FieldDetailViewController.swift */; };
+		66656F9F2AD921D700AE1AFA /* FieldDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66656F9E2AD921D700AE1AFA /* FieldDetailViewModel.swift */; };
+		66656FA12ADD2FB800AE1AFA /* FieldRecruitTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66656FA02ADD2FB800AE1AFA /* FieldRecruitTableViewCell.swift */; };
 		669674882AC3E82B0067FD48 /* MainTabController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 669674872AC3E82B0067FD48 /* MainTabController.swift */; };
 		6696748F2AC3E9CE0067FD48 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6696748E2AC3E9CE0067FD48 /* HomeViewController.swift */; };
 		669674912AC3E9D40067FD48 /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 669674902AC3E9D40067FD48 /* MapViewController.swift */; };
@@ -92,6 +99,13 @@
 		6609C5322ACE8B0E00798632 /* MapViewController+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MapViewController+.swift"; sourceTree = "<group>"; };
 		6609C5342ACE8D3600798632 /* MapViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewModel.swift; sourceTree = "<group>"; };
 		6609C5362ACFCCCD00798632 /* MapModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapModel.swift; sourceTree = "<group>"; };
+		663417C92AD682AB002FE2CA /* Firebase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Firebase.swift; sourceTree = "<group>"; };
+		663417CB2AD68413002FE2CA /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		663417CE2AD68794002FE2CA /* FieldMock.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = FieldMock.json; sourceTree = "<group>"; };
+		663417D02AD695DE002FE2CA /* MockFields.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockFields.swift; sourceTree = "<group>"; };
+		66656F9C2AD9219F00AE1AFA /* FieldDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FieldDetailViewController.swift; sourceTree = "<group>"; };
+		66656F9E2AD921D700AE1AFA /* FieldDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FieldDetailViewModel.swift; sourceTree = "<group>"; };
+		66656FA02ADD2FB800AE1AFA /* FieldRecruitTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FieldRecruitTableViewCell.swift; sourceTree = "<group>"; };
 		669674872AC3E82B0067FD48 /* MainTabController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabController.swift; sourceTree = "<group>"; };
 		6696748E2AC3E9CE0067FD48 /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		669674902AC3E9D40067FD48 /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
@@ -150,10 +164,12 @@
 		2736744B2AC3061C003ADE3F /* Around-Football */ = {
 			isa = PBXGroup;
 			children = (
+				663417CD2AD68767002FE2CA /* MockData */,
 				2736747F2AC308D1003ADE3F /* Models */,
 				7CE563A72AD13DA3005DE2DF /* ViewModels */,
 				6696748A2AC3E9740067FD48 /* Views */,
 				7CE25AE72ACAC3370014132F /* Extension */,
+				663417C82AD68299002FE2CA /* Network */,
 				7CE563A82AD13E82005DE2DF /* Utiles */,
 				2736744C2AC3061C003ADE3F /* AppDelegate.swift */,
 				2736744E2AC3061C003ADE3F /* SceneDelegate.swift */,
@@ -197,6 +213,23 @@
 			path = SignUpView;
 			sourceTree = "<group>";
 		};
+		663417C82AD68299002FE2CA /* Network */ = {
+			isa = PBXGroup;
+			children = (
+				663417C92AD682AB002FE2CA /* Firebase.swift */,
+			);
+			path = Network;
+			sourceTree = "<group>";
+		};
+		663417CD2AD68767002FE2CA /* MockData */ = {
+			isa = PBXGroup;
+			children = (
+				663417CE2AD68794002FE2CA /* FieldMock.json */,
+				663417D02AD695DE002FE2CA /* MockFields.swift */,
+			);
+			path = MockData;
+			sourceTree = "<group>";
+		};
 		6696748A2AC3E9740067FD48 /* Views */ = {
 			isa = PBXGroup;
 			children = (
@@ -229,6 +262,8 @@
 				669674902AC3E9D40067FD48 /* MapViewController.swift */,
 				6609C5322ACE8B0E00798632 /* MapViewController+.swift */,
 				6609C5302ACD506100798632 /* TestViewController.swift */,
+				66656F9C2AD9219F00AE1AFA /* FieldDetailViewController.swift */,
+				66656FA02ADD2FB800AE1AFA /* FieldRecruitTableViewCell.swift */,
 			);
 			path = MapView;
 			sourceTree = "<group>";
@@ -277,6 +312,7 @@
 				274C21C32ACFE932005469E6 /* LoginViewModel.swift */,
 				274C22122AD7C169005469E6 /* HomeViewModel.swift */,
 				6609C5342ACE8D3600798632 /* MapViewModel.swift */,
+				66656F9E2AD921D700AE1AFA /* FieldDetailViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -287,6 +323,7 @@
 				7CE563A92AD140A9005DE2DF /* LayoutOptions.swift */,
 				274C21C62ACFF901005469E6 /* TextFieldDelegateHandler.swift */,
 				7CE25AE52ACABF620014132F /* CustomButton.swift */,
+				663417CB2AD68413002FE2CA /* Constants.swift */,
 				278E555A2AD800BC00C328D3 /* APIService.swift */,
 				278E55692AD930F900C328D3 /* Response.swift */,
 			);
@@ -373,6 +410,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				663417CF2AD68794002FE2CA /* FieldMock.json in Resources */,
 				273674592AC3061E003ADE3F /* LaunchScreen.storyboard in Resources */,
 				272B44912ADD54EF00ACEC41 /* GoogleService-Info.plist in Resources */,
 				273674562AC3061E003ADE3F /* Assets.xcassets in Resources */,
@@ -387,10 +425,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				663417CA2AD682AB002FE2CA /* Firebase.swift in Sources */,
 				7CE563AA2AD140A9005DE2DF /* LayoutOptions.swift in Sources */,
 				7C5F77582AC96A7E004CE48F /* DetailUserInfoCell.swift in Sources */,
 				7CE25AE62ACABF620014132F /* CustomButton.swift in Sources */,
+				66656F9D2AD9219F00AE1AFA /* FieldDetailViewController.swift in Sources */,
 				7C5F775E2AC9CE8A004CE48F /* DateCell.swift in Sources */,
+				66656FA12ADD2FB800AE1AFA /* FieldRecruitTableViewCell.swift in Sources */,
 				278E555B2AD800BC00C328D3 /* APIService.swift in Sources */,
 				7CB21BA32AC94D36001D0058 /* DetailViewController.swift in Sources */,
 				7C5F77622AC9DB7B004CE48F /* PeopleCountView.swift in Sources */,
@@ -401,6 +442,7 @@
 				273674512AC3061C003ADE3F /* ViewController.swift in Sources */,
 				6609C5312ACD506100798632 /* TestViewController.swift in Sources */,
 				669674882AC3E82B0067FD48 /* MainTabController.swift in Sources */,
+				663417D12AD695DE002FE2CA /* MockFields.swift in Sources */,
 				7C5F775C2AC9C698004CE48F /* InviteViewController.swift in Sources */,
 				6609C5372ACFCCCD00798632 /* MapModel.swift in Sources */,
 				272B44842ADD189F00ACEC41 /* TestLoginViewController.swift in Sources */,
@@ -408,9 +450,11 @@
 				6696748F2AC3E9CE0067FD48 /* HomeViewController.swift in Sources */,
 				7C5F77642AC9E180004CE48F /* UIView+.swift in Sources */,
 				669674932AC3E9DF0067FD48 /* InfoViewController.swift in Sources */,
+				66656F9F2AD921D700AE1AFA /* FieldDetailViewModel.swift in Sources */,
 				272B44932ADD5C0F00ACEC41 /* RouterViewController.swift in Sources */,
 				278E556A2AD930F900C328D3 /* Response.swift in Sources */,
 				669674912AC3E9D40067FD48 /* MapViewController.swift in Sources */,
+				663417CC2AD68413002FE2CA /* Constants.swift in Sources */,
 				274C21C22ACFC92D005469E6 /* SignUpViewController.swift in Sources */,
 				273674852AC308D1003ADE3F /* PlaygroundList.swift in Sources */,
 				274C21C42ACFE932005469E6 /* LoginViewModel.swift in Sources */,
