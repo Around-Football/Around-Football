@@ -22,18 +22,18 @@ class HomeViewModel {
         
      */
     
-    var recruitObservable: BehaviorRelay = BehaviorRelay<[Recruit]>(value: [])
+    var recruitObservable: BehaviorRelay = BehaviorRelay<[Recruit_Rx]>(value: [])
     
     init() {
         _ = APIService.fetchfetchRecruitRx()
-            .map { data -> [Recruit] in
+            .map { data -> [Recruit_Rx] in
                 let response = try! JSONDecoder().decode(Response.self, from: data)
                 return response.recruits
             }            
-            .map { menuItems -> [Recruit] in
-                var recruits: [Recruit] = []
+            .map { menuItems -> [Recruit_Rx] in
+                var recruits: [Recruit_Rx] = []
                 menuItems.forEach { item in
-                    let menu = Recruit(id: item.id, userName: item.userName, people: item.people, content: item.content, matchDate: item.matchDate, matchTime: item.matchTime, fieldName: item.fieldName, fieldAddress: item.fieldAddress)
+                    let menu = Recruit_Rx(id: item.id, userName: item.userName, people: item.people, content: item.content, matchDate: item.matchDate, matchTime: item.matchTime, fieldName: item.fieldName, fieldAddress: item.fieldAddress)
                     recruits.append(menu)
                 }
                 return recruits
