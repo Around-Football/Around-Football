@@ -28,60 +28,68 @@ class KakaoLoginService {
     
     func loginKakaoApp() {
         UserApi.shared.loginWithKakaoTalk {(oauthToken, error) in
-            if let error = error {
+            guard error == nil else {
                 print(error)
-            }
-            else {
-                print("loginWithKakaoTalk() success.")
-                
-                //do something
-                _ = oauthToken
+                return
             }
             
-//            createGoogleUser(email: <#T##String#>, password: <#T##String#>)
+            print("loginWithKakaoTalk() success.")
+            
+            //do something
+            _ = oauthToken
+            
+            
+            self.getKakaoUserInfo()
+            
         }
     }
     
     func loginKakaoAccount() {
         UserApi.shared.loginWithKakaoAccount {oauthToken, error in
-            if let error = error {
+            guard error == nil else {
                 print(error)
+                return
             }
-            else {
-                print("loginWithKakaoAccount() success.")
-                
-                //do something
-                _ = oauthToken
-            }
+            
+            print("loginWithKakaoAccount() success.")
+            
+            //do something
+            _ = oauthToken
+            
+            
+            self.getKakaoUserInfo()
         }
     }
     
     func getKakaoUserInfo() {
         UserApi.shared.me() {(user, error) in
-            if let error = error {
+            guard error == nil else {
                 print(error)
+                return
             }
-            else {
-                print("me() success.")
-                
-                //do something
-                _ = user
-                
-                self.userProfile = user?.kakaoAccount?.profile?.nickname
-                self.email = user?.kakaoAccount?.email
-                print("userProfile: \(self.userProfile), email: \(self.email)")
-            }
+            
+            print("me() success.")
+            
+            //do something
+            _ = user
+            
+            self.userProfile = user?.kakaoAccount?.profile?.nickname
+            self.email = user?.kakaoAccount?.email
+            print("userProfile: \(self.userProfile), email: \(self.email)")
+            self.createGoogleUser(email: self.email!, password: "\(self.email!)")
+            
         }
     }
     
     func kakaoLogout() {
         UserApi.shared.logout {(error) in
-            if let error = error {
+            guard error == nil else {
                 print(error)
+                return
             }
-            else {
-                print("logout() success.")
-            }
+            self.googleLogOut()
+            print("logout() success.")
+            
         }
     }
 }
@@ -94,8 +102,8 @@ extension KakaoLoginService {
                 print(error?.localizedDescription as Any)
                 return
             }
-            self.googleSignIn(email: email, password: password) //로그인
             
+            self.googleSignIn(email: email, password: password) //로그인
         }
     }
     
@@ -111,4 +119,10 @@ extension KakaoLoginService {
             print(result?.user)
         }
     }
+    
+    func googleLogOut() {
+        try? Auth.auth().signOut()
+    }
+    
+    
 }
