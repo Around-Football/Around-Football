@@ -9,6 +9,10 @@ import UIKit
 
 class MainTabController: UITabBarController {
     
+    // MARK: - Properties
+    
+    var loginViewModel = LoginViewModel()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -21,9 +25,12 @@ class MainTabController: UITabBarController {
     }
     
     func configureViewController() {
-        let homeViewController = HomeViewController()
+        
+        
+//        let homeViewController = HomeViewController()
+        let homeTableViewController = HomeTableViewController()
         let homeNavigation: UINavigationController = makeNavigationController(
-            rootViewController: homeViewController,
+            rootViewController: homeTableViewController,
             title: "Home",
             tabbarImage: "house",
             tag: 0

@@ -17,6 +17,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         window?.windowScene = scene
         window?.rootViewController = MainTabController()
+//        window?.rootViewController = TestLoginViewController()
         window?.makeKeyAndVisible()
     }
 
