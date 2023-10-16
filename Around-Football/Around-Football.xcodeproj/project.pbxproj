@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		272B44842ADD189F00ACEC41 /* AppleLoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 272B44832ADD189F00ACEC41 /* AppleLoginViewController.swift */; };
+		272B44862ADD1A0A00ACEC41 /* AppleLoginViewController+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 272B44852ADD1A0A00ACEC41 /* AppleLoginViewController+.swift */; };
+		272B44882ADD2AE000ACEC41 /* KeychainItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 272B44872ADD2AE000ACEC41 /* KeychainItem.swift */; };
 		2736744D2AC3061C003ADE3F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2736744C2AC3061C003ADE3F /* AppDelegate.swift */; };
 		2736744F2AC3061C003ADE3F /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2736744E2AC3061C003ADE3F /* SceneDelegate.swift */; };
 		273674512AC3061C003ADE3F /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 273674502AC3061C003ADE3F /* ViewController.swift */; };
@@ -59,6 +61,8 @@
 
 /* Begin PBXFileReference section */
 		272B44832ADD189F00ACEC41 /* AppleLoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleLoginViewController.swift; sourceTree = "<group>"; };
+		272B44852ADD1A0A00ACEC41 /* AppleLoginViewController+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppleLoginViewController+.swift"; sourceTree = "<group>"; };
+		272B44872ADD2AE000ACEC41 /* KeychainItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainItem.swift; sourceTree = "<group>"; };
 		273674492AC3061C003ADE3F /* Around-Football.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Around-Football.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2736744C2AC3061C003ADE3F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		2736744E2AC3061C003ADE3F /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -173,6 +177,8 @@
 			children = (
 				274C21BE2ACFC8E9005469E6 /* LoginViewController.swift */,
 				272B44832ADD189F00ACEC41 /* AppleLoginViewController.swift */,
+				272B44852ADD1A0A00ACEC41 /* AppleLoginViewController+.swift */,
+				272B44872ADD2AE000ACEC41 /* KeychainItem.swift */,
 			);
 			path = LoginView;
 			sourceTree = "<group>";
@@ -401,11 +407,13 @@
 				7C5F77602AC9DA08004CE48F /* GroundTitleView.swift in Sources */,
 				7CB21BA52AC94EE4001D0058 /* DetailUserInfoView.swift in Sources */,
 				273674832AC308D1003ADE3F /* Recruit.swift in Sources */,
+				272B44882ADD2AE000ACEC41 /* KeychainItem.swift in Sources */,
 				274C21C72ACFF902005469E6 /* TextFieldDelegateHandler.swift in Sources */,
 				2736744F2AC3061C003ADE3F /* SceneDelegate.swift in Sources */,
 				274C21BF2ACFC8E9005469E6 /* LoginViewController.swift in Sources */,
 				274C22132AD7C16A005469E6 /* HomeViewModel.swift in Sources */,
 				6609C5332ACE8B0E00798632 /* MapViewController+.swift in Sources */,
+				272B44862ADD1A0A00ACEC41 /* AppleLoginViewController+.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
