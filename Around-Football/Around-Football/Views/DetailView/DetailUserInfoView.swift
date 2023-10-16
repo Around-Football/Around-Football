@@ -11,6 +11,9 @@ import SnapKit
 import Then
 
 final class DetailUserInfoView: UIView {
+    
+    // MARK: - Properties
+    
     private let profileImageView = UIImageView().then {
         $0.image = UIImage(named: "AppIcon")
         $0.contentMode = .scaleAspectFill
@@ -48,7 +51,13 @@ final class DetailUserInfoView: UIView {
     }
     
     private lazy var userDetailInfoStackView = UIStackView().then { view in
-        let subViews = [userDetailSex, createDotView(), userDetailReviewGrade, createDotView(), userDetailCareer, createDotView(), userDetailManner]
+        let subViews = [userDetailSex,
+                        createDotView(),
+                        userDetailReviewGrade,
+                        createDotView(),
+                        userDetailCareer,
+                        createDotView(),
+                        userDetailManner]
         
         view.axis = .horizontal
         view.spacing = 5
@@ -59,6 +68,8 @@ final class DetailUserInfoView: UIView {
         }
     }
     
+    // MARK: - Lifecycles
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         configureUI()
@@ -67,6 +78,8 @@ final class DetailUserInfoView: UIView {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
+    // MARK: - Helpers
     
     private func configureUI() {
         addSubviews(profileImageView, userNameLabel, userDetailInfoStackView)

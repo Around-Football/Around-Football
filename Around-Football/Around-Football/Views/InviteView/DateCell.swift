@@ -11,12 +11,17 @@ import SnapKit
 import Then
 
 final class DateCell: UICollectionViewCell {
+    
+    // MARK: - Properties
+
     static let cellID = "DateCell"
     
     var dateLabel = UILabel().then {
         $0.text = "0"
         $0.font = .systemFont(ofSize: 12)
     }
+    
+    // MARK: - Lifecycles
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -27,6 +32,8 @@ final class DateCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
+    // MARK: - Helpers
+
     private func configureUI() {
         addSubview(dateLabel)
         dateLabel.snp.makeConstraints { make in
