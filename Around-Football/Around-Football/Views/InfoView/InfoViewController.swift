@@ -7,17 +7,121 @@
 
 import UIKit
 
+protocol InfoDelegate: AnyObject {
+    func moveToVc()
+}
+
 class InfoViewController: UIViewController {
+    
+    // MARK: - Properties
+    
+    private let profileAndEditView = ProfileAndEditView()
+    
+    private let iconAndImage: [(icon: String, title: String)] = [
+        (icon: "heart", title: "관심 글"),
+        (icon: "doc.text", title: "작성 글"),
+        (icon: "trophy", title: "트로피"),
+        (icon: "clock", title: "풋살장 예약"),
+        (icon: "ellipsis.message", title: "리뷰 작성"),
+    ]
+    
+    private lazy var infoCollectionView: UICollectionView = {
+        let layout = UICollectionViewFlowLayout()
+        layout.minimumLineSpacing = 10
+        layout.minimumInteritemSpacing = 10
+        let cv = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        cv.delegate = self
+        cv.dataSource = self
+        cv.register(InfoCell.self, forCellWithReuseIdentifier: InfoCell.cellID)
+        return cv
+    }()
+    
+    private let infoStackView = UIStackView().then {
+        $0.axis = .vertical
+        $0.distribution = .fillEqually
+        $0.layer.cornerRadius = 10
+        $0.layer.borderColor = UIColor.gray.cgColor
+        $0.layer.borderWidth = 1.0
+        $0.addArrangedSubview(infoArrangedView())
+        $0.addArrangedSubview(infoArrangedView())
+        $0.addArrangedSubview(infoArrangedView())
+        $0.addArrangedSubview(infoArrangedView())
+    }
+    
+    // MARK: - Lifecycles
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
         configureUI()
+        configureStackView()
+        profileAndEditView.delegate = self
     }
     
-
-    func configureUI() {
-        view.backgroundColor = .systemGreen
+    // MARK: - Helpers
+    
+    func configureStackView() {
+        if let views = infoStackView.arrangedSubviews as? [infoArrangedView] {
+            views[0].setValues(name: "리뷰", content: "(1.0 - 1.0)")
+            views[1].setValues(name: "매너", content: "0")
+            views[2].setValues(name: "성별", content: "남자")
+            views[3].setValues(name: "구력", content: "1년")
+        }
     }
 
+    func configureUI() {
+        view.backgroundColor = .white
+        navigationItem.title = "프로필"
+        
+        view.addSubviews(profileAndEditView,
+                         infoCollectionView,
+                         infoStackView)
+        
+        profileAndEditView.snp.makeConstraints { make in
+            make.top.equalTo(view.safeAreaLayoutGuide)
+            make.leading.equalToSuperview().offset(20)
+            make.trailing.equalToSuperview().offset(-20)
+        }
+        
+        infoCollectionView.snp.makeConstraints { make in
+            make.top.equalTo(profileAndEditView.snp.bottom)
+            make.leading.equalToSuperview().offset(20)
+            make.trailing.equalToSuperview().offset(-20)
+            make.height.equalTo(220)
+        }
+        
+        infoStackView.snp.makeConstraints { make in
+            make.top.equalTo(infoCollectionView.snp.bottom).offset(10)
+            make.leading.equalToSuperview().offset(20)
+            make.trailing.equalToSuperview().offset(-20)
+            make.height.equalTo(150)
+        }
+    }
+}
+
+extension InfoViewController: UICollectionViewDelegateFlowLayout, UICollectionViewDataSource {
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        let width = (UIScreen.main.bounds.width / 3) - 20
+        return CGSize(width: width, height: width)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        iconAndImage.count
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: InfoCell.cellID, for: indexPath) as? InfoCell
+        else { return UICollectionViewCell() }
+        cell.setValues(icon: iconAndImage[indexPath.item].icon,
+                       title: iconAndImage[indexPath.item].title)
+        return cell
+    }
+}
+
+extension InfoViewController: InfoDelegate {
+    func moveToVc() {
+        let controller = InviteViewController()
+        navigationController?.pushViewController(controller, animated: true)
+    }
 }
