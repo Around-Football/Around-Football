@@ -42,7 +42,7 @@ final class DetailViewController: UIViewController {
         $0.backgroundColor = .secondarySystemBackground
     }
     
-    private lazy var detailTableView = UITableView().then {
+    lazy var detailTableView = UITableView().then {
         $0.delegate = self
         $0.dataSource = self
         $0.register(DetailUserInfoCell.self, forCellReuseIdentifier: DetailUserInfoCell.cellID)
