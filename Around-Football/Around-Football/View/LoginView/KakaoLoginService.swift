@@ -12,9 +12,9 @@ import KakaoSDKAuth
 import KakaoSDKCommon
 import KakaoSDKUser
 
-class KakaoLoginService {
-    var userProfile: String?
-    var email: String?
+final class KakaoLoginService {
+    private var userProfile: String?
+    private var email: String?
     
     func onKakaoLoginByAppTouched() {
         var isInstalledKakaoApp = UserApi.isKakaoTalkLoginAvailable()
