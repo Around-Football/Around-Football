@@ -8,11 +8,16 @@
 import UIKit
 
 final class CustomButton: UIButton {
+    // MARK: - Properties
+    
     private var buttonTitle: String
+    
+    // MARK: - Lifecycles
     
     init(frame: CGRect, buttonTitle: String) {
         self.buttonTitle = buttonTitle
         super.init(frame: frame)
+        
         configureUI()
     }
     
@@ -20,17 +25,20 @@ final class CustomButton: UIButton {
         fatalError("init(coder:) has not been implemented")
     }
     
+    // MARK: - Selectors
+    
+    @objc func buttonClicked() {
+        print("DEBUG: buttonClicked")
+    }
+    
+    // MARK: - Helpers
+    
     private func configureUI() {
         setTitle(buttonTitle, for: .normal)
         setTitleColor(.white, for: .normal)
         backgroundColor = .black
         layer.cornerRadius = LayoutOptions.cornerRadious
         clipsToBounds = true
-        addTarget(self, action: #selector(clickedButton), for: .touchUpInside)
+        addTarget(self, action: #selector(buttonClicked), for: .touchUpInside)
     }
-    
-    @objc func clickedButton() {
-        
-    }
-    
 }
