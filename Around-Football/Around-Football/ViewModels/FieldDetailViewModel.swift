@@ -11,7 +11,7 @@ final class FieldDetailViewModel {
     
     // MARK: - Properties
     
-    private let field: Field
+    let field: Field
     private var recruits: [Recruit] = []
     private let firebaseAPI = FirebaseAPI.shared
 
