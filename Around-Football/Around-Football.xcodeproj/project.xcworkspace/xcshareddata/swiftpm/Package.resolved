@@ -109,6 +109,15 @@
       }
     },
     {
+      "identity" : "kakao-ios-sdk",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/kakao/kakao-ios-sdk",
+      "state" : {
+        "revision" : "ca8c7e9c3ca81367661f4333ad758bea9fb50dc3",
+        "version" : "2.18.0"
+      }
+    },
+    {
       "identity" : "kakaomapssdk-spm",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/kakao-mapsSDK/KakaoMapsSDK-SPM.git",

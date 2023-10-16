@@ -7,7 +7,14 @@
 
 import UIKit
 
-class MainTabController: UITabBarController {
+import FirebaseAuth
+import KakaoSDKAuth
+import KakaoSDKCommon
+import KakaoSDKUser
+
+final class MainTabController: UITabBarController {
+    
+    // MARK: - Lifecycles
     
     // MARK: - Properties
     
@@ -20,14 +27,31 @@ class MainTabController: UITabBarController {
         configureViewController()
     }
     
-    func configureUI() {
+    override func viewDidAppear(_ animated: Bool) {
+        isLogin()
+    }
+    
+    // MARK: - Helpers
+    
+    private func isLogin() {
+//        if Auth.auth().currentUser?.uid == nil {
+            let controller = SocialLoginViewController()
+            present(controller, animated: true)
+            print("로그인화면으로")
+//        } else {
+            print("자동로그인")
+            UserApi.shared.me { user, error in
+                print("user: \(user?.kakaoAccount)")
+            }
+//        }
+    }
+    
+    private func configureUI() {
         tabBar.tintColor = .black
     }
     
     func configureViewController() {
         
-        
-//        let homeViewController = HomeViewController()
         let homeTableViewController = HomeTableViewController()
         let homeNavigation: UINavigationController = makeNavigationController(
             rootViewController: homeTableViewController,
@@ -56,15 +80,21 @@ class MainTabController: UITabBarController {
         viewControllers = [homeNavigation, mapNavigation, infoNavigation]
     }
     
-    func makeNavigationController(rootViewController rootVC: UIViewController,
-                                  title: String,
-                                  tabbarImage: String,
-                                  tag: Int) -> UINavigationController {
-        let navigation: UINavigationController = UINavigationController(rootViewController: rootVC)
+    private func makeNavigationController(
+        rootViewController rootVC: UIViewController,
+        title: String,
+        tabbarImage: String,
+        tag: Int
+    ) -> UINavigationController {
+        let navigation = UINavigationController(rootViewController: rootVC)
+        
         // TODO: - SET TabBar Image (add image constant to function input area)
-        navigation.tabBarItem = UITabBarItem(title: title,
-                                             image: UIImage(systemName: tabbarImage),
-                                             tag: tag)
+        
+        navigation.tabBarItem = UITabBarItem(
+            title: title,
+            image: UIImage(systemName: tabbarImage),
+            tag: tag
+        )
         
         return navigation
     }
