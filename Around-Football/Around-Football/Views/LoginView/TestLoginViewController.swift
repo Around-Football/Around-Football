@@ -16,6 +16,20 @@ import FirebaseAuth
 
 class TestLoginViewController: UIViewController {
     
+    // MARK: - Properties
+    
+    private var loginViewModel = LoginViewModel()
+    
+    private let logoImageView = UIImageView().then {
+        $0.image = UIImage(named: "App_logo")
+        $0.contentMode = .scaleAspectFit
+    }
+    
+    private lazy var goggleLoginButton = GIDSignInButton().then {
+        $0.style = .iconOnly
+        $0.addTarget(self, action: #selector(googleLoginButtonTapped), for: .touchUpInside)
+    }
+    
     private lazy var authorizationButton = ASAuthorizationAppleIDButton().then {
         $0.addTarget(self, action: #selector(handleAuthorizationAppleIDButtonPress), for: .touchUpInside)
     }
@@ -25,7 +39,8 @@ class TestLoginViewController: UIViewController {
         $0.distribution = .fill
         $0.alignment = .center
         $0.spacing = 10
-        $0.addArrangedSubview(authorizationButton)
+        $0.addArrangedSubviews(goggleLoginButton,
+                               authorizationButton)
     }
     
     override func viewDidLoad() {
@@ -35,13 +50,24 @@ class TestLoginViewController: UIViewController {
     }
     
     func configureUI() {
-        view.addSubview(loginProviderStackView)
+        
         view.backgroundColor = .white
+        view.addSubviews(logoImageView,
+                         loginProviderStackView)
+        
+        logoImageView.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            make.centerY.equalToSuperview().offset(-50)
+            make.width.equalToSuperview().multipliedBy(0.8)
+        }
+        
         loginProviderStackView.snp.makeConstraints { make in
-            make.center.equalToSuperview()
+            make.centerX.equalToSuperview()
+            make.top.equalTo(logoImageView.snp.bottom).offset(20)
         }
     }
     
+    // Apple Login SetUp
     func saveUserInKeychain(_ userIdentifier: String) {
         do {
             try KeychainItem(service: "changhyun-kyle.Around-Football", account: "userIdentifier").saveItem(userIdentifier)
@@ -52,21 +78,21 @@ class TestLoginViewController: UIViewController {
     
     func showMainTabViewController(userIdentifier: String, fullName: PersonNameComponents?, email: String?) {
         guard let viewController = self.presentingViewController as? MainTabController
-            else { return }
+        else { return }
         
-//        DispatchQueue.main.async {
-//            viewController.userIdentifierLabel.text = userIdentifier
-//            if let givenName = fullName?.givenName {
-//                viewController.givenNameLabel.text = givenName
-//            }
-//            if let familyName = fullName?.familyName {
-//                viewController.familyNameLabel.text = familyName
-//            }
-//            if let email = email {
-//                viewController.emailLabel.text = email
-//            }
-//            self.dismiss(animated: true, completion: nil)
-//        }
+        DispatchQueue.main.async {
+            //                    viewController.userIdentifierLabel.text = userIdentifier
+            //                    if let givenName = fullName?.givenName {
+            //                        viewController.givenNameLabel.text = givenName
+            //                    }
+            //                    if let familyName = fullName?.familyName {
+            //                        viewController.familyNameLabel.text = familyName
+            //                    }
+            //                    if let email = email {
+            //                        viewController.emailLabel.text = email
+            //                    }
+            self.dismiss(animated: true, completion: nil)
+        }
     }
     
     func showPasswordCredentialAlert(username: String, password: String) {
@@ -87,6 +113,27 @@ class TestLoginViewController: UIViewController {
         authorizationController.delegate = self
         authorizationController.presentationContextProvider = self
         authorizationController.performRequests()
+    }
+    
+    // Google Login SetUp
+    @objc private func googleLoginButtonTapped() {
+        loginViewModel.login()
+//        loginViewModel.login { success, error in
+////            guard let self else { return }
+//            if success {
+//                print("로그인 성공")
+////                guard let viewController = self?.presentingViewController as? MainTabController else { return }
+////                
+////                DispatchQueue.main.async {
+////                    viewController.dismiss(animated: true, completion: nil)
+////                }
+//                // 예를 들어 로그인 후 화면 전환 등을 수행할 수 있습니다.
+//            } else {
+//                if let error = error {
+//                    print("로그인 실패: \(error.localizedDescription)")
+//                }
+//            }
+//        }
     }
 }
 

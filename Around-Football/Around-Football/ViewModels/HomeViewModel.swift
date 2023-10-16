@@ -12,6 +12,16 @@ import RxRelay
 
 class HomeViewModel {
     
+    /*
+     Rx
+     Observable:
+     1. Observable - 데이터 주입 후 변경 안됨.
+     2. Subject - 데이터 주입 후 변경 가능.
+        - 데이터 로드 시점 == 사용시점
+     3. Relay
+        
+     */
+    
     var recruitObservable: BehaviorRelay = BehaviorRelay<[Recruit]>(value: [])
     
     init() {

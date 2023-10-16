@@ -26,9 +26,9 @@ extension TestLoginViewController: ASAuthorizationControllerDelegate {
             
             // For the purpose of this demo app, show the Apple ID credential information in the `ResultViewController`.
             self.showMainTabViewController(userIdentifier: userIdentifier, fullName: fullName, email: email)
-        
+            
         case let passwordCredential as ASPasswordCredential:
-        
+            
             // Sign in using an existing iCloud Keychain credential.
             let username = passwordCredential.user
             let password = passwordCredential.password
@@ -58,7 +58,7 @@ extension TestLoginViewController: ASAuthorizationControllerDelegate {
         authorizationController.presentationContextProvider = self
         authorizationController.performRequests()
     }
-
+    
 }
 
 
