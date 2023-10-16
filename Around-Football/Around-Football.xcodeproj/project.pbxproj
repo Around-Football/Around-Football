@@ -56,6 +56,7 @@
 		7CC619762AD448A90085DF90 /* InfoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CC619752AD448A90085DF90 /* InfoCell.swift */; };
 		7CC619782AD460D80085DF90 /* infoArrangedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CC619772AD460D80085DF90 /* infoArrangedView.swift */; };
 		7CE25AE62ACABF620014132F /* CustomButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CE25AE52ACABF620014132F /* CustomButton.swift */; };
+		7CF175E32ADD1CB500615BBF /* KakaoLoginService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CF175E22ADD1CB500615BBF /* KakaoLoginService.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -96,6 +97,7 @@
 		7CC619752AD448A90085DF90 /* InfoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoCell.swift; sourceTree = "<group>"; };
 		7CC619772AD460D80085DF90 /* infoArrangedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = infoArrangedView.swift; sourceTree = "<group>"; };
 		7CE25AE52ACABF620014132F /* CustomButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomButton.swift; sourceTree = "<group>"; };
+		7CF175E22ADD1CB500615BBF /* KakaoLoginService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KakaoLoginService.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -174,6 +176,7 @@
 				274C21BE2ACFC8E9005469E6 /* LoginViewController.swift */,
 				274C21C32ACFE932005469E6 /* LoginViewModel.swift */,
 				7C141C612ADA5F38002CF180 /* SocialLoginViewController.swift */,
+				7CF175E22ADD1CB500615BBF /* KakaoLoginService.swift */,
 			);
 			path = LoginView;
 			sourceTree = "<group>";
@@ -362,6 +365,7 @@
 				7C5F77582AC96A7E004CE48F /* DetailUserInfoCell.swift in Sources */,
 				7CC619782AD460D80085DF90 /* infoArrangedView.swift in Sources */,
 				7CC619742AD433760085DF90 /* ProfileAndEditView.swift in Sources */,
+				7CF175E32ADD1CB500615BBF /* KakaoLoginService.swift in Sources */,
 				7CE25AE62ACABF620014132F /* CustomButton.swift in Sources */,
 				7C5F775E2AC9CE8A004CE48F /* DateCell.swift in Sources */,
 				7CB21BA32AC94D36001D0058 /* DetailViewController.swift in Sources */,
