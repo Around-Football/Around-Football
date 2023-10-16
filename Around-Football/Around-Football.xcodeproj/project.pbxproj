@@ -7,6 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		272B44842ADD189F00ACEC41 /* TestLoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 272B44832ADD189F00ACEC41 /* TestLoginViewController.swift */; };
+		272B44862ADD1A0A00ACEC41 /* TestLoginViewController+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 272B44852ADD1A0A00ACEC41 /* TestLoginViewController+.swift */; };
+		272B44882ADD2AE000ACEC41 /* KeychainItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 272B44872ADD2AE000ACEC41 /* KeychainItem.swift */; };
+		272B448B2ADD375700ACEC41 /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = 272B448A2ADD375700ACEC41 /* GoogleSignIn */; };
+		272B448D2ADD375700ACEC41 /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 272B448C2ADD375700ACEC41 /* GoogleSignInSwift */; };
+		272B44912ADD54EF00ACEC41 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 272B44902ADD54EF00ACEC41 /* GoogleService-Info.plist */; };
+		272B44932ADD5C0F00ACEC41 /* RouterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 272B44922ADD5C0F00ACEC41 /* RouterViewController.swift */; };
 		2736744D2AC3061C003ADE3F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2736744C2AC3061C003ADE3F /* AppDelegate.swift */; };
 		2736744F2AC3061C003ADE3F /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2736744E2AC3061C003ADE3F /* SceneDelegate.swift */; };
 		273674512AC3061C003ADE3F /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 273674502AC3061C003ADE3F /* ViewController.swift */; };
@@ -24,11 +31,15 @@
 		273674832AC308D1003ADE3F /* Recruit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 273674802AC308D1003ADE3F /* Recruit.swift */; };
 		273674842AC308D1003ADE3F /* Field.swift in Sources */ = {isa = PBXBuildFile; fileRef = 273674812AC308D1003ADE3F /* Field.swift */; };
 		273674852AC308D1003ADE3F /* PlaygroundList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 273674822AC308D1003ADE3F /* PlaygroundList.swift */; };
-		273674872AC30981003ADE3F /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 273674862AC30981003ADE3F /* GoogleService-Info.plist */; };
 		274C21BF2ACFC8E9005469E6 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 274C21BE2ACFC8E9005469E6 /* LoginViewController.swift */; };
 		274C21C22ACFC92D005469E6 /* SignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 274C21C12ACFC92D005469E6 /* SignUpViewController.swift */; };
 		274C21C42ACFE932005469E6 /* LoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 274C21C32ACFE932005469E6 /* LoginViewModel.swift */; };
 		274C21C72ACFF902005469E6 /* TextFieldDelegateHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 274C21C62ACFF901005469E6 /* TextFieldDelegateHandler.swift */; };
+		274C22112AD6D6EF005469E6 /* HomeTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 274C22102AD6D6EF005469E6 /* HomeTableViewCell.swift */; };
+		274C22132AD7C16A005469E6 /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 274C22122AD7C169005469E6 /* HomeViewModel.swift */; };
+		274C22172AD7D826005469E6 /* HomeTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 274C22162AD7D826005469E6 /* HomeTableViewController.swift */; };
+		278E555B2AD800BC00C328D3 /* APIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 278E555A2AD800BC00C328D3 /* APIService.swift */; };
+		278E556A2AD930F900C328D3 /* Response.swift in Sources */ = {isa = PBXBuildFile; fileRef = 278E55692AD930F900C328D3 /* Response.swift */; };
 		6609C5312ACD506100798632 /* TestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6609C5302ACD506100798632 /* TestViewController.swift */; };
 		6609C5332ACE8B0E00798632 /* MapViewController+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6609C5322ACE8B0E00798632 /* MapViewController+.swift */; };
 		6609C5352ACE8D3600798632 /* MapViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6609C5342ACE8D3600798632 /* MapViewModel.swift */; };
@@ -59,6 +70,11 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		272B44832ADD189F00ACEC41 /* TestLoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestLoginViewController.swift; sourceTree = "<group>"; };
+		272B44852ADD1A0A00ACEC41 /* TestLoginViewController+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TestLoginViewController+.swift"; sourceTree = "<group>"; };
+		272B44872ADD2AE000ACEC41 /* KeychainItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainItem.swift; sourceTree = "<group>"; };
+		272B44902ADD54EF00ACEC41 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		272B44922ADD5C0F00ACEC41 /* RouterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouterViewController.swift; sourceTree = "<group>"; };
 		273674492AC3061C003ADE3F /* Around-Football.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Around-Football.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2736744C2AC3061C003ADE3F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		2736744E2AC3061C003ADE3F /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -70,11 +86,15 @@
 		273674802AC308D1003ADE3F /* Recruit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Recruit.swift; sourceTree = "<group>"; };
 		273674812AC308D1003ADE3F /* Field.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Field.swift; sourceTree = "<group>"; };
 		273674822AC308D1003ADE3F /* PlaygroundList.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaygroundList.swift; sourceTree = "<group>"; };
-		273674862AC30981003ADE3F /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		274C21BE2ACFC8E9005469E6 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		274C21C12ACFC92D005469E6 /* SignUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpViewController.swift; sourceTree = "<group>"; };
 		274C21C32ACFE932005469E6 /* LoginViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewModel.swift; sourceTree = "<group>"; };
 		274C21C62ACFF901005469E6 /* TextFieldDelegateHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldDelegateHandler.swift; sourceTree = "<group>"; };
+		274C22102AD6D6EF005469E6 /* HomeTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeTableViewCell.swift; sourceTree = "<group>"; };
+		274C22122AD7C169005469E6 /* HomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewModel.swift; sourceTree = "<group>"; };
+		274C22162AD7D826005469E6 /* HomeTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeTableViewController.swift; sourceTree = "<group>"; };
+		278E555A2AD800BC00C328D3 /* APIService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIService.swift; sourceTree = "<group>"; };
+		278E55692AD930F900C328D3 /* Response.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Response.swift; sourceTree = "<group>"; };
 		6609C5302ACD506100798632 /* TestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestViewController.swift; sourceTree = "<group>"; };
 		6609C5322ACE8B0E00798632 /* MapViewController+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MapViewController+.swift"; sourceTree = "<group>"; };
 		6609C5342ACE8D3600798632 /* MapViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewModel.swift; sourceTree = "<group>"; };
@@ -113,10 +133,12 @@
 				273674672AC306F0003ADE3F /* Then in Frameworks */,
 				2736746C2AC3071A003ADE3F /* RxSwift in Frameworks */,
 				2736746F2AC30786003ADE3F /* RxAlamofire in Frameworks */,
+				272B448B2ADD375700ACEC41 /* GoogleSignIn in Frameworks */,
 				2736746A2AC3071A003ADE3F /* RxCocoa in Frameworks */,
 				273674742AC307D6003ADE3F /* FirebaseFirestore in Frameworks */,
 				273674722AC307D6003ADE3F /* FirebaseAuth in Frameworks */,
 				273674762AC307D6003ADE3F /* FirebaseFirestoreSwift in Frameworks */,
+				272B448D2ADD375700ACEC41 /* GoogleSignInSwift in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -156,7 +178,7 @@
 				273674552AC3061E003ADE3F /* Assets.xcassets */,
 				273674572AC3061E003ADE3F /* LaunchScreen.storyboard */,
 				2736745A2AC3061E003ADE3F /* Info.plist */,
-				273674862AC30981003ADE3F /* GoogleService-Info.plist */,
+				272B44902ADD54EF00ACEC41 /* GoogleService-Info.plist */,
 			);
 			path = "Around-Football";
 			sourceTree = "<group>";
@@ -176,6 +198,9 @@
 			isa = PBXGroup;
 			children = (
 				274C21BE2ACFC8E9005469E6 /* LoginViewController.swift */,
+				272B44832ADD189F00ACEC41 /* TestLoginViewController.swift */,
+				272B44852ADD1A0A00ACEC41 /* TestLoginViewController+.swift */,
+				272B44872ADD2AE000ACEC41 /* KeychainItem.swift */,
 			);
 			path = LoginView;
 			sourceTree = "<group>";
@@ -209,6 +234,7 @@
 			isa = PBXGroup;
 			children = (
 				669674872AC3E82B0067FD48 /* MainTabController.swift */,
+				272B44922ADD5C0F00ACEC41 /* RouterViewController.swift */,
 				274C21BD2ACFC8C4005469E6 /* LoginView */,
 				274C21C02ACFC91D005469E6 /* SignUpView */,
 				6696748B2AC3E9810067FD48 /* HomeView */,
@@ -224,6 +250,8 @@
 			isa = PBXGroup;
 			children = (
 				6696748E2AC3E9CE0067FD48 /* HomeViewController.swift */,
+				274C22162AD7D826005469E6 /* HomeTableViewController.swift */,
+				274C22102AD6D6EF005469E6 /* HomeTableViewCell.swift */,
 			);
 			path = HomeView;
 			sourceTree = "<group>";
@@ -282,6 +310,7 @@
 			isa = PBXGroup;
 			children = (
 				274C21C32ACFE932005469E6 /* LoginViewModel.swift */,
+				274C22122AD7C169005469E6 /* HomeViewModel.swift */,
 				6609C5342ACE8D3600798632 /* MapViewModel.swift */,
 				66656F9E2AD921D700AE1AFA /* FieldDetailViewModel.swift */,
 			);
@@ -295,6 +324,8 @@
 				274C21C62ACFF901005469E6 /* TextFieldDelegateHandler.swift */,
 				7CE25AE52ACABF620014132F /* CustomButton.swift */,
 				663417CB2AD68413002FE2CA /* Constants.swift */,
+				278E555A2AD800BC00C328D3 /* APIService.swift */,
+				278E55692AD930F900C328D3 /* Response.swift */,
 			);
 			path = Utiles;
 			sourceTree = "<group>";
@@ -325,6 +356,8 @@
 				273674732AC307D6003ADE3F /* FirebaseFirestore */,
 				273674752AC307D6003ADE3F /* FirebaseFirestoreSwift */,
 				6650C7362AC9ED6F00055571 /* KakaoMapsSDK_SPM */,
+				272B448A2ADD375700ACEC41 /* GoogleSignIn */,
+				272B448C2ADD375700ACEC41 /* GoogleSignInSwift */,
 			);
 			productName = "Around-Football";
 			productReference = 273674492AC3061C003ADE3F /* Around-Football.app */;
@@ -361,6 +394,7 @@
 				2736746D2AC30786003ADE3F /* XCRemoteSwiftPackageReference "RxAlamofire" */,
 				273674702AC307D6003ADE3F /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 				6650C7352AC9ED6F00055571 /* XCRemoteSwiftPackageReference "KakaoMapsSDK-SPM" */,
+				272B44892ADD375700ACEC41 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
 			);
 			productRefGroup = 2736744A2AC3061C003ADE3F /* Products */;
 			projectDirPath = "";
@@ -378,7 +412,7 @@
 			files = (
 				663417CF2AD68794002FE2CA /* FieldMock.json in Resources */,
 				273674592AC3061E003ADE3F /* LaunchScreen.storyboard in Resources */,
-				273674872AC30981003ADE3F /* GoogleService-Info.plist in Resources */,
+				272B44912ADD54EF00ACEC41 /* GoogleService-Info.plist in Resources */,
 				273674562AC3061E003ADE3F /* Assets.xcassets in Resources */,
 				273674542AC3061C003ADE3F /* Main.storyboard in Resources */,
 			);
@@ -398,9 +432,12 @@
 				66656F9D2AD9219F00AE1AFA /* FieldDetailViewController.swift in Sources */,
 				7C5F775E2AC9CE8A004CE48F /* DateCell.swift in Sources */,
 				66656FA12ADD2FB800AE1AFA /* FieldRecruitTableViewCell.swift in Sources */,
+				278E555B2AD800BC00C328D3 /* APIService.swift in Sources */,
 				7CB21BA32AC94D36001D0058 /* DetailViewController.swift in Sources */,
 				7C5F77622AC9DB7B004CE48F /* PeopleCountView.swift in Sources */,
+				274C22112AD6D6EF005469E6 /* HomeTableViewCell.swift in Sources */,
 				7CE563AC2AD1425F005DE2DF /* DetailViewController+.swift in Sources */,
+				274C22172AD7D826005469E6 /* HomeTableViewController.swift in Sources */,
 				273674842AC308D1003ADE3F /* Field.swift in Sources */,
 				273674512AC3061C003ADE3F /* ViewController.swift in Sources */,
 				6609C5312ACD506100798632 /* TestViewController.swift in Sources */,
@@ -408,11 +445,14 @@
 				663417D12AD695DE002FE2CA /* MockFields.swift in Sources */,
 				7C5F775C2AC9C698004CE48F /* InviteViewController.swift in Sources */,
 				6609C5372ACFCCCD00798632 /* MapModel.swift in Sources */,
+				272B44842ADD189F00ACEC41 /* TestLoginViewController.swift in Sources */,
 				6609C5352ACE8D3600798632 /* MapViewModel.swift in Sources */,
 				6696748F2AC3E9CE0067FD48 /* HomeViewController.swift in Sources */,
 				7C5F77642AC9E180004CE48F /* UIView+.swift in Sources */,
 				669674932AC3E9DF0067FD48 /* InfoViewController.swift in Sources */,
 				66656F9F2AD921D700AE1AFA /* FieldDetailViewModel.swift in Sources */,
+				272B44932ADD5C0F00ACEC41 /* RouterViewController.swift in Sources */,
+				278E556A2AD930F900C328D3 /* Response.swift in Sources */,
 				669674912AC3E9D40067FD48 /* MapViewController.swift in Sources */,
 				663417CC2AD68413002FE2CA /* Constants.swift in Sources */,
 				274C21C22ACFC92D005469E6 /* SignUpViewController.swift in Sources */,
@@ -422,10 +462,13 @@
 				7C5F77602AC9DA08004CE48F /* GroundTitleView.swift in Sources */,
 				7CB21BA52AC94EE4001D0058 /* DetailUserInfoView.swift in Sources */,
 				273674832AC308D1003ADE3F /* Recruit.swift in Sources */,
+				272B44882ADD2AE000ACEC41 /* KeychainItem.swift in Sources */,
 				274C21C72ACFF902005469E6 /* TextFieldDelegateHandler.swift in Sources */,
 				2736744F2AC3061C003ADE3F /* SceneDelegate.swift in Sources */,
 				274C21BF2ACFC8E9005469E6 /* LoginViewController.swift in Sources */,
+				274C22132AD7C16A005469E6 /* HomeViewModel.swift in Sources */,
 				6609C5332ACE8B0E00798632 /* MapViewController+.swift in Sources */,
+				272B44862ADD1A0A00ACEC41 /* TestLoginViewController+.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -574,9 +617,10 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = W6X76DS4Z7;
+				DEVELOPMENT_TEAM = K9NKZR257N;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Around-Football/Info.plist";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "\"현재 위치사용을 허용하시겠습니까?\"";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -607,9 +651,10 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = W6X76DS4Z7;
+				DEVELOPMENT_TEAM = K9NKZR257N;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Around-Football/Info.plist";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "\"현재 위치사용을 허용하시겠습니까?\"";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -653,6 +698,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		272B44892ADD375700ACEC41 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/google/GoogleSignIn-iOS";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 7.0.0;
+			};
+		};
 		273674602AC306D6003ADE3F /* XCRemoteSwiftPackageReference "SnapKit" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/SnapKit/SnapKit.git";
@@ -704,6 +757,16 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		272B448A2ADD375700ACEC41 /* GoogleSignIn */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 272B44892ADD375700ACEC41 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
+			productName = GoogleSignIn;
+		};
+		272B448C2ADD375700ACEC41 /* GoogleSignInSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 272B44892ADD375700ACEC41 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
+			productName = GoogleSignInSwift;
+		};
 		273674612AC306D6003ADE3F /* SnapKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 273674602AC306D6003ADE3F /* XCRemoteSwiftPackageReference "SnapKit" */;
