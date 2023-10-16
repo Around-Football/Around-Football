@@ -40,6 +40,11 @@ final class DetailUserInfoCell: UITableViewCell {
     
     // MARK: - Helpers
     
+    func setValues(title: String, contents: String) {
+        self.title.text = title
+        self.contents.text = contents
+    }
+    
     private func configureUI() {
         selectionStyle = .none
         addSubviews(title, contents)

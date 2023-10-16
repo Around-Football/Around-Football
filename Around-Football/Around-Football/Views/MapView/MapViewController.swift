@@ -5,15 +5,17 @@
 //  Created by 진태영 on 2023/09/27.
 //
 
+import CoreLocation
 import UIKit
+
 import KakaoMapsSDK
 import SnapKit
 import Then
-import CoreLocation
 
-class MapViewController: UIViewController {
+final class MapViewController: UIViewController {
     
     // MARK: - Properties
+    
     lazy var mapContainer: KMViewContainer = KMViewContainer(frame: self.view.frame)
     var mapController: KMController?
     var _observerAdded: Bool = false
@@ -21,6 +23,7 @@ class MapViewController: UIViewController {
     var _appear = true
     var locationManager = CLLocationManager()
     var viewModel: MapViewModel?
+    var modalViewController: FieldDetailViewController?
     
     private let searchTextField = UISearchTextField().then {
         $0.placeholder = "장소를 입력하세요."
@@ -49,6 +52,7 @@ class MapViewController: UIViewController {
     }
     
     // MARK: - Lifecycle
+    
     deinit {
         mapController?.stopRendering()
         mapController?.stopEngine()
@@ -62,7 +66,14 @@ class MapViewController: UIViewController {
         configureUI()
         setLocationManager()
         if let locationCoordinate = locationManager.location?.coordinate {
-            self.viewModel = MapViewModel(latitude: locationCoordinate.latitude, longitude: locationCoordinate.longitude)
+            self.viewModel = MapViewModel(
+                latitude: locationCoordinate.latitude,
+                longitude: locationCoordinate.longitude
+            )
+            
+            guard let viewModel = viewModel else { return }
+            
+            viewModel.fetchFields()
         }
         
     }
@@ -97,22 +108,43 @@ class MapViewController: UIViewController {
     }
     
     // MARK: - Selectors
+    
     @objc func pressTrackingButton() {
         self.changeCurrentPoi()
         guard let location = viewModel?.currentLocation else { return }
         self.moveCamera(latitude: location.latitude, longitude: location.longitude)
     }
     
+    func tapHandler(_ param: PoiInteractionEventParam) {
+        let itemID = param.poiItem.itemID
+        guard let viewModel = self.viewModel else { return }
+        guard let field = viewModel.fields.filter({ $0.id == itemID }).first else { return }
+        
+        let fieldViewModel = FieldDetailViewModel(field: field)
+        self.modalViewController = FieldDetailViewController(viewModel: fieldViewModel)
+        
+        if let modalViewController = self.modalViewController {
+            let navigation = UINavigationController(rootViewController: modalViewController)
+            present(navigation, animated: true)
+        }
+    }
+
+    
     // MARK: - Helpers
+    
     func configureUI() {
         view.backgroundColor = .systemBackground
-        view.addSubview(mapContainer)
+        view.addSubviews(
+            mapContainer,
+            searchTextField,
+            trackingButton
+        )
+        
         mapContainer.snp.makeConstraints {
             $0.top.leading.trailing.equalTo(self.view)
             $0.bottom.equalTo(self.view.safeAreaLayoutGuide)
         }
         
-        view.addSubview(searchTextField)
         searchTextField.snp.makeConstraints {
             $0.top.equalTo(self.view.safeAreaLayoutGuide).offset(5)
             $0.leading.equalTo(self.view).offset(16)
@@ -120,7 +152,6 @@ class MapViewController: UIViewController {
             $0.height.equalTo(40)
         }
         
-        view.addSubview(trackingButton)
         trackingButton.snp.makeConstraints {
             $0.leading.equalTo(mapContainer).offset(20)
             $0.bottom.equalTo(mapContainer).offset(-20)

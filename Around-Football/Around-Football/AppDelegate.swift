@@ -6,10 +6,13 @@
 //
 
 import UIKit
+import Firebase
 
+import AuthenticationServices
 import FirebaseAuth
 import FirebaseCore
 import FirebaseFirestore
+import GoogleSignIn
 import KakaoSDKAuth
 import KakaoSDKCommon
 import KakaoSDKUser
@@ -19,14 +22,37 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+
         //Firebase 구성
         FirebaseApp.configure()
         //kakao 초기화
         KakaoSDK.initSDK(appKey: "d120f29f71b1903d6e9191768dbdfdb2")
         
+        // MARK: - Apple Login SetUp
+//        var window: UIWindow?
+//        let appleIDProvider = ASAuthorizationAppleIDProvider()
+//           appleIDProvider.getCredentialState(forUserID: KeychainItem.currentUserIdentifier) { (credentialState, error) in
+//               switch credentialState {
+//               case .authorized:
+//                   break // The Apple ID credential is valid.
+//               case .revoked, .notFound:
+//                   // The Apple ID credential is either revoked or was not found, so show the sign-in UI.
+//                   DispatchQueue.main.async {
+//                       self.window?.rootViewController?.showLoginViewController()
+//                   }
+//               default:
+//                   break
+//               }
+//           }
         return true
     }
-
+    
+    // MARK: - Google Login SetUp
+    func application(_ app: UIApplication,
+                     open url: URL,
+                     options: [UIApplication.OpenURLOptionsKey: Any] = [:]) -> Bool {
+      return GIDSignIn.sharedInstance.handle(url)
+    }
     // MARK: UISceneSession Lifecycle
 
     func application(_ application: UIApplication, configurationForConnecting connectingSceneSession: UISceneSession, options: UIScene.ConnectionOptions) -> UISceneConfiguration {

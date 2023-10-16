@@ -37,7 +37,7 @@ final class CustomButton: UIButton {
         setTitle(buttonTitle, for: .normal)
         setTitleColor(.white, for: .normal)
         backgroundColor = .black
-        layer.cornerRadius = 5
+        layer.cornerRadius = LayoutOptions.cornerRadious
         clipsToBounds = true
         addTarget(self, action: #selector(buttonClicked), for: .touchUpInside)
     }

@@ -6,16 +6,18 @@
 //
 // 홈(리스트)
 import UIKit
+import RxSwift
 
 class HomeViewController: UIViewController {
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         configureUI()
     }
     
     func configureUI() {
         view.backgroundColor = .systemRed
+        
     }
 }

@@ -16,6 +16,10 @@ final class MainTabController: UITabBarController {
     
     // MARK: - Lifecycles
     
+    // MARK: - Properties
+    
+    var loginViewModel = LoginViewModel()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -46,10 +50,11 @@ final class MainTabController: UITabBarController {
         tabBar.tintColor = .black
     }
     
-    private func configureViewController() {
-        let homeViewController = HomeViewController()
+    func configureViewController() {
+        
+        let homeTableViewController = HomeTableViewController()
         let homeNavigation: UINavigationController = makeNavigationController(
-            rootViewController: homeViewController,
+            rootViewController: homeTableViewController,
             title: "Home",
             tabbarImage: "house",
             tag: 0
