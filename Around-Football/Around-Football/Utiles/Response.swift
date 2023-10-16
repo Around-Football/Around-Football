@@ -8,5 +8,5 @@
 import Foundation
 
 struct Response: Codable {
-    let recruits: [Recruit]
+    let recruits: [Recruit_Rx]
 }
