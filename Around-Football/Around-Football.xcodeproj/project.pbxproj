@@ -14,6 +14,7 @@
 		272B448D2ADD375700ACEC41 /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 272B448C2ADD375700ACEC41 /* GoogleSignInSwift */; };
 		272B44912ADD54EF00ACEC41 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 272B44902ADD54EF00ACEC41 /* GoogleService-Info.plist */; };
 		272B44932ADD5C0F00ACEC41 /* RouterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 272B44922ADD5C0F00ACEC41 /* RouterViewController.swift */; };
+		272B44952ADD80EC00ACEC41 /* Recruit_Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 272B44942ADD80EC00ACEC41 /* Recruit_Rx.swift */; };
 		2736744D2AC3061C003ADE3F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2736744C2AC3061C003ADE3F /* AppDelegate.swift */; };
 		2736744F2AC3061C003ADE3F /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2736744E2AC3061C003ADE3F /* SceneDelegate.swift */; };
 		273674512AC3061C003ADE3F /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 273674502AC3061C003ADE3F /* ViewController.swift */; };
@@ -74,9 +75,9 @@
 		7CC619762AD448A90085DF90 /* InfoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CC619752AD448A90085DF90 /* InfoCell.swift */; };
 		7CC619782AD460D80085DF90 /* infoArrangedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CC619772AD460D80085DF90 /* infoArrangedView.swift */; };
 		7CE25AE62ACABF620014132F /* CustomButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CE25AE52ACABF620014132F /* CustomButton.swift */; };
-		7CF175E32ADD1CB500615BBF /* KakaoLoginService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CF175E22ADD1CB500615BBF /* KakaoLoginService.swift */; };
 		7CE563AA2AD140A9005DE2DF /* LayoutOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CE563A92AD140A9005DE2DF /* LayoutOptions.swift */; };
 		7CE563AC2AD1425F005DE2DF /* DetailViewController+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CE563AB2AD1425F005DE2DF /* DetailViewController+.swift */; };
+		7CF175E32ADD1CB500615BBF /* KakaoLoginService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CF175E22ADD1CB500615BBF /* KakaoLoginService.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -85,6 +86,7 @@
 		272B44872ADD2AE000ACEC41 /* KeychainItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainItem.swift; sourceTree = "<group>"; };
 		272B44902ADD54EF00ACEC41 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		272B44922ADD5C0F00ACEC41 /* RouterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouterViewController.swift; sourceTree = "<group>"; };
+		272B44942ADD80EC00ACEC41 /* Recruit_Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Recruit_Rx.swift; sourceTree = "<group>"; };
 		273674492AC3061C003ADE3F /* Around-Football.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Around-Football.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2736744C2AC3061C003ADE3F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		2736744E2AC3061C003ADE3F /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -133,9 +135,9 @@
 		7CC619752AD448A90085DF90 /* InfoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoCell.swift; sourceTree = "<group>"; };
 		7CC619772AD460D80085DF90 /* infoArrangedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = infoArrangedView.swift; sourceTree = "<group>"; };
 		7CE25AE52ACABF620014132F /* CustomButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomButton.swift; sourceTree = "<group>"; };
-		7CF175E22ADD1CB500615BBF /* KakaoLoginService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KakaoLoginService.swift; sourceTree = "<group>"; };
 		7CE563A92AD140A9005DE2DF /* LayoutOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LayoutOptions.swift; sourceTree = "<group>"; };
 		7CE563AB2AD1425F005DE2DF /* DetailViewController+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DetailViewController+.swift"; sourceTree = "<group>"; };
+		7CF175E22ADD1CB500615BBF /* KakaoLoginService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KakaoLoginService.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -184,7 +186,6 @@
 		2736744B2AC3061C003ADE3F /* Around-Football */ = {
 			isa = PBXGroup;
 			children = (
-				6696748A2AC3E9740067FD48 /* View */,
 				663417CD2AD68767002FE2CA /* MockData */,
 				2736747F2AC308D1003ADE3F /* Models */,
 				7CE563A72AD13DA3005DE2DF /* ViewModels */,
@@ -208,6 +209,7 @@
 			isa = PBXGroup;
 			children = (
 				273674802AC308D1003ADE3F /* Recruit.swift */,
+				272B44942ADD80EC00ACEC41 /* Recruit_Rx.swift */,
 				273674812AC308D1003ADE3F /* Field.swift */,
 				273674822AC308D1003ADE3F /* PlaygroundList.swift */,
 				6609C5362ACFCCCD00798632 /* MapModel.swift */,
@@ -219,7 +221,6 @@
 			isa = PBXGroup;
 			children = (
 				274C21BE2ACFC8E9005469E6 /* LoginViewController.swift */,
-				274C21C32ACFE932005469E6 /* LoginViewModel.swift */,
 				7C141C612ADA5F38002CF180 /* SocialLoginViewController.swift */,
 				7CF175E22ADD1CB500615BBF /* KakaoLoginService.swift */,
 				272B44832ADD189F00ACEC41 /* TestLoginViewController.swift */,
@@ -329,8 +330,6 @@
 			isa = PBXGroup;
 			children = (
 				7C5F77632AC9E180004CE48F /* UIView+.swift */,
-				7CE25AE52ACABF620014132F /* CustomButton.swift */,
-				274C21C62ACFF901005469E6 /* TextFieldDelegateHandler.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -470,6 +469,7 @@
 				66656F9D2AD9219F00AE1AFA /* FieldDetailViewController.swift in Sources */,
 				7C5F775E2AC9CE8A004CE48F /* DateCell.swift in Sources */,
 				66656FA12ADD2FB800AE1AFA /* FieldRecruitTableViewCell.swift in Sources */,
+				272B44952ADD80EC00ACEC41 /* Recruit_Rx.swift in Sources */,
 				278E555B2AD800BC00C328D3 /* APIService.swift in Sources */,
 				7CB21BA32AC94D36001D0058 /* DetailViewController.swift in Sources */,
 				7C5F77622AC9DB7B004CE48F /* PeopleCountView.swift in Sources */,
