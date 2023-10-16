@@ -16,7 +16,8 @@ struct FirebaseAPI {
         REF_FIELD.getDocuments { snapshot, error in
             
             guard let snapshot = snapshot else {
-                print("DEBUG: fetchFields Error - \(String(describing: error?.localizedDescription))")
+                let errorMessage = error?.localizedDescription ?? "None ERROR"
+                print("DEBUG: fetchFields Error - \(errorMessage)")
                 return
             }
             
@@ -33,7 +34,7 @@ struct FirebaseAPI {
         guard let fileLocation = Bundle.main.url(
             forResource: fileName,
             withExtension: extensionType
-        ) else { 
+        ) else {
             print("파일 위치 없음")
             return
         }
@@ -46,6 +47,26 @@ struct FirebaseAPI {
         } catch {
             print("json load fail")
         }
+    }
+    
+    func fetchRecruitFieldData(
+        fieldID: String,
+        date: Date,
+        completion: @escaping(([Recruit]) -> Void)
+    ) {
+        REF_RECRUIT
+            .whereField("fieldID", isEqualTo: fieldID)
+            .whereField("matchDate", isEqualTo: date)
+            .getDocuments { snapshot, error in
+                guard let snapshot = snapshot else {
+                    let errorMessage = error?.localizedDescription ?? "None ERROR"
+                    print("DEBUG: fetchRecruitFieldData Error - \(errorMessage)")
+                    return
+                }
+                
+                let documentsData = snapshot.documents.map { $0.data() }
+                
+            }
     }
 }
 

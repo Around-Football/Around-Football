@@ -11,16 +11,25 @@ final class FieldDetailViewModel {
     
     // MARK: - Properties
     
-    var id: String
-    
+    private let field: Field
+    private var recruits: [Recruit] = []
+    private let firebaseAPI = FirebaseAPI.shared
+
     // MARK: - Lifecycles
     
-    init(id: String) {
-        self.id = id
+    init(field: Field) {
+        self.field = field
     }
     
     // MARK: - API
     
+    func fetchRecruitFieldData(date: Date, completion: @escaping(([Recruit]) -> Void)) {
+        firebaseAPI.fetchRecruitFieldData(fieldID: field.id, date: date) { recruits in
+            self.recruits = recruits.sorted(by: { $0.matchDate < $1.matchDate })
+            
+            completion(recruits)
+        }
+    }
     
     
 }
