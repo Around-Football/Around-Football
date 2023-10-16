@@ -56,15 +56,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 // MARK: - Kakao Login
 
 extension SceneDelegate {
-    //handleOpenUrl
-    func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
-        if (AuthApi.isKakaoTalkLoginUrl(url)) {
-            return AuthController.handleOpenUrl(url: url)
-        }
-
-        return false
-    }
-    
     // 카카오톡에서 서비스 앱으로 이동하는 과정을 거칩니다. 카카오톡에서 서비스 앱으로 돌아왔을 때 카카오 로그인 처리를 정상적으로 완료
     func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
         if let url = URLContexts.first?.url {

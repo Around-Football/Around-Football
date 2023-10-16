@@ -7,6 +7,7 @@
 
 import UIKit
 
+import Firebase
 import FirebaseAuth
 import SnapKit
 import Then
@@ -17,6 +18,8 @@ import KakaoSDKUser
 final class SocialLoginViewController: UIViewController {
     
     // MARK: - Properties
+    
+    let database = Firestore.firestore()
     
     private lazy var kakaoLoginButton = UIButton().then {
         $0.setImage(UIImage(named: "KakaoLogin"), for: .normal)
@@ -91,25 +94,9 @@ extension SocialLoginViewController {
                 print("loginWithKakaoTalk() success.")
                 
                 //TODO: -  회원가입 성공 시 oauthToken 저장
-                _ = oauthToken
+                let accessToken = oauthToken?.accessToken
                 
-                UserApi.shared.me { user, error in
-                    guard error == nil else {
-                        print(error?.localizedDescription as Any)
-                        return
-                    }
-                    
-                    guard
-                        let user = user,
-                        let userId = user.id,
-                        let userEmail = user.kakaoAccount?.email
-                    else {
-                        print("유저 가져오기 오류")
-                        return
-                    }
-
-                    self.createGoogleUser(email: userEmail, password: "\(userId)")
-                }
+                self.setUserInfo()
                 
                 // 완료 후 모달 내리기
                 self.dismiss(animated: true)
@@ -124,7 +111,7 @@ extension SocialLoginViewController {
                 print("loginWithKakaoAccount() success.")
                 
                 //do something
-                _ = oauthToken
+                let accessToken = oauthToken
                 
                 //완료후 모달 내리기
                 self.dismiss(animated: true)
@@ -223,8 +210,31 @@ extension SocialLoginViewController {
             print("accessTokenInfo() success.")
             
             //do something
-            _ = accessTokenInfo
+            let accessTokenInfo = accessTokenInfo
             print("\(accessTokenInfo)")
+        }
+    }
+    
+    //유저정보
+    func setUserInfo() {
+        UserApi.shared.me { user, error in
+            guard error == nil else {
+                print(error?.localizedDescription as Any)
+                return
+            }
+            
+            guard
+                let user = user,
+                let userId = user.id,
+                let userEmail = user.kakaoAccount?.email
+            else {
+                print("유저 가져오기 오류")
+                return
+            }
+            
+            //infoLabel.text = user?.kakaoAccount?.profile?.nickname
+            
+            self.createGoogleUser(email: userEmail, password: "\(userId)")
         }
     }
 }

@@ -22,7 +22,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         //Firebase 구성
         FirebaseApp.configure()
         //kakao 초기화
-        KakaoSDK.initSDK(appKey: "0d5ef52f7c57c39af9576424a158bdb6")
+        KakaoSDK.initSDK(appKey: "d120f29f71b1903d6e9191768dbdfdb2")
         
         return true
     }
