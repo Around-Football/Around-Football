@@ -10,8 +10,11 @@ import UIKit
 
 import SnapKit
 import Then
+import FirebaseCore
+import GoogleSignIn
+import FirebaseAuth
 
-class AppleLoginViewController: UIViewController {
+class TestLoginViewController: UIViewController {
     
     private lazy var authorizationButton = ASAuthorizationAppleIDButton().then {
         $0.addTarget(self, action: #selector(handleAuthorizationAppleIDButtonPress), for: .touchUpInside)

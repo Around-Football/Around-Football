@@ -10,7 +10,7 @@ import AuthenticationServices
 
 // REF: https://developer.apple.com/documentation/sign_in_with_apple/implementing_user_authentication_with_sign_in_with_apple#3546460
 
-extension AppleLoginViewController: ASAuthorizationControllerDelegate {
+extension TestLoginViewController: ASAuthorizationControllerDelegate {
     
     func authorizationController(controller: ASAuthorizationController, didCompleteWithAuthorization authorization: ASAuthorization) {
         switch authorization.credential {
@@ -62,7 +62,7 @@ extension AppleLoginViewController: ASAuthorizationControllerDelegate {
 }
 
 
-extension AppleLoginViewController: ASAuthorizationControllerPresentationContextProviding {
+extension TestLoginViewController: ASAuthorizationControllerPresentationContextProviding {
     func presentationAnchor(for controller: ASAuthorizationController) -> ASPresentationAnchor {
         return self.view.window!
     }
