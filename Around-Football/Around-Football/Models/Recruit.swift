@@ -24,7 +24,7 @@ struct Recruit: Codable, Identifiable {
         
         return array
     }
-
+    
     init(dictionary: [String: Any]) {
         self.id = dictionary["id"] as? String ?? UUID().uuidString
         self.username = dictionary["username"] as? String ?? ""
@@ -33,3 +33,16 @@ struct Recruit: Codable, Identifiable {
         self.matchDate = dictionary["matchDate"] as? Date ?? Date()
     }
 }
+//struct Recruit: Codable {
+//    let id: Int
+//    let userName: String
+//    let people: Int
+//    let content, matchDate, matchTime, fieldName: String
+//    let fieldAddress: String
+//
+//    enum CodingKeys: String, CodingKey {
+//        case id, userName, people, content, matchDate, matchTime
+//        case fieldName = "FieldName"
+//        case fieldAddress = "FieldAddress"
+//    }
+//}
