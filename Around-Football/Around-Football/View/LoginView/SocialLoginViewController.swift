@@ -25,6 +25,11 @@ final class SocialLoginViewController: UIViewController {
         $0.addTarget(self, action: #selector(kakaoLoginButtonTapped), for: .touchUpInside)
     }
     
+    private lazy var kakaoLogOutButton = UIButton().then {
+        $0.setImage(UIImage(named: "KakaoLogin"), for: .normal)
+        $0.addTarget(self, action: #selector(kakaoLogOutButtonTapped), for: .touchUpInside)
+    }
+    
     // MARK: - Lifecycles
     
     override func viewDidLoad() {
@@ -39,15 +44,26 @@ final class SocialLoginViewController: UIViewController {
         kakaoLoginService.onKakaoLoginByAppTouched()
     }
     
+    @objc func kakaoLogOutButtonTapped() {
+        kakaoLoginService.kakaoLogout()
+    }
+    
     // MARK: - Helpers
     
     private func configureUI() {
         view.backgroundColor = .white
         
         view.addSubviews(kakaoLoginButton)
+        view.addSubview(kakaoLogOutButton)
         
         kakaoLoginButton.snp.makeConstraints { make in
             make.centerX.centerY.equalToSuperview()
+        }
+        
+        kakaoLogOutButton.snp.makeConstraints { make in
+            make.top.equalTo(kakaoLoginButton.snp.bottom).offset(20)
+            make.leading.equalToSuperview().offset(20)
+            make.trailing.equalToSuperview().offset(-20)
         }
     }
 }

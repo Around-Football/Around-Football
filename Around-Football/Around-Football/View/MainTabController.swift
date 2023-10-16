@@ -8,6 +8,9 @@
 import UIKit
 
 import FirebaseAuth
+import KakaoSDKAuth
+import KakaoSDKCommon
+import KakaoSDKUser
 
 final class MainTabController: UITabBarController {
     
@@ -27,13 +30,16 @@ final class MainTabController: UITabBarController {
     // MARK: - Helpers
     
     private func isLogin() {
-        if Auth.auth().currentUser?.uid == nil {
+//        if Auth.auth().currentUser?.uid == nil {
             let controller = SocialLoginViewController()
             present(controller, animated: true)
             print("로그인화면으로")
-        } else {
+//        } else {
             print("자동로그인")
-        }
+            UserApi.shared.me { user, error in
+                print("user: \(user?.kakaoAccount)")
+            }
+//        }
     }
     
     private func configureUI() {
