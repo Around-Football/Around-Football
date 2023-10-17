@@ -13,43 +13,67 @@ import FirebaseCore
 import GoogleSignIn
 import FirebaseAuth
 
-final class AppleLoginService: ASAuthorization {
-    fileprivate var currentNonce: String?
-    
-    private func randomNonceString(length: Int = 32) -> String {
-        precondition(length > 0)
-        var randomBytes = [UInt8](repeating: 0, count: length)
-        let errorCode = SecRandomCopyBytes(kSecRandomDefault, randomBytes.count, &randomBytes)
-        if errorCode != errSecSuccess {
-            fatalError(
-                "Unable to generate nonce. SecRandomCopyBytes failed with OSStatus \(errorCode)"
-            )
-        }
+fileprivate var currentNonce: String?
+
+class AppleLoginService: UIViewController {
+    func startSignInWithAppleFlow() {
+        let nonce = randomNonceString()
+        currentNonce = nonce
+        let appleIDProvider = ASAuthorizationAppleIDProvider()
+        let request = appleIDProvider.createRequest()
+        request.requestedScopes = [.fullName, .email]
+        request.nonce = sha256(nonce)
         
-        let charset: [Character] =
-        Array("0123456789ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvwxyz-._")
-        
-        let nonce = randomBytes.map { byte in
-            // Pick a random character from the set, wrapping around if needed.
-            charset[Int(byte) % charset.count]
-        }
-        
-        return String(nonce)
+        let authorizationController = ASAuthorizationController(authorizationRequests: [request])
+        authorizationController.delegate = self
+        authorizationController.presentationContextProvider = self
+        authorizationController.performRequests()
     }
     
     private func sha256(_ input: String) -> String {
         let inputData = Data(input.utf8)
         let hashedData = SHA256.hash(data: inputData)
         let hashString = hashedData.compactMap {
-            String(format: "%02x", $0)
+            return String(format: "%02x", $0)
         }.joined()
         
         return hashString
     }
+    
+    private func randomNonceString(length: Int = 32) -> String {
+        precondition(length > 0)
+        let charset: Array<Character> =
+            Array("0123456789ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvwxyz-._")
+        var result = ""
+        var remainingLength = length
+        
+        while remainingLength > 0 {
+            let randoms: [UInt8] = (0 ..< 16).map { _ in
+                var random: UInt8 = 0
+                let errorCode = SecRandomCopyBytes(kSecRandomDefault, 1, &random)
+                if errorCode != errSecSuccess {
+                    fatalError("Unable to generate nonce. SecRandomCopyBytes failed with OSStatus \(errorCode)")
+                }
+                return random
+            }
+            
+            randoms.forEach { random in
+                if remainingLength == 0 {
+                    return
+                }
+                
+                if random < charset.count {
+                    result.append(charset[Int(random)])
+                    remainingLength -= 1
+                }
+            }
+        }
+        
+        return result
+    }
 }
 
 extension AppleLoginService: ASAuthorizationControllerDelegate {
-    
     func authorizationController(controller: ASAuthorizationController, didCompleteWithAuthorization authorization: ASAuthorization) {
         if let appleIDCredential = authorization.credential as? ASAuthorizationAppleIDCredential {
             guard let nonce = currentNonce else {
@@ -63,41 +87,30 @@ extension AppleLoginService: ASAuthorizationControllerDelegate {
                 print("Unable to serialize token string from data: \(appleIDToken.debugDescription)")
                 return
             }
-            // Initialize a Firebase credential, including the user's full name.
-            let credential = OAuthProvider.appleCredential(withIDToken: idTokenString,
-                                                           rawNonce: nonce,
-                                                           fullName: appleIDCredential.fullName)
-            // Sign in with Firebase.
-            Auth.auth().signIn(with: credential) { (authResult, error) in
+            
+            let credential = OAuthProvider.credential(withProviderID: "apple.com", idToken: idTokenString, rawNonce: nonce)
+            
+            Auth.auth().signIn(with: credential) { authResult, error in
                 if let error = error {
-                    // Error. If error.code == .MissingOrInvalidNonce, make sure
-                    // you're sending the SHA256-hashed nonce as a hex string with
-                    // your request to Apple.
-                    print(error.localizedDescription)
+                    print ("Error Apple sign in: %@", error)
                     return
                 }
-                
-                self.createUser(email: authResult?.user.email ?? "", password: authResult?.user.email ?? "")
                 // User is signed in to Firebase with Apple.
                 // ...
+                ///Main 화면으로 보내기
+//                let storyboard = UIStoryboard(name: "Main", bundle: Bundle.main)
+//                let mainViewController = storyboard.instantiateViewController(identifier: "MainTabViewController")
+//                mainViewController.modalPresentationStyle = .fullScreen
+//                self.navigationController?.show(mainViewController, sender: nil)
+                let mainTabVC = MainTabController()
+                self.navigationController?.pushViewController(mainTabVC, animated: true)
             }
         }
     }
-    
-    func authorizationController(controller: ASAuthorizationController, didCompleteWithError error: Error) {
-        // Handle error.
-        print("Sign in with Apple errored: \(error)")
-    }
-    
-    func createUser(email: String, password: String) {
-        Auth.auth().createUser(withEmail: email, password: password) { result, error in
-            guard error == nil else {
-                print(error?.localizedDescription as Any)
-                return
-            }
-            
-            print("로그인 성공")
-            print(result?.user)
-        }
+}
+
+extension AppleLoginService: ASAuthorizationControllerPresentationContextProviding {
+    func presentationAnchor(for controller: ASAuthorizationController) -> ASPresentationAnchor {
+        return self.view.window!
     }
 }
