@@ -10,6 +10,7 @@ import UIKit
 import KakaoSDKAuth
 import KakaoSDKCommon
 import KakaoSDKUser
+import AuthenticationServices
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
@@ -17,9 +18,31 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let scene = scene as? UIWindowScene else { return }
+        
         window?.windowScene = scene
-        window?.rootViewController = MainTabController()
+        
+        // MARK: - Apple Login SetUp
+        let appleIDProvider = ASAuthorizationAppleIDProvider()
+           appleIDProvider.getCredentialState(forUserID: KeychainItem.currentUserIdentifier) { (credentialState, error) in
+               switch credentialState {
+               case .authorized:
+                   break // The Apple ID credential is valid.
+               case .revoked, .notFound:
+//                   break
+//                    The Apple ID cred/*ential is either revoked or was not found, so show the sign-in UI.*/
+                   DispatchQueue.main.async {
+                       self.window?.rootViewController = TestLoginViewController()
+                   }
+               default:
+                   break
+               }
+           }
+        
+        
+        window?.rootViewController = TestLoginViewController()
         window?.makeKeyAndVisible()
+        
+        
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {

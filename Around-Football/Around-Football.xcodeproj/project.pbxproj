@@ -129,6 +129,7 @@
 		7C5F775F2AC9DA08004CE48F /* GroundTitleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroundTitleView.swift; sourceTree = "<group>"; };
 		7C5F77612AC9DB7B004CE48F /* PeopleCountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeopleCountView.swift; sourceTree = "<group>"; };
 		7C5F77632AC9E180004CE48F /* UIView+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+.swift"; sourceTree = "<group>"; };
+		7C78830C2ADE54970028D555 /* Around-Football.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Around-Football.entitlements"; sourceTree = "<group>"; };
 		7CB21BA22AC94D36001D0058 /* DetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
 		7CB21BA42AC94EE4001D0058 /* DetailUserInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailUserInfoView.swift; sourceTree = "<group>"; };
 		7CC619732AD433760085DF90 /* ProfileAndEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileAndEditView.swift; sourceTree = "<group>"; };
@@ -186,6 +187,7 @@
 		2736744B2AC3061C003ADE3F /* Around-Football */ = {
 			isa = PBXGroup;
 			children = (
+				7C78830C2ADE54970028D555 /* Around-Football.entitlements */,
 				663417CD2AD68767002FE2CA /* MockData */,
 				2736747F2AC308D1003ADE3F /* Models */,
 				7CE563A72AD13DA3005DE2DF /* ViewModels */,
@@ -655,6 +657,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "Around-Football/Around-Football.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = W6X76DS4Z7;
@@ -676,7 +679,7 @@
 					"-Xlinker",
 					"-no_warn_duplicate_libraries",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "changhyun-kyle.Around-Football";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.changhyun-kyle.Around-Football";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -689,6 +692,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "Around-Football/Around-Football.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = W6X76DS4Z7;
@@ -706,7 +710,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "changhyun-kyle.Around-Football";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.changhyun-kyle.Around-Football";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
