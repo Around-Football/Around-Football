@@ -2,8 +2,6 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>GIDClientID</key>
-	<string>236320604181-hcu99ts7babkki9laglosr72ubsa4i7h.apps.googleusercontent.com</string>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
@@ -16,6 +14,8 @@
 			</array>
 		</dict>
 	</array>
+	<key>GIDClientID</key>
+	<string>236320604181-hcu99ts7babkki9laglosr72ubsa4i7h.apps.googleusercontent.com</string>
 	<key>KAKAO_APP_KEY</key>
 	<string>d120f29f71b1903d6e9191768dbdfdb2</string>
 	<key>LSApplicationQueriesSchemes</key>
