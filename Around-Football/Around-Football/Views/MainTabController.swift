@@ -12,6 +12,31 @@ import KakaoSDKAuth
 import KakaoSDKCommon
 import KakaoSDKUser
 
+/*
+ func authenticateUserAndConfigureUI() {
+     if Auth.auth().currentUser == nil {
+         DispatchQueue.main.async {
+             let logInNavigation = UINavigationController(rootViewController: LoginController())
+             logInNavigation.modalPresentationStyle = .fullScreen
+             self.present(logInNavigation, animated: true)
+         }
+     } else {
+         configureViewControllers()
+         configureUI()
+         fetchUser()
+     }
+ }
+
+ // MARK: - Lifecycle
+ override func viewDidLoad() {
+     super.viewDidLoad()
+     
+     view.backgroundColor = .twitterBlue
+     authenticateUserAndConfigureUI()
+ }
+ */
+
+
 final class MainTabController: UITabBarController {
     
     // MARK: - Lifecycles
