@@ -5,14 +5,14 @@
 //  Created by Deokhun KIM on 10/16/23.
 //
 
-import Foundation
+import UIKit
 
 import FirebaseAuth
 import KakaoSDKAuth
 import KakaoSDKCommon
 import KakaoSDKUser
 
-final class KakaoLoginService {
+final class KakaoLoginService: UIViewController {
     private var userProfile: String?
     private var email: String?
     
@@ -116,7 +116,8 @@ extension KakaoLoginService {
             }
             
             print("로그인 성공")
-            print(result?.user)
+            let mainTabVC = MainTabController()
+            self.navigationController?.pushViewController(mainTabVC, animated: true)
         }
     }
     
