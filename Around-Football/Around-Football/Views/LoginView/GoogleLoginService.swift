@@ -26,6 +26,7 @@ class GoogleLoginService {
           print("There is no root view controller!")
           return
         }
+        
         GIDSignIn.sharedInstance.signIn(withPresenting: rootViewController) { result, error in
             guard error == nil else {
                 // ...
