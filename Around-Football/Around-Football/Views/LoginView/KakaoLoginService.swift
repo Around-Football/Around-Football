@@ -12,7 +12,7 @@ import KakaoSDKAuth
 import KakaoSDKCommon
 import KakaoSDKUser
 
-final class KakaoLoginService: UIViewController {
+final class KakaoLoginService {
     private var userProfile: String?
     private var email: String?
     
@@ -116,8 +116,6 @@ extension KakaoLoginService {
             }
             
             print("로그인 성공")
-            let mainTabVC = MainTabController()
-            self.navigationController?.pushViewController(mainTabVC, animated: true)
         }
     }
     
