@@ -58,6 +58,13 @@ class HomeTableViewController: UITableViewController {
         return button
     }()
     
+    private lazy var recruitButton = UIButton().then {
+        $0.setTitle("용병 구하기", for: .normal)
+        $0.titleLabel?.textColor = .white
+        $0.backgroundColor = .black
+        $0.layer.cornerRadius = 20
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -112,6 +119,14 @@ class HomeTableViewController: UITableViewController {
         filterScrollView.showsHorizontalScrollIndicator = false
         
         tableView.tableHeaderView = filterScrollView
+        
+        view.addSubview(recruitButton)
+        recruitButton.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            make.centerY.equalToSuperview()
+            make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
+            make.leading.equalToSuperview().offset(SuperviewOffsets.bottomPadding)
+        }
         
         optionStackView.snp.makeConstraints { make in
             make.top.equalToSuperview()
