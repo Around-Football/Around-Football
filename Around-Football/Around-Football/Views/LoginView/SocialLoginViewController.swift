@@ -86,6 +86,7 @@ final class SocialLoginViewController: UIViewController {
     
     @objc func googleLoginButtonTapped() {
         googleLoginService.googleSignIn()
+//        LoginViewModel().login()
     }
     
     @objc func appleLoginButtonTapped() {
