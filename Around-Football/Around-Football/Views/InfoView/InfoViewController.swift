@@ -121,7 +121,8 @@ extension InfoViewController: UICollectionViewDelegateFlowLayout, UICollectionVi
 
 extension InfoViewController: InfoDelegate {
     func moveToVc() {
-        let controller = InviteViewController()
+//        let controller = InviteViewController()
+        let controller = DetailViewController()
         navigationController?.pushViewController(controller, animated: true)
     }
 }

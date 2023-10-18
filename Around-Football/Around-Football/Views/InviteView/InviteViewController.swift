@@ -99,7 +99,6 @@ final class InviteViewController: UIViewController {
         $0.layer.cornerRadius = 5
         $0.layer.borderWidth = 1.0
         $0.layer.borderColor = UIColor.gray.cgColor
-//        $0.placeholder = "내용을 입력해주세요"
         $0.addSubview(placeHolderLabel)
         placeHolderLabel.frame = CGRect(x: 5, y: 0, width: 300, height: 30)
     }
@@ -128,32 +127,42 @@ final class InviteViewController: UIViewController {
     
     // MARK: - Selectors
     
-    @objc private func previousMonth() {
+    @objc
+    private func previousMonth() {
+        selectedIndexPath = nil
         minusMonth()
     }
     
-    @objc private func nextMonth() {
+    @objc
+    private func nextMonth() {
+        selectedIndexPath = nil
         plusMonth()
     }
     
     // MARK: - Helpers
     
     private func keyboardController() {
-        //키보드 올리기, 내리기
+        //키보드 올리기
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(keyboardWillShow(_:)),
             name: UIResponder.keyboardWillShowNotification,
             object: nil
         )
+        
+        //키보드 내리기
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(keyboardWillHide(_:)),
             name: UIResponder.keyboardWillHideNotification,
             object: nil
         )
+        
         //화면 탭해서 키보드 내리기
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        let tapGesture = UITapGestureRecognizer(
+            target: self,
+            action: #selector(dismissKeyboard)
+        )
         tapGesture.cancelsTouchesInView = false
         view.addGestureRecognizer(tapGesture)
     }
@@ -164,18 +173,19 @@ final class InviteViewController: UIViewController {
         
         view.addSubview(scrollView)
         scrollView.addSubview(contentView)
+        
         contentView.addSubviews(placeView,
-                         peopleView,
-                         monthLabel,
-                         nextButton,
-                         previousButton,
-                         dayStackView,
-                         dateCollectionView,
-                         timeLabel,
-                         timePicker,
-                         contentLabel,
-                         contentTextView,
-                         addButton)
+                                peopleView,
+                                monthLabel,
+                                nextButton,
+                                previousButton,
+                                dayStackView,
+                                dateCollectionView,
+                                timeLabel,
+                                timePicker,
+                                contentLabel,
+                                contentTextView,
+                                addButton)
         
         scrollView.snp.makeConstraints { make in
             make.top.bottom.equalTo(view.safeAreaLayoutGuide)
@@ -189,74 +199,74 @@ final class InviteViewController: UIViewController {
         
         placeView.snp.makeConstraints { make in
             make.top.equalTo(contentView.snp.top)
-            make.leading.equalToSuperview().offset(20)
+            make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
             make.width.equalTo(UIScreen.main.bounds.width * 2/3)
             make.height.equalTo(50)
         }
         
         peopleView.snp.makeConstraints { make in
             make.top.equalTo(contentView.snp.top)
-            make.trailing.equalToSuperview().offset(-20)
+            make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
             make.width.equalTo(UIScreen.main.bounds.width * 1/3)
             make.height.equalTo(50)
         }
         
         monthLabel.snp.makeConstraints { make in
             make.top.equalTo(placeView.snp.bottom).offset(10)
-            make.leading.equalToSuperview().offset(20)
+            make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
         }
         
         nextButton.snp.makeConstraints { make in
             make.centerY.equalTo(monthLabel)
-            make.trailing.equalToSuperview().offset(-20)
+            make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
             make.width.height.equalTo(40)
         }
         
         previousButton.snp.makeConstraints { make in
             make.centerY.equalTo(monthLabel)
-            make.trailing.equalTo(nextButton.snp.leading).offset(-20)
+            make.trailing.equalTo(nextButton.snp.leading).offset(SuperviewOffsets.trailingPadding)
             make.width.height.equalTo(40)
         }
         
         dayStackView.snp.makeConstraints { make in
-            make.top.equalTo(monthLabel.snp.bottom).offset(20)
-            make.leading.equalToSuperview().offset(20)
-            make.trailing.equalToSuperview().offset(-20)
+            make.top.equalTo(monthLabel.snp.bottom).offset(SuperviewOffsets.topPadding)
+            make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
+            make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
         }
         
         dateCollectionView.snp.makeConstraints { make in
             make.top.equalTo(dayStackView.snp.bottom).offset(10)
-            make.leading.equalToSuperview().offset(20)
-            make.trailing.equalToSuperview().offset(-20)
+            make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
+            make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
             make.height.equalTo(((UIScreen.main.bounds.width - 40) / 7) * 6)
         }
         
         timeLabel.snp.makeConstraints { make in
             make.top.equalTo(dateCollectionView.snp.bottom)
-            make.leading.equalToSuperview().offset(20)
+            make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
         }
         
         timePicker.snp.makeConstraints { make in
             make.centerY.equalTo(timeLabel)
-            make.trailing.equalToSuperview().offset(-20)
+            make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
         }
         
         contentLabel.snp.makeConstraints { make in
-            make.top.equalTo(timeLabel.snp.bottom).offset(20)
-            make.leading.equalToSuperview().offset(20)
+            make.top.equalTo(timeLabel.snp.bottom).offset(SuperviewOffsets.topPadding)
+            make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
         }
         
         contentTextView.snp.makeConstraints { make in
             make.top.equalTo(contentLabel.snp.bottom).offset(5)
-            make.leading.equalToSuperview().offset(20)
-            make.trailing.equalToSuperview().offset(-20)
+            make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
+            make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
             make.height.equalTo(150)
         }
         
         addButton.snp.makeConstraints { make in
-            make.top.equalTo(contentTextView.snp.bottom).offset(20)
-            make.leading.equalToSuperview().offset(20)
-            make.trailing.bottom.equalToSuperview().offset(-20)
+            make.top.equalTo(contentTextView.snp.bottom).offset(SuperviewOffsets.topPadding)
+            make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
+            make.trailing.bottom.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
             make.height.equalTo(40)
         }
     }

@@ -30,6 +30,19 @@ final class DetailViewController: UIViewController {
         $0.font = .systemFont(ofSize: 10)
     }
     
+    private lazy var applyButton = UIButton().then {
+        let title = NSAttributedString(
+            string: "신청하기",
+            attributes: [.font: UIFont.systemFont(ofSize: 10)]
+        )
+        $0.setAttributedTitle(title, for: .normal)
+        $0.setTitleColor(.white, for: .normal)
+        $0.backgroundColor = .black
+        $0.layer.cornerRadius = 10
+        $0.clipsToBounds = true
+        $0.addTarget(self, action: #selector(clickedApplyButton), for: .touchUpInside)
+    }
+    
     private let groundIconView = UIImageView().then {
         $0.image = UIImage(systemName: "mappin.and.ellipse")
     }
@@ -42,7 +55,7 @@ final class DetailViewController: UIViewController {
         $0.backgroundColor = .secondarySystemBackground
     }
     
-    lazy var detailTableView = UITableView().then {
+    private(set) lazy var detailTableView = UITableView().then {
         $0.delegate = self
         $0.dataSource = self
         $0.register(DetailUserInfoCell.self, forCellReuseIdentifier: DetailUserInfoCell.cellID)
@@ -61,6 +74,10 @@ final class DetailViewController: UIViewController {
 
     private let detailUserInfoView = DetailUserInfoView()
     
+    private let scrollView = UIScrollView()
+    
+    private let contentView = UIView()
+    
     // MARK: - Lifecycles
     
     override func viewDidLoad() {
@@ -68,22 +85,45 @@ final class DetailViewController: UIViewController {
         configeUI()
     }
     
-    @objc private func clickedMessage() {
+    // MARK: - Selector
+    
+    @objc
+    private func clickedMessage() {
         //메세지 보내기 화면으로 넘어가기
     }
     
+    @objc
+    private func clickedApplyButton() {
+        //글 작성자라면
+//        applyButton.setTitle("신청현황", for: .normal)
+        //네비게이션 분기처리
+    }
+    
     // MARK: - Helpers
-
+    
     private func configeUI() {
         view.backgroundColor = .white
-        view.addSubviews(mainImageView,
-                         groundLabel,
-                         groundAddressLabel,
-                         grayLineView1,
-                         detailUserInfoView,
-                         grayLineView2,
-                         detailTableView,
-                         sendMessageButton)
+        view.addSubview(scrollView)
+        scrollView.addSubview(contentView)
+        contentView.addSubviews(mainImageView,
+                                groundLabel,
+                                groundAddressLabel,
+                                applyButton,
+                                grayLineView1,
+                                detailUserInfoView,
+                                grayLineView2,
+                                detailTableView,
+                                sendMessageButton)
+        
+        scrollView.snp.makeConstraints { make in
+            make.top.bottom.equalTo(view.safeAreaLayoutGuide)
+            make.leading.trailing.equalToSuperview()
+        }
+        
+        contentView.snp.makeConstraints { make in
+            make.top.leading.trailing.bottom.equalToSuperview()
+            make.width.equalToSuperview()
+        }
         
         mainImageView.snp.makeConstraints { make in
             make.top.leading.trailing.equalToSuperview()
@@ -91,19 +131,27 @@ final class DetailViewController: UIViewController {
         }
         
         groundLabel.snp.makeConstraints { make in
-            make.top.equalTo(mainImageView.snp.bottom).offset(20)
-            make.leading.equalToSuperview().offset(20)
-            make.trailing.equalToSuperview().offset(-20)
+            make.top.equalTo(mainImageView.snp.bottom).offset(SuperviewOffsets.topPadding)
+            make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
+            //            make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
         }
         
         groundAddressLabel.snp.makeConstraints { make in
             make.top.equalTo(groundLabel.snp.bottom)
-            make.leading.equalToSuperview().offset(20)
-            make.trailing.equalToSuperview().offset(-20)
+            make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
+//            make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
+        }
+        
+        applyButton.snp.makeConstraints { make in
+            make.top.equalTo(mainImageView.snp.bottom).offset(SuperviewOffsets.topPadding)
+            make.bottom.equalTo(grayLineView1.snp.top).offset(SuperviewOffsets.bottomPadding)
+            make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
+            make.width.equalTo(50)
+            make.height.equalTo(40)
         }
         
         grayLineView1.snp.makeConstraints { make in
-            make.top.equalTo(groundAddressLabel.snp.bottom).offset(20)
+            make.top.equalTo(groundAddressLabel.snp.bottom).offset(SuperviewOffsets.topPadding)
             make.height.equalTo(1)
             make.width.equalToSuperview()
         }
@@ -111,7 +159,6 @@ final class DetailViewController: UIViewController {
         detailUserInfoView.snp.makeConstraints { make in
             make.top.equalTo(grayLineView1.snp.bottom)
             make.leading.trailing.equalToSuperview()
-            make.height.equalTo(80)
         }
         
         grayLineView2.snp.makeConstraints { make in
@@ -121,16 +168,18 @@ final class DetailViewController: UIViewController {
         }
         
         detailTableView.snp.makeConstraints { make in
-            make.top.equalTo(grayLineView2).offset(20)
-            make.leading.equalToSuperview().offset(20)
-            make.trailing.equalToSuperview().offset(-20)
+            make.top.equalTo(grayLineView2).offset(SuperviewOffsets.topPadding)
+            make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
+            make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
+            make.bottom.equalTo(sendMessageButton.snp.top).offset(SuperviewOffsets.bottomPadding)
+            make.height.equalTo(350)
         }
         
         sendMessageButton.snp.makeConstraints { make in
-            make.top.equalTo(detailTableView.snp.bottom).offset(20)
-            make.leading.equalToSuperview().offset(20)
-            make.trailing.equalToSuperview().offset(-20)
-            make.bottom.equalToSuperview().offset(-30)
+            make.top.equalTo(detailTableView.snp.bottom).offset(SuperviewOffsets.topPadding)
+            make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
+            make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
+            make.bottom.equalToSuperview().offset(SuperviewOffsets.bottomPadding)
             make.height.equalTo(50)
         }
     }
