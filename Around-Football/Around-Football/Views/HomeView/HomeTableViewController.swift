@@ -14,6 +14,8 @@ import Then
 
 class HomeTableViewController: UITableViewController {
     
+    // MARK: - Properties
+    
     private let homeViewModel = HomeViewModel()
     private let disposeBag = DisposeBag()
     
@@ -58,24 +60,33 @@ class HomeTableViewController: UITableViewController {
         return button
     }()
     
-    private lazy var recruitButton = UIButton().then {
-        $0.setTitle("용병 구하기", for: .normal)
-        $0.titleLabel?.textColor = .white
-        $0.backgroundColor = .black
-        $0.layer.cornerRadius = 20
-    }
+    private lazy var floatingButton: UIButton = {
+        let button = UIButton()
+        var config = UIButton.Configuration.filled()
+        config.baseBackgroundColor = .systemPink
+        config.cornerStyle = .capsule
+        config.image = UIImage(systemName: "plus")?.withConfiguration(UIImage.SymbolConfiguration(pointSize: 20, weight: .medium))
+        button.configuration = config
+        button.layer.shadowRadius = 10
+        button.layer.shadowOpacity = 0.3
+        button.frame = CGRect(x: 330, y: 0, width: 50, height: 50)
+        button.addTarget(self, action: #selector(didTapFloatingButton), for: .touchUpInside)
+        return button
+    }()
+    
+    // MARK: - Lifecyles
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         navigationController?.setNavigationBarHidden(true, animated: false)
         tableView.register(HomeTableViewCell.self, forCellReuseIdentifier: HomeTableViewCell.id)
-//        tableView.delegate = nil
+        //        tableView.delegate = nil
         tableView.dataSource = nil
-
+        
         homeViewModel.recruitObservable
             .observe(on: MainScheduler.instance)
-            .bind(to: tableView.rx.items(cellIdentifier: HomeTableViewCell.id, 
+            .bind(to: tableView.rx.items(cellIdentifier: HomeTableViewCell.id,
                                          cellType: HomeTableViewCell.self)
             ) { index, item, cell in
                 cell.titleLabel.text = item.fieldName
@@ -85,13 +96,18 @@ class HomeTableViewController: UITableViewController {
                 cell.timeLabel.text = item.matchTime
             }
             .disposed(by: disposeBag)
-
+        
         configureUI()
     }
-
+    
+    override func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        
+        floatingButton.frame.origin.y = 700 + scrollView.contentOffset.y
+    }
+    
     func configureUI() {
         optionStackView.addArrangedSubview(resetButton)
-
+        
         for option in filterOptions {
             let filterButton: UIButton = {
                 let button = UIButton(configuration: buttonConfig)
@@ -120,20 +136,16 @@ class HomeTableViewController: UITableViewController {
         
         tableView.tableHeaderView = filterScrollView
         
-        view.addSubview(recruitButton)
-        recruitButton.snp.makeConstraints { make in
-            make.centerX.equalToSuperview()
-            make.centerY.equalToSuperview()
-            make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
-            make.leading.equalToSuperview().offset(SuperviewOffsets.bottomPadding)
-        }
-        
         optionStackView.snp.makeConstraints { make in
             make.top.equalToSuperview()
             make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
             make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
         }
+        
+        view.addSubview(floatingButton)
     }
+    
+    // MARK: - Selectors
     
     @objc func filterOptionTapped(sender: UIButton) {
         // 필터 옵션 버튼을 탭했을 때의 동작을 구현하세요.
@@ -142,19 +154,24 @@ class HomeTableViewController: UITableViewController {
             // 여기에 필터링 로직을 추가하십시오.
         }
     }
+    
+    @objc func didTapFloatingButton() {
+        
+    }
+    
     // UITableViewDataSource 메서드
-//    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-//        return items.count
-//    }
+    //    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    //        return items.count
+    //    }
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 150
     }
-//    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-//        let cell = tableView.dequeueReusableCell(withIdentifier: HomeTableViewCell.id, for: indexPath) as! HomeTableViewCell
-//        cell.titleLabel.text = items[indexPath.row]
-//        // 나머지 셀 내용을 설정하려면 HomeTableViewCell에 해당 프로퍼티 및 메서드를 추가하십시오.
-//        return cell
-//    }
+    //    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    //        let cell = tableView.dequeueReusableCell(withIdentifier: HomeTableViewCell.id, for: indexPath) as! HomeTableViewCell
+    //        cell.titleLabel.text = items[indexPath.row]
+    //        // 나머지 셀 내용을 설정하려면 HomeTableViewCell에 해당 프로퍼티 및 메서드를 추가하십시오.
+    //        return cell
+    //    }
 }
 
 
