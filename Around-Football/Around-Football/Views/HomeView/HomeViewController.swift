@@ -19,8 +19,8 @@ class HomeViewController: UIViewController {
     private let filterOptions: [String] = ["모든 날짜", "모든 지역", "매치 유형"] // 필터 옵션
     
     private lazy var filterScrollView = UIScrollView().then {
-        $0.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: 50)
-        $0.showsHorizontalScrollIndicator = false
+        $0.contentSize = CGSize(width: view.frame.size.width, height: 30)
+        $0.showsHorizontalScrollIndicator = true
     } // 가로 스크롤뷰
     
     private var optionStackView = UIStackView().then {
@@ -78,8 +78,9 @@ class HomeViewController: UIViewController {
         super.viewDidLoad()
         
         configureUI()
+        addChild(homeTableViewController)
     }
-    
+
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         floatingButton.frame = CGRect(x: view.frame.size.width - 70,
@@ -92,12 +93,7 @@ class HomeViewController: UIViewController {
     
     func configureUI() {
         view.backgroundColor = .white
-        addChild(homeTableViewController)
-        view.addSubviews(filterScrollView,
-                         homeTableViewController.view,
-                         floatingButton)
         
-        filterScrollView.addSubview(optionStackView)
         optionStackView.addArrangedSubview(resetButton)
         
         for option in filterOptions {
@@ -120,29 +116,42 @@ class HomeViewController: UIViewController {
             }()
             
             optionStackView.addArrangedSubview(filterButton)
-            
-            optionStackView.snp.makeConstraints { make in
-                make.top.equalToSuperview()
-                make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
-                make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
-            }
-            
-            filterScrollView.snp.makeConstraints { make in
-                make.top.equalToSuperview().offset(SuperviewOffsets.topPadding)
-                make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
-                make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
-            }
-            
-            homeTableViewController.view.snp.makeConstraints { make in
-                make.top.equalTo(filterScrollView.snp.bottom).offset(10)
-                make.leading.trailing.equalToSuperview()
-            }
+        }
+        
+        filterScrollView.addSubview(optionStackView)
+        
+        view.addSubviews(filterScrollView,
+                         homeTableViewController.view,
+                         floatingButton)
+        
+        homeTableViewController.didMove(toParent: self)
+        
+        optionStackView.snp.makeConstraints { make in
+            make.top.equalTo(filterScrollView)
+            make.leading.equalTo(filterScrollView)
+            make.trailing.equalTo(filterScrollView)
+            make.height.equalTo(filterScrollView)
+        }
+        
+        filterScrollView.snp.makeConstraints { make in
+            make.top.equalToSuperview().offset(SuperviewOffsets.topPadding)
+            make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
+            make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
+            make.height.equalTo(30)
+            make.width.equalTo(view.frame.size.width)
+        }
+        
+        homeTableViewController.view.snp.makeConstraints { make in
+            make.top.equalTo(filterScrollView.snp.bottom).offset(10)
+            make.leading.equalToSuperview()
+            make.trailing.equalToSuperview()
+            make.bottom.equalToSuperview()
         }
     }
     
     // MARK: - Selectors
     
-    @objc 
+    @objc
     func filterOptionTapped(sender: UIButton) {
         // 필터 옵션 버튼을 탭했을 때의 동작을 구현하세요.
         if let optionTitle = sender.title(for: .normal) {
@@ -151,7 +160,7 @@ class HomeViewController: UIViewController {
         }
     }
     
-    @objc 
+    @objc
     func didTapFloatingButton() {
         
     }
