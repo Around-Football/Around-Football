@@ -32,16 +32,6 @@ class HomeTableViewController: UITableViewController {
 
         configureUI()
     }
-//    override func scrollViewDidScroll(_ scrollView: UIScrollView) {
-//        
-//        floatingButton.frame.origin.x = UIScreen.main.bounds.width - 60
-//        // floatingButton.frame.origin.y = UIScreen.main.bounds.height - 30
-//        floatingButton.frame.origin.y = UIScreen.main.bounds.height - optionStackView.frame.origin.y + scrollView.contentOffset.y
-//        print("floatingButton: \(floatingButton.frame.origin.y)")
-//        print("scrollView: \(scrollView.contentOffset.y)")
-//        print("UIScreen: \(UIScreen.main.bounds.height)")
-//        print("view: \(view.frame.height)")
-//    }
     
     func configureUI() {
         homeViewModel.recruitObservable

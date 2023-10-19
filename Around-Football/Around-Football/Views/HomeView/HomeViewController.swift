@@ -14,7 +14,7 @@ class HomeViewController: UIViewController {
     
     // MARK: - Properties
     
-    private let homeTableViewController = HomeTableViewController(style: .plain)
+    private let homeTableViewController = HomeTableViewController()
     
     private let filterOptions: [String] = ["모든 날짜", "모든 지역", "매치 유형"] // 필터 옵션
     
@@ -83,7 +83,7 @@ class HomeViewController: UIViewController {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         floatingButton.frame = CGRect(x: view.frame.size.width - 70,
-                                      y: view.frame.size.height - 100,
+                                      y: view.frame.size.height - ((self.tabBarController?.tabBar.frame.size.height ?? 120) * 2),
                                       width: 50,
                                       height: 50)
     }
@@ -92,10 +92,9 @@ class HomeViewController: UIViewController {
     
     func configureUI() {
         view.backgroundColor = .white
-//        addChild(homeTableViewController)
-        
-        view.addSubview(filterScrollView)
-        view.addSubviews(homeTableViewController.view,
+        addChild(homeTableViewController)
+        view.addSubviews(filterScrollView,
+                         homeTableViewController.view,
                          floatingButton)
         
         filterScrollView.addSubview(optionStackView)
