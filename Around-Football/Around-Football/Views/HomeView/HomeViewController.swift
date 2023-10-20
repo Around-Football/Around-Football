@@ -82,11 +82,11 @@ class HomeViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        configureUI()
+        self.navigationController?.navigationBar.isHidden = true
         addChild(homeTableViewController)
+        configureUI()
     }
-    
+
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
@@ -104,7 +104,7 @@ class HomeViewController: UIViewController {
     
     func configureUI() {
         view.backgroundColor = .white
-        self.navigationController?.navigationBar.isHidden = true
+        
         optionStackView.addArrangedSubview(resetButton)
         
         for option in filterOptions {
@@ -213,10 +213,11 @@ class HomeViewController: UIViewController {
         }
     }
 
-    // FIXME: - View PopUp 시 back 버튼 추가
+    // FIXME: - View PopUp navigationBar 처리
     @objc
     func didTapFloatingButton() {
         let nextVC = InviteViewController()
-        self.navigationController?.present(nextVC, animated: true)
+        self.navigationController?.pushViewController(nextVC, animated: true)
+        self.navigationController?.navigationBar.isHidden = false
     }
 }
