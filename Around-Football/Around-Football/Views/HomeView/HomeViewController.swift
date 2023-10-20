@@ -33,10 +33,12 @@ class HomeViewController: UIViewController {
     
     private lazy var floatingButton: UIButton = {
         let button = UIButton()
+        let image = UIImage(systemName: "plus")
         var config = UIButton.Configuration.filled()
         config.baseBackgroundColor = .systemPink
         config.cornerStyle = .capsule
-        config.image = UIImage(systemName: "plus")?.withConfiguration(UIImage.SymbolConfiguration(pointSize: 20, weight: .medium))
+        config.image = image?.withConfiguration(UIImage.SymbolConfiguration(pointSize: 20, 
+                                                                            weight: .medium))
         button.configuration = config
         button.layer.shadowRadius = 10
         button.layer.shadowOpacity = 0.3
@@ -47,7 +49,10 @@ class HomeViewController: UIViewController {
     
     private var buttonConfig: UIButton.Configuration {
         var config = UIButton.Configuration.plain()
-        config.contentInsets = NSDirectionalEdgeInsets(top: 10, leading: 10, bottom: 10, trailing: 10)
+        config.contentInsets = NSDirectionalEdgeInsets(top: 10, 
+                                                       leading: 10,
+                                                       bottom: 10,
+                                                       trailing: 10)
         
         return config
     }
@@ -55,10 +60,11 @@ class HomeViewController: UIViewController {
     private lazy var resetButton: UIButton = {
         
         let button = UIButton(configuration: buttonConfig)
-        
+        let image = UIImage(systemName: "arrow.triangle.2.circlepath")
         // 버튼 타이틀과 이미지 설정
         button.setTitle("초기화", for: .normal)
-        button.setImage(UIImage(systemName: "arrow.triangle.2.circlepath")?.withTintColor(UIColor.systemGray, renderingMode: .alwaysOriginal), for: .normal)
+        button.setImage(image?.withTintColor(UIColor.systemGray, renderingMode: .alwaysOriginal),
+                        for: .normal)
         
         // 버튼 스타일 설정
         button.setTitleColor(.systemGray, for: .normal)
@@ -80,13 +86,18 @@ class HomeViewController: UIViewController {
         configureUI()
         addChild(homeTableViewController)
     }
-
+    
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        floatingButton.frame = CGRect(x: view.frame.size.width - 70,
-                                      y: view.frame.size.height - ((self.tabBarController?.tabBar.frame.size.height ?? 120) * 2),
-                                      width: 50,
-                                      height: 50)
+        
+        let tabBarHeight: CGFloat = self.tabBarController?.tabBar.frame.size.height ?? 120
+        
+        floatingButton.frame = CGRect(
+            x: view.frame.size.width - 70,
+            y: view.frame.size.height - (tabBarHeight * 2),
+            width: 50,
+            height: 50
+        )
     }
     
     // MARK: - Helpers
@@ -99,10 +110,12 @@ class HomeViewController: UIViewController {
         for option in filterOptions {
             let filterButton: UIButton = {
                 let button = UIButton(configuration: buttonConfig)
-                
+                let image = UIImage(systemName: "chevron.down")
                 // 버튼 타이틀과 이미지 설정
                 button.setTitle(option, for: .normal)
-                button.setImage(UIImage(systemName: "chevron.down")?.withTintColor(UIColor.systemGray, renderingMode: .alwaysOriginal), for: .normal)
+                button.setImage(
+                    image?.withTintColor(UIColor.systemGray, renderingMode: .alwaysOriginal), 
+                    for: .normal)
                 
                 // 버튼 스타일 설정
                 button.setTitleColor(.systemGray, for: .normal)
