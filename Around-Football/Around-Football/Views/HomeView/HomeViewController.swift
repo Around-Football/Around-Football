@@ -162,6 +162,32 @@ class HomeViewController: UIViewController {
         }
     }
     
+    func matchTypeActionSheet() -> UIAlertController {
+        let actionSheet = UIAlertController()
+        
+        actionSheet.title = "매치 유형을 선택해주세요"
+        
+        //전체 버튼 - 스타일(default)
+        actionSheet.addAction(UIAlertAction(title: "전체", style: .default, handler: {(ACTION:UIAlertAction) in
+            print("전체")
+        }))
+        
+        // 축구
+        actionSheet.addAction(UIAlertAction(title: "축구", style: .default, handler: {(ACTION:UIAlertAction) in
+            print("축구")
+        }))
+        
+        // 풋살
+        actionSheet.addAction(UIAlertAction(title: "풋살", style: .default, handler: {(ACTION:UIAlertAction) in
+            print("풋살")
+        }))
+        
+        //취소 버튼 - 스타일(cancel)
+        actionSheet.addAction(UIAlertAction(title: "취소", style: .destructive, handler: nil))
+        
+        return actionSheet
+    }
+    
     // MARK: - Selectors
     
     @objc
@@ -172,18 +198,21 @@ class HomeViewController: UIViewController {
         
         switch sender.title(for: .normal) {
         case "모든 날짜":
-            let filterView = FilterViewController()
+            let filterView = DateFilterViewController()
             present(filterView, animated: true)
+            
         case "모든 지역":
-            let filterView = FilterViewController()
+            let filterView = LocationFilterViewController()
             present(filterView, animated: true)
+            
         case "매치 유형":
-            let filterView = FilterViewController()
-            present(filterView, animated: true)
+            self.present(matchTypeActionSheet(), animated: true, completion: nil)
+
         default:
             break
         }
     }
+
     // FIXME: - View PopUp 시 back 버튼 추가
     @objc
     func didTapFloatingButton() {
