@@ -20,7 +20,7 @@ class HomeViewController: UIViewController {
     
     private lazy var filterScrollView = UIScrollView().then {
         $0.contentSize = CGSize(width: view.frame.size.width, height: 30)
-        $0.showsHorizontalScrollIndicator = true
+        $0.showsHorizontalScrollIndicator = false
     } // 가로 스크롤뷰
     
     private var optionStackView = UIStackView().then {
@@ -93,7 +93,7 @@ class HomeViewController: UIViewController {
     
     func configureUI() {
         view.backgroundColor = .white
-        
+        self.navigationController?.navigationBar.isHidden = true
         optionStackView.addArrangedSubview(resetButton)
         
         for option in filterOptions {
@@ -130,14 +130,14 @@ class HomeViewController: UIViewController {
             make.top.equalTo(filterScrollView)
             make.leading.equalTo(filterScrollView)
             make.trailing.equalTo(filterScrollView)
-            make.height.equalTo(filterScrollView)
+            make.bottom.equalTo(filterScrollView)
         }
         
         filterScrollView.snp.makeConstraints { make in
             make.top.equalToSuperview().offset(SuperviewOffsets.topPadding)
             make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
             make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
-            make.height.equalTo(30)
+            make.height.equalTo(90)
             make.width.equalTo(view.frame.size.width)
         }
         
