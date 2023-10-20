@@ -27,6 +27,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         //kakao 초기화
         KakaoSDK.initSDK(appKey: "d120f29f71b1903d6e9191768dbdfdb2")
         
+        // MARK: - TabBar Background Color Issue
+        let appearance = UITabBarAppearance()
+        let tabBar = UITabBar()
+        appearance.configureWithOpaqueBackground()
+        appearance.backgroundColor = .white
+        tabBar.standardAppearance = appearance
+        UITabBar.appearance().scrollEdgeAppearance = appearance
+        
         return true
     }
     
