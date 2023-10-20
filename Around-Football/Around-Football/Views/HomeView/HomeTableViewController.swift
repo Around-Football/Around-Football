@@ -39,10 +39,10 @@ class HomeTableViewController: UITableViewController {
             .bind(to: tableView.rx.items(cellIdentifier: HomeTableViewCell.id,
                                          cellType: HomeTableViewCell.self)
             ) { index, item, cell in
-                cell.titleLabel.text = item.fieldName
-                cell.dateLabel.text = item.matchDate
-                cell.fieldAddress.text = item.fieldAddress
-                cell.recruitLabel.text = "\(item.people)"
+                cell.titleLabel.text = "(장소) \(item.fieldName)"
+                cell.dateLabel.text = "(날짜) \(item.matchDate)"
+                cell.fieldAddress.text = "(주소) \(item.fieldAddress)"
+                cell.recruitLabel.text = "(용병 수) \(item.people)/10 명"
                 cell.timeLabel.text = item.matchTime
             }
             .disposed(by: disposeBag)
@@ -50,17 +50,6 @@ class HomeTableViewController: UITableViewController {
     
     // MARK: - Selectors
     
-    @objc func filterOptionTapped(sender: UIButton) {
-        // 필터 옵션 버튼을 탭했을 때의 동작을 구현하세요.
-        if let optionTitle = sender.title(for: .normal) {
-            print("Selected Filter: \(optionTitle)")
-            // 여기에 필터링 로직을 추가하십시오.
-        }
-    }
-    
-    @objc func didTapFloatingButton() {
-        
-    }
     
     // UITableViewDataSource 메서드
     //    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -68,6 +57,11 @@ class HomeTableViewController: UITableViewController {
     //    }
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 150
+    }
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let nextVC = DetailViewController()
+         present(nextVC, animated: true)
     }
     //    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
     //        let cell = tableView.dequeueReusableCell(withIdentifier: HomeTableViewCell.id, for: indexPath) as! HomeTableViewCell
