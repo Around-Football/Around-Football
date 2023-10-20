@@ -37,7 +37,7 @@ class HomeViewController: UIViewController {
         var config = UIButton.Configuration.filled()
         config.baseBackgroundColor = .systemPink
         config.cornerStyle = .capsule
-        config.image = image?.withConfiguration(UIImage.SymbolConfiguration(pointSize: 20, 
+        config.image = image?.withConfiguration(UIImage.SymbolConfiguration(pointSize: 20,
                                                                             weight: .medium))
         button.configuration = config
         button.layer.shadowRadius = 10
@@ -49,7 +49,7 @@ class HomeViewController: UIViewController {
     
     private var buttonConfig: UIButton.Configuration {
         var config = UIButton.Configuration.plain()
-        config.contentInsets = NSDirectionalEdgeInsets(top: 10, 
+        config.contentInsets = NSDirectionalEdgeInsets(top: 10,
                                                        leading: 10,
                                                        bottom: 10,
                                                        trailing: 10)
@@ -114,7 +114,7 @@ class HomeViewController: UIViewController {
                 // 버튼 타이틀과 이미지 설정
                 button.setTitle(option, for: .normal)
                 button.setImage(
-                    image?.withTintColor(UIColor.systemGray, renderingMode: .alwaysOriginal), 
+                    image?.withTintColor(UIColor.systemGray, renderingMode: .alwaysOriginal),
                     for: .normal)
                 
                 // 버튼 스타일 설정
@@ -166,15 +166,28 @@ class HomeViewController: UIViewController {
     
     @objc
     func filterOptionTapped(sender: UIButton) {
-        // 필터 옵션 버튼을 탭했을 때의 동작을 구현하세요.
-        if let optionTitle = sender.title(for: .normal) {
-            print("Selected Filter: \(optionTitle)")
-            // 여기에 필터링 로직을 추가하십시오.
+        // FIXME: - Switch문 리팩토링 가능? -> 쌉가능
+        // 필터 옵션 버튼을 탭했을 때의 동작
+        // ["모든 날짜", "모든 지역", "매치 유형"]
+        
+        switch sender.title(for: .normal) {
+        case "모든 날짜":
+            let filterView = FilterViewController()
+            present(filterView, animated: true)
+        case "모든 지역":
+            let filterView = FilterViewController()
+            present(filterView, animated: true)
+        case "매치 유형":
+            let filterView = FilterViewController()
+            present(filterView, animated: true)
+        default:
+            break
         }
     }
-    
+    // FIXME: - View PopUp 시 back 버튼 추가
     @objc
     func didTapFloatingButton() {
-        
+        let nextVC = InviteViewController()
+        self.navigationController?.present(nextVC, animated: true)
     }
 }
