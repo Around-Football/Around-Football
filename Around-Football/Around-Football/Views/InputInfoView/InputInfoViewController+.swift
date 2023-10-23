@@ -19,4 +19,24 @@ extension InputInfoViewController: UITextFieldDelegate {
         }
         return true
     }
+    
+    // 지역 입력 텍스트필드 선택 시 뷰 이동
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        if textField == inputInfoView.userAreaTextField {
+            UIView.animate(withDuration: 0.3) {
+                let transform = CGAffineTransform(translationX: 0, y: -200)
+                self.view.transform = transform
+            }
+        }
+    }
+    
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        
+        if textField == inputInfoView.userAreaTextField {
+            UIView.animate(withDuration: 0.3) {
+                let transform = CGAffineTransform(translationX: 0, y: 0)
+                self.view.transform = transform
+            }
+        }
+    }
 }
