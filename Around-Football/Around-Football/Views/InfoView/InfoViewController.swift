@@ -7,6 +7,7 @@
 
 import UIKit
 
+//NavigationDelegate
 protocol InfoDelegate: AnyObject {
     func moveToDatailVC()
     func moveToInviteVC()
@@ -112,8 +113,13 @@ extension InfoViewController: UICollectionViewDelegateFlowLayout, UICollectionVi
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: InfoCell.cellID, for: indexPath) as? InfoCell
-        else { return UICollectionViewCell() }
+        guard let cell = collectionView.dequeueReusableCell(
+            withReuseIdentifier: InfoCell.cellID,
+            for: indexPath
+        ) as? InfoCell else {
+            return UICollectionViewCell()
+        }
+        
         cell.setValues(icon: iconAndImage[indexPath.item].icon,
                        title: iconAndImage[indexPath.item].title)
         return cell

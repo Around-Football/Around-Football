@@ -150,6 +150,8 @@ class CalenderViewController: UIViewController {
         timePicker.snp.makeConstraints { make in
             make.centerY.equalTo(timeLabel)
             make.trailing.equalToSuperview()
+            make.height.equalTo(50)
+            make.width.equalTo(100)
         }
     }
 }

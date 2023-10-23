@@ -126,7 +126,7 @@ final class InviteViewController: UIViewController {
         }
         
         calenderViewController.view.snp.makeConstraints { make in
-            make.top.equalTo(placeView.snp.bottom).offset(50)
+            make.top.equalTo(peopleView.snp.bottom).offset(40)
             make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
             make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
             make.height.equalTo(((UIScreen.main.bounds.width - 40) / 7) * 6 + 100)
