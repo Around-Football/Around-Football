@@ -13,15 +13,15 @@ import Then
 final class InviteViewController: UIViewController {
     
     // MARK: - Properties
-
-    //캘린더
-    private let calender = Calendar.current
-    private let dateFormatter = DateFormatter()
-    private lazy var components = calender.dateComponents([.month, .day, .year], from: Date())
-    private lazy var calanderDate = calender.date(from: components) ?? Date()
-    private var days: [String] = []
-    private var selectedIndexPath: IndexPath? //캘린더 선택cell
-    private var selectedDate: String? //캘린더에서 선택한 날짜
+    
+    //    //캘린더
+    //    private let calender = Calendar.current
+    //    private let dateFormatter = DateFormatter()
+    //    private lazy var components = calender.dateComponents([.month, .day, .year], from: Date())
+    //    private lazy var calanderDate = calender.date(from: components) ?? Date()
+    //    private var days: [String] = []
+    //    private var selectedIndexPath: IndexPath? //캘린더 선택cell
+    //    private var selectedDate: String? //캘린더에서 선택한 날짜
     //UI
     private let placeView = GroundTitleView()
     private let peopleView = PeopleCountView()
@@ -32,63 +32,65 @@ final class InviteViewController: UIViewController {
     
     private let contentView = UIView()
     
-    private lazy var previousButton = UIButton().then {
-        $0.setImage(UIImage(systemName: "chevron.left"), for: .normal)
-        $0.addTarget(self, action: #selector(previousMonth), for: .touchUpInside)
-    }
+    private let calenderViewController = CalenderViewController()
     
-    private lazy var nextButton = UIButton().then {
-        $0.setImage(UIImage(systemName: "chevron.right"), for: .normal)
-        $0.addTarget(self, action: #selector(nextMonth), for: .touchUpInside)
-    }
+    //    private lazy var previousButton = UIButton().then {
+    //        $0.setImage(UIImage(systemName: "chevron.left"), for: .normal)
+    //        $0.addTarget(self, action: #selector(previousMonth), for: .touchUpInside)
+    //    }
+    //
+    //    private lazy var nextButton = UIButton().then {
+    //        $0.setImage(UIImage(systemName: "chevron.right"), for: .normal)
+    //        $0.addTarget(self, action: #selector(nextMonth), for: .touchUpInside)
+    //    }
+    //
+    //    private lazy var monthLabel = UILabel().then {
+    //        $0.text = "2023년 12월"
+    //    }
+    //
+    //    private lazy var dayStackView = UIStackView().then {
+    //        $0.axis = .horizontal
+    //        $0.distribution = .fillEqually
+    //
+    //        let days = ["일", "월", "화", "수", "목", "금", "토"]
+    //
+    //        for i in 0..<days.count {
+    //            let label = UILabel()
+    //            label.text = days[i]
+    //            label.textAlignment = .center
+    //
+    //            switch i {
+    //            case _ where i == 0:
+    //                label.textColor = .red
+    //            case _ where i == 6:
+    //                label.textColor = .blue
+    //            default:
+    //                label.textColor = .gray
+    //            }
+    //
+    //            $0.addArrangedSubview(label)
+    //        }
+    //    }
     
-    private lazy var monthLabel = UILabel().then {
-        $0.text = "2023년 12월"
-    }
+    //    private lazy var dateCollectionView: UICollectionView = {
+    //        let layout = UICollectionViewFlowLayout()
+    //        layout.minimumLineSpacing = 0
+    //        layout.minimumInteritemSpacing = 0
+    //        let cv = UICollectionView(frame: .zero, collectionViewLayout: layout)
+    //        cv.delegate = self
+    //        cv.dataSource = self
+    //        cv.register(DateCell.self, forCellWithReuseIdentifier: DateCell.cellID)
+    //        return cv
+    //    }()
     
-    private lazy var dayStackView = UIStackView().then {
-        $0.axis = .horizontal
-        $0.distribution = .fillEqually
-        
-        let days = ["일", "월", "화", "수", "목", "금", "토"]
-        
-        for i in 0..<days.count {
-            let label = UILabel()
-            label.text = days[i]
-            label.textAlignment = .center
-            
-            switch i {
-            case _ where i == 0:
-                label.textColor = .red
-            case _ where i == 6:
-                label.textColor = .blue
-            default:
-                label.textColor = .gray
-            }
-            
-            $0.addArrangedSubview(label)
-        }
-    }
-    
-    private lazy var dateCollectionView: UICollectionView = {
-        let layout = UICollectionViewFlowLayout()
-        layout.minimumLineSpacing = 0
-        layout.minimumInteritemSpacing = 0
-        let cv = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        cv.delegate = self
-        cv.dataSource = self
-        cv.register(DateCell.self, forCellWithReuseIdentifier: DateCell.cellID)
-        return cv
-    }()
-    
-    private let timeLabel = UILabel().then {
-        $0.text = "Time"
-    }
-    
-    private var timePicker = UIDatePicker().then {
-        $0.datePickerMode = .time
-        $0.locale = Locale(identifier: "ko_kr")
-    }
+    //    private let timeLabel = UILabel().then {
+    //        $0.text = "Time"
+    //    }
+    //
+    //    private var timePicker = UIDatePicker().then {
+    //        $0.datePickerMode = .time
+    //        $0.locale = Locale(identifier: "ko_kr")
+    //    }
     
     private let contentLabel = UILabel().then {
         $0.text = "내용"
@@ -117,7 +119,7 @@ final class InviteViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         configureUI()
-        updateCalender()
+        //        updateCalender()
         keyboardController()
     }
     
@@ -127,17 +129,17 @@ final class InviteViewController: UIViewController {
     
     // MARK: - Selectors
     
-    @objc
-    private func previousMonth() {
-        selectedIndexPath = nil
-        minusMonth()
-    }
-    
-    @objc
-    private func nextMonth() {
-        selectedIndexPath = nil
-        plusMonth()
-    }
+    //    @objc
+    //    private func previousMonth() {
+    //        selectedIndexPath = nil
+    //        minusMonth()
+    //    }
+    //
+    //    @objc
+    //    private func nextMonth() {
+    //        selectedIndexPath = nil
+    //        plusMonth()
+    //    }
     
     // MARK: - Helpers
     
@@ -170,19 +172,14 @@ final class InviteViewController: UIViewController {
     private func configureUI() {
         view.backgroundColor = .white
         navigationItem.title = "용병 구하기"
-        
+
+        addChild(calenderViewController)
         view.addSubview(scrollView)
         scrollView.addSubview(contentView)
         
         contentView.addSubviews(placeView,
                                 peopleView,
-                                monthLabel,
-                                nextButton,
-                                previousButton,
-                                dayStackView,
-                                dateCollectionView,
-                                timeLabel,
-                                timePicker,
+                                calenderViewController.view,
                                 contentLabel,
                                 contentTextView,
                                 addButton)
@@ -211,48 +208,15 @@ final class InviteViewController: UIViewController {
             make.height.equalTo(50)
         }
         
-        monthLabel.snp.makeConstraints { make in
-            make.top.equalTo(placeView.snp.bottom).offset(10)
-            make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
-        }
-        
-        nextButton.snp.makeConstraints { make in
-            make.centerY.equalTo(monthLabel)
-            make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
-            make.width.height.equalTo(40)
-        }
-        
-        previousButton.snp.makeConstraints { make in
-            make.centerY.equalTo(monthLabel)
-            make.trailing.equalTo(nextButton.snp.leading).offset(SuperviewOffsets.trailingPadding)
-            make.width.height.equalTo(40)
-        }
-        
-        dayStackView.snp.makeConstraints { make in
-            make.top.equalTo(monthLabel.snp.bottom).offset(SuperviewOffsets.topPadding)
+        calenderViewController.view.snp.makeConstraints { make in
+            make.top.equalTo(placeView.snp.bottom).offset(20)
             make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
             make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
-        }
-        
-        dateCollectionView.snp.makeConstraints { make in
-            make.top.equalTo(dayStackView.snp.bottom).offset(10)
-            make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
-            make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
-            make.height.equalTo(((UIScreen.main.bounds.width - 40) / 7) * 6)
-        }
-        
-        timeLabel.snp.makeConstraints { make in
-            make.top.equalTo(dateCollectionView.snp.bottom)
-            make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
-        }
-        
-        timePicker.snp.makeConstraints { make in
-            make.centerY.equalTo(timeLabel)
-            make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
+            make.height.equalTo(((UIScreen.main.bounds.width - 40) / 7) * 6 + 100)
         }
         
         contentLabel.snp.makeConstraints { make in
-            make.top.equalTo(timeLabel.snp.bottom).offset(SuperviewOffsets.topPadding)
+            make.top.equalTo(calenderViewController.view.snp.bottom).offset(SuperviewOffsets.topPadding)
             make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
         }
         
@@ -271,22 +235,22 @@ final class InviteViewController: UIViewController {
         }
     }
     
-    private func minusMonth() {
-        calanderDate = calender.date(byAdding: DateComponents(month: -1), to: calanderDate) ?? Date()
-        if let index = selectedIndexPath {
-            collectionView(dateCollectionView, didSelectItemAt: index)
-        }
-        
-        updateCalender()
-    }
-    
-    private func plusMonth() {
-        calanderDate = calender.date(byAdding: DateComponents(month: 1), to: calanderDate) ?? Date()
-        if let index = selectedIndexPath {
-            collectionView(dateCollectionView, didSelectItemAt: index)
-        }
-        updateCalender()
-    }
+    //    private func minusMonth() {
+    //        calanderDate = calender.date(byAdding: DateComponents(month: -1), to: calanderDate) ?? Date()
+    //        if let index = selectedIndexPath {
+    //            collectionView(dateCollectionView, didSelectItemAt: index)
+    //        }
+    //
+    //        updateCalender()
+    //    }
+    //
+    //    private func plusMonth() {
+    //        calanderDate = calender.date(byAdding: DateComponents(month: 1), to: calanderDate) ?? Date()
+    //        if let index = selectedIndexPath {
+    //            collectionView(dateCollectionView, didSelectItemAt: index)
+    //        }
+    //        updateCalender()
+    //    }
 }
 
 // MARK: - 키보드 관련 함수
@@ -319,86 +283,5 @@ extension InviteViewController: UITextViewDelegate {
         } else {
             placeHolderLabel.isHidden = true
         }
-    }
-}
-
-// MARK: - 달력 구현
-
-extension InviteViewController {
-    private func startDayOfWeek() -> Int {
-        return calender.component(.weekday, from: calanderDate) - 1
-    }
-    
-    private func endDate() -> Int {
-        return calender.range(of: .day, in: .month, for: calanderDate)?.count ?? Int()
-    }
-    
-    private func updateTitle() {
-        dateFormatter.locale = Locale(identifier: "ko_kr")
-        dateFormatter.timeZone = TimeZone(abbreviation: "KST")
-        dateFormatter.dateFormat = "yyyy년 MM월"
-        let date = dateFormatter.string(from: calanderDate)
-        monthLabel.text = date
-    }
-    
-    private func updateDays() {
-        days.removeAll()
-        let startDayOfWeek = startDayOfWeek()
-        let totalDays = startDayOfWeek + endDate()
-        
-        for day in 0..<totalDays {
-            if day < startDayOfWeek {
-                days.append("")
-                continue
-            }
-            days.append("\(day - startDayOfWeek + 1)")
-        }
-        
-        dateCollectionView.reloadData()
-    }
-    
-    private func updateCalender() {
-        updateTitle()
-        updateDays()
-    }
-}
-
-extension InviteViewController: UICollectionViewDelegateFlowLayout, UICollectionViewDataSource {
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        days.count
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: DateCell.cellID, for: indexPath) as! DateCell
-        cell.dateLabel.text = days[indexPath.row]
-        return cell
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let width = (UIScreen.main.bounds.width - 40) / 7
-        return CGSize(width: width, height: width)
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        if let previousSelectedIndexPath = selectedIndexPath,
-           let previousSelectedCell = collectionView.cellForItem(at: previousSelectedIndexPath) as? DateCell {
-            previousSelectedCell.isSelected = false
-            previousSelectedCell.backgroundColor = .clear
-            previousSelectedCell.dateLabel.textColor = .black
-        }
-        
-        guard let selectedCell = collectionView.cellForItem(at: indexPath) as? DateCell,
-              let yearAndMonth = monthLabel.text
-        else { return }
-        selectedCell.isSelected = true
-        selectedCell.backgroundColor = .blue
-        selectedCell.dateLabel.textColor = .white
-        if let date = Int(selectedCell.dateLabel.text ?? "") {
-            selectedDate = "\(yearAndMonth) \(date)일"
-        }
-        
-        // 선택한 셀의 indexPath를 저장
-        selectedIndexPath = indexPath
-        print(selectedDate)
     }
 }
