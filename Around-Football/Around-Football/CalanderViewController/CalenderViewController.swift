@@ -7,7 +7,7 @@
 
 import UIKit
 
-class CalenderViewController: UIViewController {
+final class CalenderViewController: UIViewController {
     
     // MARK: - Properties
     
