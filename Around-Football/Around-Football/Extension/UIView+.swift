@@ -7,6 +7,8 @@
 
 import UIKit
 
+import SnapKit
+
 extension UIView {
     func addSubviews(_ subviews: UIView...) {
         for subview in subviews {
@@ -21,6 +23,12 @@ extension UIView {
         self.layer.shadowRadius = LayoutOptions.shadowCornerRadious
         self.layer.shadowOpacity = LayoutOptions.shadowOpacity
 
+    }
+    
+    func makeSideAutoLayout() {
+        self.snp.makeConstraints {
+            $0.leading.trailing.equalToSuperview()
+        }
     }
 }
 
