@@ -12,5 +12,5 @@ struct MockFields: Codable {
     let req_id:String
     let result:String
     let data : [Field]
-
+    
 }

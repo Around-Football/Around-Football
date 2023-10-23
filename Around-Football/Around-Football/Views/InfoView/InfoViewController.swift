@@ -7,8 +7,10 @@
 
 import UIKit
 
+//NavigationDelegate
 protocol InfoDelegate: AnyObject {
-    func moveToVc()
+    func moveToDatailVC()
+    func moveToInviteVC()
 }
 
 class InfoViewController: UIViewController {
@@ -79,21 +81,21 @@ class InfoViewController: UIViewController {
         
         profileAndEditView.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide)
-            make.leading.equalToSuperview().offset(20)
-            make.trailing.equalToSuperview().offset(-20)
+            make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
+            make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
         }
         
         infoCollectionView.snp.makeConstraints { make in
-            make.top.equalTo(profileAndEditView.snp.bottom)
-            make.leading.equalToSuperview().offset(20)
-            make.trailing.equalToSuperview().offset(-20)
-            make.height.equalTo(220)
+            make.top.equalTo(profileAndEditView.snp.bottom).offset(10)
+            make.leading.equalToSuperview().offset((SuperviewOffsets.leadingPadding))
+            make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
+            make.height.equalTo(240)
         }
         
         infoStackView.snp.makeConstraints { make in
             make.top.equalTo(infoCollectionView.snp.bottom).offset(10)
-            make.leading.equalToSuperview().offset(20)
-            make.trailing.equalToSuperview().offset(-20)
+            make.leading.equalToSuperview().offset((SuperviewOffsets.leadingPadding))
+            make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
             make.height.equalTo(150)
         }
     }
@@ -111,8 +113,13 @@ extension InfoViewController: UICollectionViewDelegateFlowLayout, UICollectionVi
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: InfoCell.cellID, for: indexPath) as? InfoCell
-        else { return UICollectionViewCell() }
+        guard let cell = collectionView.dequeueReusableCell(
+            withReuseIdentifier: InfoCell.cellID,
+            for: indexPath
+        ) as? InfoCell else {
+            return UICollectionViewCell()
+        }
+        
         cell.setValues(icon: iconAndImage[indexPath.item].icon,
                        title: iconAndImage[indexPath.item].title)
         return cell
@@ -120,7 +127,12 @@ extension InfoViewController: UICollectionViewDelegateFlowLayout, UICollectionVi
 }
 
 extension InfoViewController: InfoDelegate {
-    func moveToVc() {
+    func moveToDatailVC() {
+        let controller = DetailViewController()
+        navigationController?.pushViewController(controller, animated: true)
+    }
+    
+    func moveToInviteVC() {
         let controller = InviteViewController()
         navigationController?.pushViewController(controller, animated: true)
     }

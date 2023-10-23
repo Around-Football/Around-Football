@@ -12,7 +12,6 @@
 		272B448D2ADD375700ACEC41 /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 272B448C2ADD375700ACEC41 /* GoogleSignInSwift */; };
 		272B44932ADD5C0F00ACEC41 /* RouterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 272B44922ADD5C0F00ACEC41 /* RouterViewController.swift */; };
 		272B44952ADD80EC00ACEC41 /* Recruit_Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 272B44942ADD80EC00ACEC41 /* Recruit_Rx.swift */; };
-		272B44972ADE627000ACEC41 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 272B44962ADE627000ACEC41 /* GoogleService-Info.plist */; };
 		272B44992ADE72FC00ACEC41 /* AppleLoginService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 272B44982ADE72FC00ACEC41 /* AppleLoginService.swift */; };
 		272B449B2ADEE9B900ACEC41 /* GoogleLoginService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 272B449A2ADEE9B900ACEC41 /* GoogleLoginService.swift */; };
 		2736744D2AC3061C003ADE3F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2736744C2AC3061C003ADE3F /* AppDelegate.swift */; };
@@ -65,6 +64,7 @@
 		7C141C692ADA6008002CF180 /* KakaoSDKCommon in Frameworks */ = {isa = PBXBuildFile; productRef = 7C141C682ADA6008002CF180 /* KakaoSDKCommon */; };
 		7C141C6B2ADA6008002CF180 /* KakaoSDKFriend in Frameworks */ = {isa = PBXBuildFile; productRef = 7C141C6A2ADA6008002CF180 /* KakaoSDKFriend */; };
 		7C141C6D2ADA6008002CF180 /* KakaoSDKFriendCore in Frameworks */ = {isa = PBXBuildFile; productRef = 7C141C6C2ADA6008002CF180 /* KakaoSDKFriendCore */; };
+		7C5036C32ADFA66E000F576B /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 7C5036C22ADFA66E000F576B /* GoogleService-Info.plist */; };
 		7C5F77582AC96A7E004CE48F /* DetailUserInfoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C5F77572AC96A7E004CE48F /* DetailUserInfoCell.swift */; };
 		7C5F775C2AC9C698004CE48F /* InviteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C5F775B2AC9C698004CE48F /* InviteViewController.swift */; };
 		7C5F775E2AC9CE8A004CE48F /* DateCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C5F775D2AC9CE8A004CE48F /* DateCell.swift */; };
@@ -73,6 +73,7 @@
 		7C5F77642AC9E180004CE48F /* UIView+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C5F77632AC9E180004CE48F /* UIView+.swift */; };
 		7CB21BA32AC94D36001D0058 /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CB21BA22AC94D36001D0058 /* DetailViewController.swift */; };
 		7CB21BA52AC94EE4001D0058 /* DetailUserInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CB21BA42AC94EE4001D0058 /* DetailUserInfoView.swift */; };
+		7CBFED6C2AE6477700915D65 /* CalenderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CBFED6B2AE6477700915D65 /* CalenderViewController.swift */; };
 		7CC619742AD433760085DF90 /* ProfileAndEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CC619732AD433760085DF90 /* ProfileAndEditView.swift */; };
 		7CC619762AD448A90085DF90 /* InfoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CC619752AD448A90085DF90 /* InfoCell.swift */; };
 		7CC619782AD460D80085DF90 /* infoArrangedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CC619772AD460D80085DF90 /* infoArrangedView.swift */; };
@@ -86,7 +87,6 @@
 		272B44872ADD2AE000ACEC41 /* KeychainItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainItem.swift; sourceTree = "<group>"; };
 		272B44922ADD5C0F00ACEC41 /* RouterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouterViewController.swift; sourceTree = "<group>"; };
 		272B44942ADD80EC00ACEC41 /* Recruit_Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Recruit_Rx.swift; sourceTree = "<group>"; };
-		272B44962ADE627000ACEC41 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		272B44982ADE72FC00ACEC41 /* AppleLoginService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleLoginService.swift; sourceTree = "<group>"; };
 		272B449A2ADEE9B900ACEC41 /* GoogleLoginService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoogleLoginService.swift; sourceTree = "<group>"; };
 		273674492AC3061C003ADE3F /* Around-Football.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Around-Football.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -127,6 +127,7 @@
 		669674902AC3E9D40067FD48 /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
 		669674922AC3E9DF0067FD48 /* InfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoViewController.swift; sourceTree = "<group>"; };
 		7C141C612ADA5F38002CF180 /* SocialLoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocialLoginViewController.swift; sourceTree = "<group>"; };
+		7C5036C22ADFA66E000F576B /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		7C5F77572AC96A7E004CE48F /* DetailUserInfoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailUserInfoCell.swift; sourceTree = "<group>"; };
 		7C5F775B2AC9C698004CE48F /* InviteViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InviteViewController.swift; sourceTree = "<group>"; };
 		7C5F775D2AC9CE8A004CE48F /* DateCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateCell.swift; sourceTree = "<group>"; };
@@ -136,6 +137,7 @@
 		7C78830C2ADE54970028D555 /* Around-Football.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Around-Football.entitlements"; sourceTree = "<group>"; };
 		7CB21BA22AC94D36001D0058 /* DetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
 		7CB21BA42AC94EE4001D0058 /* DetailUserInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailUserInfoView.swift; sourceTree = "<group>"; };
+		7CBFED6B2AE6477700915D65 /* CalenderViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalenderViewController.swift; sourceTree = "<group>"; };
 		7CC619732AD433760085DF90 /* ProfileAndEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileAndEditView.swift; sourceTree = "<group>"; };
 		7CC619752AD448A90085DF90 /* InfoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoCell.swift; sourceTree = "<group>"; };
 		7CC619772AD460D80085DF90 /* infoArrangedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = infoArrangedView.swift; sourceTree = "<group>"; };
@@ -196,6 +198,7 @@
 				2736747F2AC308D1003ADE3F /* Models */,
 				7CE563A72AD13DA3005DE2DF /* ViewModels */,
 				6696748A2AC3E9740067FD48 /* Views */,
+				7CBFED6D2AE6569100915D65 /* CalanderViewController */,
 				7CE25AE72ACAC3370014132F /* Extension */,
 				663417C82AD68299002FE2CA /* Network */,
 				7CE563A82AD13E82005DE2DF /* Utiles */,
@@ -206,7 +209,7 @@
 				273674552AC3061E003ADE3F /* Assets.xcassets */,
 				273674572AC3061E003ADE3F /* LaunchScreen.storyboard */,
 				2736745A2AC3061E003ADE3F /* Info.plist */,
-				272B44962ADE627000ACEC41 /* GoogleService-Info.plist */,
+				7C5036C22ADFA66E000F576B /* GoogleService-Info.plist */,
 			);
 			path = "Around-Football";
 			sourceTree = "<group>";
@@ -335,11 +338,19 @@
 			isa = PBXGroup;
 			children = (
 				7C5F775B2AC9C698004CE48F /* InviteViewController.swift */,
-				7C5F775D2AC9CE8A004CE48F /* DateCell.swift */,
 				7C5F775F2AC9DA08004CE48F /* GroundTitleView.swift */,
 				7C5F77612AC9DB7B004CE48F /* PeopleCountView.swift */,
 			);
 			path = InviteView;
+			sourceTree = "<group>";
+		};
+		7CBFED6D2AE6569100915D65 /* CalanderViewController */ = {
+			isa = PBXGroup;
+			children = (
+				7CBFED6B2AE6477700915D65 /* CalenderViewController.swift */,
+				7C5F775D2AC9CE8A004CE48F /* DateCell.swift */,
+			);
+			path = CalanderViewController;
 			sourceTree = "<group>";
 		};
 		7CE25AE72ACAC3370014132F /* Extension */ = {
@@ -462,7 +473,7 @@
 			files = (
 				663417CF2AD68794002FE2CA /* FieldMock.json in Resources */,
 				273674592AC3061E003ADE3F /* LaunchScreen.storyboard in Resources */,
-				272B44972ADE627000ACEC41 /* GoogleService-Info.plist in Resources */,
+				7C5036C32ADFA66E000F576B /* GoogleService-Info.plist in Resources */,
 				273674562AC3061E003ADE3F /* Assets.xcassets in Resources */,
 				273674542AC3061C003ADE3F /* Main.storyboard in Resources */,
 			);
@@ -479,6 +490,7 @@
 				663417CA2AD682AB002FE2CA /* Firebase.swift in Sources */,
 				7CE563AA2AD140A9005DE2DF /* LayoutOptions.swift in Sources */,
 				7C5F77582AC96A7E004CE48F /* DetailUserInfoCell.swift in Sources */,
+				7CBFED6C2AE6477700915D65 /* CalenderViewController.swift in Sources */,
 				278DAD5B2AE27A660085718C /* LocationFilterViewController.swift in Sources */,
 				7CC619782AD460D80085DF90 /* infoArrangedView.swift in Sources */,
 				7CC619742AD433760085DF90 /* ProfileAndEditView.swift in Sources */,
@@ -676,7 +688,7 @@
 				CODE_SIGN_ENTITLEMENTS = "Around-Football/Around-Football.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = K9NKZR257N;
+				DEVELOPMENT_TEAM = W6X76DS4Z7;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Around-Football/Info.plist";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "\"현재 위치사용을 허용하시겠습니까?\"";
@@ -711,7 +723,7 @@
 				CODE_SIGN_ENTITLEMENTS = "Around-Football/Around-Football.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = K9NKZR257N;
+				DEVELOPMENT_TEAM = W6X76DS4Z7;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Around-Football/Info.plist";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "\"현재 위치사용을 허용하시겠습니까?\"";
