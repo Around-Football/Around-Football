@@ -62,11 +62,12 @@ final class ProfileAndEditView: UIView {
     
     @objc private func editButtonTapped() {
         print("DEBUG: editButtonTapped")
-        delegate?.moveToVc()
+        delegate?.moveToDatailVC()
     }
     
     @objc private func settingButtonTapped() {
         print("DEBUG: settingButtonTapped")
+        delegate?.moveToInviteVC()
     }
     
     // MARK: - Helpers

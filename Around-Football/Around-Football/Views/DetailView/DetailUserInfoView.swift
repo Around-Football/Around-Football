@@ -82,25 +82,27 @@ final class DetailUserInfoView: UIView {
     // MARK: - Helpers
     
     private func configureUI() {
-        addSubviews(profileImageView, userNameLabel, userDetailInfoStackView)
+        addSubviews(profileImageView,
+                    userNameLabel,
+                    userDetailInfoStackView)
         
         profileImageView.snp.makeConstraints { make in
-            make.top.leading.equalToSuperview().offset(20)
-            make.bottom.equalToSuperview().offset(-20)
+            make.top.leading.equalToSuperview().offset(SuperviewOffsets.topPadding)
+            make.bottom.equalToSuperview().offset(SuperviewOffsets.bottomPadding)
             make.centerY.equalToSuperview()
             make.height.equalTo(50)
             make.width.equalTo(50)
         }
         
         userNameLabel.snp.makeConstraints { make in
-            make.top.equalToSuperview().offset(20)
-            make.leading.equalTo(profileImageView.snp.trailing).offset(20)
+            make.top.equalToSuperview().offset(SuperviewOffsets.topPadding)
+            make.leading.equalTo(profileImageView.snp.trailing).offset(SuperviewOffsets.leadingPadding)
         }
         
         userDetailInfoStackView.snp.makeConstraints { make in
             make.top.equalTo(userNameLabel.snp.bottom).offset(5)
-            make.leading.equalTo(profileImageView.snp.trailing).offset(20)
-            make.bottom.equalToSuperview().offset(-20)
+            make.leading.equalTo(profileImageView.snp.trailing).offset(SuperviewOffsets.leadingPadding)
+            make.bottom.equalToSuperview().offset(SuperviewOffsets.bottomPadding)
         }
     }
     

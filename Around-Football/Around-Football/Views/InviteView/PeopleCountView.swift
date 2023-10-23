@@ -14,6 +14,7 @@ class PeopleCountView: UIView {
     
     // MARK: - Properties
     
+    //선택된 사람 수
     private var count = 0 {
         didSet {
             peopleCountLabel.text = "\(count) 명"
