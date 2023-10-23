@@ -28,7 +28,6 @@ class ApplicationStatusViewController: UIViewController {
     // 화면에 진입할때마다 다시 테이블뷰 그리기
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        navigationController?.navigationBar.prefersLargeTitles = true
         tableView.reloadData()
     }
     
@@ -44,8 +43,7 @@ class ApplicationStatusViewController: UIViewController {
     func setupTableViewConstraints() {
         view.addSubview(tableView)
         tableView.snp.makeConstraints { make in
-            make.top.equalTo(view.safeAreaLayoutGuide)
-            make.leading.bottom.trailing.equalTo(view)
+            make.top.leading.bottom.trailing.equalTo(view)
         }
     }
     
