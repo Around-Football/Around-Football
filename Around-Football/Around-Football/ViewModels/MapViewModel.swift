@@ -18,12 +18,20 @@ final class MapViewModel {
     var isSearchCurrentLocation: Bool = true
     private let firebaseAPI = FirebaseAPI.shared
     var fields: [Field] = []
+    var selectedDate: Date = Date() {
+        didSet {
+            let formatter = DateFormatter()
+            formatter.dateFormat = "yyyy / MM / dd"
+            print(formatter.string(from: selectedDate))
+        }
+    }
     
     // MARK: - Lifecycles
     
     init(latitude: Double, longitude: Double, searchLocation: GeoPoint? = nil) {
         self.currentLocation = GeoPoint(latitude: latitude, longitude: longitude)
         self.searchLocation = searchLocation
+        selectedDate = Date()
     }
     
     // MARK: - API
