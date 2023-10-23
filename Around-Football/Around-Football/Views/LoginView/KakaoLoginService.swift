@@ -5,7 +5,7 @@
 //  Created by Deokhun KIM on 10/16/23.
 //
 
-import Foundation
+import UIKit
 
 import FirebaseAuth
 import KakaoSDKAuth
@@ -116,7 +116,6 @@ extension KakaoLoginService {
             }
             
             print("로그인 성공")
-            print(result?.user)
         }
     }
     
