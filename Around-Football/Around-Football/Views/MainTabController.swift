@@ -77,7 +77,7 @@ final class MainTabController: UITabBarController {
     
     func configureViewController() {
         
-        let homeTableViewController = HomeTableViewController()
+        let homeTableViewController = HomeViewController()
         let homeNavigation: UINavigationController = makeNavigationController(
             rootViewController: homeTableViewController,
             title: "Home",
