@@ -106,7 +106,7 @@ final class DetailViewController: UIViewController {
         
         //네비게이션 분기처리
         //TODO: -소미니 뷰 넣기
-        let controller = UIViewController()
+        let controller = ApplicationStatusViewController()
         controller.view.backgroundColor = .blue //test
         navigationController?.pushViewController(controller, animated: true)
     }
