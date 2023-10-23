@@ -12,13 +12,15 @@ final class FieldDetailViewModel {
     // MARK: - Properties
     
     let field: Field
+    let selectedDate: Date
     private var recruits: [Recruit] = []
     private let firebaseAPI = FirebaseAPI.shared
 
     // MARK: - Lifecycles
     
-    init(field: Field) {
+    init(field: Field, selectedDate: Date) {
         self.field = field
+        self.selectedDate = selectedDate
     }
     
     // MARK: - API
