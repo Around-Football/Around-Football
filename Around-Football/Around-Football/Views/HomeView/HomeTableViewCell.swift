@@ -23,6 +23,7 @@ class HomeTableViewCell: UITableViewCell {
     
     var titleLabel = UILabel().then {
         $0.text = "Title Text"
+        $0.font = .boldSystemFont(ofSize: 20)
     }
     
     var fieldAddress = UILabel().then {

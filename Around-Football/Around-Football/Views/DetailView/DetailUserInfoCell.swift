@@ -57,7 +57,7 @@ final class DetailUserInfoCell: UITableViewCell {
         
         contents.snp.makeConstraints { make in
             make.centerY.equalToSuperview()
-            make.leading.equalTo(title.snp.trailing).offset(20)
+            make.leading.equalTo(title.snp.trailing).offset(SuperviewOffsets.leadingPadding)
             make.trailing.equalToSuperview()
         }
     }
