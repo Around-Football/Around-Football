@@ -30,12 +30,11 @@ final class FieldDetailViewController: UIViewController {
         $0.backgroundColor = .black
     }
     
-    private let tableView = UITableView().then {
+    let tableView = UITableView().then {
         $0.register(
             FieldRecruitTableViewCell.self,
             forCellReuseIdentifier: FieldRecruitTableViewCell.cellID
         )
-        $0.backgroundColor = .systemPink
     }
     
     // MARK: - Lifecycles
@@ -43,6 +42,7 @@ final class FieldDetailViewController: UIViewController {
     init(viewModel: FieldDetailViewModel) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
+
     }
     
     required init?(coder: NSCoder) {
@@ -95,7 +95,7 @@ final class FieldDetailViewController: UIViewController {
         }
         
         tableView.snp.makeConstraints {
-            $0.top.equalTo(headerStackView.snp.bottom).offset(10)
+            $0.top.equalTo(headerStackView.snp.bottom)
             $0.leading.equalToSuperview().offset(20)
             $0.trailing.equalToSuperview().offset(-20)
             $0.bottom.equalToSuperview().offset(-20)
@@ -110,6 +110,7 @@ final class FieldDetailViewController: UIViewController {
     func configure() {
         fieldNameLabel.text = "구장이름"
         addressLabel.text = viewModel.field.fieldAddress
+        tableView.dataSource = self
     }
     
     

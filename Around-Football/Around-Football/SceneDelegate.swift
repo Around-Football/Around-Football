@@ -20,7 +20,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let scene = scene as? UIWindowScene else { return }
 
         window?.windowScene = scene
-//        window?.rootViewController = InviteViewController()
         window?.rootViewController = MainTabController()
         window?.makeKeyAndVisible()
     }
