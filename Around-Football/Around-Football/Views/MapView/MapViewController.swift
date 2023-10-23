@@ -27,14 +27,21 @@ final class MapViewController: UIViewController {
     
     private let searchTextField = UISearchTextField().then {
         $0.placeholder = "장소를 입력하세요."
-        $0.backgroundColor = .systemBackground
-        $0.layer.shadowColor = UIColor.black.cgColor
-        $0.layer.masksToBounds = false
-        $0.layer.shadowOffset = CGSize(width: 0, height: 4)
-        $0.layer.shadowRadius = 5
-        $0.layer.shadowOpacity = 0.3
+        $0.backgroundColor = .systemGroupedBackground
+        $0.setShadowLayer()
     }
     
+    lazy var datePicker = UIDatePicker().then {
+        $0.preferredDatePickerStyle = .compact
+        $0.datePickerMode = .date
+        $0.locale = Locale(identifier: "ko_KR")
+//        $0.backgroundColor = .systemGroupedBackground
+        $0.setValue(UIColor.systemGroupedBackground, forKey: "backgroundColor")
+        $0.setShadowLayer()
+        
+        $0.addTarget(self, action: #selector(changeDate(_:)), for: .valueChanged)
+    }
+        
     lazy var trackingButton = UIButton().then {
         let imageConfig = UIImage.SymbolConfiguration(pointSize: 30, weight: .medium)
         let image = UIImage(systemName: "location", withConfiguration: imageConfig)
@@ -43,11 +50,8 @@ final class MapViewController: UIViewController {
         $0.backgroundColor = .white
         $0.tintColor = .black
         $0.layer.cornerRadius = 56/2
-        $0.layer.shadowColor = UIColor.black.cgColor
-        $0.layer.masksToBounds = false
-        $0.layer.shadowOffset = CGSize(width: 0, height: 4)
-        $0.layer.shadowRadius = 5
-        $0.layer.shadowOpacity = 0.3
+        $0.setShadowLayer()
+        
         $0.addTarget(self, action: #selector(pressTrackingButton), for: .touchUpInside)
     }
     
@@ -74,6 +78,7 @@ final class MapViewController: UIViewController {
             guard let viewModel = viewModel else { return }
             
             viewModel.fetchFields()
+            viewModel.selectedDate = self.datePicker.date
         }
         
     }
@@ -109,18 +114,26 @@ final class MapViewController: UIViewController {
     
     // MARK: - Selectors
     
-    @objc func pressTrackingButton() {
+    @objc
+    func pressTrackingButton() {
         self.changeCurrentPoi()
         guard let location = viewModel?.currentLocation else { return }
         self.moveCamera(latitude: location.latitude, longitude: location.longitude)
+    }
+    
+    @objc
+    func changeDate(_ sender: UIDatePicker) {
+        guard let viewModel = self.viewModel else { return }
+        viewModel.selectedDate = sender.date
     }
     
     func tapHandler(_ param: PoiInteractionEventParam) {
         let itemID = param.poiItem.itemID
         guard let viewModel = self.viewModel else { return }
         guard let field = viewModel.fields.filter({ $0.id == itemID }).first else { return }
+        let selectedDate = viewModel.selectedDate
         
-        let fieldViewModel = FieldDetailViewModel(field: field)
+        let fieldViewModel = FieldDetailViewModel(field: field, selectedDate: selectedDate)
         self.modalViewController = FieldDetailViewController(viewModel: fieldViewModel)
         
         if let modalViewController = self.modalViewController {
@@ -128,15 +141,17 @@ final class MapViewController: UIViewController {
             present(navigation, animated: true)
         }
     }
-
+    
     
     // MARK: - Helpers
     
     func configureUI() {
         view.backgroundColor = .systemBackground
+        
         view.addSubviews(
             mapContainer,
             searchTextField,
+            datePicker,
             trackingButton
         )
         
@@ -152,11 +167,15 @@ final class MapViewController: UIViewController {
             $0.height.equalTo(40)
         }
         
+        datePicker.snp.makeConstraints {
+            $0.top.equalTo(searchTextField.snp.bottom).offset(10)
+            $0.centerX.equalToSuperview()
+        }
+        
         trackingButton.snp.makeConstraints {
             $0.leading.equalTo(mapContainer).offset(20)
             $0.bottom.equalTo(mapContainer).offset(-20)
             $0.height.width.equalTo(56)
         }
     }
-    
 }
