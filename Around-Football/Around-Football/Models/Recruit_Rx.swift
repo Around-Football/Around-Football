@@ -7,6 +7,8 @@
 
 import Foundation
 
+// MARK: - RX Test
+
 struct Recruit_Rx: Codable {
     let id: Int
     let userName: String
