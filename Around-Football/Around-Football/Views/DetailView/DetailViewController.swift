@@ -95,8 +95,14 @@ final class DetailViewController: UIViewController {
     
     @objc
     private func clickedApplyButton() {
-        //TODO: -버튼 타이틀 분기처리
-//        applyButton.setTitle("신청현황", for: .normal)
+        //TODO: -메세지 버튼 타이틀 분기처리 (작성자 or 신청자)
+        
+        //TODO: -신청하기 버튼 타이틀 분기처리
+        let title = NSAttributedString(
+            string: "신청 중",
+            attributes: [.font: UIFont.systemFont(ofSize: 15, weight: .semibold)]
+        )
+        applyButton.setAttributedTitle(title, for: .normal)
         
         //네비게이션 분기처리
         //TODO: -소미니 뷰 넣기
