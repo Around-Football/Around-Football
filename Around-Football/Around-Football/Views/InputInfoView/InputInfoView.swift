@@ -15,13 +15,14 @@ class InputInfoView: UIView {
     // MARK: Properties
     
     private var mainScrollView = UIScrollView().then {
-        $0.backgroundColor = .white
-        $0.frame.size = .init(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
+        $0.backgroundColor = .systemBackground
+        $0.translatesAutoresizingMaskIntoConstraints = false
     }
     
     private lazy var mainStackView = UIStackView().then {
+        $0.translatesAutoresizingMaskIntoConstraints = false
         $0.axis = .vertical
-        $0.distribution = .fillEqually
+        $0.distribution = .equalSpacing
         $0.alignment = .leading
         $0.spacing = 25
         $0.addArrangedSubviews(userNameStackView,
@@ -32,43 +33,25 @@ class InputInfoView: UIView {
                                userMainUsedFeetStackView,
                                userPositionStackView)
         
-        userNameStackView.snp.makeConstraints { make in
-            make.top.leading.trailing.equalToSuperview()
-        }
-        
-        userAgeStackView.snp.makeConstraints { make in
-            make.leading.trailing.equalToSuperview()
-        }
-        
-        userContactStackView.snp.makeConstraints { make in
-            make.leading.trailing.equalToSuperview()
-        }
-        
-        userDetailSexStackView.snp.makeConstraints { make in
-            make.leading.trailing.equalToSuperview()
-        }
-        
-        userAreaStackView.snp.makeConstraints { make in
-            make.leading.trailing.equalToSuperview()
-        }
-        
-        userMainUsedFeetStackView.snp.makeConstraints { make in
-            make.leading.trailing.equalToSuperview()
-        }
-        
-        userPositionStackView.snp.makeConstraints { make in
-            make.leading.trailing.equalToSuperview()
-        }
+        userNameStackView.makeSideAutoLayout()
+        userAgeStackView.makeSideAutoLayout()
+        userContactStackView.makeSideAutoLayout()
+        userDetailSexStackView.makeSideAutoLayout()
+        userAreaStackView.makeSideAutoLayout()
+        userMainUsedFeetStackView.makeSideAutoLayout()
+        userPositionStackView.makeSideAutoLayout()
     }
     
     // 이름
     private lazy var userNameStackView = UIStackView().then{
         $0.axis = .vertical
         $0.distribution = .fill
-        $0.alignment = .fill
+        $0.alignment = .leading
         $0.spacing = 10
         $0.addArrangedSubviews(userNameLabel,
                                userNameTextField)
+        userNameTextField.makeSideAutoLayout()
+        
     }
     
     private let userNameLabel = UILabel().then {
@@ -84,13 +67,14 @@ class InputInfoView: UIView {
     }
     
     // 나이
-    private lazy var userAgeStackView = UIStackView().then{
+    private lazy var userAgeStackView = UIStackView().then {
         $0.axis = .vertical
         $0.distribution = .fill
-        $0.alignment = .fill
+        $0.alignment = .leading
         $0.spacing = 10
         $0.addArrangedSubviews(userAgeLabel,
                                userAgeTextField)
+        userAgeTextField.makeSideAutoLayout()
     }
     
     private let userAgeLabel = UILabel().then{
@@ -104,15 +88,16 @@ class InputInfoView: UIView {
         $0.borderStyle = .roundedRect
         $0.font = .systemFont(ofSize: 15)
     }
-
+    
     // 연락처
     private lazy var userContactStackView = UIStackView().then{
         $0.axis = .vertical
         $0.distribution = .fill
-        $0.alignment = .fill
+        $0.alignment = .leading
         $0.spacing = 10
         $0.addArrangedSubviews(userContactLabel,
                                userContactTextField)
+        userContactTextField.makeSideAutoLayout()
     }
     
     private let userContactLabel = UILabel().then{
@@ -131,10 +116,13 @@ class InputInfoView: UIView {
     private lazy var userDetailSexStackView = UIStackView().then {
         $0.axis = .vertical
         $0.distribution = .fill
-        $0.alignment = .fill
+        $0.alignment = .leading
         $0.spacing = 10
         $0.addArrangedSubviews(userDetailSexLabel,
                                userDetailSexButtonStackView)
+        userDetailSexButtonStackView.snp.makeConstraints {
+            $0.leading.equalToSuperview()
+        }
     }
     
     private let userDetailSexLabel = UILabel().then{
@@ -164,15 +152,16 @@ class InputInfoView: UIView {
         $0.setImage(UIImage(systemName: "circle"), for: .normal)
         $0.setImage(UIImage(systemName: "checkmark.circle.fill"), for: .selected)
     }
-
+    
     // 지역
     private lazy var userAreaStackView = UIStackView().then{
         $0.axis = .vertical
         $0.distribution = .fill
-        $0.alignment = .fill
+        $0.alignment = .leading
         $0.spacing = 10
         $0.addArrangedSubviews(userAreaLabel,
                                userAreaTextField)
+        userAreaTextField.makeSideAutoLayout()
     }
     
     private let userAreaLabel = UILabel().then{
@@ -191,10 +180,13 @@ class InputInfoView: UIView {
     private lazy var userMainUsedFeetStackView = UIStackView().then {
         $0.axis = .vertical
         $0.distribution = .fill
-        $0.alignment = .fill
+        $0.alignment = .leading
         $0.spacing = 10
         $0.addArrangedSubviews(userMainUsedFeetLabel,
                                userMainUsedFeetButtonStackView)
+        userMainUsedFeetButtonStackView.snp.makeConstraints {
+            $0.leading.equalToSuperview()
+        }
     }
     
     private let userMainUsedFeetLabel = UILabel().then{
@@ -205,7 +197,7 @@ class InputInfoView: UIView {
     private lazy var userMainUsedFeetButtonStackView = UIStackView().then {
         $0.axis = .horizontal
         $0.distribution = .fill
-        $0.alignment = .fill
+        $0.alignment = .leading
         $0.spacing = 10
         $0.addArrangedSubviews(rightFootButton,
                                leftFootButton,
@@ -243,21 +235,24 @@ class InputInfoView: UIView {
     private lazy var userPositionStackView = UIStackView().then {
         $0.axis = .vertical
         $0.distribution = .fill
-        $0.alignment = .fill
+        $0.alignment = .leading
         $0.spacing = 10
         $0.addArrangedSubviews(userPositionLabel,
                                userPositionButtonStackView)
+        userPositionButtonStackView.snp.makeConstraints {
+            $0.leading.equalToSuperview()
+        }
     }
     
     private let userPositionLabel = UILabel().then{
         $0.text = "선호 포지션(복수선택 가능)"
         $0.font = .boldSystemFont(ofSize: 16)
     }
-
+    
     private lazy var userPositionButtonStackView = UIStackView().then {
         $0.axis = .horizontal
         $0.distribution = .fill
-        $0.alignment = .fill
+        $0.alignment = .leading
         $0.spacing = 10
         $0.addArrangedSubviews(fwButton,
                                mfButton,
@@ -330,14 +325,14 @@ class InputInfoView: UIView {
         
         mainScrollView.snp.makeConstraints { make in
             make.top.bottom.equalTo(safeAreaLayoutGuide)
-            make.leading.equalToSuperview().offset(20)
+            make.leading.equalToSuperview().offset(10)
             make.trailing.equalToSuperview().offset(-20)
-            make.width.equalToSuperview()
+            //            make.width.equalToSuperview()
         }
         
         mainStackView.snp.makeConstraints { make in
-            make.top.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
-            make.trailing.bottom.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
+            make.top.leading.trailing.bottom.equalToSuperview()
+            //            make.trailing.bottom.equalToSuperview()
             make.width.equalToSuperview()
         }
         
