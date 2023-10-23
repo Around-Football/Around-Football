@@ -18,8 +18,8 @@ class CalenderViewController: UIViewController {
     private var days: [String] = []
     private var selectedIndexPath: IndexPath? //캘린더 선택cell
     private var selectedDateString: String? //캘린더에서 선택한 날짜 String
-    private var selectedDate: Date? //캘린더에서 선택한 날짜 Date
-    
+    private var selectedDate: Date? //캘린더에서 선택한 날짜 + picker에서 선택한 시간 Date
+
     private lazy var previousButton = UIButton().then {
         $0.setImage(UIImage(systemName: "chevron.left"), for: .normal)
         $0.addTarget(self, action: #selector(previousMonth), for: .touchUpInside)
@@ -73,9 +73,12 @@ class CalenderViewController: UIViewController {
         $0.text = "Time"
     }
     
-    private var timePicker = UIDatePicker().then {
+    private lazy var timePicker = UIDatePicker().then {
         $0.datePickerMode = .time
         $0.locale = Locale(identifier: "ko_kr")
+        $0.locale = Locale.autoupdatingCurrent
+        $0.minuteInterval = 10
+        $0.addTarget(self, action: #selector(timePickerSelected), for: .valueChanged)
     }
     
     // MARK: - Lifecycles
@@ -98,6 +101,11 @@ class CalenderViewController: UIViewController {
     private func nextMonth() {
         selectedIndexPath = nil
         plusMonth()
+    }
+    
+    @objc
+    private func timePickerSelected() {
+        selectedDate = stringToDate(dateString: selectedDateString)
     }
     
     // MARK: - Helpers
@@ -195,7 +203,7 @@ extension CalenderViewController {
     
     private func stringToDate(dateString: String?) -> Date? { //예시 날짜 문자열 "2023년 10월 24일"
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy년 MM월 dd일" // 문자열의 형식과 날짜의 형식을 일치시킵니다.
+        dateFormatter.dateFormat = "yyyy년 MM월 dd일" //캘린더에서 선택한 날짜
         
         guard
             let dateString = dateString,
@@ -203,8 +211,22 @@ extension CalenderViewController {
         else {
             return nil
         }
-        //변환 성공시 Date타입으로 변환
-        return date
+        
+        let selectedTime = timePicker.date //picker에서 선택한 시간
+        let calendar = Calendar.current
+        let dateComponents = calendar.dateComponents([.year, .month, .day], from: date)
+        let timeComponents = calendar.dateComponents([.hour, .minute], from: selectedTime)
+
+        var combinedComponents = DateComponents()
+        combinedComponents.year = dateComponents.year
+        combinedComponents.month = dateComponents.month
+        combinedComponents.day = dateComponents.day
+        combinedComponents.hour = timeComponents.hour
+        combinedComponents.minute = timeComponents.minute
+
+        guard let resultDate = calendar.date(from: combinedComponents) else { return nil }
+        print("선택된 날짜와 시간은 \(resultDate)입니다")
+        return resultDate
     }
     
     private func updateDays() {
@@ -237,11 +259,14 @@ extension CalenderViewController: UICollectionViewDelegateFlowLayout, UICollecti
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: DateCell.cellID, for: indexPath) as! DateCell
         cell.dateLabel.text = days[indexPath.row]
+        
+        //select된 cell 초기화
         if selectedIndexPath == nil {
             cell.backgroundColor = .white
             cell.isSelected = false
             cell.dateLabel.textColor = .label
         }
+        
         return cell
     }
 
