@@ -8,7 +8,8 @@
 import UIKit
 
 protocol InfoDelegate: AnyObject {
-    func moveToVc()
+    func moveToDatailVC()
+    func moveToInviteVC()
 }
 
 class InfoViewController: UIViewController {
@@ -79,21 +80,21 @@ class InfoViewController: UIViewController {
         
         profileAndEditView.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide)
-            make.leading.equalToSuperview().offset(20)
-            make.trailing.equalToSuperview().offset(-20)
+            make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
+            make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
         }
         
         infoCollectionView.snp.makeConstraints { make in
-            make.top.equalTo(profileAndEditView.snp.bottom)
-            make.leading.equalToSuperview().offset(20)
-            make.trailing.equalToSuperview().offset(-20)
-            make.height.equalTo(220)
+            make.top.equalTo(profileAndEditView.snp.bottom).offset(10)
+            make.leading.equalToSuperview().offset((SuperviewOffsets.leadingPadding))
+            make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
+            make.height.equalTo(240)
         }
         
         infoStackView.snp.makeConstraints { make in
             make.top.equalTo(infoCollectionView.snp.bottom).offset(10)
-            make.leading.equalToSuperview().offset(20)
-            make.trailing.equalToSuperview().offset(-20)
+            make.leading.equalToSuperview().offset((SuperviewOffsets.leadingPadding))
+            make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
             make.height.equalTo(150)
         }
     }
@@ -120,9 +121,13 @@ extension InfoViewController: UICollectionViewDelegateFlowLayout, UICollectionVi
 }
 
 extension InfoViewController: InfoDelegate {
-    func moveToVc() {
-//        let controller = InviteViewController()
+    func moveToDatailVC() {
         let controller = DetailViewController()
+        navigationController?.pushViewController(controller, animated: true)
+    }
+    
+    func moveToInviteVC() {
+        let controller = InviteViewController()
         navigationController?.pushViewController(controller, animated: true)
     }
 }

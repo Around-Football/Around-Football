@@ -264,17 +264,17 @@ extension CalenderViewController: UICollectionViewDelegateFlowLayout, UICollecti
         else { return }
         
         selectedCell.isSelected = true
-        selectedCell.backgroundColor = .blue
+        selectedCell.backgroundColor = .gray
         selectedCell.dateLabel.textColor = .white
         
-        if let date = Int(selectedCell.dateLabel.text ?? "") {
+        if let date = Int(selectedCell.dateLabel.text ?? "") { //선택한 Date 저장
             selectedDateString = "\(yearAndMonth) \(date)일"
             selectedDate = stringToDate(dateString: selectedDateString)
             print(selectedDateString as Any)
             print(selectedDate as Any)
-            
-            // 선택한 셀의 indexPath를 저장
-            selectedIndexPath = indexPath
         }
+        
+        // 선택한 셀의 indexPath를 저장
+        selectedIndexPath = indexPath
     }
 }

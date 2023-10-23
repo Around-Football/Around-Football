@@ -194,6 +194,7 @@
 				2736747F2AC308D1003ADE3F /* Models */,
 				7CE563A72AD13DA3005DE2DF /* ViewModels */,
 				6696748A2AC3E9740067FD48 /* Views */,
+				7CBFED6D2AE6569100915D65 /* CalanderViewController */,
 				7CE25AE72ACAC3370014132F /* Extension */,
 				663417C82AD68299002FE2CA /* Network */,
 				7CE563A82AD13E82005DE2DF /* Utiles */,
@@ -323,12 +324,19 @@
 			isa = PBXGroup;
 			children = (
 				7C5F775B2AC9C698004CE48F /* InviteViewController.swift */,
-				7CBFED6B2AE6477700915D65 /* CalenderViewController.swift */,
-				7C5F775D2AC9CE8A004CE48F /* DateCell.swift */,
 				7C5F775F2AC9DA08004CE48F /* GroundTitleView.swift */,
 				7C5F77612AC9DB7B004CE48F /* PeopleCountView.swift */,
 			);
 			path = InviteView;
+			sourceTree = "<group>";
+		};
+		7CBFED6D2AE6569100915D65 /* CalanderViewController */ = {
+			isa = PBXGroup;
+			children = (
+				7CBFED6B2AE6477700915D65 /* CalenderViewController.swift */,
+				7C5F775D2AC9CE8A004CE48F /* DateCell.swift */,
+			);
+			path = CalanderViewController;
 			sourceTree = "<group>";
 		};
 		7CE25AE72ACAC3370014132F /* Extension */ = {

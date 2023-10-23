@@ -13,16 +13,7 @@ import Then
 final class InviteViewController: UIViewController {
     
     // MARK: - Properties
-    
-    //    //캘린더
-    //    private let calender = Calendar.current
-    //    private let dateFormatter = DateFormatter()
-    //    private lazy var components = calender.dateComponents([.month, .day, .year], from: Date())
-    //    private lazy var calanderDate = calender.date(from: components) ?? Date()
-    //    private var days: [String] = []
-    //    private var selectedIndexPath: IndexPath? //캘린더 선택cell
-    //    private var selectedDate: String? //캘린더에서 선택한 날짜
-    //UI
+
     private let placeView = GroundTitleView()
     private let peopleView = PeopleCountView()
     
@@ -31,67 +22,8 @@ final class InviteViewController: UIViewController {
     }
     
     private let contentView = UIView()
-    
     private let calenderViewController = CalenderViewController()
-    
-    //    private lazy var previousButton = UIButton().then {
-    //        $0.setImage(UIImage(systemName: "chevron.left"), for: .normal)
-    //        $0.addTarget(self, action: #selector(previousMonth), for: .touchUpInside)
-    //    }
-    //
-    //    private lazy var nextButton = UIButton().then {
-    //        $0.setImage(UIImage(systemName: "chevron.right"), for: .normal)
-    //        $0.addTarget(self, action: #selector(nextMonth), for: .touchUpInside)
-    //    }
-    //
-    //    private lazy var monthLabel = UILabel().then {
-    //        $0.text = "2023년 12월"
-    //    }
-    //
-    //    private lazy var dayStackView = UIStackView().then {
-    //        $0.axis = .horizontal
-    //        $0.distribution = .fillEqually
-    //
-    //        let days = ["일", "월", "화", "수", "목", "금", "토"]
-    //
-    //        for i in 0..<days.count {
-    //            let label = UILabel()
-    //            label.text = days[i]
-    //            label.textAlignment = .center
-    //
-    //            switch i {
-    //            case _ where i == 0:
-    //                label.textColor = .red
-    //            case _ where i == 6:
-    //                label.textColor = .blue
-    //            default:
-    //                label.textColor = .gray
-    //            }
-    //
-    //            $0.addArrangedSubview(label)
-    //        }
-    //    }
-    
-    //    private lazy var dateCollectionView: UICollectionView = {
-    //        let layout = UICollectionViewFlowLayout()
-    //        layout.minimumLineSpacing = 0
-    //        layout.minimumInteritemSpacing = 0
-    //        let cv = UICollectionView(frame: .zero, collectionViewLayout: layout)
-    //        cv.delegate = self
-    //        cv.dataSource = self
-    //        cv.register(DateCell.self, forCellWithReuseIdentifier: DateCell.cellID)
-    //        return cv
-    //    }()
-    
-    //    private let timeLabel = UILabel().then {
-    //        $0.text = "Time"
-    //    }
-    //
-    //    private var timePicker = UIDatePicker().then {
-    //        $0.datePickerMode = .time
-    //        $0.locale = Locale(identifier: "ko_kr")
-    //    }
-    
+
     private let contentLabel = UILabel().then {
         $0.text = "내용"
     }
@@ -119,27 +51,12 @@ final class InviteViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         configureUI()
-        //        updateCalender()
         keyboardController()
     }
     
     deinit {
         NotificationCenter.default.removeObserver(self)
     }
-    
-    // MARK: - Selectors
-    
-    //    @objc
-    //    private func previousMonth() {
-    //        selectedIndexPath = nil
-    //        minusMonth()
-    //    }
-    //
-    //    @objc
-    //    private func nextMonth() {
-    //        selectedIndexPath = nil
-    //        plusMonth()
-    //    }
     
     // MARK: - Helpers
     
@@ -209,7 +126,7 @@ final class InviteViewController: UIViewController {
         }
         
         calenderViewController.view.snp.makeConstraints { make in
-            make.top.equalTo(placeView.snp.bottom).offset(20)
+            make.top.equalTo(placeView.snp.bottom).offset(50)
             make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
             make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
             make.height.equalTo(((UIScreen.main.bounds.width - 40) / 7) * 6 + 100)
@@ -234,23 +151,6 @@ final class InviteViewController: UIViewController {
             make.height.equalTo(40)
         }
     }
-    
-    //    private func minusMonth() {
-    //        calanderDate = calender.date(byAdding: DateComponents(month: -1), to: calanderDate) ?? Date()
-    //        if let index = selectedIndexPath {
-    //            collectionView(dateCollectionView, didSelectItemAt: index)
-    //        }
-    //
-    //        updateCalender()
-    //    }
-    //
-    //    private func plusMonth() {
-    //        calanderDate = calender.date(byAdding: DateComponents(month: 1), to: calanderDate) ?? Date()
-    //        if let index = selectedIndexPath {
-    //            collectionView(dateCollectionView, didSelectItemAt: index)
-    //        }
-    //        updateCalender()
-    //    }
 }
 
 // MARK: - 키보드 관련 함수
