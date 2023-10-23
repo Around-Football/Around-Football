@@ -27,7 +27,9 @@ final class MapViewController: UIViewController {
     
     private let searchTextField = UISearchTextField().then {
         $0.placeholder = "장소를 입력하세요."
-        $0.backgroundColor = .systemGroupedBackground
+        $0.subviews[0].alpha = 0
+        $0.layer.backgroundColor = UIColor.white.cgColor
+        $0.layer.cornerRadius = LayoutOptions.cornerRadious
         $0.setShadowLayer()
     }
     
@@ -35,8 +37,9 @@ final class MapViewController: UIViewController {
         $0.preferredDatePickerStyle = .compact
         $0.datePickerMode = .date
         $0.locale = Locale(identifier: "ko_KR")
-//        $0.backgroundColor = .systemGroupedBackground
-        $0.setValue(UIColor.systemGroupedBackground, forKey: "backgroundColor")
+        $0.subviews[0].subviews[0].subviews[0].alpha = 0
+        $0.layer.backgroundColor = UIColor.white.cgColor
+        $0.layer.cornerRadius = LayoutOptions.cornerRadious
         $0.setShadowLayer()
         
         $0.addTarget(self, action: #selector(changeDate(_:)), for: .valueChanged)
