@@ -82,9 +82,12 @@ class HomeViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.navigationController?.navigationBar.isHidden = true
         addChild(homeTableViewController)
         configureUI()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        self.navigationController?.navigationBar.isHidden = true
     }
 
     override func viewDidLayoutSubviews() {
@@ -217,7 +220,7 @@ class HomeViewController: UIViewController {
     @objc
     func didTapFloatingButton() {
         let nextVC = InviteViewController()
-        self.navigationController?.pushViewController(nextVC, animated: true)
         self.navigationController?.navigationBar.isHidden = false
+        self.navigationController?.pushViewController(nextVC, animated: true)
     }
 }
