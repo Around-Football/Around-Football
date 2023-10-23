@@ -39,6 +39,8 @@
 		274C22112AD6D6EF005469E6 /* HomeTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 274C22102AD6D6EF005469E6 /* HomeTableViewCell.swift */; };
 		274C22132AD7C16A005469E6 /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 274C22122AD7C169005469E6 /* HomeViewModel.swift */; };
 		274C22172AD7D826005469E6 /* HomeTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 274C22162AD7D826005469E6 /* HomeTableViewController.swift */; };
+		278DAD5B2AE27A660085718C /* LocationFilterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 278DAD5A2AE27A660085718C /* LocationFilterViewController.swift */; };
+		278DAD5E2AE295C70085718C /* DateFilterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 278DAD5D2AE295C70085718C /* DateFilterViewController.swift */; };
 		278E555B2AD800BC00C328D3 /* APIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 278E555A2AD800BC00C328D3 /* APIService.swift */; };
 		278E556A2AD930F900C328D3 /* Response.swift in Sources */ = {isa = PBXBuildFile; fileRef = 278E55692AD930F900C328D3 /* Response.swift */; };
 		6609C5312ACD506100798632 /* TestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6609C5302ACD506100798632 /* TestViewController.swift */; };
@@ -105,6 +107,8 @@
 		274C22102AD6D6EF005469E6 /* HomeTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeTableViewCell.swift; sourceTree = "<group>"; };
 		274C22122AD7C169005469E6 /* HomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewModel.swift; sourceTree = "<group>"; };
 		274C22162AD7D826005469E6 /* HomeTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeTableViewController.swift; sourceTree = "<group>"; };
+		278DAD5A2AE27A660085718C /* LocationFilterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationFilterViewController.swift; sourceTree = "<group>"; };
+		278DAD5D2AE295C70085718C /* DateFilterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateFilterViewController.swift; sourceTree = "<group>"; };
 		278E555A2AD800BC00C328D3 /* APIService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIService.swift; sourceTree = "<group>"; };
 		278E55692AD930F900C328D3 /* Response.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Response.swift; sourceTree = "<group>"; };
 		6609C5302ACD506100798632 /* TestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestViewController.swift; sourceTree = "<group>"; };
@@ -240,6 +244,15 @@
 			path = SignUpView;
 			sourceTree = "<group>";
 		};
+		278DAD5C2AE295B90085718C /* FilterView */ = {
+			isa = PBXGroup;
+			children = (
+				278DAD5A2AE27A660085718C /* LocationFilterViewController.swift */,
+				278DAD5D2AE295C70085718C /* DateFilterViewController.swift */,
+			);
+			path = FilterView;
+			sourceTree = "<group>";
+		};
 		663417C82AD68299002FE2CA /* Network */ = {
 			isa = PBXGroup;
 			children = (
@@ -279,6 +292,7 @@
 				6696748E2AC3E9CE0067FD48 /* HomeViewController.swift */,
 				274C22162AD7D826005469E6 /* HomeTableViewController.swift */,
 				274C22102AD6D6EF005469E6 /* HomeTableViewCell.swift */,
+				278DAD5C2AE295B90085718C /* FilterView */,
 			);
 			path = HomeView;
 			sourceTree = "<group>";
@@ -461,9 +475,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				278DAD5E2AE295C70085718C /* DateFilterViewController.swift in Sources */,
 				663417CA2AD682AB002FE2CA /* Firebase.swift in Sources */,
 				7CE563AA2AD140A9005DE2DF /* LayoutOptions.swift in Sources */,
 				7C5F77582AC96A7E004CE48F /* DetailUserInfoCell.swift in Sources */,
+				278DAD5B2AE27A660085718C /* LocationFilterViewController.swift in Sources */,
 				7CC619782AD460D80085DF90 /* infoArrangedView.swift in Sources */,
 				7CC619742AD433760085DF90 /* ProfileAndEditView.swift in Sources */,
 				7CF175E32ADD1CB500615BBF /* KakaoLoginService.swift in Sources */,
