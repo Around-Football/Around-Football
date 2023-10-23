@@ -45,7 +45,7 @@ final class GroundTitleView: UIView {
         }
         
         groundNameLabel.snp.makeConstraints { make in
-            make.top.equalTo(groundTitleLabel.snp.bottom).offset(10)
+            make.top.equalTo(groundTitleLabel.snp.bottom).offset(5)
             make.leading.equalToSuperview()
             make.bottom.equalToSuperview().offset(10)
         }
