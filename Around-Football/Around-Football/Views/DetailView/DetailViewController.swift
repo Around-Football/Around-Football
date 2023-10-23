@@ -17,6 +17,7 @@ final class DetailViewController: UIViewController {
     private let mainImageView = UIImageView().then {
         $0.image = UIImage(named: "AppIcon")
         $0.contentMode = .scaleAspectFill
+        $0.clipsToBounds = true
     }
     
     private let groundLabel = UILabel().then {
@@ -33,7 +34,7 @@ final class DetailViewController: UIViewController {
     private lazy var applyButton = UIButton().then {
         let title = NSAttributedString(
             string: "신청하기",
-            attributes: [.font: UIFont.systemFont(ofSize: 10)]
+            attributes: [.font: UIFont.systemFont(ofSize: 15, weight: .semibold)]
         )
         $0.setAttributedTitle(title, for: .normal)
         $0.setTitleColor(.white, for: .normal)
@@ -94,9 +95,14 @@ final class DetailViewController: UIViewController {
     
     @objc
     private func clickedApplyButton() {
-        //글 작성자라면
+        //TODO: -버튼 타이틀 분기처리
 //        applyButton.setTitle("신청현황", for: .normal)
+        
         //네비게이션 분기처리
+        //TODO: -소미니 뷰 넣기
+        let controller = UIViewController()
+        controller.view.backgroundColor = .blue //test
+        navigationController?.pushViewController(controller, animated: true)
     }
     
     // MARK: - Helpers
@@ -140,14 +146,15 @@ final class DetailViewController: UIViewController {
             make.top.equalTo(groundLabel.snp.bottom)
             make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
 //            make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
+            make.bottom.equalTo(grayLineView1.snp.top).offset(SuperviewOffsets.bottomPadding)
         }
         
         applyButton.snp.makeConstraints { make in
             make.top.equalTo(mainImageView.snp.bottom).offset(SuperviewOffsets.topPadding)
             make.bottom.equalTo(grayLineView1.snp.top).offset(SuperviewOffsets.bottomPadding)
             make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
-            make.width.equalTo(50)
-            make.height.equalTo(40)
+            make.width.equalTo(70)
+            make.height.equalTo(45)
         }
         
         grayLineView1.snp.makeConstraints { make in

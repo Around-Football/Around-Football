@@ -18,7 +18,7 @@ final class DateCell: UICollectionViewCell {
     
     var dateLabel = UILabel().then {
         $0.text = "0"
-        $0.font = .systemFont(ofSize: 12)
+        $0.font = .systemFont(ofSize: 14)
     }
     
     // MARK: - Lifecycles
