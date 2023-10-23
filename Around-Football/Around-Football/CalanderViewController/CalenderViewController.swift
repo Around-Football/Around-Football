@@ -105,7 +105,7 @@ class CalenderViewController: UIViewController {
     
     @objc
     private func timePickerSelected() {
-        selectedDate = stringToDate(dateString: selectedDateString)
+        stringToDate(dateString: selectedDateString)
     }
     
     // MARK: - Helpers
@@ -185,23 +185,27 @@ extension CalenderViewController {
         updateCalender()
     }
     
+    //이번 달 날짜 시작
     private func startDayOfWeek() -> Int {
         return calender.component(.weekday, from: calanderDate) - 1
     }
 
+    //이번 달 날짜 끝
     private func endDate() -> Int {
         return calender.range(of: .day, in: .month, for: calanderDate)?.count ?? Int()
     }
 
+    //이번 달 Lable표시
     private func updateTitle() {
         dateFormatter.locale = Locale(identifier: "ko_kr")
         dateFormatter.timeZone = TimeZone(abbreviation: "KST")
         dateFormatter.dateFormat = "yyyy년 MM월"
-        let date = dateFormatter.string(from: calanderDate)
-        monthLabel.text = date
+        let calenderMonth = dateFormatter.string(from: calanderDate)
+        monthLabel.text = calenderMonth
     }
     
-    private func stringToDate(dateString: String?) -> Date? { //예시 날짜 문자열 "2023년 10월 24일"
+    //선택한 날짜와 시간 selectedDate에 반영
+    private func stringToDate(dateString: String?) { //예시 날짜 문자열 "2023년 10월 24일"
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy년 MM월 dd일" //캘린더에서 선택한 날짜
         
@@ -209,10 +213,11 @@ extension CalenderViewController {
             let dateString = dateString,
             let date = dateFormatter.date(from: dateString)
         else {
-            return nil
+            return
         }
         
-        let selectedTime = timePicker.date //picker에서 선택한 시간
+        //picker에서 선택한 시간 반영
+        let selectedTime = timePicker.date
         let calendar = Calendar.current
         let dateComponents = calendar.dateComponents([.year, .month, .day], from: date)
         let timeComponents = calendar.dateComponents([.hour, .minute], from: selectedTime)
@@ -224,9 +229,9 @@ extension CalenderViewController {
         combinedComponents.hour = timeComponents.hour
         combinedComponents.minute = timeComponents.minute
 
-        guard let resultDate = calendar.date(from: combinedComponents) else { return nil }
+        guard let resultDate = calendar.date(from: combinedComponents) else { return }
         print("선택된 날짜와 시간은 \(resultDate)입니다")
-        return resultDate
+        selectedDate = resultDate
     }
     
     private func updateDays() {
@@ -287,7 +292,7 @@ extension CalenderViewController: UICollectionViewDelegateFlowLayout, UICollecti
         guard
             let selectedCell = collectionView.cellForItem(at: indexPath) as? DateCell,
             let yearAndMonth = monthLabel.text,
-            selectedCell.dateLabel.text != "" //cell에 날짜가 적혀있으면 선택 가능하도록
+            selectedCell.dateLabel.text?.isEmpty == false //cell에 날짜가 적혀있으면 선택 가능하도록
         else { return }
         
         selectedCell.isSelected = true
@@ -296,7 +301,7 @@ extension CalenderViewController: UICollectionViewDelegateFlowLayout, UICollecti
         
         if let date = Int(selectedCell.dateLabel.text ?? "") { //선택한 Date 저장
             selectedDateString = "\(yearAndMonth) \(date)일"
-            selectedDate = stringToDate(dateString: selectedDateString)
+            stringToDate(dateString: selectedDateString)
             print(selectedDateString as Any)
             print(selectedDate as Any)
         }
