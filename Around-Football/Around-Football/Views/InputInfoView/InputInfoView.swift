@@ -313,7 +313,7 @@ class InputInfoView: UIView {
             make.top.equalTo(safeAreaLayoutGuide).offset(20)
             make.leading.equalToSuperview().offset(20)
             make.trailing.equalToSuperview().offset(-20)
-            make.bottom.equalTo(safeAreaLayoutGuide).offset(-60)
+            make.bottom.equalTo(safeAreaLayoutGuide)
         }
         
         mainStackView.snp.makeConstraints { make in
