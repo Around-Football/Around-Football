@@ -57,6 +57,7 @@
 		6696748F2AC3E9CE0067FD48 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6696748E2AC3E9CE0067FD48 /* HomeViewController.swift */; };
 		669674912AC3E9D40067FD48 /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 669674902AC3E9D40067FD48 /* MapViewController.swift */; };
 		669674932AC3E9DF0067FD48 /* InfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 669674922AC3E9DF0067FD48 /* InfoViewController.swift */; };
+		66BD86E52AE646CB00B1B256 /* FieldDetailViewController+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66BD86E42AE646CB00B1B256 /* FieldDetailViewController+.swift */; };
 		7C141C622ADA5F38002CF180 /* SocialLoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C141C612ADA5F38002CF180 /* SocialLoginViewController.swift */; };
 		7C141C652ADA6008002CF180 /* KakaoSDK in Frameworks */ = {isa = PBXBuildFile; productRef = 7C141C642ADA6008002CF180 /* KakaoSDK */; };
 		7C141C672ADA6008002CF180 /* KakaoSDKAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 7C141C662ADA6008002CF180 /* KakaoSDKAuth */; };
@@ -122,6 +123,7 @@
 		6696748E2AC3E9CE0067FD48 /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		669674902AC3E9D40067FD48 /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
 		669674922AC3E9DF0067FD48 /* InfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoViewController.swift; sourceTree = "<group>"; };
+		66BD86E42AE646CB00B1B256 /* FieldDetailViewController+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FieldDetailViewController+.swift"; sourceTree = "<group>"; };
 		7C141C612ADA5F38002CF180 /* SocialLoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocialLoginViewController.swift; sourceTree = "<group>"; };
 		7C5F77572AC96A7E004CE48F /* DetailUserInfoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailUserInfoCell.swift; sourceTree = "<group>"; };
 		7C5F775B2AC9C698004CE48F /* InviteViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InviteViewController.swift; sourceTree = "<group>"; };
@@ -288,6 +290,7 @@
 				6609C5322ACE8B0E00798632 /* MapViewController+.swift */,
 				6609C5302ACD506100798632 /* TestViewController.swift */,
 				66656F9C2AD9219F00AE1AFA /* FieldDetailViewController.swift */,
+				66BD86E42AE646CB00B1B256 /* FieldDetailViewController+.swift */,
 				66656FA02ADD2FB800AE1AFA /* FieldRecruitTableViewCell.swift */,
 			);
 			path = MapView;
@@ -509,6 +512,7 @@
 				274C22132AD7C16A005469E6 /* HomeViewModel.swift in Sources */,
 				6609C5332ACE8B0E00798632 /* MapViewController+.swift in Sources */,
 				272B44862ADD1A0A00ACEC41 /* TestLoginViewController+.swift in Sources */,
+				66BD86E52AE646CB00B1B256 /* FieldDetailViewController+.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
