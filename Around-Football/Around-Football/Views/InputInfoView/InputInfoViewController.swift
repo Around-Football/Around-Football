@@ -22,6 +22,7 @@ class InputInfoViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         inputInfoView.userNameTextField.delegate = self
         inputInfoView.userAgeTextField.delegate = self
         inputInfoView.userContactTextField.delegate = self

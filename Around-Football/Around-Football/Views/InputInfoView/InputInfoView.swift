@@ -16,12 +16,12 @@ class InputInfoView: UIView {
     
     private var mainScrollView = UIScrollView().then {
         $0.backgroundColor = .white
+        $0.frame.size = .init(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
     }
-    
     
     private lazy var mainStackView = UIStackView().then {
         $0.axis = .vertical
-        $0.distribution = .fill
+        $0.distribution = .fillEqually
         $0.alignment = .leading
         $0.spacing = 25
         $0.addArrangedSubviews(userNameStackView,
@@ -31,8 +31,35 @@ class InputInfoView: UIView {
                                userAreaStackView,
                                userMainUsedFeetStackView,
                                userPositionStackView)
+        
+        userNameStackView.snp.makeConstraints { make in
+            make.top.leading.trailing.equalToSuperview()
+        }
+        
+        userAgeStackView.snp.makeConstraints { make in
+            make.leading.trailing.equalToSuperview()
+        }
+        
+        userContactStackView.snp.makeConstraints { make in
+            make.leading.trailing.equalToSuperview()
+        }
+        
+        userDetailSexStackView.snp.makeConstraints { make in
+            make.leading.trailing.equalToSuperview()
+        }
+        
+        userAreaStackView.snp.makeConstraints { make in
+            make.leading.trailing.equalToSuperview()
+        }
+        
+        userMainUsedFeetStackView.snp.makeConstraints { make in
+            make.leading.trailing.equalToSuperview()
+        }
+        
+        userPositionStackView.snp.makeConstraints { make in
+            make.leading.trailing.equalToSuperview()
+        }
     }
-    
     
     // 이름
     private lazy var userNameStackView = UIStackView().then{
@@ -56,9 +83,6 @@ class InputInfoView: UIView {
         $0.font = .systemFont(ofSize: 15)
     }
     
-    
-    
-    
     // 나이
     private lazy var userAgeStackView = UIStackView().then{
         $0.axis = .vertical
@@ -80,11 +104,7 @@ class InputInfoView: UIView {
         $0.borderStyle = .roundedRect
         $0.font = .systemFont(ofSize: 15)
     }
-    
-    
-    
-    
-    
+
     // 연락처
     private lazy var userContactStackView = UIStackView().then{
         $0.axis = .vertical
@@ -99,6 +119,7 @@ class InputInfoView: UIView {
         $0.text = "연락처"
         $0.font = .boldSystemFont(ofSize: 16)
     }
+    
     let userContactTextField = UITextField().then {
         $0.layer.cornerRadius = LayoutOptions.cornerRadious
         $0.placeholder = "연락처를 입력해주세요"
@@ -106,12 +127,8 @@ class InputInfoView: UIView {
         $0.font = .systemFont(ofSize: 15)
     }
     
-    
-    
-    
-    
     // 성별
-    private lazy var userDetailSexStackView = UIStackView().then{
+    private lazy var userDetailSexStackView = UIStackView().then {
         $0.axis = .vertical
         $0.distribution = .fill
         $0.alignment = .fill
@@ -124,12 +141,14 @@ class InputInfoView: UIView {
         $0.text = "성별"
         $0.font = .boldSystemFont(ofSize: 16)
     }
+    
     private lazy var userDetailSexButtonStackView = UIStackView().then{
         $0.axis = .horizontal
         $0.spacing = 10
         $0.addArrangedSubviews(maleButton,
                                femaleButton)
     }
+    
     let maleButton = UIButton().then{
         $0.setTitle("남성", for: .normal)
         $0.titleLabel?.font = .systemFont(ofSize: 15)
@@ -137,6 +156,7 @@ class InputInfoView: UIView {
         $0.setImage(UIImage(systemName: "circle"), for: .normal)
         $0.setImage(UIImage(systemName: "checkmark.circle.fill"), for: .selected)
     }
+    
     let femaleButton = UIButton().then{
         $0.setTitle("여성", for: .normal)
         $0.titleLabel?.font = .systemFont(ofSize: 15)
@@ -144,10 +164,7 @@ class InputInfoView: UIView {
         $0.setImage(UIImage(systemName: "circle"), for: .normal)
         $0.setImage(UIImage(systemName: "checkmark.circle.fill"), for: .selected)
     }
-    
-    
-    
-    
+
     // 지역
     private lazy var userAreaStackView = UIStackView().then{
         $0.axis = .vertical
@@ -162,16 +179,13 @@ class InputInfoView: UIView {
         $0.text = "지역(시/군/구)"
         $0.font = .boldSystemFont(ofSize: 16)
     }
+    
     let userAreaTextField = UITextField().then{
         $0.layer.cornerRadius = LayoutOptions.cornerRadious
         $0.placeholder = "지역을 입력해주세요"
         $0.borderStyle = .roundedRect
         $0.font = .systemFont(ofSize: 15)
     }
-    
-    
-    
-    
     
     // 주발
     private lazy var userMainUsedFeetStackView = UIStackView().then {
@@ -182,10 +196,12 @@ class InputInfoView: UIView {
         $0.addArrangedSubviews(userMainUsedFeetLabel,
                                userMainUsedFeetButtonStackView)
     }
+    
     private let userMainUsedFeetLabel = UILabel().then{
         $0.text = "주발"
         $0.font = .boldSystemFont(ofSize: 16)
     }
+    
     private lazy var userMainUsedFeetButtonStackView = UIStackView().then {
         $0.axis = .horizontal
         $0.distribution = .fill
@@ -195,6 +211,7 @@ class InputInfoView: UIView {
                                leftFootButton,
                                bothFeetButton)
     }
+    
     let rightFootButton = UIButton().then {
         $0.setTitle("오른발", for: .normal)
         $0.titleLabel?.font = .systemFont(ofSize: 15)
@@ -203,6 +220,7 @@ class InputInfoView: UIView {
         $0.setImage(UIImage(systemName: "checkmark.square.fill"), for: .selected)
         
     }
+    
     let leftFootButton = UIButton().then {
         $0.setTitle("왼발", for: .normal)
         $0.titleLabel?.font = .systemFont(ofSize: 15)
@@ -212,6 +230,7 @@ class InputInfoView: UIView {
         $0.setImage(UIImage(systemName: "checkmark.square.fill"), for: .selected)
         
     }
+    
     let bothFeetButton = UIButton().then {
         $0.setTitle("양발", for: .normal)
         $0.titleLabel?.font = .systemFont(ofSize: 15)
@@ -219,7 +238,6 @@ class InputInfoView: UIView {
         $0.setImage(UIImage(systemName: "square"), for: .normal)
         $0.setImage(UIImage(systemName: "checkmark.square.fill"), for: .selected)
     }
-    
     
     // 포지션
     private lazy var userPositionStackView = UIStackView().then {
@@ -246,6 +264,7 @@ class InputInfoView: UIView {
                                dfButton,
                                gkButton)
     }
+    
     let fwButton = UIButton().then {
         $0.setTitle("FW", for: .normal)
         $0.titleLabel?.font = .systemFont(ofSize: 15)
@@ -254,6 +273,7 @@ class InputInfoView: UIView {
         $0.setImage(UIImage(systemName: "checkmark.square.fill"), for: .selected)
         
     }
+    
     let mfButton = UIButton().then {
         $0.setTitle("MF", for: .normal)
         $0.titleLabel?.font = .systemFont(ofSize: 15)
@@ -262,6 +282,7 @@ class InputInfoView: UIView {
         $0.setImage(UIImage(systemName: "checkmark.square.fill"), for: .selected)
         
     }
+    
     let dfButton = UIButton().then {
         $0.setTitle("DF", for: .normal)
         $0.titleLabel?.font = .systemFont(ofSize: 15)
@@ -270,6 +291,7 @@ class InputInfoView: UIView {
         $0.setImage(UIImage(systemName: "checkmark.square.fill"), for: .selected)
         
     }
+    
     let gkButton = UIButton().then {
         $0.setTitle("GK", for: .normal)
         $0.titleLabel?.font = .systemFont(ofSize: 15)
@@ -277,7 +299,6 @@ class InputInfoView: UIView {
         $0.setImage(UIImage(systemName: "square"), for: .normal)
         $0.setImage(UIImage(systemName: "checkmark.square.fill"), for: .selected)
     }
-    
     
     // 다음 버튼
     let nextButton = UIButton().then {
@@ -287,7 +308,6 @@ class InputInfoView: UIView {
         $0.layer.cornerRadius = LayoutOptions.cornerRadious
         $0.clipsToBounds = true
     }
-    
     
     // MARK: - Lifecycles
     
@@ -301,35 +321,32 @@ class InputInfoView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    
     // MARK: - Helpers
     
     func setupUI() {
-        self.addSubviews(mainScrollView)
+        addSubviews(mainScrollView)
         mainScrollView.addSubview(mainStackView)
         self.addSubview(nextButton)
         
         mainScrollView.snp.makeConstraints { make in
-            make.top.equalTo(safeAreaLayoutGuide).offset(20)
+            make.top.bottom.equalTo(safeAreaLayoutGuide)
             make.leading.equalToSuperview().offset(20)
             make.trailing.equalToSuperview().offset(-20)
-            make.bottom.equalTo(safeAreaLayoutGuide)
+            make.width.equalToSuperview()
         }
         
         mainStackView.snp.makeConstraints { make in
-            make.top.leading.equalTo(mainScrollView)
-            make.bottom.trailing.equalTo(mainScrollView)
+            make.top.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
+            make.trailing.bottom.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
+            make.width.equalToSuperview()
         }
         
         nextButton.snp.makeConstraints { make in
             make.leading.equalToSuperview().offset(20)
             make.trailing.bottom.equalToSuperview().offset(-20)
             make.height.equalTo(40)
-            
         }
-        
     }
-    
 }
 
 
