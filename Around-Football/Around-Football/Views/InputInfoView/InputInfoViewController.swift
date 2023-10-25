@@ -13,7 +13,6 @@ class InputInfoViewController: UIViewController {
     
     let inputInfoView = InputInfoView()
     
-    
     // MARK: - Lifecycles
     
     override func loadView() {
@@ -22,6 +21,8 @@ class InputInfoViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        keyboardController()
         
         inputInfoView.userNameTextField.delegate = self
         inputInfoView.userAgeTextField.delegate = self
@@ -46,28 +47,30 @@ class InputInfoViewController: UIViewController {
         navigationItem.title = "추가정보 입력"
     }
     
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        view.endEditing(true)
+    deinit {
+        NotificationCenter.default.removeObserver(self)
     }
-    
     
     // MARK: - Selectors
     
     @objc func nextButtonTapped(_ sender: UIButton) {
         print("nextButton Tapped")
     }
+    
     @objc func maleButtonTapped(_ sender: UIButton) {
         sender.isSelected.toggle()
         if inputInfoView.femaleButton.isSelected {
             inputInfoView.femaleButton.isSelected.toggle()
         }
     }
+    
     @objc func femaleButtonTapped(_ sender: UIButton) {
         sender.isSelected.toggle()
         if inputInfoView.maleButton.isSelected {
             inputInfoView.maleButton.isSelected.toggle()
         }
     }
+    
     @objc func rightFootButtonTapped(_ sender: UIButton) {
         if inputInfoView.leftFootButton.isSelected {
             inputInfoView.leftFootButton.isSelected.toggle()
@@ -77,6 +80,7 @@ class InputInfoViewController: UIViewController {
         }
         sender.isSelected.toggle()
     }
+    
     @objc func leftFootButtonTapped(_ sender: UIButton) {
         if inputInfoView.rightFootButton.isSelected {
             inputInfoView.rightFootButton.isSelected.toggle()
@@ -86,6 +90,7 @@ class InputInfoViewController: UIViewController {
         }
         sender.isSelected.toggle()
     }
+    
     @objc func bothFeetButtonTapped(_ sender: UIButton) {
         if inputInfoView.rightFootButton.isSelected {
             inputInfoView.rightFootButton.isSelected.toggle()
@@ -99,14 +104,26 @@ class InputInfoViewController: UIViewController {
     @objc func fwButtonTapped(_ sender: UIButton) {
         sender.isSelected.toggle()
     }
+    
     @objc func mfButtonTapped(_ sender: UIButton) {
         sender.isSelected.toggle()
     }
+    
     @objc func dfButtonTapped(_ sender: UIButton) {
         sender.isSelected.toggle()
     }
+    
     @objc func gkButtonTapped(_ sender: UIButton) {
         sender.isSelected.toggle()
     }
     
+    private func keyboardController() {
+        //화면 탭해서 키보드 내리기
+        let tapGesture = UITapGestureRecognizer(
+            target: self,
+            action: #selector(dismissKeyboard)
+        )
+        tapGesture.cancelsTouchesInView = false
+        view.addGestureRecognizer(tapGesture)
+    }
 }

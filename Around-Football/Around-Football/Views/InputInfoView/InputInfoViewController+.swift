@@ -8,6 +8,7 @@
 import UIKit
 
 extension InputInfoViewController: UITextFieldDelegate {
+    
     // 엔터 누르면 다음 텍스트필드로 넘어감
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         if textField == inputInfoView.userNameTextField {
@@ -20,7 +21,7 @@ extension InputInfoViewController: UITextFieldDelegate {
         return true
     }
     
-    // 지역 입력 텍스트필드 선택 시 뷰 이동
+    // 지역 입력 텍스트필드 선택 시 뷰 이동 (위로 올림)
     func textFieldDidBeginEditing(_ textField: UITextField) {
         if textField == inputInfoView.userAreaTextField {
             UIView.animate(withDuration: 0.3) {
@@ -30,8 +31,8 @@ extension InputInfoViewController: UITextFieldDelegate {
         }
     }
     
+    // 뷰 다시 원위치
     func textFieldDidEndEditing(_ textField: UITextField) {
-        
         if textField == inputInfoView.userAreaTextField {
             UIView.animate(withDuration: 0.3) {
                 let transform = CGAffineTransform(translationX: 0, y: 0)
@@ -39,4 +40,10 @@ extension InputInfoViewController: UITextFieldDelegate {
             }
         }
     }
+    
+    @objc func dismissKeyboard() {
+        view.endEditing(true)
+    }
+    
 }
+
