@@ -19,9 +19,6 @@ final class SocialLoginViewController: UIViewController {
     
     // MARK: - Properties
     var loginViewModel = LoginViewModel()
-    var kakaoLoginService = KakaoLoginService()
-//    var appleLoginService = AppleLoginService()
-    var googleLoginService = GoogleLoginService()
     
     private let logoImageView = UIImageView().then {
         $0.image = UIImage(named: "App_logo")
