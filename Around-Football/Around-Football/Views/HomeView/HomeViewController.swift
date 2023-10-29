@@ -154,7 +154,6 @@ class HomeViewController: UIViewController {
             make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
             make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
             make.height.equalTo(90)
-            make.width.equalTo(view.frame.size.width)
         }
         
         homeTableViewController.view.snp.makeConstraints { make in
