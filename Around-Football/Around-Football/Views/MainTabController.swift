@@ -39,8 +39,6 @@ import KakaoSDKUser
 
 final class MainTabController: UITabBarController {
     
-    // MARK: - Lifecycles
-    
     // MARK: - Properties
     
     var loginViewModel = LoginViewModel()
@@ -52,6 +50,8 @@ final class MainTabController: UITabBarController {
         configureViewController()
     }
     
+    // MARK: - Lifecycles
+    
     override func viewDidAppear(_ animated: Bool) {
         isLogin()
     }
@@ -59,16 +59,23 @@ final class MainTabController: UITabBarController {
     // MARK: - Helpers
     
     private func isLogin() {
-//        if Auth.auth().currentUser?.uid == nil {
+        let handle = Auth.auth().addStateDidChangeListener { auth, user in
+          // ...
+            print(user?.uid)
+        }
+        
+        if Auth.auth().currentUser !== nil {
             let controller = SocialLoginViewController()
+            controller.modalPresentationStyle = .fullScreen
             present(controller, animated: true)
             print("로그인화면으로")
-//        } else {
+        } else {
             print("자동로그인")
             UserApi.shared.me { user, error in
                 print("user: \(user?.kakaoAccount)")
             }
-//        }
+            
+        }
     }
     
     private func configureUI() {
