@@ -41,7 +41,7 @@ class LoginViewModel: NSObject {
         GIDSignIn.sharedInstance.signIn(withPresenting: controller) { result, error in
             guard error == nil else {
                 // ...
-                print("signIn ERROR: \(error?.localizedDescription)")
+                print("signIn ERROR: \(String(describing: error?.localizedDescription))")
                 return
             }
             
@@ -61,10 +61,12 @@ class LoginViewModel: NSObject {
                     print ("Error Apple sign in: %@", error)
                     return
                 }
-                print("로그인 성공: \(result?.user)")
-                // 로그인 성공 시 MainTabView로 화면 이동
-                let controller = SocialLoginViewController()
-                controller.dismiss(animated: true)
+                print("로그인 성공: \(String(describing: result?.user))")
+ 
+                // TODO: - Coordinator Refactoring
+                NotificationCenter.default.post(name: NSNotification.Name("TestNotification"),
+                                                object: nil,
+                                                userInfo: nil)
             }
         }
     }
@@ -84,7 +86,7 @@ class LoginViewModel: NSObject {
     func loginKakaoApp() {
         UserApi.shared.loginWithKakaoTalk {(oauthToken, error) in
             guard error == nil else {
-                print(error)
+                print("\(String(describing: error))")
                 return
             }
             
@@ -101,7 +103,7 @@ class LoginViewModel: NSObject {
     func loginKakaoAccount() {
         UserApi.shared.loginWithKakaoAccount {oauthToken, error in
             guard error == nil else {
-                print(error)
+                print("\(String(describing: error))")
                 return
             }
             
@@ -131,6 +133,10 @@ class LoginViewModel: NSObject {
             print("userProfile: \(String(describing: self.userProfile)), email: \(String(describing: self.email))")
             self.createGoogleUser(email: self.email!, password: "\(self.email!)")
             
+            // TODO: - Coordinator Refactoring
+            NotificationCenter.default.post(name: NSNotification.Name("TestNotification"),
+                                            object: nil,
+                                            userInfo: nil)
         }
     }
     
@@ -202,10 +208,17 @@ class LoginViewModel: NSObject {
         return result
     }
     
-    func showInputInfoView() {
-        
+    func logout() {
+        let firebaseAuth = Auth.auth()
+        do {
+          try firebaseAuth.signOut()
+        } catch let signOutError as NSError {
+          print("Error signing out: %@", signOutError)
+        }
     }
 }
+
+// MARK: - LoginViewModel+Kakao
 
 extension LoginViewModel {
     //파베 유저 생성
@@ -216,7 +229,7 @@ extension LoginViewModel {
                 return
             }
             
-            self.googleSignIn(email: email, password: password) //로그인
+//            self.googleSignIn(email: email, password: password) //로그인
         }
     }
     
@@ -234,5 +247,6 @@ extension LoginViewModel {
     
     func googleLogOut() {
         try? Auth.auth().signOut()
+        print("로그아웃 성공")
     }
 }
