@@ -18,6 +18,7 @@ import KakaoSDKUser
 final class SocialLoginViewController: UIViewController {
     
     // MARK: - Properties
+    
     var loginViewModel = LoginViewModel()
     
     private let logoImageView = UIImageView().then {
@@ -72,11 +73,22 @@ final class SocialLoginViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+
         configureUI()
-        // Do any additional setup after loading the view.
+        
+        // TODO: - Coordinator Refactoring
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(didRecieveTestNotification(_:)),
+                                               name: NSNotification.Name("TestNotification"),
+                                               object: nil)
     }
     
     // MARK: - Selectors
+    
+    @objc func didRecieveTestNotification(_ notification: Notification) {
+            print("Test Notification")
+        present(InputInfoViewController(), animated: true)
+    }
     
     @objc func kakaoLoginButtonTapped() {
         loginViewModel.kakaoSignIn()
