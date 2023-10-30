@@ -54,7 +54,7 @@ class InputInfoViewController: UIViewController {
     // MARK: - Selectors
     
     @objc func nextButtonTapped(_ sender: UIButton) {
-        print("nextButton Tapped")
+        // FIXME: - 왜 화면전환 안돼 시봅ㅇ방이ㅏ;ㅂ러ㅣ;밪러 ㅏㅣㅡㅇ.ㄴ,ㄹ무ㅢ;ㅏ러
     }
     
     @objc func maleButtonTapped(_ sender: UIButton) {
