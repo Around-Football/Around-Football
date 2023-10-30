@@ -17,6 +17,8 @@ class InfoViewController: UIViewController {
     
     // MARK: - Properties
     
+    private let loginViewModel = LoginViewModel()
+    
     private let profileAndEditView = ProfileAndEditView()
     
     private let iconAndImage: [(icon: String, title: String)] = [
@@ -50,6 +52,12 @@ class InfoViewController: UIViewController {
         $0.addArrangedSubview(infoArrangedView())
     }
     
+    private lazy var logoutButton = UIButton().then {
+        $0.setTitle("로그아웃", for: .normal)
+        $0.setTitleColor(.black, for: .normal)
+        $0.addTarget(self, action: #selector(logoutButtonTapped), for: .touchUpInside)
+    }
+    
     // MARK: - Lifecycles
 
     override func viewDidLoad() {
@@ -58,6 +66,12 @@ class InfoViewController: UIViewController {
         configureUI()
         configureStackView()
         profileAndEditView.delegate = self
+    }
+    
+    // MARK: - Selectors
+    
+    @objc func logoutButtonTapped() {
+        loginViewModel.logout()
     }
     
     // MARK: - Helpers
@@ -79,6 +93,8 @@ class InfoViewController: UIViewController {
                          infoCollectionView,
                          infoStackView)
         
+        view.addSubview(logoutButton)
+        
         profileAndEditView.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide)
             make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
@@ -98,7 +114,15 @@ class InfoViewController: UIViewController {
             make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
             make.height.equalTo(150)
         }
+        
+        logoutButton.snp.makeConstraints { make in
+            make.top.equalTo(infoStackView.snp.bottom).offset(20)
+            make.leading.equalToSuperview().offset(50)
+            make.trailing.equalToSuperview().offset(-50)
+        }
     }
+    
+    
 }
 
 extension InfoViewController: UICollectionViewDelegateFlowLayout, UICollectionViewDataSource {

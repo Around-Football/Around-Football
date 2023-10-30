@@ -14,33 +14,10 @@ class InputInfoView: UIView {
     
     // MARK: Properties
     
-    private var mainScrollView = UIScrollView().then {
+    private lazy var mainScrollView = UIScrollView().then {
         $0.backgroundColor = .systemBackground
-        $0.translatesAutoresizingMaskIntoConstraints = false
     }
-    
-    private lazy var mainStackView = UIStackView().then {
-        $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.axis = .vertical
-        $0.distribution = .equalSpacing
-        $0.alignment = .leading
-        $0.spacing = 25
-        $0.addArrangedSubviews(userNameStackView,
-                               userAgeStackView,
-                               userContactStackView,
-                               userDetailSexStackView,
-                               userAreaStackView,
-                               userMainUsedFeetStackView,
-                               userPositionStackView)
-        
-        userNameStackView.makeSideAutoLayout()
-        userAgeStackView.makeSideAutoLayout()
-        userContactStackView.makeSideAutoLayout()
-        userDetailSexStackView.makeSideAutoLayout()
-        userAreaStackView.makeSideAutoLayout()
-        userMainUsedFeetStackView.makeSideAutoLayout()
-        userPositionStackView.makeSideAutoLayout()
-    }
+    private let contentView = UIView()
     
     // 이름
     private lazy var userNameStackView = UIStackView().then{
@@ -51,7 +28,6 @@ class InputInfoView: UIView {
         $0.addArrangedSubviews(userNameLabel,
                                userNameTextField)
         userNameTextField.makeSideAutoLayout()
-        
     }
     
     private let userNameLabel = UILabel().then {
@@ -320,26 +296,82 @@ class InputInfoView: UIView {
     
     func setupUI() {
         addSubviews(mainScrollView)
-        mainScrollView.addSubview(mainStackView)
-        self.addSubview(nextButton)
+        mainScrollView.addSubview(contentView)
+        contentView.addSubviews(userNameStackView,
+                                userAgeStackView,
+                                userContactStackView,
+                                userDetailSexStackView,
+                                userAreaStackView,
+                                userMainUsedFeetStackView,
+                                userPositionStackView,
+                                nextButton)
         
         mainScrollView.snp.makeConstraints { make in
-            make.top.bottom.equalTo(safeAreaLayoutGuide)
-            make.leading.equalToSuperview().offset(10)
-            make.trailing.equalToSuperview().offset(-20)
-            //            make.width.equalToSuperview()
+            make.top.equalTo(safeAreaLayoutGuide)
+            make.bottom.equalTo(safeAreaLayoutGuide).offset(4)
+            make.leading.equalToSuperview()
+            make.trailing.equalToSuperview()
         }
         
-        mainStackView.snp.makeConstraints { make in
-            make.top.leading.trailing.bottom.equalToSuperview()
-            //            make.trailing.bottom.equalToSuperview()
-            make.width.equalToSuperview()
+        contentView.snp.makeConstraints { make in
+            make.edges.equalTo(mainScrollView.contentLayoutGuide)
+            make.width.equalTo(mainScrollView.frameLayoutGuide)
+        }
+        
+        userNameStackView.snp.makeConstraints { make in
+            make.top.leading.equalToSuperview().offset(SuperviewOffsets.topPadding)
+            make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
+            make.bottom.equalTo(userAgeStackView.snp.top).offset(SuperviewOffsets.bottomPadding)
+        }
+        
+        userAgeStackView.snp.makeConstraints { make in
+            make.top.equalTo(userNameStackView.snp.bottom).offset(SuperviewOffsets.topPadding)
+            make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
+            make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
+            make.bottom.equalTo(userContactStackView.snp.top).offset(SuperviewOffsets.bottomPadding)
+        }
+        
+        userContactStackView.snp.makeConstraints { make in
+            make.top.equalTo(userAgeStackView.snp.bottom).offset(SuperviewOffsets.topPadding)
+            make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
+            make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
+            make.bottom.equalTo(userDetailSexStackView.snp.top).offset(SuperviewOffsets.bottomPadding)
+        }
+        
+        userDetailSexStackView.snp.makeConstraints { make in
+            make.top.equalTo(userContactStackView.snp.bottom).offset(SuperviewOffsets.topPadding)
+            make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
+            make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
+            make.bottom.equalTo(userAreaStackView.snp.top).offset(SuperviewOffsets.bottomPadding)
+        }
+        
+        userAreaStackView.snp.makeConstraints { make in
+            make.top.equalTo(userDetailSexStackView.snp.bottom).offset(SuperviewOffsets.topPadding)
+            make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
+            make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
+            make.bottom.equalTo(userMainUsedFeetStackView.snp.top).offset(SuperviewOffsets.bottomPadding)
+        }
+        
+        userMainUsedFeetStackView.snp.makeConstraints { make in
+            make.top.equalTo(userAreaStackView.snp.bottom).offset(SuperviewOffsets.topPadding)
+            make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
+            make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
+            make.bottom.equalTo(userPositionStackView.snp.top).offset(SuperviewOffsets.bottomPadding)
+        }
+        
+        userPositionStackView.snp.makeConstraints { make in
+            make.top.equalTo(userMainUsedFeetStackView.snp.bottom).offset(SuperviewOffsets.topPadding)
+            make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
+            make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
+            make.bottom.equalTo(nextButton.snp.top).offset(SuperviewOffsets.bottomPadding)
         }
         
         nextButton.snp.makeConstraints { make in
-            make.leading.equalToSuperview().offset(20)
-            make.trailing.bottom.equalToSuperview().offset(-20)
-            make.height.equalTo(40)
+            make.top.equalTo(userPositionStackView.snp.bottom).offset(SuperviewOffsets.topPadding)
+            make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
+            make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
+            make.bottom.equalToSuperview()
+            make.height.equalTo(50)
         }
     }
 }
