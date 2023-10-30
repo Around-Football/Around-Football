@@ -87,7 +87,8 @@ final class SocialLoginViewController: UIViewController {
     
     @objc func didRecieveTestNotification(_ notification: Notification) {
             print("Test Notification")
-        present(InputInfoViewController(), animated: true)
+        let inputInfoViewController = InputInfoViewController()
+        self.navigationController?.pushViewController(inputInfoViewController, animated: true)
     }
     
     @objc func kakaoLoginButtonTapped() {
