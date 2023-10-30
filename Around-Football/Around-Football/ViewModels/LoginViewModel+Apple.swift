@@ -35,6 +35,10 @@ extension LoginViewModel: ASAuthorizationControllerDelegate {
                 }
                 // User is signed in to Firebase with Apple.
                 // ...
+                // TODO: - Coordinator Refactoring
+                NotificationCenter.default.post(name: NSNotification.Name("TestNotification"),
+                                                object: nil,
+                                                userInfo: nil)
             }
         }
     }
