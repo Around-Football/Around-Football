@@ -31,6 +31,4 @@ class HomeViewModel {
             .take(1)
             .bind(to: recruitObservable)
     }
-    
-
 }
