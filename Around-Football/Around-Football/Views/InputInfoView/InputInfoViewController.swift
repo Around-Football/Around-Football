@@ -44,6 +44,7 @@ class InputInfoViewController: UIViewController {
         inputInfoView.gkButton.addTarget(self, action: #selector(gkButtonTapped), for: .touchUpInside)
         
         navigationController?.navigationBar.prefersLargeTitles = true
+        navigationItem.hidesBackButton = true
         navigationItem.title = "추가정보 입력"
     }
     
@@ -54,7 +55,7 @@ class InputInfoViewController: UIViewController {
     // MARK: - Selectors
     
     @objc func nextButtonTapped(_ sender: UIButton) {
-        // FIXME: - 왜 화면전환 안돼 시봅ㅇ방이ㅏ;ㅂ러ㅣ;밪러 ㅏㅣㅡㅇ.ㄴ,ㄹ무ㅢ;ㅏ러
+        dismiss(animated: true)
     }
     
     @objc func maleButtonTapped(_ sender: UIButton) {
