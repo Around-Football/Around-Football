@@ -61,8 +61,9 @@ final class MainTabController: UITabBarController {
     private func isLogin() {
         if Auth.auth().currentUser == nil {
             let controller = SocialLoginViewController()
-            controller.modalPresentationStyle = .fullScreen
-            present(controller, animated: true)
+            let navigationController = UINavigationController(rootViewController: controller)
+            navigationController.modalPresentationStyle = .fullScreen
+            present(navigationController, animated: true)
             print("로그인화면으로")
         } else {
             print("자동로그인")
