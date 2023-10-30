@@ -16,7 +16,7 @@ import FirebaseCore
 import GoogleSignIn
 import AuthenticationServices
 
-class LoginViewModel {
+class LoginViewModel: NSObject {
     
     // MARK: - Properties
     
@@ -24,9 +24,13 @@ class LoginViewModel {
     private var email: String?
     var currentNonce: String?
     
+    override init() {
+        super.init()
+    }
+    
     // MARK: - Helpers - Google
     
-    func googleSignIn() {
+    func googleSignIn(_ controller: UIViewController) {
         
         guard let clientID = FirebaseApp.app()?.options.clientID else { return }
         
@@ -34,19 +38,13 @@ class LoginViewModel {
         let config = GIDConfiguration(clientID: clientID)
         GIDSignIn.sharedInstance.configuration = config
         
-        // Start the sign in flow!
-        guard let rootViewController = UIApplication.shared.windows.first?.rootViewController else {
-          print("There is no root view controller!")
-          return
-        }
-        
-        GIDSignIn.sharedInstance.signIn(withPresenting: rootViewController) { result, error in
+        GIDSignIn.sharedInstance.signIn(withPresenting: controller) { result, error in
             guard error == nil else {
                 // ...
                 print("signIn ERROR: \(error?.localizedDescription)")
                 return
             }
-
+            
             guard let user = result?.user,
                   let idToken = user.idToken?.tokenString
             else {
@@ -57,18 +55,16 @@ class LoginViewModel {
             print("구글 로그인 Flow 진행")
             let credential = GoogleAuthProvider.credential(withIDToken: idToken,
                                                            accessToken: user.accessToken.tokenString)
-
-            Auth.auth().signIn(with: credential) { [weak self] result, error in
+            
+            Auth.auth().signIn(with: credential) { result, error in
                 if let error = error {
                     print ("Error Apple sign in: %@", error)
                     return
                 }
                 print("로그인 성공: \(result?.user)")
                 // 로그인 성공 시 MainTabView로 화면 이동
-                let mainTabVC = MainTabController()
-//                if let navigationController = self?.navigationController {
-//                    navigationController.pushViewController(mainTabVC, animated: true)
-//                }
+                let controller = SocialLoginViewController()
+                controller.dismiss(animated: true)
             }
         }
     }
@@ -76,7 +72,7 @@ class LoginViewModel {
     // MARK: - Helpers - Kakao
     
     func kakaoSignIn() {
-        var isInstalledKakaoApp = UserApi.isKakaoTalkLoginAvailable()
+        let isInstalledKakaoApp = UserApi.isKakaoTalkLoginAvailable()
         // 카카오톡 설치 여부 확인
         if isInstalledKakaoApp {
             loginKakaoApp()
@@ -121,7 +117,7 @@ class LoginViewModel {
     func getKakaoUserInfo() {
         UserApi.shared.me() {(user, error) in
             guard error == nil else {
-                print(error)
+                print("\(String(describing: error))")
                 return
             }
             
@@ -132,7 +128,7 @@ class LoginViewModel {
             
             self.userProfile = user?.kakaoAccount?.profile?.nickname
             self.email = user?.kakaoAccount?.email
-            print("userProfile: \(self.userProfile), email: \(self.email)")
+            print("userProfile: \(String(describing: self.userProfile)), email: \(String(describing: self.email))")
             self.createGoogleUser(email: self.email!, password: "\(self.email!)")
             
         }
@@ -141,7 +137,7 @@ class LoginViewModel {
     func kakaoLogout() {
         UserApi.shared.logout {(error) in
             guard error == nil else {
-                print(error)
+                print("\(String(describing: error))")
                 return
             }
             self.googleLogOut()
@@ -149,7 +145,9 @@ class LoginViewModel {
             
         }
     }
+    
     // MARK: - Helpers - Apple
+    
     func appleSignIn() {
         let nonce = randomNonceString()
         currentNonce = nonce
@@ -157,10 +155,8 @@ class LoginViewModel {
         let request = appleIDProvider.createRequest()
         request.requestedScopes = [.fullName, .email]
         request.nonce = sha256(nonce)
-        let socialLoginViewController = SocialLoginViewController()
         let authorizationController = ASAuthorizationController(authorizationRequests: [request])
-        authorizationController.delegate = socialLoginViewController
-        authorizationController.presentationContextProvider = socialLoginViewController
+        authorizationController.delegate = self
         authorizationController.performRequests()
     }
     
@@ -177,7 +173,7 @@ class LoginViewModel {
     private func randomNonceString(length: Int = 32) -> String {
         precondition(length > 0)
         let charset: Array<Character> =
-            Array("0123456789ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvwxyz-._")
+        Array("0123456789ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvwxyz-._")
         var result = ""
         var remainingLength = length
         
@@ -205,7 +201,10 @@ class LoginViewModel {
         
         return result
     }
-    // MARK: - Selectors
+    
+    func showInputInfoView() {
+        
+    }
 }
 
 extension LoginViewModel {
@@ -236,6 +235,4 @@ extension LoginViewModel {
     func googleLogOut() {
         try? Auth.auth().signOut()
     }
-    
-    
 }
