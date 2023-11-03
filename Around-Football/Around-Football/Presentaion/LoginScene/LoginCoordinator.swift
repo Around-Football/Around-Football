@@ -18,7 +18,9 @@ final class LoginCoordinator: BaseCoordinator, LoginViewControllerDelegate, Inpu
     
     override func start() {
         let loginViewController = LoginViewController()
+        loginViewController.viewModel = LoginViewModel()
         loginViewController.delegate = self
+        //TODO: - Modal로 로그인뷰 변경 이야기해보기
 //        loginViewController.modalPresentationStyle = .fullScreen
 //        navigationController?.present(loginViewController, animated: true)
         navigationController?.viewControllers = [loginViewController]
