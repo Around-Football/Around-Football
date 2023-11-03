@@ -140,7 +140,7 @@ class HomeViewController: UIViewController {
         homeTableViewController.didMove(toParent: self)
         
         filterScrollView.snp.makeConstraints { make in
-            make.top.equalTo(view.safeAreaLayoutGuide)
+            make.top.equalTo(view.safeAreaLayoutGuide).offset(SuperviewOffsets.topPadding)
             make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
             make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
             make.height.equalTo(50)

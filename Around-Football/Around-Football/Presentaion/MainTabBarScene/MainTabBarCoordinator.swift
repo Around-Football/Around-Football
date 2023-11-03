@@ -16,6 +16,7 @@ final class MainTabBarCoordinator: BaseCoordinator {
     }
     
     private func showMainTabController() {
+        navigationController?.isNavigationBarHidden = true
         let homeViewController = makeHomeViewController()
         let mapViewController = makeMapViewController()
         let chatViewController = makeChatViewController()
@@ -30,9 +31,9 @@ final class MainTabBarCoordinator: BaseCoordinator {
     //TODO: - 각 Coordinator 마다 delegate = self로 설정
     
     private func makeHomeViewController() -> UINavigationController {
-        let homeTableViewController = HomeViewController()
+        let homeViewController = HomeViewController()
         let homeNavigationController: UINavigationController = makeNavigationController(
-            rootViewController: homeTableViewController,
+            rootViewController: homeViewController,
             title: "Home",
             tabbarImage: "house",
             tag: 0

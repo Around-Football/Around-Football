@@ -121,8 +121,6 @@ class InfoViewController: UIViewController {
             make.trailing.equalToSuperview().offset(-50)
         }
     }
-    
-    
 }
 
 extension InfoViewController: UICollectionViewDelegateFlowLayout, UICollectionViewDataSource {
