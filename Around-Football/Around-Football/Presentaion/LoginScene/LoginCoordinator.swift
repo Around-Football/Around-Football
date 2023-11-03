@@ -47,6 +47,7 @@ final class LoginCoordinator: BaseCoordinator, LoginViewControllerDelegate, Inpu
     
     func showMainTabController() {
         delegate?.showMainTabController()
+        removeFromChildCoordinators(coordinator: self)
     }
     
 }

@@ -54,8 +54,8 @@ final class AppCoordinator: BaseCoordinator, LoginCoordinatorDelegate, MainTabBa
     var type: CoordinatorType = .app
     
     override func start() {
-//        showMainTabController()
-        showLoginViewController() //Test
+        showMainTabController()
+//        showLoginViewController() //Test
     }
     
     func showMainTabController() {

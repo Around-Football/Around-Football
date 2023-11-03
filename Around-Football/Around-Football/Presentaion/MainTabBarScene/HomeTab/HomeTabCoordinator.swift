@@ -7,12 +7,29 @@
 
 import UIKit
 
-final class HomeTabCoordinator: BaseCoordinator {
-    
+protocol HomeTabCoordinatorDelegate {
+    func showLoginViewController()
+    func pushToInviteView()
+}
+
+final class HomeTabCoordinator: BaseCoordinator, HomeViewControllerDelegate {
+
     var type: CoordinatorType = .home
+    var delegate: HomeTabCoordinatorDelegate?
     
     deinit {
         print("HomeTabCoordinator 해제")
     }
+    
+    func showLoginViewController() {
+        //
+    }
+    
+    func pushToInviteView() {
+        print("DEBUG: pushToInviteView")
+        delegate?.pushToInviteView()
+//        let controller = Home
+    }
+    
     
 }
