@@ -40,5 +40,6 @@ final class MainTabController: UITabBarController {
     
     private func configureUI() {
         tabBar.tintColor = .black
+        viewControllers = pages
     }
 }

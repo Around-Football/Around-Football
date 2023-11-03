@@ -8,8 +8,11 @@
 import UIKit
 
 final class HomeTabCoordinator: BaseCoordinator {
+    
     var type: CoordinatorType = .home
     
-//    var delegate: 
+    deinit {
+        print("HomeTabCoordinator 해제")
+    }
     
 }
