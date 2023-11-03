@@ -24,7 +24,7 @@ final class LoginViewController: UIViewController {
     // MARK: - Properties
     
     weak var delegate: LoginViewControllerDelegate?
-    private var loginViewModel = LoginViewModel()
+    var viewModel: LoginViewModel?
     
     private let logoImageView = UIImageView().then {
         $0.image = UIImage(named: "App_logo")
@@ -94,23 +94,25 @@ final class LoginViewController: UIViewController {
     
     // MARK: - Selectors
     
-    @objc func didRecieveTestNotification(_ notification: Notification) {
-            print("Test Notification")
-//        let inputInfoViewController = InputInfoViewController()
-//        self.navigationController?.pushViewController(inputInfoViewController, animated: true)
+    @objc
+    func didRecieveTestNotification(_ notification: Notification) {
+        print("DEBUG: 로그인 완료")
         delegate?.pushToInputInfoViewController()
     }
     
-    @objc func kakaoLoginButtonTapped() {
-        loginViewModel.kakaoSignIn()
+    @objc
+    func kakaoLoginButtonTapped() {
+        viewModel?.kakaoSignIn()
     }
     
-    @objc func googleLoginButtonTapped() {
-        loginViewModel.googleSignIn(self)
+    @objc
+    func googleLoginButtonTapped() {
+        viewModel?.googleSignIn(self)
     }
     
-    @objc func appleLoginButtonTapped() {
-        loginViewModel.appleSignIn()
+    @objc
+    func appleLoginButtonTapped() {
+        viewModel?.appleSignIn()
     }
     
     // MARK: - Helpers
