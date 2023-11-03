@@ -1,5 +1,5 @@
 //
-//  SocialLoginViewController.swift
+//  LoginViewController.swift
 //  Around-Football
 //
 //  Created by Deokhun KIM on 10/14/23.
@@ -15,10 +15,15 @@ import KakaoSDKCommon
 import KakaoSDKAuth
 import KakaoSDKUser
 
-final class SocialLoginViewController: UIViewController {
+protocol LoginViewControllerDelegate: AnyObject {
+    func pushToInputInfoViewController()
+}
+
+final class LoginViewController: UIViewController {
     
     // MARK: - Properties
     
+    weak var delegate: LoginViewControllerDelegate?
     private var loginViewModel = LoginViewModel()
     
     private let logoImageView = UIImageView().then {
@@ -83,12 +88,17 @@ final class SocialLoginViewController: UIViewController {
                                                object: nil)
     }
     
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+    
     // MARK: - Selectors
     
     @objc func didRecieveTestNotification(_ notification: Notification) {
             print("Test Notification")
-        let inputInfoViewController = InputInfoViewController()
-        self.navigationController?.pushViewController(inputInfoViewController, animated: true)
+//        let inputInfoViewController = InputInfoViewController()
+//        self.navigationController?.pushViewController(inputInfoViewController, animated: true)
+        delegate?.pushToInputInfoViewController()
     }
     
     @objc func kakaoLoginButtonTapped() {

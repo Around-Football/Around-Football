@@ -7,9 +7,14 @@
 
 import UIKit
 
+protocol MainTabBarCoordinatorDelegate {
+    func showLoginViewController()
+}
+
 final class MainTabBarCoordinator: BaseCoordinator {
     
     var type: CoordinatorType = .mainTab
+    var delegate: MainTabBarCoordinatorDelegate?
     
     override func start() {
         showMainTabController()

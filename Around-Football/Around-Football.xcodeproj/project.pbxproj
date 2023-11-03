@@ -56,7 +56,7 @@
 		7929A3182ADFECD9006ED4FA /* ApplicationStatusViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7929A3172ADFECD9006ED4FA /* ApplicationStatusViewController.swift */; };
 		7929A31A2ADFED07006ED4FA /* ApplicationStatusTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7929A3192ADFED07006ED4FA /* ApplicationStatusTableViewCell.swift */; };
 		7929A31D2ADFFB15006ED4FA /* ApplicationStatusViewController+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7929A31C2ADFFB15006ED4FA /* ApplicationStatusViewController+.swift */; };
-		7C141C622ADA5F38002CF180 /* SocialLoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C141C612ADA5F38002CF180 /* SocialLoginViewController.swift */; };
+		7C141C622ADA5F38002CF180 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C141C612ADA5F38002CF180 /* LoginViewController.swift */; };
 		7C141C652ADA6008002CF180 /* KakaoSDK in Frameworks */ = {isa = PBXBuildFile; productRef = 7C141C642ADA6008002CF180 /* KakaoSDK */; };
 		7C141C672ADA6008002CF180 /* KakaoSDKAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 7C141C662ADA6008002CF180 /* KakaoSDKAuth */; };
 		7C141C692ADA6008002CF180 /* KakaoSDKCommon in Frameworks */ = {isa = PBXBuildFile; productRef = 7C141C682ADA6008002CF180 /* KakaoSDKCommon */; };
@@ -138,7 +138,7 @@
 		7929A3172ADFECD9006ED4FA /* ApplicationStatusViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplicationStatusViewController.swift; sourceTree = "<group>"; };
 		7929A3192ADFED07006ED4FA /* ApplicationStatusTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplicationStatusTableViewCell.swift; sourceTree = "<group>"; };
 		7929A31C2ADFFB15006ED4FA /* ApplicationStatusViewController+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ApplicationStatusViewController+.swift"; sourceTree = "<group>"; };
-		7C141C612ADA5F38002CF180 /* SocialLoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocialLoginViewController.swift; sourceTree = "<group>"; };
+		7C141C612ADA5F38002CF180 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		7C2B1AC62AF4B10B0052EC64 /* LoginCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginCoordinator.swift; sourceTree = "<group>"; };
 		7C2B1ACA2AF4B1530052EC64 /* MainTabBarCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabBarCoordinator.swift; sourceTree = "<group>"; };
 		7C2B1ADD2AF4B2DA0052EC64 /* InputInfoCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputInfoCoordinator.swift; sourceTree = "<group>"; };
@@ -251,7 +251,7 @@
 		274C21BD2ACFC8C4005469E6 /* View */ = {
 			isa = PBXGroup;
 			children = (
-				7C141C612ADA5F38002CF180 /* SocialLoginViewController.swift */,
+				7C141C612ADA5F38002CF180 /* LoginViewController.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -786,7 +786,7 @@
 				7C2B1AEC2AF4BD170052EC64 /* DetailViewModel.swift in Sources */,
 				7C2B1AC72AF4B10B0052EC64 /* LoginCoordinator.swift in Sources */,
 				7C2B1AFA2AF4C1C90052EC64 /* InviteViewController+.swift in Sources */,
-				7C141C622ADA5F38002CF180 /* SocialLoginViewController.swift in Sources */,
+				7C141C622ADA5F38002CF180 /* LoginViewController.swift in Sources */,
 				7C2B1AFE2AF4D28D0052EC64 /* HomeTabCoordinator.swift in Sources */,
 				274C21C42ACFE932005469E6 /* LoginViewModel.swift in Sources */,
 				2736744D2AC3061C003ADE3F /* AppDelegate.swift in Sources */,
