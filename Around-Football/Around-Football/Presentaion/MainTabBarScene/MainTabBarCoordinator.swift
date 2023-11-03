@@ -16,10 +16,15 @@ final class MainTabBarCoordinator: BaseCoordinator {
     }
     
     private func showMainTabController() {
-        makeMainTabBarController(homeVC: makeHomeViewController(),
-                                 mapVC: makeMapViewController(),
-                                 chatVC: makeChatViewController(),
-                                 infoVC: makeInfoViewController())
+        let homeViewController = makeHomeViewController()
+        let mapViewController = makeMapViewController()
+        let chatViewController = makeChatViewController()
+        let infoViewController = makeInfoViewController()
+        
+        makeMainTabBarController(homeVC: homeViewController,
+                                 mapVC: mapViewController,
+                                 chatVC: chatViewController,
+                                 infoVC: infoViewController)
     }
     
     //TODO: - 각 Coordinator 마다 delegate = self로 설정
