@@ -10,7 +10,7 @@ import UIKit
 import SnapKit
 import Then
 
-class LocationFilterViewController: UIViewController {
+final class LocationFilterViewController: UIViewController {
     
     // MARK: - Properties
     
@@ -84,7 +84,7 @@ class LocationFilterViewController: UIViewController {
     
     // MARK: - Helpers
     
-    func configureUI() {
+    private func configureUI() {
         view.backgroundColor = .white
         
         for city in cities {

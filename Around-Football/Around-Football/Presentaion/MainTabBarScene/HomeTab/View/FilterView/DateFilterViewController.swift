@@ -10,7 +10,7 @@ import UIKit
 import SnapKit
 import Then
 
-class DateFilterViewController: UIViewController {
+final class DateFilterViewController: UIViewController {
     
     // MARK: - Properties
     
@@ -29,7 +29,7 @@ class DateFilterViewController: UIViewController {
     
     // MARK: - Helpers
     
-    func configureUI() {
+    private func configureUI() {
         view.backgroundColor = .white
         
         view.addSubviews(titleLabel)

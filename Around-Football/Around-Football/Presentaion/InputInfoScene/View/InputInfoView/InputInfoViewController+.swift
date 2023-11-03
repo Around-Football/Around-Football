@@ -41,7 +41,8 @@ extension InputInfoViewController: UITextFieldDelegate {
         }
     }
     
-    @objc func dismissKeyboard() {
+    @objc 
+    func dismissKeyboard() {
         view.endEditing(true)
     }
     

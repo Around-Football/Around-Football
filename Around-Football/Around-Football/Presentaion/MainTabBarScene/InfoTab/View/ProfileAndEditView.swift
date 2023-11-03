@@ -60,19 +60,21 @@ final class ProfileAndEditView: UIView {
     
     // MARK: - Selectors
     
-    @objc private func editButtonTapped() {
+    @objc 
+    private func editButtonTapped() {
         print("DEBUG: editButtonTapped")
         delegate?.moveToDatailVC()
     }
     
-    @objc private func settingButtonTapped() {
+    @objc 
+    private func settingButtonTapped() {
         print("DEBUG: settingButtonTapped")
         delegate?.moveToInviteVC()
     }
     
     // MARK: - Helpers
     
-    func configureUI() {
+    private func configureUI() {
         addSubviews(
             profileImageView,
             userName,

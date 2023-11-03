@@ -42,9 +42,6 @@ final class MapViewModel {
         }
     }
     
-    
-    
-    
     // MARK: - Helpers
     
     func setCurrentLocation(latitude: Double, longitude: Double) {

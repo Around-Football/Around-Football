@@ -8,6 +8,7 @@
 import UIKit
 
 final class CustomButton: UIButton {
+    
     // MARK: - Properties
     
     private var buttonTitle: String
@@ -27,7 +28,8 @@ final class CustomButton: UIButton {
     
     // MARK: - Selectors
     
-    @objc func buttonClicked() {
+    @objc 
+    func buttonClicked() {
         print("DEBUG: buttonClicked")
     }
     

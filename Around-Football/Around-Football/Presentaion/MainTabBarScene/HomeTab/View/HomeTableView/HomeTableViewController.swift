@@ -17,7 +17,6 @@ class HomeTableViewController: UITableViewController {
     // MARK: - Properties
     
     private let homeViewModel = HomeViewModel()
-    
     private let disposeBag = DisposeBag()
     
     // MARK: - Lifecyles
@@ -33,7 +32,7 @@ class HomeTableViewController: UITableViewController {
         configureUI()
     }
     
-    func configureUI() {
+    private func configureUI() {
         homeViewModel.recruitObservable
             .observe(on: MainScheduler.instance)
             .bind(to: tableView.rx.items(cellIdentifier: HomeTableViewCell.id,

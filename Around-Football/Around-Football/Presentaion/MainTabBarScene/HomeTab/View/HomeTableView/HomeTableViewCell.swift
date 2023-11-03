@@ -18,7 +18,10 @@ import SnapKit
  4. Selectors
  5. Helpers
  */
-class HomeTableViewCell: UITableViewCell {
+final class HomeTableViewCell: UITableViewCell {
+    
+    // MARK: - Properties
+    
     static let id: String = "HomeTableViewCell"
     
     var titleLabel = UILabel().then {
@@ -49,6 +52,8 @@ class HomeTableViewCell: UITableViewCell {
         $0.spacing = 6
     }
     
+    // MARK: - Lifecycles
+    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         configureUI()
@@ -59,12 +64,12 @@ class HomeTableViewCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func configureUI() {
+    // MARK: - Helpers
+    
+    private func configureUI() {
         contentView.addSubviews(titleLabel,
                                 fieldAddress,
                                 timelineStackView,
-//                                dateLabel,
-//                                timeLabel,
                                 recruitLabel
         )
         

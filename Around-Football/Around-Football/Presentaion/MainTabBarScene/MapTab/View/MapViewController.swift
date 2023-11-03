@@ -33,7 +33,7 @@ final class MapViewController: UIViewController {
         $0.setShadowLayer()
     }
     
-    lazy var datePicker = UIDatePicker().then {
+    private lazy var datePicker = UIDatePicker().then {
         $0.preferredDatePickerStyle = .compact
         $0.datePickerMode = .date
         $0.locale = Locale(identifier: "ko_KR")
@@ -41,20 +41,17 @@ final class MapViewController: UIViewController {
         $0.layer.backgroundColor = UIColor.white.cgColor
         $0.layer.cornerRadius = LayoutOptions.cornerRadious
         $0.setShadowLayer()
-        
         $0.addTarget(self, action: #selector(changeDate(_:)), for: .valueChanged)
     }
         
-    lazy var trackingButton = UIButton().then {
+    private lazy var trackingButton = UIButton().then {
         let imageConfig = UIImage.SymbolConfiguration(pointSize: 30, weight: .medium)
         let image = UIImage(systemName: "location", withConfiguration: imageConfig)
         $0.setImage(image, for: .normal)
-        
         $0.backgroundColor = .white
         $0.tintColor = .black
         $0.layer.cornerRadius = 56/2
         $0.setShadowLayer()
-        
         $0.addTarget(self, action: #selector(pressTrackingButton), for: .touchUpInside)
     }
     
@@ -148,7 +145,7 @@ final class MapViewController: UIViewController {
     
     // MARK: - Helpers
     
-    func configureUI() {
+    private func configureUI() {
         view.backgroundColor = .systemBackground
         
         view.addSubviews(

@@ -18,7 +18,6 @@ class InfoViewController: UIViewController {
     // MARK: - Properties
     
     private let loginViewModel = LoginViewModel()
-    
     private let profileAndEditView = ProfileAndEditView()
     
     private let iconAndImage: [(icon: String, title: String)] = [
@@ -46,10 +45,10 @@ class InfoViewController: UIViewController {
         $0.layer.cornerRadius = 10
         $0.layer.borderColor = UIColor.gray.cgColor
         $0.layer.borderWidth = 1.0
-        $0.addArrangedSubview(infoArrangedView())
-        $0.addArrangedSubview(infoArrangedView())
-        $0.addArrangedSubview(infoArrangedView())
-        $0.addArrangedSubview(infoArrangedView())
+        $0.addArrangedSubview(InfoArrangedView())
+        $0.addArrangedSubview(InfoArrangedView())
+        $0.addArrangedSubview(InfoArrangedView())
+        $0.addArrangedSubview(InfoArrangedView())
     }
     
     private lazy var logoutButton = UIButton().then {
@@ -70,14 +69,15 @@ class InfoViewController: UIViewController {
     
     // MARK: - Selectors
     
-    @objc func logoutButtonTapped() {
+    @objc 
+    func logoutButtonTapped() {
         loginViewModel.logout()
     }
     
     // MARK: - Helpers
     
-    func configureStackView() {
-        if let views = infoStackView.arrangedSubviews as? [infoArrangedView] {
+    private func configureStackView() {
+        if let views = infoStackView.arrangedSubviews as? [InfoArrangedView] {
             views[0].setValues(name: "리뷰", content: "(1.0 - 1.0)")
             views[1].setValues(name: "매너", content: "0")
             views[2].setValues(name: "성별", content: "남자")
@@ -85,7 +85,7 @@ class InfoViewController: UIViewController {
         }
     }
 
-    func configureUI() {
+    private func configureUI() {
         view.backgroundColor = .white
         navigationItem.title = "프로필"
         
