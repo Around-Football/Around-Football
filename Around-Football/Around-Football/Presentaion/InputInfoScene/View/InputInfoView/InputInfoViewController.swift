@@ -7,11 +7,16 @@
 
 import UIKit
 
-class InputInfoViewController: UIViewController {
+protocol InputInfoViewControllerDelegate: AnyObject {
+    func showMainTabController()
+}
+
+final class InputInfoViewController: UIViewController {
     
     // MARK: - Properties
     
-    let inputInfoView = InputInfoView()
+    weak var delegate: InputInfoViewControllerDelegate?
+    let inputInfoView: InputInfoView = InputInfoView()
     
     // MARK: - Lifecycles
     
@@ -56,7 +61,9 @@ class InputInfoViewController: UIViewController {
     
     @objc 
     func nextButtonTapped(_ sender: UIButton) {
-        dismiss(animated: true)
+        print("DEBUG: InputInfoViewController - nextButtonTapped")
+        delegate?.showMainTabController()
+//        dismiss(animated: true)
     }
     
     @objc 

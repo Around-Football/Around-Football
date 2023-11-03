@@ -49,18 +49,35 @@ class BaseCoordinator: Coordinator {
     }
 }
 
-final class AppCoordinator: BaseCoordinator {
+final class AppCoordinator: BaseCoordinator, LoginCoordinatorDelegate, MainTabBarCoordinatorDelegate, InputInfoCoordinatorDelegate {
     
     var type: CoordinatorType = .app
     
     override func start() {
         showMainTabController()
+//        showLoginViewController()
     }
     
     func showMainTabController() {
         let coordinator = MainTabBarCoordinator(navigationController: navigationController)
-//        coordinator.delegate = self
+        coordinator.delegate = self
         coordinator.start() //뷰컨 생성 후 이동
         childCoordinators.append(coordinator)
     }
+    
+    func showLoginViewController() {
+        let coordinator = LoginCoordinator(navigationController: navigationController)
+        coordinator.delegate = self
+        coordinator.start()
+        childCoordinators.append(coordinator)
+    }
+    
+//    func showMainTabView() {
+//        showMainTabController()
+//    }
+//    
+//    func showLoginView() {
+//        showLoginViewController()
+//    }
+    
 }
