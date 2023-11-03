@@ -44,16 +44,7 @@ final class InviteViewController: UIViewController {
         $0.textAlignment = .left
     }
     
-    private lazy var addButton = {
-        let button = CustomButton(frame: .zero, buttonTitle: "등록하기")
-        button.addTarget(self, action: #selector(addButtonTapped), for: .touchUpInside)
-        return button
-    }()
-    
-    @objc
-    func addButtonTapped() {
-        dismiss(animated: true)
-    }
+    private lazy var addButton = AFButton(frame: .zero, buttonTitle: "등록하기")
     
     // MARK: - Lifecycles
     
@@ -61,6 +52,7 @@ final class InviteViewController: UIViewController {
         super.viewDidLoad()
         configureUI()
         keyboardController()
+        addButton.buttonActionHandler = { self.dismiss(animated: true) }
     }
     
     deinit {
