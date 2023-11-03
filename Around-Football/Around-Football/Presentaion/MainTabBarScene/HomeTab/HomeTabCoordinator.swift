@@ -27,6 +27,7 @@ final class HomeTabCoordinator: BaseCoordinator, HomeViewControllerDelegate {
     
     func pushToInviteView() {
         print("DEBUG: pushToInviteView")
+        
         delegate?.pushToInviteView()
 //        let controller = Home
     }

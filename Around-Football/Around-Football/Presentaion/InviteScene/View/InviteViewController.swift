@@ -44,7 +44,16 @@ final class InviteViewController: UIViewController {
         $0.textAlignment = .left
     }
     
-    private let addButton = CustomButton(frame: .zero, buttonTitle: "등록하기")
+    private lazy var addButton = {
+        let button = CustomButton(frame: .zero, buttonTitle: "등록하기")
+        button.addTarget(self, action: #selector(addButtonTapped), for: .touchUpInside)
+        return button
+    }()
+    
+    @objc
+    func addButtonTapped() {
+        dismiss(animated: true)
+    }
     
     // MARK: - Lifecycles
     
