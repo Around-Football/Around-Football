@@ -212,13 +212,12 @@
 				7C78830C2ADE54970028D555 /* Around-Football.entitlements */,
 				7C2B1AC32AF4AE6C0052EC64 /* App */,
 				7C2B1AC42AF4B0B60052EC64 /* Presentaion */,
-				663417CD2AD68767002FE2CA /* MockData */,
 				2736747F2AC308D1003ADE3F /* Models */,
 				7CE25AE72ACAC3370014132F /* Extension */,
 				663417C82AD68299002FE2CA /* Network */,
 				7CE563A82AD13E82005DE2DF /* Utiles */,
-				273674552AC3061E003ADE3F /* Assets.xcassets */,
-				273674572AC3061E003ADE3F /* LaunchScreen.storyboard */,
+				663417CD2AD68767002FE2CA /* MockData */,
+				7C2B1AF82AF4BFD40052EC64 /* Resource */,
 				2736745A2AC3061E003ADE3F /* Info.plist */,
 				7CBFED722AE69B6000915D65 /* GoogleService-Info.plist */,
 			);
@@ -585,6 +584,15 @@
 				7929A3192ADFED07006ED4FA /* ApplicationStatusTableViewCell.swift */,
 			);
 			path = View;
+			sourceTree = "<group>";
+		};
+		7C2B1AF82AF4BFD40052EC64 /* Resource */ = {
+			isa = PBXGroup;
+			children = (
+				273674552AC3061E003ADE3F /* Assets.xcassets */,
+				273674572AC3061E003ADE3F /* LaunchScreen.storyboard */,
+			);
+			path = Resource;
 			sourceTree = "<group>";
 		};
 		7CE25AE72ACAC3370014132F /* Extension */ = {
