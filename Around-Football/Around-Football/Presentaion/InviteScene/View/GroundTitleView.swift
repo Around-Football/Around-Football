@@ -18,7 +18,8 @@ final class GroundTitleView: UIView {
         $0.text = "장소"
         $0.font = .systemFont(ofSize: 15, weight: .bold)
     }
-    var groundNameLabel = UILabel().then {
+    
+    private let groundNameLabel = UILabel().then {
         $0.text = "종합운동장"
         $0.font = .systemFont(ofSize: 15, weight: .regular)
         $0.numberOfLines = 0

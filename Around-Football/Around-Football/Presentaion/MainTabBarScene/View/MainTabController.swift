@@ -74,7 +74,7 @@ final class MainTabController: UITabBarController {
         tabBar.tintColor = .black
     }
     
-    func configureViewController() {
+    private func configureViewController() {
         
         let homeTableViewController = HomeViewController()
         let homeNavigation: UINavigationController = makeNavigationController(

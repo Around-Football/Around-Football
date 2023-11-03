@@ -9,14 +9,12 @@ import UIKit
 
 import SnapKit
 
-class ApplicationStatusViewController: UIViewController {
-    
+final class ApplicationStatusViewController: UIViewController {
     
     // MARK: Properties
 
     private let tableView = UITableView()
 
-    
     // MARK: - Lifecycles
     
     override func viewDidLoad() {
@@ -31,22 +29,21 @@ class ApplicationStatusViewController: UIViewController {
         tableView.reloadData()
     }
     
-    
     // MARK: - Helpers
 
-    func setupTableView() {
+    private func setupTableView() {
         tableView.dataSource = self
         tableView.delegate = self
-        tableView.register(ApplicationStatusTableViewCell.self, forCellReuseIdentifier: "ApplicationStatusTableViewCell")
+        tableView.register(ApplicationStatusTableViewCell.self, 
+                           forCellReuseIdentifier: "ApplicationStatusTableViewCell")
     }
     
-    func setupTableViewConstraints() {
+    private func setupTableViewConstraints() {
         view.addSubview(tableView)
         tableView.snp.makeConstraints { make in
             make.top.leading.bottom.trailing.equalTo(view)
         }
     }
-    
 }
 
 

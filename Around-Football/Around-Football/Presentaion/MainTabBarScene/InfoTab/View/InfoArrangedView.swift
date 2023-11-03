@@ -10,16 +10,16 @@ import UIKit
 import SnapKit
 import Then
 
-class infoArrangedView: UIView {
+final class InfoArrangedView: UIView {
     
     // MARK: - Properties
 
-     var nameLabel = UILabel().then {
+    private var nameLabel = UILabel().then {
         $0.text = ""
         $0.font = .systemFont(ofSize: 15)
     }
     
-     var contentLabel = UILabel().then {
+    private var contentLabel = UILabel().then {
         $0.text = ""
         $0.font = .systemFont(ofSize: 15)
     }
@@ -42,7 +42,7 @@ class infoArrangedView: UIView {
         contentLabel.text = content
     }
     
-    func configureUI() {
+    private func configureUI() {
         addSubviews(nameLabel, contentLabel)
         
         nameLabel.snp.makeConstraints { make in

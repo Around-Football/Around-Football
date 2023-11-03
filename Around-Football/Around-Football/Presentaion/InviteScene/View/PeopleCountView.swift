@@ -26,7 +26,7 @@ class PeopleCountView: UIView {
         $0.font = .systemFont(ofSize: 15, weight: .bold)
     }
     
-    lazy var peopleCountLabel = UILabel().then {
+    private lazy var peopleCountLabel = UILabel().then {
         $0.text = "\(count) 명"
         $0.textAlignment = .center
         $0.font = .systemFont(ofSize: 15)
@@ -57,11 +57,13 @@ class PeopleCountView: UIView {
     
     // MARK: - Selectors
     
-    @objc private func minusCount() {
+    @objc 
+    private func minusCount() {
         count = count > 0 ? count - 1 : count
     }
     
-    @objc private func plusCount() {
+    @objc 
+    private func plusCount() {
         count = count < 25 ? count + 1 : count
     }
 

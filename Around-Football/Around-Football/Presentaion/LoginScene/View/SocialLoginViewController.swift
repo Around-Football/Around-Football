@@ -19,7 +19,7 @@ final class SocialLoginViewController: UIViewController {
     
     // MARK: - Properties
     
-    var loginViewModel = LoginViewModel()
+    private var loginViewModel = LoginViewModel()
     
     private let logoImageView = UIImageView().then {
         $0.image = UIImage(named: "App_logo")

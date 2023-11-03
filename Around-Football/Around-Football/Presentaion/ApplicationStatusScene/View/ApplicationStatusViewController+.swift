@@ -18,16 +18,12 @@ extension ApplicationStatusViewController: UITableViewDataSource {
         cell.selectionStyle = .none
         return cell
     }
-    
-    
 }
 
 extension ApplicationStatusViewController: UITableViewDelegate {
-
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
             return 85
-        }
-
+    }
 }
 
 

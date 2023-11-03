@@ -204,7 +204,6 @@ class LoginViewModel: NSObject {
                 }
             }
         }
-        
         return result
     }
     
@@ -228,8 +227,6 @@ extension LoginViewModel {
                 print(error?.localizedDescription as Any)
                 return
             }
-            
-//            self.googleSignIn(email: email, password: password) //로그인
         }
     }
     

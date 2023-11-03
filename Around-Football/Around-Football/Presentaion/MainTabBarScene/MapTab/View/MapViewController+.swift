@@ -13,6 +13,7 @@ import KakaoMapsSDK
 extension MapViewController: MapControllerDelegate, KakaoMapEventDelegate {
     
     // MARK: - API
+    
     // 인증 성공시 delegate 호출.
     func authenticationSucceeded() {
         _auth = true
@@ -37,15 +38,19 @@ extension MapViewController: MapControllerDelegate, KakaoMapEventDelegate {
     }
     
     // MARK: - Selectors
-    @objc func willResignActive(){
+    
+    @objc 
+    func willResignActive(){
         mapController?.stopRendering()  //뷰가 inactive 상태로 전환되는 경우 렌더링 중인 경우 렌더링을 중단.
     }
     
-    @objc func didBecomeActive(){
+    @objc 
+    func didBecomeActive(){
         mapController?.startRendering() //뷰가 active 상태가 되면 렌더링 시작. 엔진은 미리 시작된 상태여야 함.
     }
     
     // MARK: - Helpers
+    
     func configureMap() {
         //KMController 생성.
         mapController = KMController(viewContainer: mapContainer)!
@@ -93,7 +98,6 @@ extension MapViewController: MapControllerDelegate, KakaoMapEventDelegate {
             createPoiStyle(label: fieldsMapLabel)
             createPois(label: fieldsMapLabel, fields: fields)
         }
-        
     }
     
     /**

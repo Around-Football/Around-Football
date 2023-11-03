@@ -12,7 +12,7 @@ import SnapKit
 
 class InputInfoView: UIView {
     
-    // MARK: Properties
+    // MARK: - Properties
     
     private lazy var mainScrollView = UIScrollView().then {
         $0.backgroundColor = .systemBackground
@@ -294,7 +294,7 @@ class InputInfoView: UIView {
     
     // MARK: - Helpers
     
-    func setupUI() {
+    private func setupUI() {
         addSubviews(mainScrollView)
         mainScrollView.addSubview(contentView)
         contentView.addSubviews(userNameStackView,

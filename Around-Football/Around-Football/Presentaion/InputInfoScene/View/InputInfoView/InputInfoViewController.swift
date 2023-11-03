@@ -9,7 +9,7 @@ import UIKit
 
 class InputInfoViewController: UIViewController {
     
-    // MARK: Properties
+    // MARK: - Properties
     
     let inputInfoView = InputInfoView()
     
@@ -54,25 +54,29 @@ class InputInfoViewController: UIViewController {
     
     // MARK: - Selectors
     
-    @objc func nextButtonTapped(_ sender: UIButton) {
+    @objc 
+    func nextButtonTapped(_ sender: UIButton) {
         dismiss(animated: true)
     }
     
-    @objc func maleButtonTapped(_ sender: UIButton) {
+    @objc 
+    func maleButtonTapped(_ sender: UIButton) {
         sender.isSelected.toggle()
         if inputInfoView.femaleButton.isSelected {
             inputInfoView.femaleButton.isSelected.toggle()
         }
     }
     
-    @objc func femaleButtonTapped(_ sender: UIButton) {
+    @objc 
+    func femaleButtonTapped(_ sender: UIButton) {
         sender.isSelected.toggle()
         if inputInfoView.maleButton.isSelected {
             inputInfoView.maleButton.isSelected.toggle()
         }
     }
     
-    @objc func rightFootButtonTapped(_ sender: UIButton) {
+    @objc 
+    func rightFootButtonTapped(_ sender: UIButton) {
         if inputInfoView.leftFootButton.isSelected {
             inputInfoView.leftFootButton.isSelected.toggle()
         }
@@ -82,7 +86,8 @@ class InputInfoViewController: UIViewController {
         sender.isSelected.toggle()
     }
     
-    @objc func leftFootButtonTapped(_ sender: UIButton) {
+    @objc 
+    func leftFootButtonTapped(_ sender: UIButton) {
         if inputInfoView.rightFootButton.isSelected {
             inputInfoView.rightFootButton.isSelected.toggle()
         }
@@ -92,7 +97,8 @@ class InputInfoViewController: UIViewController {
         sender.isSelected.toggle()
     }
     
-    @objc func bothFeetButtonTapped(_ sender: UIButton) {
+    @objc 
+    func bothFeetButtonTapped(_ sender: UIButton) {
         if inputInfoView.rightFootButton.isSelected {
             inputInfoView.rightFootButton.isSelected.toggle()
         }
@@ -102,22 +108,27 @@ class InputInfoViewController: UIViewController {
         sender.isSelected.toggle()
     }
     
-    @objc func fwButtonTapped(_ sender: UIButton) {
+    @objc 
+    func fwButtonTapped(_ sender: UIButton) {
         sender.isSelected.toggle()
     }
     
-    @objc func mfButtonTapped(_ sender: UIButton) {
+    @objc 
+    func mfButtonTapped(_ sender: UIButton) {
         sender.isSelected.toggle()
     }
     
-    @objc func dfButtonTapped(_ sender: UIButton) {
+    @objc 
+    func dfButtonTapped(_ sender: UIButton) {
         sender.isSelected.toggle()
     }
     
-    @objc func gkButtonTapped(_ sender: UIButton) {
+    @objc 
+    func gkButtonTapped(_ sender: UIButton) {
         sender.isSelected.toggle()
     }
     
+    //TODO: - Keyboard 함수 Utiles로 정리
     private func keyboardController() {
         //화면 탭해서 키보드 내리기
         let tapGesture = UITapGestureRecognizer(

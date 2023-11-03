@@ -12,9 +12,9 @@ import SnapKit
 
 final class FieldDetailViewController: UIViewController {
     
-    var viewModel: FieldDetailViewModel
-    
     // MARK: - Properties
+    
+    var viewModel: FieldDetailViewModel
     
     private let fieldNameLabel = UILabel().then {
         $0.font = UIFont.boldSystemFont(ofSize: 18)
@@ -30,7 +30,7 @@ final class FieldDetailViewController: UIViewController {
         $0.backgroundColor = .black
     }
     
-    let tableView = UITableView().then {
+    private let tableView = UITableView().then {
         $0.register(
             FieldRecruitTableViewCell.self,
             forCellReuseIdentifier: FieldRecruitTableViewCell.cellID
@@ -58,7 +58,7 @@ final class FieldDetailViewController: UIViewController {
     
     // MARK: - Helpers
     
-    func configurePresentStyle() {
+    private func configurePresentStyle() {
         if let sheetPresentationController = sheetPresentationController {
             sheetPresentationController.detents = [.medium(), .large()]
             
@@ -67,7 +67,7 @@ final class FieldDetailViewController: UIViewController {
         }
     }
     
-    func configureUI() {
+    private func configureUI() {
         view.backgroundColor = .systemBackground
         
         let headerStackView = UIStackView(arrangedSubviews: [
@@ -107,7 +107,7 @@ final class FieldDetailViewController: UIViewController {
 //        }
     }
     
-    func configure() {
+    private  func configure() {
         fieldNameLabel.text = "구장이름"
         addressLabel.text = viewModel.field.fieldAddress
         tableView.dataSource = self

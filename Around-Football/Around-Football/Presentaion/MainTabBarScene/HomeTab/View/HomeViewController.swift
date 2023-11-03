@@ -10,7 +10,7 @@ import RxSwift
 import Then
 import SnapKit
 
-class HomeViewController: UIViewController {
+final class HomeViewController: UIViewController {
     
     // MARK: - Properties
     

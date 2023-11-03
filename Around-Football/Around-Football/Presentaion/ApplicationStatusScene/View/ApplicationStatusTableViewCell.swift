@@ -12,7 +12,7 @@ import SnapKit
 
 class ApplicationStatusTableViewCell: UITableViewCell {
     
-    // MARK: Properties
+    // MARK: - Properties
 
     private lazy var mainStackView = UIStackView().then {
         $0.addArrangedSubviews(profileImage,
@@ -28,7 +28,6 @@ class ApplicationStatusTableViewCell: UITableViewCell {
         $0.image = UIImage(systemName: "person.fill")
     }
     
-    
     private lazy var userInfoStackView = UIStackView().then {
         $0.addArrangedSubviews(userNameLabel,
                                detailInfoStackView1,
@@ -38,13 +37,13 @@ class ApplicationStatusTableViewCell: UITableViewCell {
         $0.distribution = .fill
         $0.alignment = .leading
     }
+    
     private let userNameLabel = UILabel().then {
         $0.text = "이름"
         $0.font = UIFont.boldSystemFont(ofSize: 16)
         $0.textColor = .black
     }
-    
-    
+
     private lazy var detailInfoStackView1 = UIStackView().then {
         $0.addArrangedSubviews(userAgeLabel,
                                createDotView(),
@@ -56,23 +55,24 @@ class ApplicationStatusTableViewCell: UITableViewCell {
         $0.distribution = .fill
         $0.alignment = .center
     }
+    
     private let userAgeLabel = UILabel().then {
         $0.text = "나이"
         $0.font = UIFont.systemFont(ofSize: 15)
         $0.textColor = .gray
     }
+    
     private let userDetailSexLabel = UILabel().then {
         $0.text = "성별"
         $0.font = UIFont.systemFont(ofSize: 15)
         $0.textColor = .gray
     }
+    
     private let userAreaLabel = UILabel().then {
         $0.text = "지역"
         $0.font = UIFont.systemFont(ofSize: 15)
         $0.textColor = .gray
     }
-    
-    
     
     private lazy var detailInfoStackView2 = UIStackView().then {
         $0.addArrangedSubviews(userMainUsedFeetLabelLabel,
@@ -84,25 +84,27 @@ class ApplicationStatusTableViewCell: UITableViewCell {
         $0.axis = .horizontal
         $0.distribution = .fill
         $0.alignment = .center
-        
     }
+    
     private let userMainUsedFeetLabelLabel = UILabel().then {
         $0.text = "주발"
         $0.font = UIFont.systemFont(ofSize: 15)
         $0.textColor = .gray
     }
+    
     private let userPositionLabel = UILabel().then {
         $0.text = "포지션"
         $0.font = UIFont.systemFont(ofSize: 15)
         $0.textColor = .gray
     }
+    
     private let userMannerLabel = UILabel().then {
         $0.text = "매너온도"
         $0.font = UIFont.systemFont(ofSize: 15)
         $0.textColor = .gray
     }
 
-    // TODO: 버튼 addTarget
+    // TODO: - 버튼 addTarget
     private lazy var buttonStackView = UIStackView().then {
         $0.addArrangedSubviews(acceptButton,
                                refuseButton)
@@ -111,6 +113,7 @@ class ApplicationStatusTableViewCell: UITableViewCell {
         $0.distribution = .fill
         $0.alignment = .trailing
     }
+    
     private let acceptButton = UIButton().then {
         $0.setTitle("수락", for: .normal)
         $0.backgroundColor = .blue
@@ -119,6 +122,7 @@ class ApplicationStatusTableViewCell: UITableViewCell {
         $0.layer.cornerRadius = LayoutOptions.cornerRadious
         $0.clipsToBounds = true
     }
+    
     private let refuseButton = UIButton().then {
         $0.setTitle("거절", for: .normal)
         $0.backgroundColor = .darkGray
@@ -127,7 +131,6 @@ class ApplicationStatusTableViewCell: UITableViewCell {
         $0.layer.cornerRadius = LayoutOptions.cornerRadious
         $0.clipsToBounds = true
     }
-    
     
     // MARK: - Lifecycles
     
@@ -140,10 +143,9 @@ class ApplicationStatusTableViewCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    
     // MARK: - Helpers
 
-    func setupUI() {
+    private func setupUI() {
         self.contentView.addSubview(mainStackView)
         
         mainStackView.snp.makeConstraints { make in

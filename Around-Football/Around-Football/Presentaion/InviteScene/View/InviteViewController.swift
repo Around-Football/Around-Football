@@ -21,7 +21,7 @@ final class InviteViewController: UIViewController {
         $0.showsVerticalScrollIndicator = false
     }
     
-    private let contentView = UIView()
+    let contentView = UIView()
     private let calenderViewController = CalenderViewController()
 
     private let contentLabel = UILabel().then {
@@ -37,7 +37,7 @@ final class InviteViewController: UIViewController {
         placeHolderLabel.frame = CGRect(x: 5, y: 0, width: 300, height: 30)
     }
     
-    private let placeHolderLabel = UILabel().then {
+    let placeHolderLabel = UILabel().then {
         $0.text = "내용을 입력해주세요"
         $0.font = .systemFont(ofSize: 12)
         $0.textColor = .gray
@@ -149,39 +149,6 @@ final class InviteViewController: UIViewController {
             make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
             make.trailing.bottom.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
             make.height.equalTo(40)
-        }
-    }
-}
-
-// MARK: - 키보드 관련 함수
-
-extension InviteViewController {
-    @objc func keyboardWillShow(_ notification: Notification) {
-        if let keyboardFrame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
-            let keyboardHeight = keyboardFrame.cgRectValue.height
-            UIView.animate(withDuration: 0.3) {
-                self.contentView.transform = CGAffineTransform(translationX: 0, y: -keyboardHeight)
-            }
-        }
-    }
-    
-    @objc func keyboardWillHide(_ notification: Notification) {
-        self.contentView.transform = CGAffineTransform(translationX: 0, y: 0)
-    }
-    
-    @objc func dismissKeyboard() {
-        view.endEditing(true)
-    }
-}
-
-// MARK: - TextViewDelegate
-
-extension InviteViewController: UITextViewDelegate {
-    func textViewDidChange(_ textView: UITextView) {
-        if textView.text.isEmpty {
-            placeHolderLabel.isHidden = false
-        } else {
-            placeHolderLabel.isHidden = true
         }
     }
 }
