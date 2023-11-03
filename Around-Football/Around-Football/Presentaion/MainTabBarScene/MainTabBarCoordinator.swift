@@ -37,14 +37,16 @@ final class MainTabBarCoordinator: BaseCoordinator, HomeTabCoordinatorDelegate {
     
     private func makeHomeViewController() -> UINavigationController {
         let homeViewController = HomeViewController()
+
         let homeNavigationController: UINavigationController = makeNavigationController(
             rootViewController: homeViewController,
             title: "Home",
             tabbarImage: "house",
             tag: 0
         )
-        
+
         let homeTabCoordinator = HomeTabCoordinator(navigationController: homeNavigationController)
+        homeViewController.delegate = homeTabCoordinator
         homeTabCoordinator.delegate = self
         homeTabCoordinator.start()
         childCoordinators.append(homeTabCoordinator)
@@ -119,7 +121,9 @@ final class MainTabBarCoordinator: BaseCoordinator, HomeTabCoordinatorDelegate {
     
     func pushToInviteView() {
         print("MainTabBarCoordinator - pushToInviteView")
-//        let controller = InviteViewController()
+        let controller = InviteViewController()
+        controller.modalPresentationStyle = .fullScreen
+        navigationController?.present(controller, animated: true)
 //        navigationController?.pushViewController(controller, animated: true)
     }
     

@@ -239,6 +239,7 @@ final class HomeViewController: UIViewController {
         } else {
             delegate?.pushToInviteView() //test
         }
+        
 //        let nextVC = InviteViewController()
 //        self.navigationController?.navigationBar.isHidden = false
 //        self.navigationController?.pushViewController(nextVC, animated: true)
