@@ -6,14 +6,21 @@
 //
 // 홈(리스트)
 import UIKit
+
 import RxSwift
 import Then
 import SnapKit
 
-class HomeViewController: UIViewController {
+protocol HomeViewControllerDelegate: AnyObject {
+    func showLoginViewController()
+    func pushToInviteView()
+}
+
+final class HomeViewController: UIViewController {
     
     // MARK: - Properties
     
+    weak var delegate: HomeViewControllerDelegate?
     private let homeTableViewController = HomeTableViewController()
     
     private let filterOptions: [String] = ["모든 날짜", "모든 지역", "매치 유형"] // 필터 옵션
@@ -216,8 +223,24 @@ class HomeViewController: UIViewController {
     // FIXME: - View PopUp navigationBar 처리
     @objc
     func didTapFloatingButton() {
-        let nextVC = InviteViewController()
-        self.navigationController?.navigationBar.isHidden = false
-        self.navigationController?.pushViewController(nextVC, animated: true)
+        //TODO: -FirebaseAuth UID 확인해서 로그인 or 초대뷰
+//        if uid == nil {
+//            delegate.showLoginViewController()
+//        } else {
+//            delegate?.pushToInviteView()
+//        }
+        print("DEBUG: didTapFloatingButton")
+//        let controller = InviteViewController()
+//        navigationController?.pushViewController(controller, animated: true)
+
+        if delegate == nil {
+            //TODO: - Delegate 넣어..! 정신차려
+            print("delegate 넣어")
+        } else {
+            delegate?.pushToInviteView() //test
+        }
+//        let nextVC = InviteViewController()
+//        self.navigationController?.navigationBar.isHidden = false
+//        self.navigationController?.pushViewController(nextVC, animated: true)
     }
 }

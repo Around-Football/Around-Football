@@ -11,8 +11,8 @@ protocol MainTabBarCoordinatorDelegate {
     func showLoginViewController()
 }
 
-final class MainTabBarCoordinator: BaseCoordinator {
-    
+final class MainTabBarCoordinator: BaseCoordinator, HomeTabCoordinatorDelegate {
+
     var type: CoordinatorType = .mainTab
     var delegate: MainTabBarCoordinatorDelegate?
     
@@ -45,8 +45,9 @@ final class MainTabBarCoordinator: BaseCoordinator {
         )
         
         let homeTabCoordinator = HomeTabCoordinator(navigationController: homeNavigationController)
-        childCoordinators.append(homeTabCoordinator)
+        homeTabCoordinator.delegate = self
         homeTabCoordinator.start()
+        childCoordinators.append(homeTabCoordinator)
         
         return homeNavigationController
     }
@@ -110,6 +111,18 @@ final class MainTabBarCoordinator: BaseCoordinator {
                                                      pages: [homeVC, mapVC, chatVC, infoVC])
         navigationController?.viewControllers = [mainTabBarController]
     }
+    
+    //HomeTabCoordinatorDelegate
+    func showLoginViewController() {
+        delegate?.showLoginViewController()
+    }
+    
+    func pushToInviteView() {
+        print("MainTabBarCoordinator - pushToInviteView")
+//        let controller = InviteViewController()
+//        navigationController?.pushViewController(controller, animated: true)
+    }
+    
     
     // MARK: - Helpers
     
