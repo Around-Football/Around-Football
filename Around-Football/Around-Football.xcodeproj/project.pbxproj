@@ -92,7 +92,7 @@
 		7CC619742AD433760085DF90 /* ProfileAndEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CC619732AD433760085DF90 /* ProfileAndEditView.swift */; };
 		7CC619762AD448A90085DF90 /* InfoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CC619752AD448A90085DF90 /* InfoCell.swift */; };
 		7CC619782AD460D80085DF90 /* InfoArrangedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CC619772AD460D80085DF90 /* InfoArrangedView.swift */; };
-		7CE25AE62ACABF620014132F /* CustomButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CE25AE52ACABF620014132F /* CustomButton.swift */; };
+		7CE25AE62ACABF620014132F /* AFButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CE25AE52ACABF620014132F /* AFButton.swift */; };
 		7CE563AA2AD140A9005DE2DF /* LayoutOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CE563A92AD140A9005DE2DF /* LayoutOptions.swift */; };
 		7CE563AC2AD1425F005DE2DF /* DetailViewController+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CE563AB2AD1425F005DE2DF /* DetailViewController+.swift */; };
 /* End PBXBuildFile section */
@@ -170,7 +170,7 @@
 		7CC619732AD433760085DF90 /* ProfileAndEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileAndEditView.swift; sourceTree = "<group>"; };
 		7CC619752AD448A90085DF90 /* InfoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoCell.swift; sourceTree = "<group>"; };
 		7CC619772AD460D80085DF90 /* InfoArrangedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoArrangedView.swift; sourceTree = "<group>"; };
-		7CE25AE52ACABF620014132F /* CustomButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomButton.swift; sourceTree = "<group>"; };
+		7CE25AE52ACABF620014132F /* AFButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AFButton.swift; sourceTree = "<group>"; };
 		7CE563A92AD140A9005DE2DF /* LayoutOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LayoutOptions.swift; sourceTree = "<group>"; };
 		7CE563AB2AD1425F005DE2DF /* DetailViewController+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DetailViewController+.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -627,7 +627,7 @@
 				7C2B1AF22AF4BD8F0052EC64 /* Calendar */,
 				7CE563A92AD140A9005DE2DF /* LayoutOptions.swift */,
 				274C21C62ACFF901005469E6 /* TextFieldDelegateHandler.swift */,
-				7CE25AE52ACABF620014132F /* CustomButton.swift */,
+				7CE25AE52ACABF620014132F /* AFButton.swift */,
 				663417CB2AD68413002FE2CA /* Constants.swift */,
 				278E555A2AD800BC00C328D3 /* APIService.swift */,
 				278E55692AD930F900C328D3 /* Response.swift */,
@@ -745,7 +745,7 @@
 				278DAD5B2AE27A660085718C /* LocationFilterViewController.swift in Sources */,
 				7CC619782AD460D80085DF90 /* InfoArrangedView.swift in Sources */,
 				7CC619742AD433760085DF90 /* ProfileAndEditView.swift in Sources */,
-				7CE25AE62ACABF620014132F /* CustomButton.swift in Sources */,
+				7CE25AE62ACABF620014132F /* AFButton.swift in Sources */,
 				66656F9D2AD9219F00AE1AFA /* FieldDetailViewController.swift in Sources */,
 				7C5F775E2AC9CE8A004CE48F /* DateCell.swift in Sources */,
 				66656FA12ADD2FB800AE1AFA /* FieldRecruitTableViewCell.swift in Sources */,

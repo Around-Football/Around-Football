@@ -7,11 +7,12 @@
 
 import UIKit
 
-final class CustomButton: UIButton {
+final class AFButton: UIButton {
     
     // MARK: - Properties
     
     private var buttonTitle: String
+    var buttonActionHandler: (() -> Void)?
     
     // MARK: - Lifecycles
     
@@ -31,6 +32,9 @@ final class CustomButton: UIButton {
     @objc 
     func buttonClicked() {
         print("DEBUG: buttonClicked")
+        if let buttonActionHandler {
+            buttonActionHandler()
+        }
     }
     
     // MARK: - Helpers
