@@ -7,12 +7,12 @@
 
 import UIKit
 
-import RxSwift
 import RxCocoa
+import RxSwift
 import SnapKit
 import Then
 
-class HomeTableViewController: UITableViewController {
+final class HomeTableViewController: UITableViewController {
     
     // MARK: - Properties
     
@@ -23,16 +23,13 @@ class HomeTableViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        navigationController?.setNavigationBarHidden(true, animated: false)
-        tableView.register(HomeTableViewCell.self, forCellReuseIdentifier: HomeTableViewCell.id)
-        //        tableView.delegate = nil
-        tableView.dataSource = nil
-
         configureUI()
     }
     
     private func configureUI() {
+        tableView.register(HomeTableViewCell.self, forCellReuseIdentifier: HomeTableViewCell.id)
+        tableView.dataSource = nil
+        
         homeViewModel.recruitObservable
             .observe(on: MainScheduler.instance)
             .bind(to: tableView.rx.items(cellIdentifier: HomeTableViewCell.id,
@@ -49,11 +46,6 @@ class HomeTableViewController: UITableViewController {
     
     // MARK: - Selectors
     
-    
-    // UITableViewDataSource 메서드
-    //    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    //        return items.count
-    //    }
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 150
     }
@@ -62,12 +54,6 @@ class HomeTableViewController: UITableViewController {
         let nextVC = DetailViewController()
          present(nextVC, animated: true)
     }
-    //    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-    //        let cell = tableView.dequeueReusableCell(withIdentifier: HomeTableViewCell.id, for: indexPath) as! HomeTableViewCell
-    //        cell.titleLabel.text = items[indexPath.row]
-    //        // 나머지 셀 내용을 설정하려면 HomeTableViewCell에 해당 프로퍼티 및 메서드를 추가하십시오.
-    //        return cell
-    //    }
 }
 
 

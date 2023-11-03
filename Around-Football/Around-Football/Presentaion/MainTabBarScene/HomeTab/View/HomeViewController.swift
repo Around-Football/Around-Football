@@ -10,7 +10,7 @@ import RxSwift
 import Then
 import SnapKit
 
-final class HomeViewController: UIViewController {
+class HomeViewController: UIViewController {
     
     // MARK: - Properties
     
@@ -84,9 +84,6 @@ final class HomeViewController: UIViewController {
         super.viewDidLoad()
         addChild(homeTableViewController)
         configureUI()
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
         self.navigationController?.navigationBar.isHidden = true
     }
 
@@ -142,19 +139,20 @@ final class HomeViewController: UIViewController {
         
         homeTableViewController.didMove(toParent: self)
         
+        filterScrollView.snp.makeConstraints { make in
+            make.top.equalTo(view.safeAreaLayoutGuide)
+            make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
+            make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
+            make.height.equalTo(50)
+        }
+        
         optionStackView.snp.makeConstraints { make in
             make.top.equalTo(filterScrollView)
             make.leading.equalTo(filterScrollView)
             make.trailing.equalTo(filterScrollView)
             make.bottom.equalTo(filterScrollView)
         }
-        
-        filterScrollView.snp.makeConstraints { make in
-            make.top.equalToSuperview().offset(SuperviewOffsets.topPadding)
-            make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
-            make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
-            make.height.equalTo(90)
-        }
+    
         
         homeTableViewController.view.snp.makeConstraints { make in
             make.top.equalTo(filterScrollView.snp.bottom).offset(10)
