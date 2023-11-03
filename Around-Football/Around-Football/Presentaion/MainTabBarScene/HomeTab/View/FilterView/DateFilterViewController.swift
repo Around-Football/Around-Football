@@ -23,7 +23,6 @@ final class DateFilterViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         configureUI()
     }
     
@@ -31,7 +30,6 @@ final class DateFilterViewController: UIViewController {
     
     private func configureUI() {
         view.backgroundColor = .white
-        
         view.addSubviews(titleLabel)
         
         titleLabel.snp.makeConstraints { make in
