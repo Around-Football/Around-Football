@@ -9,8 +9,38 @@ import Foundation
 
 import FirebaseFirestore
 
+/*
+ var id: String
+ var userName: String
+ var age: Int
+ var contact: Int?
+ var detailSex: String
+ var area: String
+ var mainUsedFeet: String
+ var position: String
+ */
+
 struct FirebaseAPI {
     static let shared = FirebaseAPI()
+    
+    func createUser(_ user: User) {
+        let documentID = REF_USER.document().documentID
+        REF_USER.document(documentID)
+            .setData(["id" : documentID,
+                      "userName" : user.userName,
+                      "age" : user.age,
+                      "contact" : user.contact ?? 0,
+                      "detailSex" : user.detailSex,
+                      "area" : user.area,
+                      "mainUsedFeet" : user.mainUsedFeet,
+                      "position" : user.position
+                     ])
+    }
+    
+    
+    func readUser() {
+        
+    }
     
     func fetchFields(completion: @escaping(([Field]) -> Void)) {
         REF_FIELD.getDocuments { snapshot, error in
@@ -94,5 +124,4 @@ func saveFieldJsonData<T: Encodable>(data:T) {
     } catch {
         print(error)
     }
-    
 }

@@ -18,6 +18,15 @@ final class InputInfoViewController: UIViewController {
     weak var delegate: InputInfoViewControllerDelegate?
     let inputInfoView: InputInfoView = InputInfoView()
     
+    private var id: String = ""
+    private var userName: String = ""
+    private var age: Int = 0
+    private var contact: Int = 0
+    private var detailSex: String = ""
+    private var area: String = ""
+    private var mainUsedFeet: String = ""
+    private var position: String = ""
+    
     // MARK: - Lifecycles
     
     override func loadView() {
@@ -62,8 +71,20 @@ final class InputInfoViewController: UIViewController {
     @objc 
     func nextButtonTapped(_ sender: UIButton) {
         print("DEBUG: InputInfoViewController - nextButtonTapped")
+        area = inputInfoView.userAreaTextField.text ?? ""
+        userName = inputInfoView.userNameTextField.text ?? ""
+        age = Int(inputInfoView.userAgeTextField.text ?? "") ?? 0
         delegate?.showMainTabController()
 //        dismiss(animated: true)
+        FirebaseAPI.shared.createUser(User(dictionary: ["id" : UUID().uuidString,
+                                                        "userName" : userName,
+                                                        "age" : age,
+                                                        "contact" : contact,
+                                                        "detailSex" : detailSex,
+                                                        "area" : area,
+                                                        "mainUsedFeet" : mainUsedFeet,
+                                                        "position" : position
+                                                       ]))
     }
     
     @objc 
@@ -72,6 +93,7 @@ final class InputInfoViewController: UIViewController {
         if inputInfoView.femaleButton.isSelected {
             inputInfoView.femaleButton.isSelected.toggle()
         }
+        detailSex = sender.titleLabel?.text ?? ""
     }
     
     @objc 
@@ -80,6 +102,8 @@ final class InputInfoViewController: UIViewController {
         if inputInfoView.maleButton.isSelected {
             inputInfoView.maleButton.isSelected.toggle()
         }
+        detailSex = sender.titleLabel?.text ?? ""
+        
     }
     
     @objc 
@@ -91,6 +115,7 @@ final class InputInfoViewController: UIViewController {
             inputInfoView.bothFeetButton.isSelected.toggle()
         }
         sender.isSelected.toggle()
+        mainUsedFeet = sender.titleLabel?.text ?? ""
     }
     
     @objc 
@@ -102,6 +127,7 @@ final class InputInfoViewController: UIViewController {
             inputInfoView.bothFeetButton.isSelected.toggle()
         }
         sender.isSelected.toggle()
+        mainUsedFeet = sender.titleLabel?.text ?? ""
     }
     
     @objc 
@@ -113,26 +139,31 @@ final class InputInfoViewController: UIViewController {
             inputInfoView.leftFootButton.isSelected.toggle()
         }
         sender.isSelected.toggle()
+        mainUsedFeet = sender.titleLabel?.text ?? ""
     }
     
     @objc 
     func fwButtonTapped(_ sender: UIButton) {
         sender.isSelected.toggle()
+        position = sender.titleLabel?.text ?? ""
     }
     
     @objc 
     func mfButtonTapped(_ sender: UIButton) {
         sender.isSelected.toggle()
+        position = sender.titleLabel?.text ?? ""
     }
     
     @objc 
     func dfButtonTapped(_ sender: UIButton) {
         sender.isSelected.toggle()
+        position = sender.titleLabel?.text ?? ""
     }
     
     @objc 
     func gkButtonTapped(_ sender: UIButton) {
         sender.isSelected.toggle()
+        position = sender.titleLabel?.text ?? ""
     }
     
     //TODO: - Keyboard 함수 Utiles로 정리
