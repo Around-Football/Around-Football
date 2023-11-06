@@ -9,4 +9,8 @@ import UIKit
 
 final class ChatViewController: UIViewController {
     
+    override func viewDidLoad() {
+        view.backgroundColor = .green
+    }
+    
 }

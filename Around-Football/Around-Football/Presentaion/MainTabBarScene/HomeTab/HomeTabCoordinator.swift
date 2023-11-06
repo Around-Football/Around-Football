@@ -9,7 +9,7 @@ import UIKit
 
 protocol HomeTabCoordinatorDelegate {
     func showLoginViewController()
-    func pushToInviteView()
+    func presentToInviteView()
 }
 
 final class HomeTabCoordinator: BaseCoordinator, HomeViewControllerDelegate {
@@ -25,10 +25,10 @@ final class HomeTabCoordinator: BaseCoordinator, HomeViewControllerDelegate {
         //
     }
     
-    func pushToInviteView() {
+    func presentToInviteView() {
         print("DEBUG: pushToInviteView")
         
-        delegate?.pushToInviteView()
+        delegate?.presentToInviteView()
 //        let controller = Home
     }
     

@@ -119,12 +119,13 @@ final class MainTabBarCoordinator: BaseCoordinator, HomeTabCoordinatorDelegate {
         delegate?.showLoginViewController()
     }
     
-    func pushToInviteView() {
+    // MARK: - HomeTab FloatingButtonTabbed
+    
+    func presentToInviteView() {
         print("MainTabBarCoordinator - pushToInviteView")
-        let controller = InviteViewController()
-        controller.modalPresentationStyle = .fullScreen
+        let controller = UINavigationController(rootViewController:         InviteViewController())
+        controller.isNavigationBarHidden = false
         navigationController?.present(controller, animated: true)
-//        navigationController?.pushViewController(controller, animated: true)
     }
     
     

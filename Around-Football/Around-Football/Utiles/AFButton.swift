@@ -19,7 +19,6 @@ final class AFButton: UIButton {
     init(frame: CGRect, buttonTitle: String) {
         self.buttonTitle = buttonTitle
         super.init(frame: frame)
-        
         configureUI()
     }
     
