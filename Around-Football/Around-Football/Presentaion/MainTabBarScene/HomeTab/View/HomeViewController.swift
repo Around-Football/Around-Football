@@ -13,7 +13,7 @@ import SnapKit
 
 protocol HomeViewControllerDelegate: AnyObject {
     func showLoginViewController()
-    func pushToInviteView()
+    func presentToInviteView()
 }
 
 final class HomeViewController: UIViewController {
@@ -227,18 +227,11 @@ final class HomeViewController: UIViewController {
 //        if uid == nil {
 //            delegate.showLoginViewController()
 //        } else {
-//            delegate?.pushToInviteView()
+            delegate?.presentToInviteView()
 //        }
         print("DEBUG: didTapFloatingButton")
 //        let controller = InviteViewController()
 //        navigationController?.pushViewController(controller, animated: true)
-
-        if delegate == nil {
-            //TODO: - Delegate 넣어..! 정신차려
-            print("delegate 넣어")
-        } else {
-            delegate?.pushToInviteView() //test
-        }
         
 //        let nextVC = InviteViewController()
 //        self.navigationController?.navigationBar.isHidden = false

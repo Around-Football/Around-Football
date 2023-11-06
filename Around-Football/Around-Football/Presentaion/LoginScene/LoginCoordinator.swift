@@ -36,7 +36,6 @@ final class LoginCoordinator: BaseCoordinator, LoginViewControllerDelegate, Inpu
         inputInfoCoordinator.delegate = self
         inputInfoCoordinator.start()
         childCoordinators.append(inputInfoCoordinator)
-        
     }
     
     //LoginViewControllerDelegate
