@@ -7,15 +7,17 @@
 
 import UIKit
 
-//NavigationDelegate
-protocol InfoDelegate: AnyObject {
-    func moveToDatailVC()
-    func moveToInviteVC()
+protocol InfoViewControllerDelegate: AnyObject {
+    func showLoginViewController()
+    func pushToEditView()
+    func pushToSettingView()
 }
 
 class InfoViewController: UIViewController {
     
     // MARK: - Properties
+    
+    weak var delegate: InfoViewControllerDelegate?
     
     private let loginViewModel = LoginViewModel()
     private let profileAndEditView = ProfileAndEditView()
@@ -61,10 +63,9 @@ class InfoViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         configureUI()
         configureStackView()
-        profileAndEditView.delegate = self
+        setButtonDelegate()
     }
     
     // MARK: - Selectors
@@ -72,6 +73,7 @@ class InfoViewController: UIViewController {
     @objc 
     func logoutButtonTapped() {
         loginViewModel.logout()
+        delegate?.showLoginViewController()
     }
     
     // MARK: - Helpers
@@ -121,6 +123,17 @@ class InfoViewController: UIViewController {
             make.trailing.equalToSuperview().offset(-50)
         }
     }
+    
+    private func setButtonDelegate() {
+        profileAndEditView.editButtonActionHandler = { [weak self] in
+            guard let self else { return }
+            delegate?.pushToEditView()
+        }
+        profileAndEditView.settingButtonActionHandler = { [weak self] in
+            guard let self else { return }
+            delegate?.pushToSettingView()
+        }
+    }
 }
 
 extension InfoViewController: UICollectionViewDelegateFlowLayout, UICollectionViewDataSource {
@@ -148,14 +161,15 @@ extension InfoViewController: UICollectionViewDelegateFlowLayout, UICollectionVi
     }
 }
 
-extension InfoViewController: InfoDelegate {
-    func moveToDatailVC() {
-        let controller = DetailViewController()
-        navigationController?.pushViewController(controller, animated: true)
-    }
-    
-    func moveToInviteVC() {
-        let controller = InviteViewController()
-        navigationController?.pushViewController(controller, animated: true)
-    }
-}
+//이전 delegate방식
+//extension InfoViewController: InfoDelegate {
+//    func moveToDatailVC() {
+//        let controller = DetailViewController()
+//        navigationController?.pushViewController(controller, animated: true)
+//    }
+//    
+//    func moveToInviteVC() {
+//        let controller = InviteViewController()
+//        navigationController?.pushViewController(controller, animated: true)
+//    }
+//}

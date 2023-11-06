@@ -14,6 +14,7 @@ protocol HomeTabCoordinatorDelegate {
 
 final class HomeTabCoordinator: BaseCoordinator, HomeViewControllerDelegate {
 
+
     var type: CoordinatorType = .home
     var delegate: HomeTabCoordinatorDelegate?
     
@@ -27,9 +28,7 @@ final class HomeTabCoordinator: BaseCoordinator, HomeViewControllerDelegate {
     
     func presentToInviteView() {
         print("DEBUG: pushToInviteView")
-        
         delegate?.presentToInviteView()
-//        let controller = Home
     }
     
     

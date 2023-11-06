@@ -11,7 +11,7 @@ protocol MainTabBarCoordinatorDelegate {
     func showLoginViewController()
 }
 
-final class MainTabBarCoordinator: BaseCoordinator, HomeTabCoordinatorDelegate {
+final class MainTabBarCoordinator: BaseCoordinator, HomeTabCoordinatorDelegate, InfoTabCoordinatorDelegate {
 
     var type: CoordinatorType = .mainTab
     var delegate: MainTabBarCoordinatorDelegate?
@@ -34,7 +34,7 @@ final class MainTabBarCoordinator: BaseCoordinator, HomeTabCoordinatorDelegate {
     }
     
     //TODO: - 각 Coordinator 마다 delegate = self로 설정
-    
+    //TODO: - Controller delegate도 여기서 선언
     private func makeHomeViewController() -> UINavigationController {
         let homeViewController = HomeViewController()
 
@@ -96,6 +96,8 @@ final class MainTabBarCoordinator: BaseCoordinator, HomeTabCoordinatorDelegate {
         )
         
         let infoTabCoordinator = InfoTabCoordinator(navigationController: infoNavigationController)
+        infoTabCoordinator.delegate = self
+        infoViewController.delegate = infoTabCoordinator
         childCoordinators.append(infoTabCoordinator)
         infoTabCoordinator.start()
         

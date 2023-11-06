@@ -52,7 +52,7 @@ final class InviteViewController: UIViewController {
         super.viewDidLoad()
         configureUI()
         keyboardController()
-        addButton.buttonActionHandler = { self.dismiss(animated: true) }
+        setAddButton()
     }
     
     deinit {
@@ -60,6 +60,13 @@ final class InviteViewController: UIViewController {
     }
     
     // MARK: - Helpers
+    
+    private func setAddButton() {
+        addButton.buttonActionHandler = { [weak self] in
+            guard let self else { return }
+            dismiss(animated: true)
+        }
+    }
     
     private func keyboardController() {
         //키보드 올리기
