@@ -14,7 +14,8 @@ final class ProfileAndEditView: UIView {
     
     // MARK: - Properties
     
-    weak var delegate: InfoDelegate?
+    var editButtonActionHandler: (() -> Void)?
+    var settingButtonActionHandler: (() -> Void)?
     
     private let profileImageView = UIImageView().then {
         $0.image = UIImage(systemName: "person")?.withRenderingMode(.alwaysOriginal)
@@ -63,13 +64,17 @@ final class ProfileAndEditView: UIView {
     @objc 
     private func editButtonTapped() {
         print("DEBUG: editButtonTapped")
-        delegate?.moveToDatailVC()
+        if let editButtonActionHandler {
+            editButtonActionHandler()
+        }
     }
     
     @objc 
     private func settingButtonTapped() {
         print("DEBUG: settingButtonTapped")
-        delegate?.moveToInviteVC()
+        if let settingButtonActionHandler {
+            settingButtonActionHandler()
+        }
     }
     
     // MARK: - Helpers

@@ -230,11 +230,5 @@ final class HomeViewController: UIViewController {
             delegate?.presentToInviteView()
 //        }
         print("DEBUG: didTapFloatingButton")
-//        let controller = InviteViewController()
-//        navigationController?.pushViewController(controller, animated: true)
-        
-//        let nextVC = InviteViewController()
-//        self.navigationController?.navigationBar.isHidden = false
-//        self.navigationController?.pushViewController(nextVC, animated: true)
     }
 }
