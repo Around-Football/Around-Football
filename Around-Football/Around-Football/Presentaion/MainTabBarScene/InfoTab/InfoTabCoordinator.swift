@@ -21,9 +21,9 @@ final class InfoTabCoordinator: BaseCoordinator, InfoViewControllerDelegate {
     }
     
     func pushEditView() {
-        let controller = InputInfoViewController()
-        controller.navigationItem.hidesBackButton = false
-        navigationController?.pushViewController(controller, animated: true)
+        let coordinator = InputInfoCoordinator(navigationController: navigationController)
+        coordinator.start(hidesBackButton: false)
+        childCoordinators.append(coordinator)
     }
     
     func pushSettingView() {

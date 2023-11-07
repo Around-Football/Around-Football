@@ -16,14 +16,21 @@ final class InputInfoCoordinator: BaseCoordinator, InputInfoViewControllerDelega
     var delegate: InputInfoCoordinatorDelegate?
     
     override func start() {
+        start(hidesBackButton: false)
+    }
+    
+    func start(hidesBackButton: Bool) {
         let controller = InputInfoViewController()
         controller.delegate = self
-        controller.navigationItem.hidesBackButton = true
+        controller.navigationItem.hidesBackButton = hidesBackButton
         navigationController?.pushViewController(controller, animated: true)
     }
     
     func dismissView() {
         navigationController?.dismiss(animated: true)
+    }
+    
+    func removeThisChildCoordinators() {
         removeThisChildCoordinators(coordinator: self)
     }
 }
