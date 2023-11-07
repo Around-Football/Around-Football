@@ -38,9 +38,7 @@ struct FirebaseAPI {
             .updateData(
                 ["userName" : user.userName,
                  "age" : user.age,
-                 // TODO: - 채팅 기능 구현 중이니 연락처 삭제?
-                 "contact" : user.contact ?? 0,
-                 "detailSex" : user.detailSex,
+                 "gender" : user.gender,
                  "area" : user.area,
                  "mainUsedFeet" : user.mainUsedFeet,
                  "position" : user.position
