@@ -62,9 +62,11 @@ class LoginViewModel: NSObject {
                     return
                 }
                 print("로그인 성공: \(String(describing: result?.user))")
+            
+                let uid = result?.user.uid
                 
-                // FIXME: - User Dictionary에 어떤 값을 할당해야하는가
-                FirebaseAPI.shared.createUser(User(dictionary: ["id" : UUID().uuidString]))
+                REF_USER.document(uid ?? UUID().uuidString)
+                    .setData(["id" : uid ?? UUID().uuidString])
                 
                 // TODO: - Coordinator Refactoring
                 NotificationCenter.default.post(name: NSNotification.Name("TestNotification"),
@@ -136,9 +138,6 @@ class LoginViewModel: NSObject {
             print("userProfile: \(String(describing: self.userProfile)), email: \(String(describing: self.email))")
             self.createGoogleUser(email: self.email!, password: "\(self.email!)")
             
-            // FIXME: - User Dictionary에 어떤 값을 할당해야하는가
-            FirebaseAPI.shared.createUser(User(dictionary: ["id" : UUID().uuidString]))
-            
             // TODO: - Coordinator Refactoring
             NotificationCenter.default.post(name: NSNotification.Name("TestNotification"),
                                             object: nil,
@@ -170,9 +169,6 @@ class LoginViewModel: NSObject {
         let authorizationController = ASAuthorizationController(authorizationRequests: [request])
         authorizationController.delegate = self
         authorizationController.performRequests()
-        
-        // FIXME: - User Dictionary에 어떤 값을 할당해야하는가
-        FirebaseAPI.shared.createUser(User(dictionary: ["id" : UUID().uuidString]))
     }
     
     private func sha256(_ input: String) -> String {
@@ -236,6 +232,11 @@ extension LoginViewModel {
                 print(error?.localizedDescription as Any)
                 return
             }
+            
+            let uid = result?.user.uid
+            
+            REF_USER.document(uid ?? UUID().uuidString)
+                .setData(["id" : uid ?? UUID().uuidString])
         }
     }
     
