@@ -11,8 +11,7 @@ struct User: Codable {
     var id: String
     var userName: String
     var age: Int
-    var contact: Int?
-    var detailSex: String
+    var gender: String
     var area: String
     var mainUsedFeet: String
     var position: String
@@ -33,8 +32,7 @@ struct User: Codable {
         self.id = dictionary["id"] as? String ?? UUID().uuidString
         self.userName = dictionary["userName"] as? String ?? ""
         self.age = dictionary["age"] as? Int ?? Int()
-        self.contact = dictionary["contact"] as? Int ?? Int()
-        self.detailSex = dictionary["detailSex"] as? String ?? ""
+        self.gender = dictionary["gender"] as? String ?? ""
         self.area = dictionary["area"] as? String ?? ""
         self.mainUsedFeet = dictionary["mainUsedFeet"] as? String ?? ""
         self.position = dictionary["position"] as? String ?? ""
