@@ -22,8 +22,7 @@ final class InputInfoViewController: UIViewController {
     private var id: String = ""
     private var userName: String = ""
     private var age: Int = 0
-    private var contact: Int = 0
-    private var detailSex: String = ""
+    private var gender: String = ""
     private var area: String = ""
     private var mainUsedFeet: String = ""
     private var position: String = ""
@@ -84,8 +83,7 @@ final class InputInfoViewController: UIViewController {
       
         FirebaseAPI.shared.updateUser(User(dictionary: ["userName" : userName,
                                                         "age" : age,
-                                                        "contact" : contact,
-                                                        "detailSex" : detailSex,
+                                                        "gender" : gender,
                                                         "area" : area,
                                                         "mainUsedFeet" : mainUsedFeet,
                                                         "position" : position
@@ -98,7 +96,7 @@ final class InputInfoViewController: UIViewController {
         if inputInfoView.femaleButton.isSelected {
             inputInfoView.femaleButton.isSelected.toggle()
         }
-        detailSex = sender.titleLabel?.text ?? ""
+        gender = sender.titleLabel?.text ?? ""
     }
     
     @objc 
@@ -107,7 +105,7 @@ final class InputInfoViewController: UIViewController {
         if inputInfoView.maleButton.isSelected {
             inputInfoView.maleButton.isSelected.toggle()
         }
-        detailSex = sender.titleLabel?.text ?? ""
+        gender = sender.titleLabel?.text ?? ""
         
     }
     

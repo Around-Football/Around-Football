@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		272918572AFA60A9009C9042 /* UserService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 272918562AFA60A9009C9042 /* UserService.swift */; };
 		272B448B2ADD375700ACEC41 /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = 272B448A2ADD375700ACEC41 /* GoogleSignIn */; };
 		272B448D2ADD375700ACEC41 /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 272B448C2ADD375700ACEC41 /* GoogleSignInSwift */; };
 		272B44952ADD80EC00ACEC41 /* Recruit_Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 272B44942ADD80EC00ACEC41 /* Recruit_Rx.swift */; };
@@ -100,6 +101,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		272918562AFA60A9009C9042 /* UserService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserService.swift; sourceTree = "<group>"; };
 		272B44942ADD80EC00ACEC41 /* Recruit_Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Recruit_Rx.swift; sourceTree = "<group>"; };
 		273674492AC3061C003ADE3F /* Around-Football.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Around-Football.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2736744C2AC3061C003ADE3F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -206,6 +208,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		272918552AFA6087009C9042 /* Service */ = {
+			isa = PBXGroup;
+			children = (
+				272918562AFA60A9009C9042 /* UserService.swift */,
+			);
+			path = Service;
+			sourceTree = "<group>";
+		};
 		273674402AC3061C003ADE3F = {
 			isa = PBXGroup;
 			children = (
@@ -231,6 +241,7 @@
 				2736747F2AC308D1003ADE3F /* Models */,
 				7CE25AE72ACAC3370014132F /* Extension */,
 				663417C82AD68299002FE2CA /* Network */,
+				272918552AFA6087009C9042 /* Service */,
 				7CE563A82AD13E82005DE2DF /* Utiles */,
 				663417CD2AD68767002FE2CA /* MockData */,
 				7C2B1AF82AF4BFD40052EC64 /* Resource */,
@@ -796,6 +807,7 @@
 				7C2B1ACB2AF4B1530052EC64 /* MainTabBarCoordinator.swift in Sources */,
 				278E556A2AD930F900C328D3 /* Response.swift in Sources */,
 				669674912AC3E9D40067FD48 /* MapViewController.swift in Sources */,
+				272918572AFA60A9009C9042 /* UserService.swift in Sources */,
 				7C2B1B042AF4D30D0052EC64 /* InfoTabCoordinator.swift in Sources */,
 				663417CC2AD68413002FE2CA /* Constants.swift in Sources */,
 				7C2B1AEC2AF4BD170052EC64 /* DetailViewModel.swift in Sources */,
