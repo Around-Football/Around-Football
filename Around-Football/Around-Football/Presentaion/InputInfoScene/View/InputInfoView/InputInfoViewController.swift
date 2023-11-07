@@ -49,7 +49,7 @@ final class InputInfoViewController: UIViewController {
         inputInfoView.gkButton.addTarget(self, action: #selector(gkButtonTapped), for: .touchUpInside)
         
         navigationController?.navigationBar.prefersLargeTitles = true
-        navigationItem.hidesBackButton = true
+//        navigationItem.hidesBackButton = true
         navigationItem.title = "추가정보 입력"
     }
     

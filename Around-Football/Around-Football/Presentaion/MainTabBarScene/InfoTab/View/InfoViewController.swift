@@ -7,6 +7,8 @@
 
 import UIKit
 
+import FirebaseAuth
+
 protocol InfoViewControllerDelegate: AnyObject {
     func presentLoginViewController()
     func pushEditView()
@@ -128,11 +130,19 @@ final class InfoViewController: UIViewController {
     private func setButtonDelegate() {
         profileAndEditView.editButtonActionHandler = { [weak self] in
             guard let self else { return }
-            delegate?.pushEditView()
+            if Auth.auth().currentUser == nil {
+                delegate?.presentLoginViewController()
+            } else {
+                delegate?.pushEditView()
+            }
         }
         profileAndEditView.settingButtonActionHandler = { [weak self] in
             guard let self else { return }
-            delegate?.pushSettingView()
+            if Auth.auth().currentUser == nil {
+                delegate?.presentLoginViewController()
+            } else {
+                delegate?.pushSettingView()
+            }
         }
     }
 }
