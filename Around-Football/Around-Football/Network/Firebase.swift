@@ -7,6 +7,7 @@
 
 import Foundation
 
+import FirebaseAuth
 import FirebaseFirestore
 
 /*
@@ -23,23 +24,44 @@ import FirebaseFirestore
 struct FirebaseAPI {
     static let shared = FirebaseAPI()
     
-    func createUser(_ user: User) {
-        let documentID = REF_USER.document().documentID
-        REF_USER.document(documentID)
-            .setData(["id" : documentID,
-                      "userName" : user.userName,
-                      "age" : user.age,
-                      "contact" : user.contact ?? 0,
-                      "detailSex" : user.detailSex,
-                      "area" : user.area,
-                      "mainUsedFeet" : user.mainUsedFeet,
-                      "position" : user.position
-                     ])
+    func createUser(_ result: AuthDataResult) {
+        
+        let uid = result.user.uid
+        
+        REF_USER.document(uid)
+            .setData(["id" : uid])
     }
     
+    func updateUser(_ user: User) {
+        guard let currentUserID = Auth.auth().currentUser?.uid else { return }
+        REF_USER.document(currentUserID)
+            .updateData(
+                ["userName" : user.userName,
+                 "age" : user.age,
+                 // TODO: - 채팅 기능 구현 중이니 연락처 삭제?
+                 "contact" : user.contact ?? 0,
+                 "detailSex" : user.detailSex,
+                 "area" : user.area,
+                 "mainUsedFeet" : user.mainUsedFeet,
+                 "position" : user.position
+                ])
+    }
     
-    func readUser() {
-        
+    func readUser(completion: @escaping (User?) -> Void) {
+        guard let currentUserID = Auth.auth().currentUser?.uid else {
+            completion(nil)
+            return
+        }
+
+        REF_USER.document(currentUserID).getDocument(as: User.self) { result in
+            switch result {
+            case .success(let user):
+                completion(user)
+            case .failure(let error):
+                print("Error decoding user: \(error)")
+                completion(nil)
+            }
+        }
     }
     
     func fetchFields(completion: @escaping(([Field]) -> Void)) {
