@@ -35,6 +35,12 @@ extension LoginViewModel: ASAuthorizationControllerDelegate {
                 }
                 // User is signed in to Firebase with Apple.
                 // ...
+                
+                let uid = authResult?.user.uid
+                
+                REF_USER.document(uid ?? UUID().uuidString)
+                    .setData(["id" : uid ?? UUID().uuidString])
+                
                 // TODO: - Coordinator Refactoring
                 NotificationCenter.default.post(name: NSNotification.Name("TestNotification"),
                                                 object: nil,
