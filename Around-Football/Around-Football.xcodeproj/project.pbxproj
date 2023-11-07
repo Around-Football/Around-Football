@@ -960,7 +960,7 @@
 				CODE_SIGN_ENTITLEMENTS = "Around-Football/Around-Football.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = W6X76DS4Z7;
+				DEVELOPMENT_TEAM = K9NKZR257N;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Around-Football/Info.plist";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "\"현재 위치사용을 허용하시겠습니까?\"";
@@ -994,7 +994,7 @@
 				CODE_SIGN_ENTITLEMENTS = "Around-Football/Around-Football.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = W6X76DS4Z7;
+				DEVELOPMENT_TEAM = K9NKZR257N;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Around-Football/Info.plist";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "\"현재 위치사용을 허용하시겠습니까?\"";
