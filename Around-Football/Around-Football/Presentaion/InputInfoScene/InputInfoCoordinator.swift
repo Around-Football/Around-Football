@@ -18,6 +18,7 @@ final class InputInfoCoordinator: BaseCoordinator, InputInfoViewControllerDelega
     override func start() {
         let controller = InputInfoViewController()
         controller.delegate = self
+        controller.navigationItem.hidesBackButton = true
         navigationController?.pushViewController(controller, animated: true)
     }
     
