@@ -26,6 +26,10 @@ final class InputInfoCoordinator: BaseCoordinator, InputInfoViewControllerDelega
         navigationController?.pushViewController(controller, animated: true)
     }
     
+    deinit {
+        print("DEBUG: InputInfoCoordinator deinit")
+    }
+    
     func dismissView() {
         navigationController?.dismiss(animated: true)
     }

@@ -19,7 +19,7 @@ final class HomeTabCoordinator: BaseCoordinator, HomeViewControllerDelegate {
     var delegate: HomeTabCoordinatorDelegate?
     
     deinit {
-        print("HomeTabCoordinator 해제")
+        print("HomeTabCoordinator deinit")
     }
     
     func presentLoginViewController() {

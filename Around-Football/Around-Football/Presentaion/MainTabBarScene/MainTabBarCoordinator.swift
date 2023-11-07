@@ -20,6 +20,10 @@ final class MainTabBarCoordinator: BaseCoordinator, HomeTabCoordinatorDelegate, 
         showMainTabController()
     }
     
+    deinit {
+        print("DEBUG: MainTabBarCoordinator deinit")
+    }
+    
     private func showMainTabController() {
         navigationController?.isNavigationBarHidden = true
         let homeViewController = makeHomeViewController()
