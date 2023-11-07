@@ -9,6 +9,7 @@ import UIKit
 
 protocol InputInfoViewControllerDelegate: AnyObject {
     func dismissView()
+    func removeThisChildCoordinators()
 }
 
 final class InputInfoViewController: UIViewController {
@@ -49,10 +50,13 @@ final class InputInfoViewController: UIViewController {
         inputInfoView.gkButton.addTarget(self, action: #selector(gkButtonTapped), for: .touchUpInside)
         
         navigationController?.navigationBar.prefersLargeTitles = true
-//        navigationItem.hidesBackButton = true
         navigationItem.title = "추가정보 입력"
     }
     
+    override func viewWillDisappear(_ animated: Bool) {
+        delegate?.removeThisChildCoordinators()
+    }
+
     deinit {
         NotificationCenter.default.removeObserver(self)
     }
