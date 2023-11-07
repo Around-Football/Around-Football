@@ -5,25 +5,29 @@
 //  Created by Deokhun KIM on 11/3/23.
 //
 
-import Foundation
+import UIKit
 
 protocol LoginCoordinatorDelegate {
     func showMainTabController()
 }
 
-final class LoginCoordinator: BaseCoordinator, LoginViewControllerDelegate, InputInfoCoordinatorDelegate {
+final class LoginCoordinator: BaseCoordinator, LoginViewControllerDelegate {
 
     var type: CoordinatorType = .login
     var delegate: LoginCoordinatorDelegate?
+    var loginNavigationViewController: UINavigationController?
     
     override func start() {
-        let loginViewController = LoginViewController()
-        loginViewController.viewModel = LoginViewModel()
-        loginViewController.delegate = self
-        //TODO: - Modal로 로그인뷰 변경 이야기해보기
-//        loginViewController.modalPresentationStyle = .fullScreen
-//        navigationController?.present(loginViewController, animated: true)
-        navigationController?.viewControllers = [loginViewController]
+        let controller = LoginViewController()
+        controller.viewModel = LoginViewModel()
+        controller.delegate = self
+        //기존 로그인뷰 뜸
+        //        navigationController?.viewControllers = [loginViewController]
+        // MARK: - 모달로 변경, 로그인뷰 안에서만 사용하는 네비게이션 컨트롤러인 loginNavigationViewController 추가
+        loginNavigationViewController = UINavigationController(rootViewController: controller)
+        if let loginNavigationViewController {
+            navigationController?.present(loginNavigationViewController, animated: true)
+        }
     }
     
     deinit {
@@ -31,9 +35,7 @@ final class LoginCoordinator: BaseCoordinator, LoginViewControllerDelegate, Inpu
     }
     
     func pushToInputInfoView() {
-        //TODO: - 뷰랑 뷰컨 합치는 거 이야기해보기
-        let inputInfoCoordinator = InputInfoCoordinator(navigationController: navigationController)
-        inputInfoCoordinator.delegate = self
+        let inputInfoCoordinator = InputInfoCoordinator(navigationController: loginNavigationViewController)
         inputInfoCoordinator.start()
         childCoordinators.append(inputInfoCoordinator)
     }
