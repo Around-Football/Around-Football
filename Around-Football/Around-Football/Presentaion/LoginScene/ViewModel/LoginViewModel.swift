@@ -62,7 +62,12 @@ class LoginViewModel: NSObject {
                     return
                 }
                 print("로그인 성공: \(String(describing: result?.user))")
- 
+            
+                let uid = result?.user.uid
+                
+                REF_USER.document(uid ?? UUID().uuidString)
+                    .setData(["id" : uid ?? UUID().uuidString])
+                
                 // TODO: - Coordinator Refactoring
                 NotificationCenter.default.post(name: NSNotification.Name("TestNotification"),
                                                 object: nil,
@@ -227,6 +232,11 @@ extension LoginViewModel {
                 print(error?.localizedDescription as Any)
                 return
             }
+            
+            let uid = result?.user.uid
+            
+            REF_USER.document(uid ?? UUID().uuidString)
+                .setData(["id" : uid ?? UUID().uuidString])
         }
     }
     
