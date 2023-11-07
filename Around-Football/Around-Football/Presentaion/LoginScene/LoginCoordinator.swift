@@ -38,7 +38,7 @@ final class LoginCoordinator: BaseCoordinator, LoginViewControllerDelegate, Inpu
     }
     
     //LoginViewControllerDelegate
-    func pushToInputInfoViewController() {
+    func pushInputInfoViewController() {
         let inputInfoCoordinator = InputInfoCoordinator(navigationController: loginNavigationViewController)
         inputInfoCoordinator.start()
         inputInfoCoordinator.delegate = self

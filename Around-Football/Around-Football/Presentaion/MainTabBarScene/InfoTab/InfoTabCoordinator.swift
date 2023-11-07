@@ -8,7 +8,7 @@
 import UIKit
 
 protocol InfoTabCoordinatorDelegate {
-    func showLoginViewController()
+    func presentLoginViewController()
 }
 
 final class InfoTabCoordinator: BaseCoordinator, InfoViewControllerDelegate {
@@ -16,16 +16,16 @@ final class InfoTabCoordinator: BaseCoordinator, InfoViewControllerDelegate {
     var type: CoordinatorType = .info
     var delegate: InfoTabCoordinatorDelegate?
     
-    func showLoginViewController() {
-        delegate?.showLoginViewController()
+    func presentLoginViewController() {
+        delegate?.presentLoginViewController()
     }
     
-    func pushToEditView() {
+    func pushEditView() {
         let controller = EditViewController()
         navigationController?.pushViewController(controller, animated: true)
     }
     
-    func pushToSettingView() {
+    func pushSettingView() {
         let controller = SettingViewController()
         navigationController?.pushViewController(controller, animated: true)
     }
