@@ -11,5 +11,7 @@ final class ChatTabCoordinator: BaseCoordinator {
     
     var type: CoordinatorType = .chat
     
-    
+    deinit {
+        print("DEBUG: ChatTabCoordinator deinit")
+    }
 }

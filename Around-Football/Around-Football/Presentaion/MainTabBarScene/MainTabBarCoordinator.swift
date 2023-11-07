@@ -8,7 +8,7 @@
 import UIKit
 
 protocol MainTabBarCoordinatorDelegate {
-    func showLoginViewController()
+    func presentLoginViewController()
 }
 
 final class MainTabBarCoordinator: BaseCoordinator, HomeTabCoordinatorDelegate, InfoTabCoordinatorDelegate {
@@ -18,6 +18,10 @@ final class MainTabBarCoordinator: BaseCoordinator, HomeTabCoordinatorDelegate, 
     
     override func start() {
         showMainTabController()
+    }
+    
+    deinit {
+        print("DEBUG: MainTabBarCoordinator deinit")
     }
     
     private func showMainTabController() {
@@ -97,6 +101,7 @@ final class MainTabBarCoordinator: BaseCoordinator, HomeTabCoordinatorDelegate, 
         
         let infoTabCoordinator = InfoTabCoordinator(navigationController: infoNavigationController)
         infoTabCoordinator.delegate = self
+        infoViewController.loginViewModel = LoginViewModel()
         infoViewController.delegate = infoTabCoordinator
         childCoordinators.append(infoTabCoordinator)
         infoTabCoordinator.start()
@@ -117,19 +122,17 @@ final class MainTabBarCoordinator: BaseCoordinator, HomeTabCoordinatorDelegate, 
     }
     
     //HomeTabCoordinatorDelegate
-    func showLoginViewController() {
-        delegate?.showLoginViewController()
+    func presentLoginViewController() {
+        delegate?.presentLoginViewController()
     }
     
     // MARK: - HomeTab FloatingButtonTabbed
     
-    func presentToInviteView() {
-        print("MainTabBarCoordinator - pushToInviteView")
-        let controller = UINavigationController(rootViewController:         InviteViewController())
+    func presentInviteView() {
+        let controller = UINavigationController(rootViewController: InviteViewController())
         controller.isNavigationBarHidden = false
         navigationController?.present(controller, animated: true)
     }
-    
     
     // MARK: - Helpers
     

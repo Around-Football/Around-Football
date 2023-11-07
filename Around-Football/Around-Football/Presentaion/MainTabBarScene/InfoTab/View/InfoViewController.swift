@@ -7,19 +7,21 @@
 
 import UIKit
 
+import FirebaseAuth
+
 protocol InfoViewControllerDelegate: AnyObject {
-    func showLoginViewController()
-    func pushToEditView()
-    func pushToSettingView()
+    func presentLoginViewController()
+    func pushEditView()
+    func pushSettingView()
 }
 
-class InfoViewController: UIViewController {
+final class InfoViewController: UIViewController {
     
     // MARK: - Properties
     
     weak var delegate: InfoViewControllerDelegate?
     
-    private let loginViewModel = LoginViewModel()
+    var loginViewModel: LoginViewModel?
     private let profileAndEditView = ProfileAndEditView()
     
     private let iconAndImage: [(icon: String, title: String)] = [
@@ -72,8 +74,9 @@ class InfoViewController: UIViewController {
     
     @objc 
     func logoutButtonTapped() {
-        loginViewModel.logout()
-        delegate?.showLoginViewController()
+        loginViewModel?.logout()
+        delegate?.presentLoginViewController() //로그인 모달뷰 나옴
+        tabBarController?.selectedIndex = 0 //로그아웃하면 메인탭으로 이동
     }
     
     // MARK: - Helpers
@@ -127,11 +130,19 @@ class InfoViewController: UIViewController {
     private func setButtonDelegate() {
         profileAndEditView.editButtonActionHandler = { [weak self] in
             guard let self else { return }
-            delegate?.pushToEditView()
+            if Auth.auth().currentUser == nil {
+                delegate?.presentLoginViewController()
+            } else {
+                delegate?.pushEditView()
+            }
         }
         profileAndEditView.settingButtonActionHandler = { [weak self] in
             guard let self else { return }
-            delegate?.pushToSettingView()
+            if Auth.auth().currentUser == nil {
+                delegate?.presentLoginViewController()
+            } else {
+                delegate?.pushSettingView()
+            }
         }
     }
 }
@@ -160,16 +171,3 @@ extension InfoViewController: UICollectionViewDelegateFlowLayout, UICollectionVi
         return cell
     }
 }
-
-//이전 delegate방식
-//extension InfoViewController: InfoDelegate {
-//    func moveToDatailVC() {
-//        let controller = DetailViewController()
-//        navigationController?.pushViewController(controller, animated: true)
-//    }
-//    
-//    func moveToInviteVC() {
-//        let controller = InviteViewController()
-//        navigationController?.pushViewController(controller, animated: true)
-//    }
-//}
