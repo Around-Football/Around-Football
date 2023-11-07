@@ -8,7 +8,7 @@
 import UIKit
 
 protocol InputInfoViewControllerDelegate: AnyObject {
-    func dismissModalView()
+    func dismissView()
 }
 
 final class InputInfoViewController: UIViewController {
@@ -62,7 +62,7 @@ final class InputInfoViewController: UIViewController {
     @objc 
     func nextButtonTapped(_ sender: UIButton) {
         print("DEBUG: InputInfoViewController - nextButtonTapped")
-        delegate?.dismissModalView()
+        delegate?.dismissView()
     }
     
     @objc 

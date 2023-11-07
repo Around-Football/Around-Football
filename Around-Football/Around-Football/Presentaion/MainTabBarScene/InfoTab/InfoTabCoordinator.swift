@@ -29,6 +29,4 @@ final class InfoTabCoordinator: BaseCoordinator, InfoViewControllerDelegate {
         let controller = SettingViewController()
         navigationController?.pushViewController(controller, animated: true)
     }
-    
-    
 }

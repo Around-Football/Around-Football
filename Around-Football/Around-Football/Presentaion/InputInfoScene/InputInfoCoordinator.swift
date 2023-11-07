@@ -18,7 +18,7 @@ final class InputInfoCoordinator: BaseCoordinator, InputInfoViewControllerDelega
         
     }
     
-    func dismissModalView() {
+    func dismissView() {
         navigationController?.dismiss(animated: true)
         removeFromChildCoordinators(coordinator: self)
     }
