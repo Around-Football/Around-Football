@@ -49,7 +49,7 @@ class BaseCoordinator: Coordinator {
     }
 }
 
-final class AppCoordinator: BaseCoordinator, LoginCoordinatorDelegate, MainTabBarCoordinatorDelegate, InputInfoCoordinatorDelegate {
+final class AppCoordinator: BaseCoordinator, LoginCoordinatorDelegate, MainTabBarCoordinatorDelegate {
     
     var type: CoordinatorType = .app
     

@@ -13,7 +13,7 @@ protocol InfoViewControllerDelegate: AnyObject {
     func pushToSettingView()
 }
 
-class InfoViewController: UIViewController {
+final class InfoViewController: UIViewController {
     
     // MARK: - Properties
     
