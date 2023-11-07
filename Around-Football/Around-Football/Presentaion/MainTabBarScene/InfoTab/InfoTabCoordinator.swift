@@ -16,13 +16,18 @@ final class InfoTabCoordinator: BaseCoordinator, InfoViewControllerDelegate {
     var type: CoordinatorType = .info
     var delegate: InfoTabCoordinatorDelegate?
     
+    deinit {
+        print("DEBUG: InfoTabCoordinator deinit")
+    }
+    
     func presentLoginViewController() {
         delegate?.presentLoginViewController()
     }
     
     func pushEditView() {
+        //뷰 재사용, InputInfoCoordinator 사용
         let coordinator = InputInfoCoordinator(navigationController: navigationController)
-        coordinator.start(hidesBackButton: false)
+        coordinator.start()
         childCoordinators.append(coordinator)
     }
     

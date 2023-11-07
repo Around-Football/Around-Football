@@ -49,5 +49,4 @@ final class LoginCoordinator: BaseCoordinator, LoginViewControllerDelegate, Inpu
     func loginDone() {
         removeThisChildCoordinators(coordinator: self)
     }
-    
 }
