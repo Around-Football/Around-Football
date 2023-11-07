@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct User {
+struct User: Codable {
     var id: String
     var userName: String
     var age: Int
@@ -40,4 +40,3 @@ struct User {
         self.position = dictionary["position"] as? String ?? ""
     }
 }
-
