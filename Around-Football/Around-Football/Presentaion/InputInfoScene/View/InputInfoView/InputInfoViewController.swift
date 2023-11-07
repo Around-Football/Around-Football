@@ -76,8 +76,7 @@ final class InputInfoViewController: UIViewController {
         age = Int(inputInfoView.userAgeTextField.text ?? "") ?? 0
         delegate?.showMainTabController()
 //        dismiss(animated: true)
-        FirebaseAPI.shared.createUser(User(dictionary: ["id" : UUID().uuidString,
-                                                        "userName" : userName,
+        FirebaseAPI.shared.updateUser(User(dictionary: ["userName" : userName,
                                                         "age" : age,
                                                         "contact" : contact,
                                                         "detailSex" : detailSex,
