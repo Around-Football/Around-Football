@@ -8,7 +8,7 @@
 import Foundation
 
 protocol InputInfoCoordinatorDelegate {
-    func showMainTabController()
+    func loginDone()
 }
 
 final class InputInfoCoordinator: BaseCoordinator, InputInfoViewControllerDelegate {
@@ -16,14 +16,25 @@ final class InputInfoCoordinator: BaseCoordinator, InputInfoViewControllerDelega
     var delegate: InputInfoCoordinatorDelegate?
     
     override func start() {
-        print("DEBUG: inputInfoViewController 생성")
-        let inputInfoViewController = InputInfoViewController()
-        inputInfoViewController.delegate = self
-        navigationController?.pushViewController(inputInfoViewController, animated: true)
+        start(hidesBackButton: false)
     }
     
-    func showMainTabController() {
-        delegate?.showMainTabController()
-        removeFromChildCoordinators(coordinator: self)
+    func start(hidesBackButton: Bool) {
+        let controller = InputInfoViewController()
+        controller.delegate = self
+        controller.navigationItem.hidesBackButton = hidesBackButton
+        navigationController?.pushViewController(controller, animated: true)
+    }
+    
+    deinit {
+        print("DEBUG: InputInfoCoordinator deinit")
+    }
+    
+    func dismissView() {
+        navigationController?.dismiss(animated: true)
+    }
+    
+    func removeThisChildCoordinators() {
+        removeThisChildCoordinators(coordinator: self)
     }
 }

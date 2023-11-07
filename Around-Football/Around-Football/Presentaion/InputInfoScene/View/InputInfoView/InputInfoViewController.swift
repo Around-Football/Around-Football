@@ -8,7 +8,8 @@
 import UIKit
 
 protocol InputInfoViewControllerDelegate: AnyObject {
-    func showMainTabController()
+    func dismissView()
+    func removeThisChildCoordinators()
 }
 
 final class InputInfoViewController: UIViewController {
@@ -58,10 +59,13 @@ final class InputInfoViewController: UIViewController {
         inputInfoView.gkButton.addTarget(self, action: #selector(gkButtonTapped), for: .touchUpInside)
         
         navigationController?.navigationBar.prefersLargeTitles = true
-        navigationItem.hidesBackButton = true
         navigationItem.title = "추가정보 입력"
     }
     
+    override func viewWillDisappear(_ animated: Bool) {
+        delegate?.removeThisChildCoordinators()
+    }
+
     deinit {
         NotificationCenter.default.removeObserver(self)
     }
@@ -71,11 +75,13 @@ final class InputInfoViewController: UIViewController {
     @objc 
     func nextButtonTapped(_ sender: UIButton) {
         print("DEBUG: InputInfoViewController - nextButtonTapped")
+
+        delegate?.dismissView()
+
         area = inputInfoView.userAreaTextField.text ?? ""
         userName = inputInfoView.userNameTextField.text ?? ""
         age = Int(inputInfoView.userAgeTextField.text ?? "") ?? 0
-        delegate?.showMainTabController()
-//        dismiss(animated: true)
+      
         FirebaseAPI.shared.updateUser(User(dictionary: ["userName" : userName,
                                                         "age" : age,
                                                         "contact" : contact,

@@ -8,7 +8,7 @@
 import UIKit
 
 protocol InfoTabCoordinatorDelegate {
-    func showLoginViewController()
+    func presentLoginViewController()
 }
 
 final class InfoTabCoordinator: BaseCoordinator, InfoViewControllerDelegate {
@@ -16,19 +16,23 @@ final class InfoTabCoordinator: BaseCoordinator, InfoViewControllerDelegate {
     var type: CoordinatorType = .info
     var delegate: InfoTabCoordinatorDelegate?
     
-    func showLoginViewController() {
-        delegate?.showLoginViewController()
+    deinit {
+        print("DEBUG: InfoTabCoordinator deinit")
     }
     
-    func pushToEditView() {
-        let controller = EditViewController()
-        navigationController?.pushViewController(controller, animated: true)
+    func presentLoginViewController() {
+        delegate?.presentLoginViewController()
     }
     
-    func pushToSettingView() {
+    func pushEditView() {
+        //뷰 재사용, InputInfoCoordinator 사용
+        let coordinator = InputInfoCoordinator(navigationController: navigationController)
+        coordinator.start()
+        childCoordinators.append(coordinator)
+    }
+    
+    func pushSettingView() {
         let controller = SettingViewController()
         navigationController?.pushViewController(controller, animated: true)
     }
-    
-    
 }
