@@ -7,19 +7,22 @@
 
 import Foundation
 
+protocol InputInfoCoordinatorDelegate {
+    func loginDone()
+}
+
 final class InputInfoCoordinator: BaseCoordinator, InputInfoViewControllerDelegate {
     var type: CoordinatorType = .login
+    var delegate: InputInfoCoordinatorDelegate?
     
     override func start() {
-        print("DEBUG: inputInfoViewController 생성")
         let controller = InputInfoViewController()
         controller.delegate = self
         navigationController?.pushViewController(controller, animated: true)
-        
     }
     
     func dismissView() {
         navigationController?.dismiss(animated: true)
-        removeFromChildCoordinators(coordinator: self)
+        removeThisChildCoordinators(coordinator: self)
     }
 }

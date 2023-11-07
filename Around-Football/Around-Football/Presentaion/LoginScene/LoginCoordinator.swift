@@ -11,7 +11,7 @@ protocol LoginCoordinatorDelegate {
     func showMainTabController()
 }
 
-final class LoginCoordinator: BaseCoordinator, LoginViewControllerDelegate {
+final class LoginCoordinator: BaseCoordinator, LoginViewControllerDelegate, InputInfoCoordinatorDelegate {
 
     var type: CoordinatorType = .login
     var delegate: LoginCoordinatorDelegate?
@@ -34,13 +34,20 @@ final class LoginCoordinator: BaseCoordinator, LoginViewControllerDelegate {
     //LoginCoordinatorDelegate
     func showMainTabController() {
         delegate?.showMainTabController()
-        removeFromChildCoordinators(coordinator: self)
+        removeThisChildCoordinators(coordinator: self)
     }
     
     //LoginViewControllerDelegate
     func pushToInputInfoViewController() {
         let inputInfoCoordinator = InputInfoCoordinator(navigationController: loginNavigationViewController)
         inputInfoCoordinator.start()
+        inputInfoCoordinator.delegate = self
         childCoordinators.append(inputInfoCoordinator)
     }
+    
+    //InputInfoCoordinatorDelegate
+    func loginDone() {
+        removeThisChildCoordinators(coordinator: self)
+    }
+    
 }
