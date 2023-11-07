@@ -5,7 +5,7 @@
 //  Created by Deokhun KIM on 11/3/23.
 //
 
-import Foundation
+import UIKit
 
 protocol LoginCoordinatorDelegate {
     func showMainTabController()
@@ -15,38 +15,38 @@ final class LoginCoordinator: BaseCoordinator, LoginViewControllerDelegate, Inpu
 
     var type: CoordinatorType = .login
     var delegate: LoginCoordinatorDelegate?
+    var loginNavigationViewController: UINavigationController? //로그인 뷰 내에서만 사용하는 네비게이션 뷰컨
     
     override func start() {
-        let loginViewController = LoginViewController()
-        loginViewController.viewModel = LoginViewModel()
-        loginViewController.delegate = self
-        //TODO: - Modal로 로그인뷰 변경 이야기해보기
-//        loginViewController.modalPresentationStyle = .fullScreen
-//        navigationController?.present(loginViewController, animated: true)
-        navigationController?.viewControllers = [loginViewController]
+        let controller = LoginViewController()
+        controller.viewModel = LoginViewModel()
+        controller.delegate = self
+        loginNavigationViewController = UINavigationController(rootViewController: controller)
+        if let loginNavigationViewController {
+            navigationController?.present(loginNavigationViewController, animated: true)
+        }
     }
     
     deinit {
         print("DEBUG: LoginCoordinator deinit")
     }
     
-    func pushToInputInfoView() {
-        //TODO: - 뷰랑 뷰컨 합치는 거 이야기해보기
-        let inputInfoCoordinator = InputInfoCoordinator(navigationController: navigationController)
-        inputInfoCoordinator.delegate = self
-        inputInfoCoordinator.start()
-        childCoordinators.append(inputInfoCoordinator)
+    //LoginCoordinatorDelegate
+    func showMainTabController() {
+        delegate?.showMainTabController()
+        removeThisChildCoordinators(coordinator: self)
     }
     
     //LoginViewControllerDelegate
-    func pushToInputInfoViewController() {
-        print("pushToInputInfoViewController 실행")
-        pushToInputInfoView()
+    func pushInputInfoViewController() {
+        let inputInfoCoordinator = InputInfoCoordinator(navigationController: loginNavigationViewController)
+        inputInfoCoordinator.start(hidesBackButton: true)
+        inputInfoCoordinator.delegate = self
+        childCoordinators.append(inputInfoCoordinator)
     }
     
-    func showMainTabController() {
-        delegate?.showMainTabController()
-        removeFromChildCoordinators(coordinator: self)
+    //InputInfoCoordinatorDelegate
+    func loginDone() {
+        removeThisChildCoordinators(coordinator: self)
     }
-    
 }

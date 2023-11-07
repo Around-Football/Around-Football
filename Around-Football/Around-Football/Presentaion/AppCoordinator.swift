@@ -7,6 +7,14 @@
 
 import UIKit
 
+/* Coordinator 함수 이름
+ 1. 화면 그냥 띄워줄때 show이름ViewController
+ 2. 화면 네비게이션으로 이동할때 push이름ViewController
+ 3. 화면 네비게이션으로 돌아갈때 pop이름ViewController
+ 4. 모달로 띄울때 present이름ViewController
+ 5. 모달로 내릴때 dismissView
+ */
+
 enum CoordinatorType {
     case app
     case login
@@ -43,19 +51,19 @@ class BaseCoordinator: Coordinator {
 
     func start() {}
     
-    func removeFromChildCoordinators(coordinator: Coordinator) {
+    func removeThisChildCoordinators(coordinator: Coordinator) {
         let updatedChildCoordinators = childCoordinators.filter { $0 !== coordinator }
         childCoordinators = updatedChildCoordinators
     }
 }
 
-final class AppCoordinator: BaseCoordinator, LoginCoordinatorDelegate, MainTabBarCoordinatorDelegate, InputInfoCoordinatorDelegate {
+final class AppCoordinator: BaseCoordinator, LoginCoordinatorDelegate, MainTabBarCoordinatorDelegate {
     
     var type: CoordinatorType = .app
     
     override func start() {
         showMainTabController()
-//        showLoginViewController() //Test
+//        presentLoginViewController() //Test
     }
     
     func showMainTabController() {
@@ -65,10 +73,10 @@ final class AppCoordinator: BaseCoordinator, LoginCoordinatorDelegate, MainTabBa
         childCoordinators.append(coordinator)
     }
     
-    func showLoginViewController() {
+    func presentLoginViewController() {
         let coordinator = LoginCoordinator(navigationController: navigationController)
         coordinator.delegate = self
-        coordinator.start()
+        coordinator.start() //여기서 모달뷰로 만듬
         childCoordinators.append(coordinator)
     }
 }

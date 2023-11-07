@@ -8,8 +8,8 @@
 import UIKit
 
 protocol HomeTabCoordinatorDelegate {
-    func showLoginViewController()
-    func presentToInviteView()
+    func presentLoginViewController()
+    func presentInviteView()
 }
 
 final class HomeTabCoordinator: BaseCoordinator, HomeViewControllerDelegate {
@@ -19,16 +19,15 @@ final class HomeTabCoordinator: BaseCoordinator, HomeViewControllerDelegate {
     var delegate: HomeTabCoordinatorDelegate?
     
     deinit {
-        print("HomeTabCoordinator 해제")
+        print("HomeTabCoordinator deinit")
     }
     
-    func showLoginViewController() {
-        //
+    func presentLoginViewController() {
+        delegate?.presentLoginViewController()
     }
     
-    func presentToInviteView() {
-        print("DEBUG: pushToInviteView")
-        delegate?.presentToInviteView()
+    func presentInviteView() {
+        delegate?.presentInviteView()
     }
     
     
