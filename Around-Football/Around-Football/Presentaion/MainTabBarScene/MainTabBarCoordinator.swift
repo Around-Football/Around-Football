@@ -101,6 +101,7 @@ final class MainTabBarCoordinator: BaseCoordinator, HomeTabCoordinatorDelegate, 
         
         let infoTabCoordinator = InfoTabCoordinator(navigationController: infoNavigationController)
         infoTabCoordinator.delegate = self
+        infoViewController.loginViewModel = LoginViewModel()
         infoViewController.delegate = infoTabCoordinator
         childCoordinators.append(infoTabCoordinator)
         infoTabCoordinator.start()

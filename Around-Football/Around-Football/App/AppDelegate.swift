@@ -20,8 +20,7 @@ import KakaoSDKUser
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
-
+        
         //Firebase 구성
         FirebaseApp.configure()
         //kakao 초기화
@@ -34,6 +33,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         appearance.backgroundColor = .white
         tabBar.standardAppearance = appearance
         UITabBar.appearance().scrollEdgeAppearance = appearance
+        //네비게이션 탭바 색상 검정색으로
+        UINavigationBar.appearance().tintColor = .label
+
         
         return true
     }
