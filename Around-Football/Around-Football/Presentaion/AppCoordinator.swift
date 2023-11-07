@@ -43,7 +43,7 @@ class BaseCoordinator: Coordinator {
 
     func start() {}
     
-    func removeFromChildCoordinators(coordinator: Coordinator) {
+    func removeThisChildCoordinators(coordinator: Coordinator) {
         let updatedChildCoordinators = childCoordinators.filter { $0 !== coordinator }
         childCoordinators = updatedChildCoordinators
     }
