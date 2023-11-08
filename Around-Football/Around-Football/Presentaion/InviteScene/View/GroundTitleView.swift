@@ -19,10 +19,12 @@ final class GroundTitleView: UIView {
         $0.font = .systemFont(ofSize: 15, weight: .bold)
     }
     
-    private let groundNameLabel = UILabel().then {
-        $0.text = "종합운동장"
-        $0.font = .systemFont(ofSize: 15, weight: .regular)
-        $0.numberOfLines = 0
+    private lazy var groundNameLabel = UIButton().then {
+        $0.setTitleColor(.black, for: .normal)
+        $0.setTitle("장소를 검색해주세요.", for: .normal)
+        $0.addTarget(self, action: #selector(searchFieldButtonTapped), for: .touchUpInside)
+        // $0.font = .systemFont(ofSize: 15, weight: .regular)
+        // $0.numberOfLines = 0
     }
     
     // MARK: - Lifecycles
@@ -50,5 +52,12 @@ final class GroundTitleView: UIView {
             make.leading.equalToSuperview()
             make.bottom.equalToSuperview().offset(10)
         }
+    }
+    
+    // MARK: - Selectors
+    
+    @objc
+    func searchFieldButtonTapped() {
+        
     }
 }
