@@ -10,10 +10,16 @@ import UIKit
 import SnapKit
 import Then
 
+protocol InviteViewControllerDelegate: HomeViewControllerDelegate {
+    func pushMapView()
+}
+
 final class InviteViewController: UIViewController {
     
     // MARK: - Properties
-
+    
+    weak var delegate : InviteViewControllerDelegate?
+    
     private let placeView = GroundTitleView()
     private let peopleView = PeopleCountView()
     
@@ -66,6 +72,8 @@ final class InviteViewController: UIViewController {
             guard let self else { return }
             dismiss(animated: true)
         }
+        
+        placeView.searchFieldButton.addTarget(self, action: #selector(searchFieldButtonTapped), for: .touchUpInside)
     }
     
     private func keyboardController() {
@@ -158,5 +166,13 @@ final class InviteViewController: UIViewController {
             make.trailing.bottom.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
             make.height.equalTo(40)
         }
+    }
+    
+    // MARK: - Selectors
+    
+    @objc
+    func searchFieldButtonTapped() {
+        delegate?.pushMapView()
+        print("버튼 tap")
     }
 }
