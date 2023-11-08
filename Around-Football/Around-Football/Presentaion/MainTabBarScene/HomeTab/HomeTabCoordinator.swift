@@ -30,5 +30,9 @@ final class HomeTabCoordinator: BaseCoordinator, HomeViewControllerDelegate {
         delegate?.presentInviteView()
     }
     
+    func pushMapView() {
+        let controller = MapViewController()
+        navigationController?.pushViewController(controller, animated: true)
+    }
     
 }
