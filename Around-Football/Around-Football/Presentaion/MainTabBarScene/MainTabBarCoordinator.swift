@@ -131,6 +131,7 @@ final class MainTabBarCoordinator: BaseCoordinator, HomeTabCoordinatorDelegate, 
     func presentInviteView() {
         let controller = UINavigationController(rootViewController: InviteViewController())
         controller.isNavigationBarHidden = false
+        controller.modalPresentationStyle = .fullScreen
         navigationController?.present(controller, animated: true)
     }
     
