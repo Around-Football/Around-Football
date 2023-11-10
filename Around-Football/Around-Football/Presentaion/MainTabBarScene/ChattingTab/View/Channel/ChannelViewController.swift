@@ -33,6 +33,8 @@ final class ChannelViewController: UIViewController {
         self.viewModel = viewModel
         
         super.init(nibName: nil, bundle: nil)
+        title = "채팅"
+        // TODO: - 채널 리스너
     }
     
     required init?(coder: NSCoder) {
@@ -48,7 +50,14 @@ final class ChannelViewController: UIViewController {
     // MARK: - Helpers
     
     func configureUI() {
-        
+        view.addSubview(channelTableView)
+        channelTableView.snp.makeConstraints {
+            $0.top.bottom.equalTo(view.safeAreaLayoutGuide)
+            $0.leading.trailing.equalToSuperview()
+        }
     }
+    
+    // TODO: - UpdateCell Logic
+    
     
 }
