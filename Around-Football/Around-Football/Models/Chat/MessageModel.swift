@@ -11,7 +11,7 @@ import MessageKit
 import Firebase
 
 struct Message: MessageType {
-    let id: String
+    let messageId: String
     let sender: SenderType
     let content: String
     var image: UIImage?
@@ -27,7 +27,7 @@ struct Message: MessageType {
     }
     var representation: [String : Any] {
         var representation: [String: Any] = [
-            "id": id,
+            "messageId": messageId,
             "created": sentDate,
             "senderId": sender.senderId,
             "senderName": sender.displayName
@@ -48,25 +48,25 @@ struct Message: MessageType {
         sender = Sender(senderId: user.id, displayName: user.userName)
         self.content = content
         sentDate = Date()
-        id = UUID().uuidString
+        messageId = UUID().uuidString
     }
     
     // create image message
     init(user: User, image: UIImage) {
-        sender = Sender(senderId: user.uid, displayName: user.userName)
+        sender = Sender(senderId: user.id, displayName: user.userName)
         self.image = image
         sentDate = Date()
         content = ""
-        id = UUID().uuidString
+        messageId = UUID().uuidString
     }
     
     init?(dictionary: [String: Any]) {
-        guard let id = dictionary["id"] as? String,
+        guard let messageId = dictionary["messageId"] as? String,
               let sentDate = dictionary["created"] as? Timestamp,
               let senderId = dictionary["senderId"] as? String,
               let senderName = dictionary["senderName"] as? String else { return nil }
         
-        self.id = id
+        self.messageId = messageId
         self.sentDate = sentDate.dateValue()
         sender = Sender(senderId: senderId, displayName: senderName)
         
@@ -84,7 +84,7 @@ struct Message: MessageType {
 
 extension Message: Comparable {
     static func == (lhs: Message, rhs: Message) -> Bool {
-        return lhs.id == rhs.id
+        return lhs.messageId == rhs.messageId
     }
     
     static func < (lhs: Message, rhs: Message) -> Bool {
