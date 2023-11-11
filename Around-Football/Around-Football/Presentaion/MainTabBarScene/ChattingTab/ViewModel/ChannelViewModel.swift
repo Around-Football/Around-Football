@@ -14,7 +14,8 @@ final class ChannelViewModel {
     
     // MARK: - Properties
     
-    
+    var channels: [ChannelInfo] = []
+    var currentUser: User?
     
     
     // MARK: - API

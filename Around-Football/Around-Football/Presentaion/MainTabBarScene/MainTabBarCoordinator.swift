@@ -78,7 +78,7 @@ final class MainTabBarCoordinator: BaseCoordinator,
     }
     
     private func makeChannelViewController() -> UINavigationController {
-        let channelViewController = ChannelViewController()
+        let channelViewController = ChannelViewController(viewModel: ChannelViewModel())
         let channelNavigationController: UINavigationController = makeNavigationController(
             rootViewController: channelViewController,
             title: "Chat",
