@@ -50,7 +50,6 @@ final class HomeTabCoordinator: BaseCoordinator {
     
     func presentInviteView() {
         let controller = UINavigationController(rootViewController: InviteViewController())
-        controller.isNavigationBarHidden = false
         navigationController?.present(controller, animated: true)
     }
     
