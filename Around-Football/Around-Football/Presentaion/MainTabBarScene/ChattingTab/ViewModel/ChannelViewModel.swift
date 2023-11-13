@@ -16,6 +16,13 @@ final class ChannelViewModel {
     
     var channels: [ChannelInfo] = []
     var currentUser: User?
+    weak var coordinator: ChatTabCoordinator?
+    
+    // MARK: - Lifecycles
+    
+//    init(coordinator: ChatTabCoordinator) {
+//        self.coordinator = coordinator
+//    }
     
     // MARK: - API
     
@@ -53,8 +60,9 @@ final class ChannelViewModel {
             case .added:
                 addChannelToTable(channel)
             case .modified:
-                
+                updateChannelInTable(channel)
             case .removed:
+                removeChannelFromTable(channel)
             }
         }
     }

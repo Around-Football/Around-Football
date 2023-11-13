@@ -19,7 +19,7 @@ final class ChannelViewController: UIViewController {
 
     // MARK: - Properties
     
-    weak var delegate: ChannelViewControllerDelegate?
+//    weak var delegate: ChannelViewControllerDelegate?
     let viewModel: ChannelViewModel
     
     lazy var channelTableView = UITableView().then {
@@ -29,7 +29,7 @@ final class ChannelViewController: UIViewController {
     // MARK: - Lifecycles
     
     init(delegate: ChannelViewControllerDelegate? = nil, viewModel: ChannelViewModel) {
-        self.delegate = delegate
+//        self.delegate = delegate
         self.viewModel = viewModel
         
         super.init(nibName: nil, bundle: nil)

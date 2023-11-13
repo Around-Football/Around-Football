@@ -19,7 +19,7 @@ final class ChatTabCoordinator: BaseCoordinator, ChannelViewControllerDelegate {
     deinit {
         print("DEBUG: ChatTabCoordinator deinit")
     }
-    
+      
     func presentLoginViewController() {
         delegate?.presentLoginViewController()
     }
@@ -27,5 +27,9 @@ final class ChatTabCoordinator: BaseCoordinator, ChannelViewControllerDelegate {
     func pushChatView() {
         let controller = ChatViewController()
         navigationController?.pushViewController(controller, animated: true)
+    }
+    
+    func popCurrnetPage() {
+        navigationController?.popViewController(animated: true)
     }
 }

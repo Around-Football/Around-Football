@@ -87,8 +87,11 @@ final class MainTabBarCoordinator: BaseCoordinator,
         )
         
         let chatTabCoordinator = ChatTabCoordinator(navigationController: channelNavigationController)
-        childCoordinators.append(chatTabCoordinator)
+        channelViewController.viewModel.coordinator = chatTabCoordinator
+        chatTabCoordinator.delegate = self
         chatTabCoordinator.start()
+        childCoordinators.append(chatTabCoordinator)
+        
         
         return channelNavigationController
     }
