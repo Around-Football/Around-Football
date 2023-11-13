@@ -32,4 +32,17 @@ final class ChatTabCoordinator: BaseCoordinator {
 
         return navigationController
     }
+      
+    func presentLoginViewController() {
+        delegate?.presentLoginViewController()
+    }
+    
+    func pushChatView() {
+        let controller = ChatViewController()
+        navigationController?.pushViewController(controller, animated: true)
+    }
+    
+    func popCurrnetPage() {
+        navigationController?.popViewController(animated: true)
+    }
 }

@@ -9,6 +9,7 @@ import Foundation
 
 import FirebaseAuth
 import FirebaseFirestore
+import RxSwift
 
 /*
  var id: String
@@ -118,6 +119,53 @@ struct FirebaseAPI {
                 
             }
     }
+    
+    // MARK: - AuthService
+    func updateFCMTokenAndFetchUser(uid: String, fcmToken: String) -> Single<User?> {
+        return Single.create { single in
+            self.updateFCMToken(uid: uid, fcmToken: fcmToken) { error in
+                if let error = error {
+                    single(.failure(error))
+                    return
+                }
+                self.fetchUser(uid: uid) { user in
+                    single(.success(user))
+                }
+            }
+            return Disposables.create()
+        }
+        
+        
+    }
+    
+    func updateFCMToken(uid: String, fcmToken: String, completion: @escaping (Error?) -> Void) {
+        let ref = REF_USER.document(uid)
+        let data = ["fcmToken": fcmToken]
+        updateRefData(ref: ref, data: data, completion: completion)
+    }
+    
+    // TODO: - 창현이와 readUser 함수 맞추기
+    func fetchUser(uid: String, completion: @escaping (User) -> Void) {
+        REF_USER.document(uid).getDocument { snapshot, error in
+            guard let dictionary = snapshot?.data() else { return }
+
+            let user = User(dictionary: dictionary)
+            completion(user)
+        }
+    }
+    
+    // TODO: - ChannelAPI와 통합하기
+    func updateRefData(ref: DocumentReference, data: [String: Any], completion: @escaping ((Error?) -> Void)) {
+        ref.updateData(data) { error in
+            if let error = error {
+                completion(error)
+                return
+            }
+            print("DEBUG - Document successfully updated")
+            completion(nil)
+        }
+    }
+
 }
 
 func saveFieldJsonData<T: Encodable>(data:T) {
