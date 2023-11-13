@@ -7,11 +7,29 @@
 
 import UIKit
 
-final class ChatTabCoordinator: BaseCoordinator {
-    
+protocol ChatTabCoordinatorDelegate {
+    func presentLoginViewController()
+}
+
+final class ChatTabCoordinator: BaseCoordinator, ChannelViewControllerDelegate {
+
     var type: CoordinatorType = .chat
+    var delegate: ChatTabCoordinatorDelegate?
     
     deinit {
         print("DEBUG: ChatTabCoordinator deinit")
+    }
+      
+    func presentLoginViewController() {
+        delegate?.presentLoginViewController()
+    }
+    
+    func pushChatView() {
+        let controller = ChatViewController()
+        navigationController?.pushViewController(controller, animated: true)
+    }
+    
+    func popCurrnetPage() {
+        navigationController?.popViewController(animated: true)
     }
 }
