@@ -9,6 +9,7 @@ import Foundation
 
 import FirebaseAuth
 import FirebaseFirestore
+import RxSwift
 
 /*
  var id: String
@@ -120,16 +121,20 @@ struct FirebaseAPI {
     }
     
     // MARK: - AuthService
-    func updateFCMTokenAndFetchUser(uid: String, fcmToken: String, completion: @escaping (User?, Error?) -> Void) {
-        updateFCMToken(uid: uid, fcmToken: fcmToken) { error in
-            if let error = error {
-                completion(nil, error)
-                return
+    func updateFCMTokenAndFetchUser(uid: String, fcmToken: String) -> Single<User> {
+        return Single.create { single in
+            self.updateFCMToken(uid: uid, fcmToken: fcmToken) { error in
+                if let error = error {
+                    single(.failure(error))
+                    return
+                }
+                self.fetchUser(uid: uid) { user in
+                    single(.success(user))
+                }
             }
-            fetchUser(uid: uid) { user in
-                completion(user, nil)
-            }
+            return Disposables.create()
         }
+        
         
     }
     

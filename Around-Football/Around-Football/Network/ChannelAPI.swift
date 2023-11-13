@@ -9,6 +9,7 @@ import Foundation
 
 import Firebase
 import FirebaseFirestore
+import RxSwift
 
 final class ChannelAPI {
     static let shared = ChannelAPI()
@@ -59,19 +60,25 @@ final class ChannelAPI {
             }
     }
     
-    func subscribe(completion: @escaping (Result<[(ChannelInfo, DocumentChangeType)], Error>) -> Void) {
-        guard let channelListener = channelListener else { return }
-        channelListener.addSnapshotListener { snapshot, error in
-            guard let snapshot = snapshot else {
-                completion(.failure(error!))
-                return
-            }
+    func subscribe() -> Single<[(ChannelInfo, DocumentChangeType)]> {
+        return Single.create { [weak self] single in
+            let disposable = Disposables.create()
             
-            let result = snapshot.documentChanges
-                .filter { ChannelInfo($0.document.data()) != nil }
-                .compactMap { (ChannelInfo($0.document.data())!, $0.type) }
+            guard let self = self,
+                  let channelListener = self.channelListener else { return Disposables.create() }
             
-            completion(.success(result))
+            self.listener = channelListener.addSnapshotListener({ snapshot, error in
+                guard let document = snapshot?.documentChanges else {
+                    single(.failure(error ?? NSError(domain: "", code: -1)))
+                    return
+                }
+                
+                let result = document
+                    .filter { ChannelInfo($0.document.data()) != nil }
+                    .compactMap { (ChannelInfo($0.document.data())!, $0.type) }
+                single(.success(result))
+            })
+            return disposable
         }
     }
     
@@ -102,7 +109,7 @@ final class ChannelAPI {
         let ref = REF_USER.document(uid).collection("channels").document(channelId)
         let data = ["alarmNumber": 0]
         updateRefData(ref: ref, data: data)
-            
+        
     }
     
     // TODO: - Firebase 공통 API에 넣어버리기

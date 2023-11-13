@@ -9,6 +9,7 @@ import UIKit
 
 import SnapKit
 import Then
+import RxSwift
 
 protocol ChannelViewControllerDelegate: AnyObject {
     func presentLoginViewController()
@@ -21,9 +22,13 @@ final class ChannelViewController: UIViewController {
     
 //    weak var delegate: ChannelViewControllerDelegate?
     let viewModel: ChannelViewModel
+    let disposeBag = DisposeBag()
+    
+    private let invokedViewDidLoad = PublishSubject<Void>()
     
     lazy var channelTableView = UITableView().then {
         $0.register(ChannelTableViewCell.self, forCellReuseIdentifier: ChannelTableViewCell.cellId)
+        $0.delegate = self
     }
     
     // MARK: - Lifecycles
@@ -34,7 +39,6 @@ final class ChannelViewController: UIViewController {
         
         super.init(nibName: nil, bundle: nil)
         title = "채팅"
-        // TODO: - 채널 리스너
     }
     
     required init?(coder: NSCoder) {
@@ -45,6 +49,8 @@ final class ChannelViewController: UIViewController {
         super.viewDidLoad()
         
         configureUI()
+        invokedViewDidLoad.onNext(())
+        viewModel.setupListener()
     }
     
     // MARK: - Helpers
@@ -57,7 +63,10 @@ final class ChannelViewController: UIViewController {
         }
     }
     
-    // TODO: - UpdateCell Logic
-    
+    private func bind() {
+        let input = ChannelViewModel.Input(invokedViewDidLoad: invokedViewDidLoad.asObservable())
+        
+        viewModel.transform(input)
+    }
     
 }
