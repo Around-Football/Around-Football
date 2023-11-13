@@ -66,3 +66,13 @@ enum Poi {
 //        }
 //    }
 //}
+
+struct KakaoPlaceResponse: Codable {
+    let documents: [KakaoPlace]
+}
+
+struct KakaoPlace: Codable {
+    let x: String
+    let y: String
+    // Add other necessary place information here
+}
