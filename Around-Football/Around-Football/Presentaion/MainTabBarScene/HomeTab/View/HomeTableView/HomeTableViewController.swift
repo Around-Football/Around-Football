@@ -51,7 +51,7 @@ final class HomeTableViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let nextVC = DetailViewController()
+        let nextVC = UINavigationController(rootViewController: DetailViewController())
          present(nextVC, animated: true)
     }
 }
