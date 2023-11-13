@@ -6,3 +6,12 @@
 //
 
 import Foundation
+
+class ChatViewModel {
+    
+    weak var coordinator: ChatTabCoordinator?
+    
+    init(coordinator: ChatTabCoordinator) {
+        self.coordinator = coordinator
+    }
+}

@@ -14,12 +14,25 @@ protocol HomeTabCoordinatorDelegate {
 
 final class HomeTabCoordinator: BaseCoordinator, HomeViewControllerDelegate {
 
-
     var type: CoordinatorType = .home
     var delegate: HomeTabCoordinatorDelegate?
+    var viewModel: HomeViewModel = HomeViewModel()
     
     deinit {
         print("HomeTabCoordinator deinit")
+    }
+    
+    func makeHomeViewController() -> UINavigationController {
+        let homeViewModel = HomeViewModel(coordinator: self)
+        let homeViewController = HomeViewController(delegate: self, viewModel: homeViewModel)
+        navigationController = UINavigationController(rootViewController: homeViewController)
+        navigationController?.navigationBar.isHidden = true
+        
+        guard let navigationController = navigationController else {
+            return UINavigationController()
+        }
+
+        return navigationController
     }
     
     func presentLoginViewController() {

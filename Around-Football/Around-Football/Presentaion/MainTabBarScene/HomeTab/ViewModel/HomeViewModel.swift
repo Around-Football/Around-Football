@@ -11,6 +11,12 @@ import RxSwift
 import RxRelay
 
 final class HomeViewModel {
+    
+    weak var coordinator: HomeTabCoordinator?
+    
+    init(coordinator: HomeTabCoordinator) {
+        self.coordinator = coordinator
+    }
      
     var recruitObservable: BehaviorRelay = BehaviorRelay<[Recruit_Rx]>(value: [])
     

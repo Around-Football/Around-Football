@@ -20,9 +20,19 @@ final class InfoViewController: UIViewController {
     // MARK: - Properties
     
     weak var delegate: InfoViewControllerDelegate?
-    
+    var viewModel: InfoViewModel?
     var loginViewModel: LoginViewModel?
     private let profileAndEditView = ProfileAndEditView()
+    
+    init(delegate: InfoViewControllerDelegate, viewModel: InfoViewModel) {
+        self.delegate = delegate
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     private let iconAndImage: [(icon: String, title: String)] = [
         (icon: "heart", title: "관심 글"),

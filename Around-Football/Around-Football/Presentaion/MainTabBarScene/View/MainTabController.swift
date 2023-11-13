@@ -41,5 +41,20 @@ final class MainTabController: UITabBarController {
     private func configureUI() {
         tabBar.tintColor = .black
         viewControllers = pages
+    
+        pages[0].tabBarItem = UITabBarItem(title: "Home",
+                                           image: UIImage(systemName: "house"),
+                                           tag: 0)
+        pages[1].tabBarItem = UITabBarItem(title: "Map",
+                                           image: UIImage(systemName: "map"),
+                                           tag: 1)
+        pages[2].tabBarItem = UITabBarItem(title: "Chat",
+                                           image: UIImage(systemName: "bubble"),
+                                           tag: 2)
+        pages[3].tabBarItem = UITabBarItem(title: "Info",
+                                           image: UIImage(systemName: "info.square"),
+                                           tag: 3)
     }
+    
+    
 }
