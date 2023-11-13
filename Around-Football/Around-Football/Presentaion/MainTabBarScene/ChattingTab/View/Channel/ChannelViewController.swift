@@ -11,16 +11,10 @@ import SnapKit
 import Then
 import RxSwift
 
-protocol ChannelViewControllerDelegate: AnyObject {
-    func presentLoginViewController()
-    func pushChatView()
-}
-
 final class ChannelViewController: UIViewController {
     
     // MARK: - Properties
     
-    //    weak var delegate: ChannelViewControllerDelegate?
     let viewModel: ChannelViewModel
     let disposeBag = DisposeBag()
     
@@ -42,8 +36,7 @@ final class ChannelViewController: UIViewController {
     
     // MARK: - Lifecycles
     
-    init(delegate: ChannelViewControllerDelegate? = nil, viewModel: ChannelViewModel) {
-        //        self.delegate = delegate
+    init(viewModel: ChannelViewModel) {
         self.viewModel = viewModel
         
         super.init(nibName: nil, bundle: nil)

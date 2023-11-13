@@ -8,7 +8,7 @@
 import UIKit
 
 protocol ChatTabCoordinatorDelegate {
-    //
+    func presentLoginViewController()
 }
 
 final class ChatTabCoordinator: BaseCoordinator {
@@ -20,10 +20,10 @@ final class ChatTabCoordinator: BaseCoordinator {
         print("DEBUG: ChatTabCoordinator deinit")
     }
     
-    func makeChatViewController() -> UINavigationController {
-        let chatViewModel = ChatViewModel(coordinator: self)
-        let chatViewController = ChatViewController(viewModel: chatViewModel)
-        navigationController = UINavigationController(rootViewController: chatViewController)
+    func makeChannelViewController() -> UINavigationController {
+        let channelViewModel = ChannelViewModel(coordinator: self)
+        let channelViewController = ChannelViewController(viewModel: channelViewModel)
+        navigationController = UINavigationController(rootViewController: channelViewController)
         navigationController?.navigationBar.isHidden = true
         
         guard let navigationController = navigationController else {
@@ -38,7 +38,7 @@ final class ChatTabCoordinator: BaseCoordinator {
     }
     
     func pushChatView() {
-        let controller = ChatViewController()
+        let controller = ChatViewController(viewModel: ChatViewModel(coordinator: self))
         navigationController?.pushViewController(controller, animated: true)
     }
     
