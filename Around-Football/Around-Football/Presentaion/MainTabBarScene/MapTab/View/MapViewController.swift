@@ -90,7 +90,6 @@ final class MapViewController: UIViewController {
                 self?.searchButtonPressed()
             })
             .disposed(by: disposeBag)
-        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -152,7 +151,6 @@ final class MapViewController: UIViewController {
         }
     }
     
-    
     // MARK: - Helpers
     
     private func configureUI() {
@@ -197,6 +195,6 @@ final class MapViewController: UIViewController {
             return
         }
         viewModel?.setSearchLocation(keyword)
-        moveCamera(latitude: viewModel?.searchLocation?.latitude ?? 0.0, longitude: viewModel?.searchLocation?.longitude ?? 0.0)
+//        moveCamera(latitude: viewModel?.searchLocation?.latitude ?? 0.0, longitude: viewModel?.searchLocation?.longitude ?? 0.0)
     }
 }
