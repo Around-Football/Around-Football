@@ -45,7 +45,7 @@ final class MainTabBarCoordinator: BaseCoordinator,
 
         let homeViewController = homeTabCoordinator.makeHomeViewController()
         let mapViewController = mapTabCoordinator.makeMapViewController()
-        let chatViewController = chatTabCoordinator.makeChatViewController()
+        let channelViewController = chatTabCoordinator.makeChannelViewController()
         let infoViewController = infoTabCoordinator.makeInfoViewController()
 
         makeMainTabBarController(homeVC: homeViewController,

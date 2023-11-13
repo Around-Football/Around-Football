@@ -33,9 +33,9 @@ final class ChannelViewModel {
     
     // MARK: - Lifecycles
     
-    //    init(coordinator: ChatTabCoordinator) {
-    //        self.coordinator = coordinator
-    //    }
+        init(coordinator: ChatTabCoordinator) {
+            self.coordinator = coordinator
+        }
     
     // MARK: - API
     

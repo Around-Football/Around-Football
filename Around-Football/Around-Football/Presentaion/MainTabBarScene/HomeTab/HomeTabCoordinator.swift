@@ -45,7 +45,8 @@ final class HomeTabCoordinator: BaseCoordinator {
     
 
     func pushMapView() {
-        let controller = MapViewController()
+        // MARK: - MapView이동시 coordinator 사용
+        let controller = MapViewController(viewModel: MapViewModel(latitude: 37, longitude: 126))
         navigationController?.pushViewController(controller, animated: true)
     }
 
@@ -55,8 +56,10 @@ final class HomeTabCoordinator: BaseCoordinator {
 
     }
     
-    func presentInviteView() {
+    func pushInviteView() {
         let controller = UINavigationController(rootViewController: InviteViewController())
         navigationController?.present(controller, animated: true)
+        //TODO: -push방식으로 변경
+//        navigationController?.pushViewController(controller, animated: true)
     }
 }

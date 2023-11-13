@@ -232,7 +232,7 @@ final class HomeViewController: UIViewController {
         if Auth.auth().currentUser == nil {
             viewModel?.coordinator?.presentLoginViewController()
         } else {
-            viewModel?.coordinator?.presentInviteView()
+            viewModel?.coordinator?.pushInviteView()
         }
         print("DEBUG: didTapFloatingButton")
     }

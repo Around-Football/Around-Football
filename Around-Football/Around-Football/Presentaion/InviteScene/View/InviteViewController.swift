@@ -10,15 +10,10 @@ import UIKit
 import SnapKit
 import Then
 
-protocol InviteViewControllerDelegate: HomeViewControllerDelegate {
-    func pushMapView()
-}
-
 final class InviteViewController: UIViewController, GroundTitleViewDelegate {
     
     // MARK: - Properties
     
-    weak var delegate : InviteViewControllerDelegate?
     var viewModel = SearchViewModel()
     private let placeView = GroundTitleView()
     private let peopleView = PeopleCountView()
@@ -181,7 +176,7 @@ final class InviteViewController: UIViewController, GroundTitleViewDelegate {
     
     @objc
     func searchFieldButtonTapped() {
-        delegate?.pushMapView()
-        print("버튼 tap")
+//        viewModel.coordinator?.pushMapView()
+//        print("버튼 tap")
     }
 }
