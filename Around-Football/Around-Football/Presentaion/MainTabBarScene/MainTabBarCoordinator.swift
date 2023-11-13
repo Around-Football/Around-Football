@@ -11,7 +11,10 @@ protocol MainTabBarCoordinatorDelegate {
     func presentLoginViewController()
 }
 
-final class MainTabBarCoordinator: BaseCoordinator, HomeTabCoordinatorDelegate, InfoTabCoordinatorDelegate {
+final class MainTabBarCoordinator: BaseCoordinator,
+                                    HomeTabCoordinatorDelegate,
+                                    InfoTabCoordinatorDelegate,
+                                   ChatTabCoordinatorDelegate {
 
     var type: CoordinatorType = .mainTab
     var delegate: MainTabBarCoordinatorDelegate?
@@ -47,10 +50,10 @@ final class MainTabBarCoordinator: BaseCoordinator, HomeTabCoordinatorDelegate, 
 
         makeMainTabBarController(homeVC: homeViewController,
                                  mapVC: mapViewController,
-                                 chatVC: chatViewController,
+                                 chatVC: channelViewController,
                                  infoVC: infoViewController)
     }
-    
+
     private func makeMainTabBarController(
         homeVC: UINavigationController,
         mapVC: UINavigationController,
@@ -63,7 +66,7 @@ final class MainTabBarCoordinator: BaseCoordinator, HomeTabCoordinatorDelegate, 
         navigationController?.viewControllers = [mainTabBarController]
     }
     
-    //HomeTabCoordinatorDelegate
+    // HomeTabCoordinatorDelegate
     func presentLoginViewController() {
         delegate?.presentLoginViewController()
     }

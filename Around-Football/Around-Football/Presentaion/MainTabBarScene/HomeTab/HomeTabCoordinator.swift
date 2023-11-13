@@ -52,5 +52,4 @@ final class HomeTabCoordinator: BaseCoordinator {
         let controller = UINavigationController(rootViewController: InviteViewController())
         navigationController?.present(controller, animated: true)
     }
-    
 }
