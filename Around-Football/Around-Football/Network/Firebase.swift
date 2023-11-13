@@ -124,6 +124,7 @@ struct FirebaseAPI {
         updateFCMToken(uid: uid, fcmToken: fcmToken) { error in
             if let error = error {
                 completion(nil, error)
+                return
             }
             fetchUser(uid: uid) { user in
                 completion(user, nil)

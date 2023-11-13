@@ -57,6 +57,7 @@
 		668EE4B22AFCBC09007A8844 /* ChannelTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 668EE4B12AFCBC09007A8844 /* ChannelTableViewCell.swift */; };
 		668EE4B42AFF552F007A8844 /* ChannelAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 668EE4B32AFF552F007A8844 /* ChannelAPI.swift */; };
 		668EE4B62AFF5E89007A8844 /* ChannelModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 668EE4B52AFF5E89007A8844 /* ChannelModel.swift */; };
+		668EE4B82B01A60E007A8844 /* ChannelViewController+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 668EE4B72B01A60E007A8844 /* ChannelViewController+.swift */; };
 		669674882AC3E82B0067FD48 /* MainTabController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 669674872AC3E82B0067FD48 /* MainTabController.swift */; };
 		6696748F2AC3E9CE0067FD48 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6696748E2AC3E9CE0067FD48 /* HomeViewController.swift */; };
 		669674912AC3E9D40067FD48 /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 669674902AC3E9D40067FD48 /* MapViewController.swift */; };
@@ -152,6 +153,7 @@
 		668EE4B12AFCBC09007A8844 /* ChannelTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChannelTableViewCell.swift; sourceTree = "<group>"; };
 		668EE4B32AFF552F007A8844 /* ChannelAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChannelAPI.swift; sourceTree = "<group>"; };
 		668EE4B52AFF5E89007A8844 /* ChannelModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChannelModel.swift; sourceTree = "<group>"; };
+		668EE4B72B01A60E007A8844 /* ChannelViewController+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ChannelViewController+.swift"; sourceTree = "<group>"; };
 		669674872AC3E82B0067FD48 /* MainTabController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabController.swift; sourceTree = "<group>"; };
 		6696748E2AC3E9CE0067FD48 /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		669674902AC3E9D40067FD48 /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
@@ -339,6 +341,7 @@
 			children = (
 				668EE49B2AFC9E84007A8844 /* ChannelViewController.swift */,
 				668EE4B12AFCBC09007A8844 /* ChannelTableViewCell.swift */,
+				668EE4B72B01A60E007A8844 /* ChannelViewController+.swift */,
 			);
 			path = Channel;
 			sourceTree = "<group>";
@@ -888,6 +891,7 @@
 				273674832AC308D1003ADE3F /* RecruitModel.swift in Sources */,
 				7CC619762AD448A90085DF90 /* InfoCell.swift in Sources */,
 				7C2B1AE72AF4BCB40052EC64 /* ChatViewModel.swift in Sources */,
+				668EE4B82B01A60E007A8844 /* ChannelViewController+.swift in Sources */,
 				7929A3132ADEB319006ED4FA /* InputInfoViewController+.swift in Sources */,
 				274C21C72ACFF902005469E6 /* TextFieldDelegateHandler.swift in Sources */,
 				7CE0143E2AF8C5B700ED77D2 /* EditViewController.swift in Sources */,
