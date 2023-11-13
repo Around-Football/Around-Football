@@ -9,6 +9,7 @@ import CoreLocation
 import UIKit
 
 import KakaoMapsSDK
+import RxSwift
 import SnapKit
 import Then
 
@@ -16,6 +17,8 @@ final class MapViewController: UIViewController {
     
     // MARK: - Properties
     
+
+    private let disposeBag = DisposeBag()
     var viewModel: MapViewModel?
     
     init(viewModel: MapViewModel) {
@@ -91,6 +94,13 @@ final class MapViewController: UIViewController {
             viewModel.selectedDate = self.datePicker.date
         }
         
+        searchTextField.rx.controlEvent(.editingDidEndOnExit)
+            .asObservable()
+            .subscribe(onNext: { [weak self] in
+                // Trigger the search when the 'Search' button is pressed
+                self?.searchButtonPressed()
+            })
+            .disposed(by: disposeBag)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -152,7 +162,6 @@ final class MapViewController: UIViewController {
         }
     }
     
-    
     // MARK: - Helpers
     
     private func configureUI() {
@@ -187,5 +196,16 @@ final class MapViewController: UIViewController {
             $0.bottom.equalTo(mapContainer).offset(-20)
             $0.height.width.equalTo(56)
         }
+    }
+    
+    private func searchButtonPressed() {
+        guard 
+            let keyword = searchTextField.text,
+                !keyword.isEmpty
+        else {
+            return
+        }
+        viewModel?.setSearchLocation(keyword)
+//        moveCamera(latitude: viewModel?.searchLocation?.latitude ?? 0.0, longitude: viewModel?.searchLocation?.longitude ?? 0.0)
     }
 }

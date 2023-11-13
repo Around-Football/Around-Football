@@ -10,10 +10,16 @@ import UIKit
 import SnapKit
 import Then
 
-final class InviteViewController: UIViewController {
+protocol InviteViewControllerDelegate: HomeViewControllerDelegate {
+    func pushMapView()
+}
+
+final class InviteViewController: UIViewController, GroundTitleViewDelegate {
     
     // MARK: - Properties
-
+    
+    weak var delegate : InviteViewControllerDelegate?
+    var viewModel = SearchViewModel()
     private let placeView = GroundTitleView()
     private let peopleView = PeopleCountView()
     
@@ -50,6 +56,9 @@ final class InviteViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        placeView.delegate = self
+
         configureUI()
         keyboardController()
         setAddButton()
@@ -66,6 +75,8 @@ final class InviteViewController: UIViewController {
             guard let self else { return }
             dismiss(animated: true)
         }
+        
+        placeView.searchFieldButton.addTarget(self, action: #selector(searchFieldButtonTapped), for: .touchUpInside)
     }
     
     private func keyboardController() {
@@ -123,14 +134,14 @@ final class InviteViewController: UIViewController {
             make.top.equalTo(contentView.snp.top)
             make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
             make.width.equalTo(UIScreen.main.bounds.width * 2/3)
-            make.height.equalTo(50)
+            make.height.equalTo(100)
         }
         
         peopleView.snp.makeConstraints { make in
             make.top.equalTo(contentView.snp.top)
             make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
             make.width.equalTo(UIScreen.main.bounds.width * 1/3)
-            make.height.equalTo(50)
+            make.height.equalTo(100)
         }
         
         calenderViewController.view.snp.makeConstraints { make in
@@ -158,5 +169,19 @@ final class InviteViewController: UIViewController {
             make.trailing.bottom.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
             make.height.equalTo(40)
         }
+    }
+    
+    func searchBarTapped() {
+        let searchController = SearchViewController()
+        searchController.viewModel = self.viewModel
+        present(searchController, animated: true, completion: nil)
+    }
+    
+    // MARK: - Selectors
+    
+    @objc
+    func searchFieldButtonTapped() {
+        delegate?.pushMapView()
+        print("버튼 tap")
     }
 }
