@@ -9,7 +9,6 @@ import UIKit
 
 protocol HomeTabCoordinatorDelegate {
     func presentLoginViewController()
-    func presentInviteView()
 }
 
 final class HomeTabCoordinator: BaseCoordinator {
@@ -38,10 +37,6 @@ final class HomeTabCoordinator: BaseCoordinator {
         delegate?.presentLoginViewController()
     }
     
-    func presentInviteView() {
-        delegate?.presentInviteView()
-    }
-    
     func pushToDetailView() {
         let detailVc = DetailViewController()
         navigationController?.navigationBar.isHidden = false
@@ -51,6 +46,12 @@ final class HomeTabCoordinator: BaseCoordinator {
     func pushApplicationStatusView() {
         let ApplicationStatusVc = ApplicationStatusViewController()
         navigationController?.pushViewController(ApplicationStatusVc, animated: true)
+    }
+    
+    func presentInviteView() {
+        let controller = UINavigationController(rootViewController: InviteViewController())
+        controller.isNavigationBarHidden = false
+        navigationController?.present(controller, animated: true)
     }
     
 }

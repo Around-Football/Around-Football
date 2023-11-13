@@ -17,12 +17,14 @@ final class InputInfoCoordinator: BaseCoordinator {
     
     override func start() {
         start(isHidesBackButton: false)
+        navigationController?.navigationBar.prefersLargeTitles = false
     }
     
     func start(isHidesBackButton: Bool) {
         let inputInfoViewModel = InputInfoViewModel(coordinator: self)
         let controller = InputInfoViewController(viewModel: inputInfoViewModel)
         controller.navigationItem.hidesBackButton = isHidesBackButton
+        navigationController?.navigationBar.prefersLargeTitles = true
         navigationController?.pushViewController(controller, animated: true)
     }
     
