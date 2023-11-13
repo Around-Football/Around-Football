@@ -21,6 +21,7 @@ final class MapViewModel {
     var isSearchCurrentLocation: Bool = true
     private let disposeBag = DisposeBag()
     private let firebaseAPI = FirebaseAPI.shared
+    var searchPlaces: [Place] = []
     var fields: [Field] = []
     var selectedDate: Date = Date() {
         didSet {
@@ -53,11 +54,7 @@ final class MapViewModel {
     }
     
     func setSearchLocation(_ keyword: String) {
-        // searchLocation = GeoPoint(latitude: latitude, longitude: longitude)
-//        guard let apiUrl = URL(string: "https://dapi.kakao.com/v2/local/search/keyword.json") else {
-//            return
-//        }
-//        
+        
         guard let apiUrl = URL(string: "https://dapi.kakao.com/v2/local/search/keyword.json?query=\(keyword.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "")") else {
             return
         }
@@ -74,13 +71,10 @@ final class MapViewModel {
                     let decoder = JSONDecoder()
                     let result = try decoder.decode(KakaoPlaceResponse.self, from: data)
                     
-                    if let firstPlace = result.documents.first {
-                        // 검색된 장소 중 첫 번째 장소의 좌표로 이동
-//                        self?.moveToLocation(latitude: firstPlace.y, longitude: firstPlace.x)
-                        self?.searchLocation = GeoPoint(latitude: Double(firstPlace.y) ?? 0.0, longitude: Double(firstPlace.x) ?? 0.0)
-                    } else {
-                        print("장소를 찾을 수 없습니다.")
+                    self?.searchPlaces = result.documents.map {
+                        Place(id: $0.id, name: $0.placeName, address: $0.addressName, x: $0.x, y: $0.y)
                     }
+                    print(self?.searchPlaces ?? "파싱 에러")
                 } catch {
                     print("Error decoding JSON: \(error.localizedDescription)")
                 }
