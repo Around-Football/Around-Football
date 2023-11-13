@@ -91,7 +91,7 @@ final class MainTabBarCoordinator: BaseCoordinator,
         chatTabCoordinator.delegate = self
         chatTabCoordinator.start()
         childCoordinators.append(chatTabCoordinator)
-        
+        channelNavigationController.isNavigationBarHidden = false
         
         return channelNavigationController
     }
