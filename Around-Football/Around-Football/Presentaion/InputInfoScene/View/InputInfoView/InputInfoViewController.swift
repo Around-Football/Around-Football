@@ -7,17 +7,23 @@
 
 import UIKit
 
-protocol InputInfoViewControllerDelegate: AnyObject {
-    func dismissView()
-    func removeThisChildCoordinators()
-}
+//TODO: - 기존에 유저 정보 있으면 로딩시 텍스트필드에 넣어주기
 
 final class InputInfoViewController: UIViewController {
     
     // MARK: - Properties
     
-    weak var delegate: InputInfoViewControllerDelegate?
+    private var viewModel: InputInfoViewModel?
     let inputInfoView: InputInfoView = InputInfoView()
+    
+    init(viewModel: InputInfoViewModel?) {
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     private var id: String = ""
     private var userName: String = ""
@@ -35,8 +41,8 @@ final class InputInfoViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         keyboardController()
+        navigationItem.title = "추가정보 입력"
         
         inputInfoView.userNameTextField.delegate = self
         inputInfoView.userAgeTextField.delegate = self
@@ -56,13 +62,10 @@ final class InputInfoViewController: UIViewController {
         inputInfoView.mfButton.addTarget(self, action: #selector(mfButtonTapped), for: .touchUpInside)
         inputInfoView.dfButton.addTarget(self, action: #selector(dfButtonTapped), for: .touchUpInside)
         inputInfoView.gkButton.addTarget(self, action: #selector(gkButtonTapped), for: .touchUpInside)
-        
-        navigationController?.navigationBar.prefersLargeTitles = true
-        navigationItem.title = "추가정보 입력"
     }
     
     override func viewWillDisappear(_ animated: Bool) {
-        delegate?.removeThisChildCoordinators()
+        viewModel?.coordinator?.removeThisChildCoordinators()
     }
 
     deinit {
@@ -74,8 +77,8 @@ final class InputInfoViewController: UIViewController {
     @objc 
     func nextButtonTapped(_ sender: UIButton) {
         print("DEBUG: InputInfoViewController - nextButtonTapped")
-
-        delegate?.dismissView()
+        //TODO: - 모달, push에 따라 분기처리
+        viewModel?.coordinator?.dismissView()
 
         area = inputInfoView.userAreaTextField.text ?? ""
         userName = inputInfoView.userNameTextField.text ?? ""
