@@ -15,17 +15,26 @@ import KakaoSDKCommon
 import KakaoSDKAuth
 import KakaoSDKUser
 
-protocol LoginViewControllerDelegate: AnyObject {
-    func pushInputInfoViewController()
-    func loginDone()
-}
+//protocol LoginViewControllerDelegate: AnyObject {
+//    func pushInputInfoViewController()
+//    func loginDone()
+//}
 
 final class LoginViewController: UIViewController {
     
     // MARK: - Properties
     
-    weak var delegate: LoginViewControllerDelegate?
+//    weak var delegate: LoginViewControllerDelegate?
     var viewModel: LoginViewModel?
+    
+    init(viewModel: LoginViewModel?) {
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     private let logoImageView = UIImageView().then {
         $0.image = UIImage(named: "App_logo")
@@ -100,7 +109,8 @@ final class LoginViewController: UIViewController {
         // TODO: - 추가정보 입력 여부에따라 추가정보입력뷰 또는 메인뷰로 이동
         print("DEBUG: 로그인 완료")
 //        if /*추가정보입력*/ = nil {
-            delegate?.pushInputInfoViewController()
+//            delegate?.pushInputInfoViewController()
+        viewModel?.coordinator?.pushInputInfoViewController()
 //        } else {
 //            delegate?.loginDone()
 //        }

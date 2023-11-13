@@ -7,17 +7,27 @@
 
 import UIKit
 
-protocol InputInfoViewControllerDelegate: AnyObject {
-    func dismissView()
-    func removeThisChildCoordinators()
-}
+//protocol InputInfoViewControllerDelegate: AnyObject {
+//    func dismissView()
+//    func removeThisChildCoordinators()
+//}
 
 final class InputInfoViewController: UIViewController {
     
     // MARK: - Properties
     
-    weak var delegate: InputInfoViewControllerDelegate?
+//    weak var delegate: InputInfoViewControllerDelegate?
+    private var viewModel: InputInfoViewModel?
     let inputInfoView: InputInfoView = InputInfoView()
+    
+    init(viewModel: InputInfoViewModel?) {
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     private var id: String = ""
     private var userName: String = ""
@@ -61,7 +71,8 @@ final class InputInfoViewController: UIViewController {
     }
     
     override func viewWillDisappear(_ animated: Bool) {
-        delegate?.removeThisChildCoordinators()
+//        delegate?.removeThisChildCoordinators()
+        viewModel?.coordinator?.removeThisChildCoordinators()
     }
 
     deinit {
@@ -74,7 +85,8 @@ final class InputInfoViewController: UIViewController {
     func nextButtonTapped(_ sender: UIButton) {
         print("DEBUG: InputInfoViewController - nextButtonTapped")
 
-        delegate?.dismissView()
+//        delegate?.dismissView()
+        viewModel?.coordinator?.dismissView()
 
         area = inputInfoView.userAreaTextField.text ?? ""
         userName = inputInfoView.userNameTextField.text ?? ""

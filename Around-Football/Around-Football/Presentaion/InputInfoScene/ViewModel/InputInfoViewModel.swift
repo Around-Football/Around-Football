@@ -6,3 +6,12 @@
 //
 
 import Foundation
+
+class InputInfoViewModel {
+    
+    weak var coordinator: InputInfoCoordinator?
+    
+    init(coordinator: InputInfoCoordinator) {
+        self.coordinator = coordinator
+    }
+}
