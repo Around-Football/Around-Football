@@ -67,12 +67,4 @@ final class MainTabBarCoordinator: BaseCoordinator, HomeTabCoordinatorDelegate, 
     func presentLoginViewController() {
         delegate?.presentLoginViewController()
     }
-    
-    // MARK: - HomeTab FloatingButtonTabbed
-    
-    func presentInviteView() {
-        let controller = UINavigationController(rootViewController: InviteViewController())
-        controller.isNavigationBarHidden = false
-        navigationController?.present(controller, animated: true)
-    }
 }
