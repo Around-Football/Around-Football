@@ -11,18 +11,21 @@ protocol InputInfoCoordinatorDelegate {
     func loginDone()
 }
 
-final class InputInfoCoordinator: BaseCoordinator, InputInfoViewControllerDelegate {
+final class InputInfoCoordinator: BaseCoordinator
+//                                  InputInfoViewControllerDelegate
+{
     var type: CoordinatorType = .login
     var delegate: InputInfoCoordinatorDelegate?
     
     override func start() {
-        start(hidesBackButton: false)
+        start(isHidesBackButton: false)
     }
     
-    func start(hidesBackButton: Bool) {
-        let controller = InputInfoViewController()
-        controller.delegate = self
-        controller.navigationItem.hidesBackButton = hidesBackButton
+    func start(isHidesBackButton: Bool) {
+        let inputInfoViewModel = InputInfoViewModel(coordinator: self)
+        let controller = InputInfoViewController(viewModel: inputInfoViewModel)
+//        controller.delegate = self
+        controller.navigationItem.hidesBackButton = isHidesBackButton
         navigationController?.pushViewController(controller, animated: true)
     }
     

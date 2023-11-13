@@ -14,7 +14,7 @@ protocol ChatViewControllerDelegate: AnyObject {
 final class ChatViewController: UIViewController {
     
     weak var delegate: ChatViewControllerDelegate?
-    var viewModel: ChatViewModel?
+    private var viewModel: ChatViewModel?
     
     init(delegate: ChatViewControllerDelegate, viewModel: ChatViewModel) {
         self.delegate = delegate
