@@ -15,9 +15,17 @@ import Then
 final class HomeTableViewController: UITableViewController {
     
     // MARK: - Properties
-    
-    private let homeViewModel = HomeViewModel()
+    var viewModel: HomeViewModel
     private let disposeBag = DisposeBag()
+    
+    init(viewModel: HomeViewModel) {
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     // MARK: - Lifecyles
     
@@ -30,7 +38,7 @@ final class HomeTableViewController: UITableViewController {
         tableView.register(HomeTableViewCell.self, forCellReuseIdentifier: HomeTableViewCell.id)
         tableView.dataSource = nil
         
-        homeViewModel.recruitObservable
+        viewModel.recruitObservable
             .observe(on: MainScheduler.instance)
             .bind(to: tableView.rx.items(cellIdentifier: HomeTableViewCell.id,
                                          cellType: HomeTableViewCell.self)
@@ -51,8 +59,7 @@ final class HomeTableViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let nextVC = UINavigationController(rootViewController: DetailViewController())
-         present(nextVC, animated: true)
+        viewModel.coordinator?.pushToDetailView()
     }
 }
 

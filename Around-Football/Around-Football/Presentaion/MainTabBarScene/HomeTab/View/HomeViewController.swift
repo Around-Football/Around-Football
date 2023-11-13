@@ -16,10 +16,11 @@ final class HomeViewController: UIViewController {
     
     // MARK: - Properties
     
+    var homeTableViewController: HomeTableViewController
     var viewModel: HomeViewModel?
-    private let homeTableViewController = HomeTableViewController()
     
-    init(viewModel: HomeViewModel) {
+    init(homeTableViewController: HomeTableViewController, viewModel: HomeViewModel) {
+        self.homeTableViewController = homeTableViewController
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
@@ -92,9 +93,12 @@ final class HomeViewController: UIViewController {
         super.viewDidLoad()
         addChild(homeTableViewController)
         configureUI()
-        self.navigationController?.navigationBar.isHidden = true
     }
-
+    
+    override func viewWillAppear(_ animated: Bool) {
+        navigationController?.navigationBar.isHidden = true
+    }
+    
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         

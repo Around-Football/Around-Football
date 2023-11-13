@@ -16,7 +16,6 @@ final class HomeTabCoordinator: BaseCoordinator {
 
     var type: CoordinatorType = .home
     var delegate: HomeTabCoordinatorDelegate?
-    var viewModel: HomeViewModel = HomeViewModel()
     
     deinit {
         print("HomeTabCoordinator deinit")
@@ -24,9 +23,9 @@ final class HomeTabCoordinator: BaseCoordinator {
     
     func makeHomeViewController() -> UINavigationController {
         let homeViewModel = HomeViewModel(coordinator: self)
-        let homeViewController = HomeViewController(viewModel: homeViewModel)
+        let homeTableViewController = HomeTableViewController(viewModel: homeViewModel)
+        let homeViewController = HomeViewController(homeTableViewController: homeTableViewController, viewModel: homeViewModel)
         navigationController = UINavigationController(rootViewController: homeViewController)
-        navigationController?.navigationBar.isHidden = true
         
         guard let navigationController = navigationController else {
             return UINavigationController()
@@ -43,5 +42,15 @@ final class HomeTabCoordinator: BaseCoordinator {
         delegate?.presentInviteView()
     }
     
+    func pushToDetailView() {
+        let detailVc = DetailViewController()
+        navigationController?.navigationBar.isHidden = false
+        navigationController?.pushViewController(detailVc, animated: true)
+    }
+    
+    func pushApplicationStatusView() {
+        let ApplicationStatusVc = ApplicationStatusViewController()
+        navigationController?.pushViewController(ApplicationStatusVc, animated: true)
+    }
     
 }
