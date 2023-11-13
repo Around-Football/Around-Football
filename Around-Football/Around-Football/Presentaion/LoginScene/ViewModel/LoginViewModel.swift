@@ -23,8 +23,10 @@ class LoginViewModel: NSObject {
     private var userProfile: String?
     private var email: String?
     var currentNonce: String?
+    var coordinator: LoginCoordinator?
     
-    override init() {
+    init(coordinator: LoginCoordinator) {
+        self.coordinator = coordinator
         super.init()
     }
     

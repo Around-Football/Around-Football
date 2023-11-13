@@ -105,9 +105,8 @@ final class DetailViewController: UIViewController {
         applyButton.setAttributedTitle(title, for: .normal)
         
         //네비게이션 분기처리
-        //TODO: -소미니 뷰 넣기
+        //TODO: -소미니 뷰 넣기 (여기는 코디네이터 어떻게 전달하지..뷰모델을 또 전달해야하나)
         let controller = ApplicationStatusViewController()
-        controller.view.backgroundColor = .blue //test
         navigationController?.pushViewController(controller, animated: true)
     }
     
