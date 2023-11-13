@@ -11,7 +11,10 @@ protocol MainTabBarCoordinatorDelegate {
     func presentLoginViewController()
 }
 
-final class MainTabBarCoordinator: BaseCoordinator, HomeTabCoordinatorDelegate, InfoTabCoordinatorDelegate {
+final class MainTabBarCoordinator: BaseCoordinator,
+                                    HomeTabCoordinatorDelegate,
+                                    InfoTabCoordinatorDelegate,
+                                   ChatTabCoordinatorDelegate {
 
     var type: CoordinatorType = .mainTab
     var delegate: MainTabBarCoordinatorDelegate?
@@ -28,12 +31,12 @@ final class MainTabBarCoordinator: BaseCoordinator, HomeTabCoordinatorDelegate, 
         navigationController?.isNavigationBarHidden = true
         let homeViewController = makeHomeViewController()
         let mapViewController = makeMapViewController()
-        let chatViewController = makeChatViewController()
+        let channelViewController = makeChannelViewController()
         let infoViewController = makeInfoViewController()
         
         makeMainTabBarController(homeVC: homeViewController,
                                  mapVC: mapViewController,
-                                 chatVC: chatViewController,
+                                 chatVC: channelViewController,
                                  infoVC: infoViewController)
     }
     
@@ -74,20 +77,23 @@ final class MainTabBarCoordinator: BaseCoordinator, HomeTabCoordinatorDelegate, 
         return mapNavigationController
     }
     
-    private func makeChatViewController() -> UINavigationController {
-        let chatViewController = ChatViewController()
-        let chatNavigationController: UINavigationController = makeNavigationController(
-            rootViewController: chatViewController,
+    private func makeChannelViewController() -> UINavigationController {
+        let channelViewController = ChannelViewController(viewModel: ChannelViewModel())
+        let channelNavigationController: UINavigationController = makeNavigationController(
+            rootViewController: channelViewController,
             title: "Chat",
             tabbarImage: "bubble",
             tag: 2
         )
         
-        let chatTabCoordinator = ChatTabCoordinator(navigationController: chatNavigationController)
-        childCoordinators.append(chatTabCoordinator)
+        let chatTabCoordinator = ChatTabCoordinator(navigationController: channelNavigationController)
+        channelViewController.viewModel.coordinator = chatTabCoordinator
+        chatTabCoordinator.delegate = self
         chatTabCoordinator.start()
+        childCoordinators.append(chatTabCoordinator)
+        channelNavigationController.isNavigationBarHidden = false
         
-        return chatNavigationController
+        return channelNavigationController
     }
     
     private func makeInfoViewController() -> UINavigationController {
@@ -121,19 +127,11 @@ final class MainTabBarCoordinator: BaseCoordinator, HomeTabCoordinatorDelegate, 
         navigationController?.viewControllers = [mainTabBarController]
     }
     
-    //HomeTabCoordinatorDelegate
+    // HomeTabCoordinatorDelegate
     func presentLoginViewController() {
         delegate?.presentLoginViewController()
     }
-    
-    // MARK: - HomeTab FloatingButtonTabbed
-    
-    func presentInviteView() {
-        let controller = UINavigationController(rootViewController: InviteViewController())
-        controller.isNavigationBarHidden = false
-        navigationController?.present(controller, animated: true)
-    }
-    
+        
     // MARK: - Helpers
     
     private func makeNavigationController(
