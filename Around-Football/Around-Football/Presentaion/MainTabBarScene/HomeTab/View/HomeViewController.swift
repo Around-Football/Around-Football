@@ -234,7 +234,6 @@ final class HomeViewController: UIViewController {
         } else {
             viewModel?.coordinator?.presentInviteView()
         }
-//        print(Auth.auth().currentUser?.uid)
         print("DEBUG: didTapFloatingButton")
     }
     
