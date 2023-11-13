@@ -121,7 +121,7 @@ struct FirebaseAPI {
     }
     
     // MARK: - AuthService
-    func updateFCMTokenAndFetchUser(uid: String, fcmToken: String) -> Single<User> {
+    func updateFCMTokenAndFetchUser(uid: String, fcmToken: String) -> Single<User?> {
         return Single.create { single in
             self.updateFCMToken(uid: uid, fcmToken: fcmToken) { error in
                 if let error = error {
