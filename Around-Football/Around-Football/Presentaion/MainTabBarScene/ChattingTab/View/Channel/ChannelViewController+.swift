@@ -10,25 +10,25 @@ import UIKit
 import MessageKit
 
 extension ChannelViewController {
-    func bindTableView() {
-        viewModel.channels.bind(to: channelTableView.rx.items(cellIdentifier: ChannelTableViewCell.cellId, cellType: ChannelTableViewCell.self)) { [weak self] row, item, cell in
-            guard let self = self else { return }
-            cell.chatRoomLabel.text = item.withUserName
-            cell.chatPreviewLabel.text = item.previewContent
-            let alarmNumber = item.alarmNumber
-            alarmNumber == 0 ? self.hideChatAlarmNumber(cell: cell) : self.showChatAlarmNumber(cell: cell, alarmNumber: "\(alarmNumber)")
-            let date = item.recentDate
-            cell.recentDateLabel.text = self.formatDate(date)
-        }
-        .disposed(by: disposeBag)
-        
-        channelTableView.rx.itemSelected
-            .subscribe { [weak self] indexPath in
-                let selectedItem = self?.viewModel.channels.value[indexPath.row]
-                self?.viewModel.showChatView()
-            }
-            .disposed(by: disposeBag)
-    }
+//    func bindTableView() {
+//        viewModel.channels.bind(to: channelTableView.rx.items(cellIdentifier: ChannelTableViewCell.cellId, cellType: ChannelTableViewCell.self)) { [weak self] row, item, cell in
+//            guard let self = self else { return }
+//            cell.chatRoomLabel.text = item.withUserName
+//            cell.chatPreviewLabel.text = item.previewContent
+//            let alarmNumber = item.alarmNumber
+//            alarmNumber == 0 ? self.hideChatAlarmNumber(cell: cell) : self.showChatAlarmNumber(cell: cell, alarmNumber: "\(alarmNumber)")
+//            let date = item.recentDate
+//            cell.recentDateLabel.text = self.formatDate(date)
+//        }
+//        .disposed(by: disposeBag)
+//        
+//        channelTableView.rx.itemSelected
+//            .subscribe { [weak self] indexPath in
+//                let selectedItem = self?.viewModel.channels.value[indexPath.row]
+//                self?.viewModel.showChatView()
+//            }
+//            .disposed(by: disposeBag)
+//    }
     
     private func hideChatAlarmNumber(cell: ChannelTableViewCell) {
         cell.chatAlarmNumberLabel.text = ""
