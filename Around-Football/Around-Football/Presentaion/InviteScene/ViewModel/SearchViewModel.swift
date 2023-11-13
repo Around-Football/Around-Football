@@ -1,8 +1,8 @@
 //
-//  MapViewModel.swift
+//  SearchViewModel.swift
 //  Around-Football
 //
-//  Created by 진태영 on 10/5/23.
+//  Created by 강창현 on 11/13/23.
 //
 
 import Foundation
@@ -12,50 +12,16 @@ import FirebaseFirestore
 import RxAlamofire
 import RxSwift
 
-final class MapViewModel {
+class SearchViewModel {
     
     // MARK: - Properties
     
-    weak var coordinator: MapTabCoordinator?
-    
-    var currentLocation: GeoPoint
-    var searchLocation: GeoPoint?
-    var isSearchCurrentLocation: Bool = true
     private let disposeBag = DisposeBag()
-    private let firebaseAPI = FirebaseAPI.shared
     var searchPlaces: [Place] = []
-    var fields: [Field] = []
-    var selectedDate: Date = Date() {
-        didSet {
-            let formatter = DateFormatter()
-            formatter.dateFormat = "yyyy / MM / dd"
-            print(formatter.string(from: selectedDate))
-        }
-    }
-    
-    // MARK: - Lifecycles
-    
-    init(latitude: Double, longitude: Double, searchLocation: GeoPoint? = nil) {
-        self.currentLocation = GeoPoint(latitude: latitude, longitude: longitude)
-        self.searchLocation = searchLocation
-        selectedDate = Date()
-    }
-    
-    // MARK: - API
-    
-    func fetchFields() {
-        firebaseAPI.fetchMockFieldsData { fields in
-            self.fields = fields
-        }
-    }
     
     // MARK: - Helpers
     
-    func setCurrentLocation(latitude: Double, longitude: Double) {
-        currentLocation = GeoPoint(latitude: latitude, longitude: longitude)
-    }
-    
-    func setSearchLocation(_ keyword: String) {
+    func searchField(_ keyword: String) {
         
         guard let apiUrl = URL(string: "https://dapi.kakao.com/v2/local/search/keyword.json?query=\(keyword.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "")") else {
             return
@@ -63,7 +29,7 @@ final class MapViewModel {
         
         let apiKey = "07874a02a8d48af697b51048893c3d70"
         let headers: HTTPHeaders = ["Authorization": "KakaoAK \(apiKey)"]
-
+        
         // RxAlamofire를 사용한 비동기 요청
         RxAlamofire
             .data(.get, apiUrl, headers: headers)
