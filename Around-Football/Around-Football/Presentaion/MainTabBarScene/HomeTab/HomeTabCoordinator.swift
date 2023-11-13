@@ -43,9 +43,16 @@ final class HomeTabCoordinator: BaseCoordinator {
         navigationController?.pushViewController(detailVc, animated: true)
     }
     
+
+    func pushMapView() {
+        let controller = MapViewController()
+        navigationController?.pushViewController(controller, animated: true)
+    }
+
     func pushApplicationStatusView() {
         let ApplicationStatusVc = ApplicationStatusViewController()
         navigationController?.pushViewController(ApplicationStatusVc, animated: true)
+
     }
     
     func presentInviteView() {
