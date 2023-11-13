@@ -12,17 +12,18 @@ import RxSwift
 import Then
 import SnapKit
 
-protocol HomeViewControllerDelegate: AnyObject {
-    func presentLoginViewController()
-    func presentInviteView()
-}
-
 final class HomeViewController: UIViewController {
     
     // MARK: - Properties
     
-    weak var delegate: HomeViewControllerDelegate?
-    private let homeTableViewController = HomeTableViewController()
+    var homeTableViewController: HomeTableViewController
+    var viewModel: HomeViewModel?
+    
+    init(homeTableViewController: HomeTableViewController, viewModel: HomeViewModel) {
+        self.homeTableViewController = homeTableViewController
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+    }
     
     private let filterOptions: [String] = ["모든 날짜", "모든 지역", "매치 유형"] // 필터 옵션
     
@@ -92,9 +93,12 @@ final class HomeViewController: UIViewController {
         super.viewDidLoad()
         addChild(homeTableViewController)
         configureUI()
-        self.navigationController?.navigationBar.isHidden = true
     }
-
+    
+    override func viewWillAppear(_ animated: Bool) {
+        navigationController?.navigationBar.isHidden = true
+    }
+    
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
@@ -226,10 +230,14 @@ final class HomeViewController: UIViewController {
     func didTapFloatingButton() {
         //TODO: -FirebaseAuth UID 확인해서 로그인 or 초대뷰
         if Auth.auth().currentUser == nil {
-            delegate?.presentLoginViewController()
+            viewModel?.coordinator?.presentLoginViewController()
         } else {
-            delegate?.presentInviteView()
+            viewModel?.coordinator?.pushInviteView()
         }
         print("DEBUG: didTapFloatingButton")
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
 }

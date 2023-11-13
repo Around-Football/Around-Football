@@ -80,24 +80,24 @@ class PeopleCountView: UIView {
         }
         
         peopleCountLabel.snp.makeConstraints { make in
-            make.top.equalTo(peopleCountTitleLabel.snp.bottom).offset(5)
+            make.top.equalTo(peopleCountTitleLabel.snp.bottom).offset(-10)
             make.centerX.equalToSuperview()
-            make.bottom.equalToSuperview().offset(10)
+            make.bottom.equalToSuperview()
         }
         
         minusButton.snp.makeConstraints { make in
-            make.top.equalTo(peopleCountTitleLabel.snp.bottom).offset(5)
+            make.top.equalTo(peopleCountTitleLabel.snp.bottom).offset(-10)
             make.leading.equalToSuperview()
             make.trailing.equalTo(peopleCountLabel.snp.leading).offset(-10)
-            make.bottom.equalToSuperview().offset(10)
-            make.width.height.equalTo(35)
+            make.bottom.equalToSuperview()
+            make.height.equalTo(60)
         }
         
         plusButton.snp.makeConstraints { make in
-            make.top.equalTo(peopleCountTitleLabel.snp.bottom).offset(5)
+            make.top.equalTo(peopleCountTitleLabel.snp.bottom).offset(-10)
             make.trailing.equalToSuperview()
-            make.bottom.equalToSuperview().offset(10)
-            make.width.height.equalTo(35)
+            make.bottom.equalToSuperview()
+            make.height.equalTo(60)
         }
     }
 }
