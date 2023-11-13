@@ -16,13 +16,23 @@ final class MapViewController: UIViewController {
     
     // MARK: - Properties
     
+    var viewModel: MapViewModel?
+    
+    init(viewModel: MapViewModel) {
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     lazy var mapContainer: KMViewContainer = KMViewContainer(frame: self.view.frame)
     var mapController: KMController?
     var _observerAdded: Bool = false
     var _auth: Bool = false
     var _appear = true
     var locationManager = CLLocationManager()
-    var viewModel: MapViewModel?
     var modalViewController: FieldDetailViewController?
     
     private let searchTextField = UISearchTextField().then {

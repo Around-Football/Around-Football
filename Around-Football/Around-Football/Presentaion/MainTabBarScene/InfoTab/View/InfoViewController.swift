@@ -9,20 +9,22 @@ import UIKit
 
 import FirebaseAuth
 
-protocol InfoViewControllerDelegate: AnyObject {
-    func presentLoginViewController()
-    func pushEditView()
-    func pushSettingView()
-}
-
 final class InfoViewController: UIViewController {
     
     // MARK: - Properties
     
-    weak var delegate: InfoViewControllerDelegate?
-    
+    var viewModel: InfoViewModel?
     var loginViewModel: LoginViewModel?
     private let profileAndEditView = ProfileAndEditView()
+    
+    init(viewModel: InfoViewModel) {
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     private let iconAndImage: [(icon: String, title: String)] = [
         (icon: "heart", title: "관심 글"),
@@ -75,7 +77,7 @@ final class InfoViewController: UIViewController {
     @objc 
     func logoutButtonTapped() {
         loginViewModel?.logout()
-        delegate?.presentLoginViewController() //로그인 모달뷰 나옴
+        viewModel?.coordinator?.presentLoginViewController()
         tabBarController?.selectedIndex = 0 //로그아웃하면 메인탭으로 이동
     }
     
@@ -131,17 +133,17 @@ final class InfoViewController: UIViewController {
         profileAndEditView.editButtonActionHandler = { [weak self] in
             guard let self else { return }
             if Auth.auth().currentUser == nil {
-                delegate?.presentLoginViewController()
+                viewModel?.coordinator?.presentLoginViewController()
             } else {
-                delegate?.pushEditView()
+                viewModel?.coordinator?.pushEditView()
             }
         }
         profileAndEditView.settingButtonActionHandler = { [weak self] in
             guard let self else { return }
             if Auth.auth().currentUser == nil {
-                delegate?.presentLoginViewController()
+                viewModel?.coordinator?.presentLoginViewController()
             } else {
-                delegate?.pushSettingView()
+                viewModel?.coordinator?.pushSettingView()
             }
         }
     }

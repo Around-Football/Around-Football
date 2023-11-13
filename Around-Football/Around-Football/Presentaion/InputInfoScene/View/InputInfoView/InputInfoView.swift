@@ -273,7 +273,7 @@ class InputInfoView: UIView {
     
     // 다음 버튼
     let nextButton = UIButton().then {
-        $0.setTitle("다음", for: .normal)
+        $0.setTitle("완료", for: .normal)
         $0.backgroundColor = .black
         $0.setTitleColor(.white, for: .normal)
         $0.layer.cornerRadius = LayoutOptions.cornerRadious
