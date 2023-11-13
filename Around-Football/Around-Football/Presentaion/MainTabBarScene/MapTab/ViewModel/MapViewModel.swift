@@ -13,6 +13,8 @@ final class MapViewModel {
     
     // MARK: - Properties
     
+    weak var coordinator: MapTabCoordinator!
+    
     var currentLocation: GeoPoint
     var searchLocation: GeoPoint?
     var isSearchCurrentLocation: Bool = true

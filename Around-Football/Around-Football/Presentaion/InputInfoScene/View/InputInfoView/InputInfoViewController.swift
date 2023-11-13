@@ -35,7 +35,6 @@ final class InputInfoViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         keyboardController()
         
         inputInfoView.userNameTextField.delegate = self

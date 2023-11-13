@@ -27,13 +27,13 @@ enum CoordinatorType {
 }
 
 protocol Coordinator: AnyObject {
-    var childCoordinators: [Coordinator] { get set }
+    var childCoordinators: [Coordinator] { get set } // 자식 코디네이터 가지고 있음.
     var navigationController: UINavigationController? { get set }
     
-    func start()
+    func start() // 뷰컨트롤러 만들고 그 뷰컨으로 이동
 }
 
-//Coordinator 프로토콜 채택한 공통 BaseCoordinator 클래스
+// Coordinator 프로토콜 채택한 공통 BaseCoordinator 클래스
 class BaseCoordinator: Coordinator {
 
     // MARK: - Property
@@ -63,16 +63,16 @@ final class AppCoordinator: BaseCoordinator, LoginCoordinatorDelegate, MainTabBa
     
     override func start() {
         showMainTabController()
-//        presentLoginViewController() //Test
     }
     
     func showMainTabController() {
         let coordinator = MainTabBarCoordinator(navigationController: navigationController)
         coordinator.delegate = self
-        coordinator.start() //뷰컨 생성 후 이동
+        coordinator.start() // 뷰컨 생성 후 이동
         childCoordinators.append(coordinator)
     }
     
+    //TODO: - 온보딩뷰 컨트롤러 올리기
     func presentLoginViewController() {
         let coordinator = LoginCoordinator(navigationController: navigationController)
         coordinator.delegate = self

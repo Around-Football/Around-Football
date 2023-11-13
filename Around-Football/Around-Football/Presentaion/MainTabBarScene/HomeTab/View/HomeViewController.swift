@@ -22,7 +22,14 @@ final class HomeViewController: UIViewController {
     // MARK: - Properties
     
     weak var delegate: HomeViewControllerDelegate?
+    var viewModel: HomeViewModel?
     private let homeTableViewController = HomeTableViewController()
+    
+    init(delegate: HomeViewControllerDelegate, viewModel: HomeViewModel) {
+        self.delegate = delegate
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+    }
     
     private let filterOptions: [String] = ["모든 날짜", "모든 지역", "매치 유형"] // 필터 옵션
     
@@ -230,6 +237,11 @@ final class HomeViewController: UIViewController {
         } else {
             delegate?.presentInviteView()
         }
+        print(Auth.auth().currentUser?.uid)
         print("DEBUG: didTapFloatingButton")
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
 }
