@@ -15,16 +15,10 @@ import KakaoSDKCommon
 import KakaoSDKAuth
 import KakaoSDKUser
 
-//protocol LoginViewControllerDelegate: AnyObject {
-//    func pushInputInfoViewController()
-//    func loginDone()
-//}
-
 final class LoginViewController: UIViewController {
     
     // MARK: - Properties
     
-//    weak var delegate: LoginViewControllerDelegate?
     var viewModel: LoginViewModel?
     
     init(viewModel: LoginViewModel?) {
@@ -109,10 +103,9 @@ final class LoginViewController: UIViewController {
         // TODO: - 추가정보 입력 여부에따라 추가정보입력뷰 또는 메인뷰로 이동
         print("DEBUG: 로그인 완료")
 //        if /*추가정보입력*/ = nil {
-//            delegate?.pushInputInfoViewController()
         viewModel?.coordinator?.pushInputInfoViewController()
 //        } else {
-//            delegate?.loginDone()
+//        viewModel?.coordinator?.loginDone()
 //        }
     }
     

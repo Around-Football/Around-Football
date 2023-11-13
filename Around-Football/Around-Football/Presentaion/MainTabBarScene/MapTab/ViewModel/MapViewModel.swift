@@ -13,7 +13,7 @@ final class MapViewModel {
     
     // MARK: - Properties
     
-    weak var coordinator: MapTabCoordinator!
+    weak var coordinator: MapTabCoordinator?
     
     var currentLocation: GeoPoint
     var searchLocation: GeoPoint?

@@ -11,7 +11,7 @@ protocol InfoTabCoordinatorDelegate {
     func presentLoginViewController()
 }
 
-final class InfoTabCoordinator: BaseCoordinator, InfoViewControllerDelegate {
+final class InfoTabCoordinator: BaseCoordinator {
 
     var type: CoordinatorType = .info
     var delegate: InfoTabCoordinatorDelegate?
@@ -22,7 +22,7 @@ final class InfoTabCoordinator: BaseCoordinator, InfoViewControllerDelegate {
     
     func makeInfoViewController() -> UINavigationController {
         let infoViewModel = InfoViewModel(coordinator: self)
-        let infoViewController = InfoViewController(delegate: self, viewModel: infoViewModel)
+        let infoViewController = InfoViewController(viewModel: infoViewModel)
         navigationController = UINavigationController(rootViewController: infoViewController)
         navigationController?.navigationBar.prefersLargeTitles = false
         

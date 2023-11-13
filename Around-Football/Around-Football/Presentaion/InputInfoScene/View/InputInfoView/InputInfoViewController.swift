@@ -7,16 +7,10 @@
 
 import UIKit
 
-//protocol InputInfoViewControllerDelegate: AnyObject {
-//    func dismissView()
-//    func removeThisChildCoordinators()
-//}
-
 final class InputInfoViewController: UIViewController {
     
     // MARK: - Properties
     
-//    weak var delegate: InputInfoViewControllerDelegate?
     private var viewModel: InputInfoViewModel?
     let inputInfoView: InputInfoView = InputInfoView()
     
@@ -71,7 +65,6 @@ final class InputInfoViewController: UIViewController {
     }
     
     override func viewWillDisappear(_ animated: Bool) {
-//        delegate?.removeThisChildCoordinators()
         viewModel?.coordinator?.removeThisChildCoordinators()
     }
 
@@ -84,8 +77,6 @@ final class InputInfoViewController: UIViewController {
     @objc 
     func nextButtonTapped(_ sender: UIButton) {
         print("DEBUG: InputInfoViewController - nextButtonTapped")
-
-//        delegate?.dismissView()
         viewModel?.coordinator?.dismissView()
 
         area = inputInfoView.userAreaTextField.text ?? ""

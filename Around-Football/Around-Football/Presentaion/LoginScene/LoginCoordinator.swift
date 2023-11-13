@@ -11,9 +11,7 @@ protocol LoginCoordinatorDelegate {
     func showMainTabController()
 }
 
-final class LoginCoordinator: BaseCoordinator,
-//                              LoginViewControllerDelegate,
-                              InputInfoCoordinatorDelegate {
+final class LoginCoordinator: BaseCoordinator, InputInfoCoordinatorDelegate {
 
     var type: CoordinatorType = .login
     var delegate: LoginCoordinatorDelegate?
@@ -22,7 +20,6 @@ final class LoginCoordinator: BaseCoordinator,
     override func start() {
         let loginViewModel = LoginViewModel(coordinator: self)
         let controller = LoginViewController(viewModel: loginViewModel)
-//        controller.delegate = self
         loginNavigationViewController = UINavigationController(rootViewController: controller)
         if let loginNavigationViewController {
             navigationController?.present(loginNavigationViewController, animated: true)
