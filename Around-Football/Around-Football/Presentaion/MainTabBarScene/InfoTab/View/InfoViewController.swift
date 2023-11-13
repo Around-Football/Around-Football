@@ -9,23 +9,15 @@ import UIKit
 
 import FirebaseAuth
 
-protocol InfoViewControllerDelegate: AnyObject {
-    func presentLoginViewController()
-    func pushEditView()
-    func pushSettingView()
-}
-
 final class InfoViewController: UIViewController {
     
     // MARK: - Properties
     
-    weak var delegate: InfoViewControllerDelegate?
     var viewModel: InfoViewModel?
     var loginViewModel: LoginViewModel?
     private let profileAndEditView = ProfileAndEditView()
     
-    init(delegate: InfoViewControllerDelegate, viewModel: InfoViewModel) {
-        self.delegate = delegate
+    init(viewModel: InfoViewModel) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
@@ -85,7 +77,8 @@ final class InfoViewController: UIViewController {
     @objc 
     func logoutButtonTapped() {
         loginViewModel?.logout()
-        delegate?.presentLoginViewController() //로그인 모달뷰 나옴
+//        delegate?.presentLoginViewController() 로그인 모달뷰 나옴
+        viewModel?.coordinator?.presentLoginViewController()
         tabBarController?.selectedIndex = 0 //로그아웃하면 메인탭으로 이동
     }
     
@@ -141,17 +134,17 @@ final class InfoViewController: UIViewController {
         profileAndEditView.editButtonActionHandler = { [weak self] in
             guard let self else { return }
             if Auth.auth().currentUser == nil {
-                delegate?.presentLoginViewController()
+                viewModel?.coordinator?.presentLoginViewController()
             } else {
-                delegate?.pushEditView()
+                viewModel?.coordinator?.pushEditView()
             }
         }
         profileAndEditView.settingButtonActionHandler = { [weak self] in
             guard let self else { return }
             if Auth.auth().currentUser == nil {
-                delegate?.presentLoginViewController()
+                viewModel?.coordinator?.presentLoginViewController()
             } else {
-                delegate?.pushSettingView()
+                viewModel?.coordinator?.pushSettingView()
             }
         }
     }

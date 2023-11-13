@@ -12,21 +12,14 @@ import RxSwift
 import Then
 import SnapKit
 
-protocol HomeViewControllerDelegate: AnyObject {
-    func presentLoginViewController()
-    func presentInviteView()
-}
-
 final class HomeViewController: UIViewController {
     
     // MARK: - Properties
     
-    weak var delegate: HomeViewControllerDelegate?
     var viewModel: HomeViewModel?
     private let homeTableViewController = HomeTableViewController()
     
-    init(delegate: HomeViewControllerDelegate, viewModel: HomeViewModel) {
-        self.delegate = delegate
+    init(viewModel: HomeViewModel) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
@@ -233,11 +226,11 @@ final class HomeViewController: UIViewController {
     func didTapFloatingButton() {
         //TODO: -FirebaseAuth UID 확인해서 로그인 or 초대뷰
         if Auth.auth().currentUser == nil {
-            delegate?.presentLoginViewController()
+            viewModel?.coordinator?.presentLoginViewController()
         } else {
-            delegate?.presentInviteView()
+            viewModel?.coordinator?.presentInviteView()
         }
-        print(Auth.auth().currentUser?.uid)
+//        print(Auth.auth().currentUser?.uid)
         print("DEBUG: didTapFloatingButton")
     }
     

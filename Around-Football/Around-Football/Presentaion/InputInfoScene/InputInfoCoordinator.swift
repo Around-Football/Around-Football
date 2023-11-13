@@ -11,9 +11,7 @@ protocol InputInfoCoordinatorDelegate {
     func loginDone()
 }
 
-final class InputInfoCoordinator: BaseCoordinator
-//                                  InputInfoViewControllerDelegate
-{
+final class InputInfoCoordinator: BaseCoordinator {
     var type: CoordinatorType = .login
     var delegate: InputInfoCoordinatorDelegate?
     
@@ -24,7 +22,6 @@ final class InputInfoCoordinator: BaseCoordinator
     func start(isHidesBackButton: Bool) {
         let inputInfoViewModel = InputInfoViewModel(coordinator: self)
         let controller = InputInfoViewController(viewModel: inputInfoViewModel)
-//        controller.delegate = self
         controller.navigationItem.hidesBackButton = isHidesBackButton
         navigationController?.pushViewController(controller, animated: true)
     }

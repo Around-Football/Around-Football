@@ -11,7 +11,7 @@ protocol ChatTabCoordinatorDelegate {
     //
 }
 
-final class ChatTabCoordinator: BaseCoordinator, ChatViewControllerDelegate {
+final class ChatTabCoordinator: BaseCoordinator {
     
     var type: CoordinatorType = .chat
     var delegate: ChatTabCoordinatorDelegate?
@@ -22,7 +22,7 @@ final class ChatTabCoordinator: BaseCoordinator, ChatViewControllerDelegate {
     
     func makeChatViewController() -> UINavigationController {
         let chatViewModel = ChatViewModel(coordinator: self)
-        let chatViewController = ChatViewController(delegate: self, viewModel: chatViewModel)
+        let chatViewController = ChatViewController(viewModel: chatViewModel)
         navigationController = UINavigationController(rootViewController: chatViewController)
         navigationController?.navigationBar.isHidden = true
         

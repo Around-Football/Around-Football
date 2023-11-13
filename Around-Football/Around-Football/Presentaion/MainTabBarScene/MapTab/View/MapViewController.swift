@@ -12,19 +12,13 @@ import KakaoMapsSDK
 import SnapKit
 import Then
 
-protocol MapViewControllerDelegate: AnyObject {
-    //
-}
-
 final class MapViewController: UIViewController {
     
     // MARK: - Properties
     
-    weak var delegate: MapViewControllerDelegate?
     var viewModel: MapViewModel?
     
-    init(delegate: MapViewControllerDelegate, viewModel: MapViewModel) {
-        self.delegate = delegate
+    init(viewModel: MapViewModel) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }

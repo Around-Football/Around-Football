@@ -7,17 +7,11 @@
 
 import UIKit
 
-protocol ChatViewControllerDelegate: AnyObject {
-    //
-}
-
 final class ChatViewController: UIViewController {
     
-    weak var delegate: ChatViewControllerDelegate?
     private var viewModel: ChatViewModel?
     
-    init(delegate: ChatViewControllerDelegate, viewModel: ChatViewModel) {
-        self.delegate = delegate
+    init(viewModel: ChatViewModel) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }

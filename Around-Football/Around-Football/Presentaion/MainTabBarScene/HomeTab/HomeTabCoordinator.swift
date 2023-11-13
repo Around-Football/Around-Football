@@ -12,7 +12,7 @@ protocol HomeTabCoordinatorDelegate {
     func presentInviteView()
 }
 
-final class HomeTabCoordinator: BaseCoordinator, HomeViewControllerDelegate {
+final class HomeTabCoordinator: BaseCoordinator {
 
     var type: CoordinatorType = .home
     var delegate: HomeTabCoordinatorDelegate?
@@ -24,7 +24,7 @@ final class HomeTabCoordinator: BaseCoordinator, HomeViewControllerDelegate {
     
     func makeHomeViewController() -> UINavigationController {
         let homeViewModel = HomeViewModel(coordinator: self)
-        let homeViewController = HomeViewController(delegate: self, viewModel: homeViewModel)
+        let homeViewController = HomeViewController(viewModel: homeViewModel)
         navigationController = UINavigationController(rootViewController: homeViewController)
         navigationController?.navigationBar.isHidden = true
         
