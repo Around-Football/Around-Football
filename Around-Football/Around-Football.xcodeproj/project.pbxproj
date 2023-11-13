@@ -340,8 +340,8 @@
 			isa = PBXGroup;
 			children = (
 				668EE49B2AFC9E84007A8844 /* ChannelViewController.swift */,
-				668EE4B12AFCBC09007A8844 /* ChannelTableViewCell.swift */,
 				668EE4B72B01A60E007A8844 /* ChannelViewController+.swift */,
+				668EE4B12AFCBC09007A8844 /* ChannelTableViewCell.swift */,
 			);
 			path = Channel;
 			sourceTree = "<group>";
