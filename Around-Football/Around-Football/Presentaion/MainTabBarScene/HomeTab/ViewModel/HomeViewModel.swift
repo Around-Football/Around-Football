@@ -11,15 +11,22 @@ import RxSwift
 import RxRelay
 
 final class HomeViewModel {
+    
+    weak var coordinator: HomeTabCoordinator?
+    
+    init(coordinator: HomeTabCoordinator) {
+        self.coordinator = coordinator
+        fetchRecruitRx()
+    }
      
     var recruitObservable: BehaviorRelay = BehaviorRelay<[Recruit_Rx]>(value: [])
     
-    init() {
+    func fetchRecruitRx() {
         _ = APIService.fetchfetchRecruitRx()
             .map { data -> [Recruit_Rx] in
                 let response = try! JSONDecoder().decode(Response.self, from: data)
                 return response.recruits
-            }            
+            }
             .map { menuItems -> [Recruit_Rx] in
                 var recruits: [Recruit_Rx] = []
                 menuItems.forEach { item in
