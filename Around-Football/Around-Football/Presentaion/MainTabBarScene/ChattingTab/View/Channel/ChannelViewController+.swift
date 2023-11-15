@@ -30,18 +30,18 @@ extension ChannelViewController {
 //            .disposed(by: disposeBag)
 //    }
     
-    private func hideChatAlarmNumber(cell: ChannelTableViewCell) {
+    func hideChatAlarmNumber(cell: ChannelTableViewCell) {
         cell.chatAlarmNumberLabel.text = ""
         cell.chatAlarmNumberLabel.isHidden = true
     }
     
-    private func showChatAlarmNumber(cell: ChannelTableViewCell, alarmNumber: String) {
+    func showChatAlarmNumber(cell: ChannelTableViewCell, alarmNumber: String) {
         cell.chatAlarmNumberLabel.text = alarmNumber
         cell.chatAlarmNumberLabel.isHidden = false
         cell.updateAlarmLabelUI()
     }
     
-    private func formatDate(_ date: Date) -> String {
+    func formatDate(_ date: Date) -> String {
         let calendar = Calendar.current
         let formatter = DateFormatter()
         formatter.locale = Locale(identifier: "ko_KR")
