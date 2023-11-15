@@ -64,12 +64,12 @@ final class ChannelViewController: UIViewController {
         
         configureUI()
         bind()
-                invokedViewWillAppear.onNext(())
 
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        invokedViewWillAppear.onNext(())
     }
     
     
@@ -96,7 +96,8 @@ final class ChannelViewController: UIViewController {
         
         let output = viewModel.transform(input)
         
-        bindCurrentUser(with: output.currentUser)
+        bindContentView()
         bindChannels()
+        bindLoginModalView(with: output.isShowing)
     }
 }
