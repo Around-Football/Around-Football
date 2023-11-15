@@ -100,26 +100,6 @@ struct FirebaseAPI {
         }
     }
     
-    func fetchRecruitFieldData(
-        fieldID: String,
-        date: Date,
-        completion: @escaping(([Recruit]) -> Void)
-    ) {
-        REF_RECRUIT
-            .whereField("fieldID", isEqualTo: fieldID)
-            .whereField("matchDate", isEqualTo: date)
-            .getDocuments { snapshot, error in
-                guard let snapshot = snapshot else {
-                    let errorMessage = error?.localizedDescription ?? "None ERROR"
-                    print("DEBUG: fetchRecruitFieldData Error - \(errorMessage)")
-                    return
-                }
-                
-                let documentsData = snapshot.documents.map { $0.data() }
-                
-            }
-    }
-    
     // MARK: - AuthService
     func updateFCMTokenAndFetchUser(uid: String, fcmToken: String) -> Single<User?> {
         return Single.create { single in
@@ -134,8 +114,6 @@ struct FirebaseAPI {
             }
             return Disposables.create()
         }
-        
-        
     }
     
     func updateFCMToken(uid: String, fcmToken: String, completion: @escaping (Error?) -> Void) {
@@ -166,6 +144,63 @@ struct FirebaseAPI {
         }
     }
 
+}
+
+// MARK: - Recruit create 함수
+
+extension FirebaseAPI {
+    
+    func createRecruitFieldData(
+        user: User,
+        fieldID: String,
+        date: Date,
+        completion: @escaping (Error?) -> Void
+    ) {
+        
+//        var id: String
+//        var userName: String //작성자이름
+//        var fieldID: String //운동장 ID
+//        var recruitedPeopleCount: Int //용병 몇명 구할건지
+//        var content: String //작성내용
+//        var matchDate: Date //날짜만
+//        var startTime: Date//시작시간
+//        var endTime: Date // 종료시간
+        
+        let data = ["id": user.id,
+                    "userName": user.userName,
+                    "fieldID": UUID().uuidString,
+                    "recruitedPeopleCount": 3,
+                    "content": "안녕하세요, 용병 구합니다~",
+                    "matchDate": Date(),
+                        "startTime": Date(),
+                        "endTime": Date()
+        ] as [String : Any]
+        
+        
+        REF_RECRUIT
+            .document(fieldID)
+            .setData(data, completion: completion)
+    }
+    
+    func fetchRecruitFieldData(
+        fieldID: String,
+        date: Date,
+        completion: @escaping(([Recruit]) -> Void)
+    ) {
+        REF_RECRUIT
+            .whereField("fieldID", isEqualTo: fieldID)
+            .whereField("matchDate", isEqualTo: date)
+            .getDocuments { snapshot, error in
+                guard let snapshot = snapshot else {
+                    let errorMessage = error?.localizedDescription ?? "None ERROR"
+                    print("DEBUG: fetchRecruitFieldData Error - \(errorMessage)")
+                    return
+                }
+                
+                let documentsData = snapshot.documents.map { $0.data() }
+                
+            }
+    }
 }
 
 func saveFieldJsonData<T: Encodable>(data:T) {
