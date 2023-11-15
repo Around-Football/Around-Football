@@ -11,6 +11,13 @@ class ChatViewModel {
     
     weak var coordinator: ChatTabCoordinator?
     
+    var messages: [Message] = []
+    let chatAPI = ChatAPI.shared
+    let channelAPI = ChannelAPI.shared
+    let currentUser: User?
+    let withUser: User?
+    var isNewChat: Bool = false
+    
     init(coordinator: ChatTabCoordinator) {
         self.coordinator = coordinator
     }

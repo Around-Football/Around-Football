@@ -17,6 +17,7 @@ final class ChannelViewModel {
     // MARK: - Properties
     
     var channels: BehaviorRelay<[ChannelInfo]> = BehaviorRelay(value: [])
+    let channelAPI: ChannelAPI = ChannelAPI.shared
     var currentUser: BehaviorRelay<User?> = BehaviorRelay(value: nil)
     
     weak var coordinator: ChatTabCoordinator?
@@ -41,24 +42,25 @@ final class ChannelViewModel {
     
     func setupListener(currentUser: Observable<User?>) {
         currentUser
-            .subscribe(onNext: { user in
+            .withUnretained(self)
+            .subscribe(onNext: { (owner, user) in
                 print(#function, "user:", user)
                 if let _ = user {
-                    ChannelAPI.shared.subscribe()
+                    owner.channelAPI.subscribe()
                         .asObservable()
                         .subscribe(onNext: { result in
                             print("channels")
                             print(result)
-                            self.updateCell(to: result)
+                            owner.updateCell(to: result)
 
                         }, onError: { error in
                             print("DEBUG - setupListener Error: \(error.localizedDescription)")
 
                         })
-                        .disposed(by: self.disposeBag)
+                        .disposed(by: owner.disposeBag)
                 } else {
                     print("nochannels")
-                    self.channels.accept([])
+                    owner.channels.accept([])
                 }
             })
             .disposed(by: disposeBag)
@@ -138,6 +140,6 @@ final class ChannelViewModel {
     }
     
     func removeListner() {
-        ChannelAPI.shared.removeListener()
+        channelAPI.removeListener()
     }
 }
