@@ -14,6 +14,8 @@ final class InfoViewController: UIViewController {
     // MARK: - Properties
     
     var viewModel: InfoViewModel
+    
+    //TODO: - 로그인 싱글톤으로 수정
     var loginViewModel: LoginViewModel
     private let profileAndEditView = ProfileAndEditView()
     
@@ -77,7 +79,7 @@ final class InfoViewController: UIViewController {
     
     @objc 
     func logoutButtonTapped() {
-        loginViewModel.logout()
+        UserService.shared.logout()
         viewModel.coordinator?.presentLoginViewController()
         tabBarController?.selectedIndex = 0 //로그아웃하면 메인탭으로 이동
     }
