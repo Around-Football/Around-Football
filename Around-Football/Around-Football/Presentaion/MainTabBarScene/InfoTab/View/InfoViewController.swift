@@ -13,12 +13,13 @@ final class InfoViewController: UIViewController {
     
     // MARK: - Properties
     
-    var viewModel: InfoViewModel?
-    var loginViewModel: LoginViewModel?
+    var viewModel: InfoViewModel
+    var loginViewModel: LoginViewModel
     private let profileAndEditView = ProfileAndEditView()
     
-    init(viewModel: InfoViewModel) {
+    init(viewModel: InfoViewModel, loginViewModel: LoginViewModel) {
         self.viewModel = viewModel
+        self.loginViewModel = loginViewModel
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -76,8 +77,8 @@ final class InfoViewController: UIViewController {
     
     @objc 
     func logoutButtonTapped() {
-        loginViewModel?.logout()
-        viewModel?.coordinator?.presentLoginViewController()
+        loginViewModel.logout()
+        viewModel.coordinator?.presentLoginViewController()
         tabBarController?.selectedIndex = 0 //로그아웃하면 메인탭으로 이동
     }
     
@@ -133,17 +134,17 @@ final class InfoViewController: UIViewController {
         profileAndEditView.editButtonActionHandler = { [weak self] in
             guard let self else { return }
             if Auth.auth().currentUser == nil {
-                viewModel?.coordinator?.presentLoginViewController()
+                viewModel.coordinator?.presentLoginViewController()
             } else {
-                viewModel?.coordinator?.pushEditView()
+                viewModel.coordinator?.pushEditView()
             }
         }
         profileAndEditView.settingButtonActionHandler = { [weak self] in
             guard let self else { return }
             if Auth.auth().currentUser == nil {
-                viewModel?.coordinator?.presentLoginViewController()
+                viewModel.coordinator?.presentLoginViewController()
             } else {
-                viewModel?.coordinator?.pushSettingView()
+                viewModel.coordinator?.pushSettingView()
             }
         }
     }
