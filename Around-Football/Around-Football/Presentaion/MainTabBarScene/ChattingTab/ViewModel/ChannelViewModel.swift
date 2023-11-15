@@ -27,7 +27,8 @@ final class ChannelViewModel {
     }
     
     struct Output {
-        let currentUser: Observable<User?>
+//        let currentUser: Observable<User?>
+        let isShowing: Observable<Bool>
     }
     
     // MARK: - Lifecycles
@@ -41,6 +42,7 @@ final class ChannelViewModel {
     func setupListener(currentUser: Observable<User?>) {
         currentUser
             .subscribe(onNext: { user in
+                print(#function, "user:", user)
                 if let _ = user {
                     ChannelAPI.shared.subscribe()
                         .asObservable()
@@ -88,19 +90,21 @@ final class ChannelViewModel {
     }
         
     func transform(_ input: Input) -> Output {
-        let currentUser = configureCurrentUser(by: input.invokedViewWillAppear)
-        setupListener(currentUser: currentUser)
+//        let currentUser = configureCurrentUser()
+        setupListener(currentUser: self.currentUser.asObservable())
+        let isShowing = configureShowingLoginView(by: input.invokedViewWillAppear)
         
-        return Output(currentUser: currentUser)
+        return Output(isShowing: isShowing)
     }
     
-    
-    private func configureCurrentUser(by inputObserver: Observable<Void>) -> Observable<User?> {
-        guard let uid = Auth.auth().currentUser?.uid else { return .just(nil) }
+    // TODO: - AuthService 나오면 제거
+    private func configureCurrentUser() {
+        guard let uid = Auth.auth().currentUser?.uid else { return }
         
         
-        return inputObserver
+        currentUser
             .withUnretained(self)
+            .filter { (_, user) in user != nil }
             .flatMap { (owner, _) -> Observable<User?> in
                 print("inputobserver")
                 return FirebaseAPI.shared.updateFCMTokenAndFetchUser(uid: uid, fcmToken: "fcmToken")
@@ -110,7 +114,18 @@ final class ChannelViewModel {
             .do { [weak self] user in
                 self?.currentUser.accept(user)
             }
-            .share()
+//            .share()
+    }
+    
+    private func configureShowingLoginView(by inputObserver: Observable<Void>) -> Observable<Bool> {
+        
+        return inputObserver
+            .withUnretained(self)
+            .flatMap({ (owner, _) -> Observable<Bool> in
+                if owner.currentUser.value != nil { return .just(false) }
+                return .just(true)
+            })
+            
     }
     
     

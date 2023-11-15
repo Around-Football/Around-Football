@@ -11,20 +11,13 @@ import RxSwift
 import MessageKit
 
 extension ChannelViewController {
-    func bindCurrentUser(with outputObservable: Observable<User?>) {
-        outputObservable
-            .withUnretained(self)
-            .do(onNext: { (owner, user) in
-                if user == nil {
-                    print("currentUser nil")
-                    owner.viewModel.coordinator?.presentLoginViewController()
-                }
-            })
-            .map { $0.1 != nil }
+    func bindContentView() {
+        viewModel.currentUser
+            .map { $0 != nil }
             .bind(to: loginLabel.rx.isHidden)
             .disposed(by: disposeBag)
         
-        outputObservable
+        viewModel.currentUser
             .map { $0 == nil }
             .bind(to: channelTableView.rx.isHidden)
             .disposed(by: disposeBag)
@@ -44,7 +37,33 @@ extension ChannelViewController {
         
         
     }
-
+    
+    func bindLoginModalView(with outputObservable: Observable<Bool>) {
+        outputObservable
+            .withUnretained(self)
+            .subscribe(onNext: { (owner, isShowing) in
+                if isShowing {
+                    print("currentUser nil")
+                    owner.viewModel.coordinator?.presentLoginViewController()
+                    // TODO: - AuthService 나오면 제거
+                    DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 5) {
+                        owner.viewModel.currentUser.accept(User(dictionary: [
+                            "age": 312321311,
+                            "area": "Efefe",
+                            "gender": "남성",
+                            "id": "nTUShiSwx2UXVZudPiWSnGE6XNf1",
+                            "mainUserFeet": "왼발",
+                            "position": "MF",
+                            "userName": "1312312"
+                        ]))
+                    }
+                    
+                }
+            })
+            .disposed(by: disposeBag)
+        
+    }
+    
     private func hideChatAlarmNumber(cell: ChannelTableViewCell) {
         cell.chatAlarmNumberLabel.text = ""
         cell.chatAlarmNumberLabel.isHidden = true
@@ -72,40 +91,11 @@ extension ChannelViewController {
         }
         return formatter.string(from: date)
     }
-
-}
-//extension ChannelViewController: UITableViewDataSource {
-//    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-//        return viewModel.channels.count
-//    }
-//    
-//    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-//        let cell = tableView.dequeueReusableCell(withIdentifier: ChannelTableViewCell.cellId, for: indexPath) as! ChannelTableViewCell
-//        cell.chatRoomLabel.text = viewModel.channels[indexPath.row].withUserName
-//        cell.chatPreviewLabel.text = viewModel.channels[indexPath.row].previewContent
-//        
-//        let alarmNumber = viewModel.channels[indexPath.row].alarmNumber
-//        alarmNumber == 0 ? hideChatAlarmNumber(cell: cell) : showChatAlarmNumber(cell: cell, alarmNumber: "\(alarmNumber)")
-//        
-//        let date = viewModel.channels[indexPath.row].recentDate
-//        cell.recentDateLabel.text = formatDate(date)
-//        
-//        return cell
-//    }
     
-//}
+}
 
 extension ChannelViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 100
-    }
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-//        let channel = viewModel.channels[indexPath.row]
-//        guard let currentUser = viewModel.currentUser else { return }
-        /* Coordinator 적용
-        let viewController = ChatViewController(user: currentUser, channel: channel)
-        navigationController?.pushViewController(viewController, animated: true)
-         */
     }
 }
