@@ -63,3 +63,48 @@ extension ChatViewController: MessagesDisplayDelegate {
     }
 }
 
+// MARK: - ImageCell Custom DetailView
+
+extension ChatViewController: MessageCellDelegate {
+    func didTapImage(in cell: MessageCollectionViewCell) {
+        print(#function)
+        print("didTapMessage")
+        guard let indexPath = messagesCollectionView.indexPath(for: cell),
+              let messagesDataSource = messagesCollectionView.messagesDataSource else { return }
+        let message = messagesDataSource.messageForItem(at: indexPath, in: messagesCollectionView)
+        switch message.kind {
+        case .photo(let photoItem):
+            print("DEBUG - Message in a photo")
+            if let image = photoItem.image {
+                // cell의 위치정보
+                let cellOriginFrame = cell.superview?.convert(cell.frame, to: nil)
+                let cellOriginPoint = cellOriginFrame?.origin
+                
+                
+                // Transition 설정
+                imageTransition.setPoint(point: cellOriginPoint)
+                imageTransition.setFrame(frame: cellOriginFrame)
+                
+                let imageMessageViewController = ImageMessageViewController()
+                imageMessageViewController.image = image
+                imageMessageViewController.transitioningDelegate = self
+                imageMessageViewController.modalPresentationStyle = .custom
+                
+                present(imageMessageViewController, animated: true)
+            }
+        default:
+            print("DEBUG - Message is not a photo")
+            break
+        }
+    }
+}
+
+extension ChatViewController: UIViewControllerTransitioningDelegate {
+    func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        return imageTransition
+    }
+    
+    func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        return DisMissAnim()
+    }
+}
