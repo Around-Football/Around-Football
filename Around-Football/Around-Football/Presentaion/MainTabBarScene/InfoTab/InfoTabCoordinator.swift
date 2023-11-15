@@ -22,6 +22,7 @@ final class InfoTabCoordinator: BaseCoordinator {
     
     func makeInfoViewController() -> UINavigationController {
         let infoViewModel = InfoViewModel(coordinator: self)
+        //TODO: - 로그인뷰모델 싱글톤으로 수정
         let loginViewModel = LoginViewModel(coordinator: LoginCoordinator(navigationController: self.navigationController))
         let infoViewController = InfoViewController(viewModel: infoViewModel, loginViewModel: loginViewModel)
         navigationController = UINavigationController(rootViewController: infoViewController)
