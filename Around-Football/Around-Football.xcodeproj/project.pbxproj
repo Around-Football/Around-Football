@@ -64,6 +64,9 @@
 		668EE4BA2B04E37C007A8844 /* ChatAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 668EE4B92B04E37C007A8844 /* ChatAPI.swift */; };
 		668EE4BD2B04E3A6007A8844 /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = 668EE4BC2B04E3A6007A8844 /* FirebaseStorage */; };
 		668EE4BF2B0500D5007A8844 /* ChatViewController+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 668EE4BE2B0500D5007A8844 /* ChatViewController+.swift */; };
+		668EE4C12B050305007A8844 /* ImageMessageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 668EE4C02B050305007A8844 /* ImageMessageViewController.swift */; };
+		668EE4C32B050373007A8844 /* ImageTransition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 668EE4C22B050373007A8844 /* ImageTransition.swift */; };
+		668EE4C52B05038B007A8844 /* DisMissAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 668EE4C42B05038B007A8844 /* DisMissAnimation.swift */; };
 		669674882AC3E82B0067FD48 /* MainTabController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 669674872AC3E82B0067FD48 /* MainTabController.swift */; };
 		6696748F2AC3E9CE0067FD48 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6696748E2AC3E9CE0067FD48 /* HomeViewController.swift */; };
 		669674912AC3E9D40067FD48 /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 669674902AC3E9D40067FD48 /* MapViewController.swift */; };
@@ -166,6 +169,9 @@
 		668EE4B72B01A60E007A8844 /* ChannelViewController+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ChannelViewController+.swift"; sourceTree = "<group>"; };
 		668EE4B92B04E37C007A8844 /* ChatAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatAPI.swift; sourceTree = "<group>"; };
 		668EE4BE2B0500D5007A8844 /* ChatViewController+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ChatViewController+.swift"; sourceTree = "<group>"; };
+		668EE4C02B050305007A8844 /* ImageMessageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageMessageViewController.swift; sourceTree = "<group>"; };
+		668EE4C22B050373007A8844 /* ImageTransition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageTransition.swift; sourceTree = "<group>"; };
+		668EE4C42B05038B007A8844 /* DisMissAnimation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisMissAnimation.swift; sourceTree = "<group>"; };
 		669674872AC3E82B0067FD48 /* MainTabController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabController.swift; sourceTree = "<group>"; };
 		6696748E2AC3E9CE0067FD48 /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		669674902AC3E9D40067FD48 /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
@@ -368,6 +374,7 @@
 			children = (
 				7C2B1AE42AF4BCA80052EC64 /* ChatViewController.swift */,
 				668EE4BE2B0500D5007A8844 /* ChatViewController+.swift */,
+				668EE4C02B050305007A8844 /* ImageMessageViewController.swift */,
 			);
 			path = Chat;
 			sourceTree = "<group>";
@@ -743,6 +750,8 @@
 				663417CB2AD68413002FE2CA /* Constants.swift */,
 				278E555A2AD800BC00C328D3 /* APIService.swift */,
 				278E55692AD930F900C328D3 /* Response.swift */,
+				668EE4C22B050373007A8844 /* ImageTransition.swift */,
+				668EE4C42B05038B007A8844 /* DisMissAnimation.swift */,
 			);
 			path = Utiles;
 			sourceTree = "<group>";
@@ -866,6 +875,7 @@
 				7CC619742AD433760085DF90 /* ProfileAndEditView.swift in Sources */,
 				7CE25AE62ACABF620014132F /* AFButton.swift in Sources */,
 				66656F9D2AD9219F00AE1AFA /* FieldDetailViewController.swift in Sources */,
+				668EE4C12B050305007A8844 /* ImageMessageViewController.swift in Sources */,
 				668EE4B42AFF552F007A8844 /* ChannelAPI.swift in Sources */,
 				7C5F775E2AC9CE8A004CE48F /* DateCell.swift in Sources */,
 				7C94EBD52B01BF0600A7E42A /* InfoViewModel.swift in Sources */,
@@ -895,6 +905,7 @@
 				7CBFED752AE69FE400915D65 /* UserModel.swift in Sources */,
 				7C5F77642AC9E180004CE48F /* UIView+.swift in Sources */,
 				669674932AC3E9DF0067FD48 /* InfoViewController.swift in Sources */,
+				668EE4C32B050373007A8844 /* ImageTransition.swift in Sources */,
 				7929A3112ADEAD35006ED4FA /* InputInfoView.swift in Sources */,
 				7C2B1AE52AF4BCA80052EC64 /* ChatViewController.swift in Sources */,
 				668EE4BA2B04E37C007A8844 /* ChatAPI.swift in Sources */,
@@ -918,6 +929,7 @@
 				7C2B1AFE2AF4D28D0052EC64 /* HomeTabCoordinator.swift in Sources */,
 				274C21C42ACFE932005469E6 /* LoginViewModel.swift in Sources */,
 				2736744D2AC3061C003ADE3F /* AppDelegate.swift in Sources */,
+				668EE4C52B05038B007A8844 /* DisMissAnimation.swift in Sources */,
 				7C5F77602AC9DA08004CE48F /* GroundTitleView.swift in Sources */,
 				7CB21BA52AC94EE4001D0058 /* DetailUserInfoView.swift in Sources */,
 				273674832AC308D1003ADE3F /* RecruitModel.swift in Sources */,
