@@ -111,17 +111,17 @@ final class LoginViewController: UIViewController {
     
     @objc
     func kakaoLoginButtonTapped() {
-        viewModel?.kakaoSignIn()
+        UserService.shared.kakaoSignIn()
     }
     
     @objc
     func googleLoginButtonTapped() {
-        viewModel?.googleSignIn(self)
+        UserService.shared.googleSignIn(self)
     }
     
     @objc
     func appleLoginButtonTapped() {
-        viewModel?.appleSignIn()
+        UserService.shared.appleSignIn()
     }
     
     // MARK: - Helpers

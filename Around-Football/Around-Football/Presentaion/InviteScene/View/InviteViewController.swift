@@ -68,10 +68,25 @@ final class InviteViewController: UIViewController, GroundTitleViewDelegate {
     private func setAddButton() {
         addButton.buttonActionHandler = { [weak self] in
             guard let self else { return }
-            dismiss(animated: true)
+            
+            // MARK: - 테스트용 임시 데이터 파베에 올림
+            FirebaseAPI.shared.createRecruitFieldData(
+                user: UserService.shared.user ?? User(dictionary: [:]),
+                fieldID: UUID().uuidString,
+                date: Date()
+            ) { error in
+                if error == nil {
+                    print("필드 올리기 성공")
+                } else {
+                    print("createRecruitFieldData Error: \(error?.localizedDescription)")
+                }
+            }
         }
         
-        placeView.searchFieldButton.addTarget(self, action: #selector(searchFieldButtonTapped), for: .touchUpInside)
+        // MARK: - 창현이가 만든 서치 버튼
+        placeView.searchFieldButton.addTarget(self,
+                                              action: #selector(searchFieldButtonTapped),
+                                              for: .touchUpInside)
     }
     
     private func keyboardController() {
