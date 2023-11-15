@@ -16,19 +16,18 @@ final class ChannelViewModel {
     
     // MARK: - Properties
     
-    var channels: [ChannelInfo] = []
-    var currentUser: User?
+    var channels: BehaviorRelay<[ChannelInfo]> = BehaviorRelay(value: [])
+    var currentUser: BehaviorRelay<User?> = BehaviorRelay(value: nil)
     
     weak var coordinator: ChatTabCoordinator?
     private let disposeBag = DisposeBag()
     
     struct Input {
-        let invokedViewDidLoad: Observable<Void>
+        let invokedViewWillAppear: Observable<Void>
     }
     
     struct Output {
         let currentUser: Observable<User?>
-        let channels: Observable<[ChannelInfo]>
     }
     
     // MARK: - Lifecycles
@@ -39,126 +38,80 @@ final class ChannelViewModel {
     
     // MARK: - API
     
-    //    func setupListener() {
-    //        ChannelAPI.shared.subscribe { [weak self] result in
-    //            guard let self = self else { return }
-    //            switch result {
-    //            case .success(let data):
-    //                self.updateCell(to: data)
-    //            case .failure(let error):
-    //                print("DEBUG - setupListener Error: \(error.localizedDescription)")
-    //            }
-    //        }
-    //    }
-    
-    func setupListener() {
-        ChannelAPI.shared.subscribe()
-            .subscribe { result in
-                switch result {
-                case .success(let data):
-                    self.updateCell(to: data)
-                case .failure(let error):
-                    print("DEBUG - setupListener Error: \(error.localizedDescription)")
+    func setupListener(currentUser: Observable<User?>) {
+        currentUser
+            .subscribe(onNext: { user in
+                if let _ = user {
+                    ChannelAPI.shared.subscribe()
+                        .asObservable()
+                        .subscribe(onNext: { result in
+                            print("channels")
+                            print(result)
+                            self.updateCell(to: result)
+
+                        }, onError: { error in
+                            print("DEBUG - setupListener Error: \(error.localizedDescription)")
+
+                        })
+                        .disposed(by: self.disposeBag)
+                } else {
+                    print("nochannels")
+                    self.channels.accept([])
                 }
-            }
+            })
             .disposed(by: disposeBag)
     }
     
-    //    func fetchUser() {
-    //        let uid = Auth.auth().currentUser?.uid ?? UUID().uuidString
-    //        let fcmToken = UserDefaults.standard.string(forKey: "FCMToken") ?? ""
-    //        FirebaseAPI.shared.updateFCMTokenAndFetchUser(uid: uid, fcmToken: fcmToken) { [weak self] user, error in
-    //            if let error = error {
-    //                print("DEBUG - FetchUser Error: ", #function, error.localizedDescription)
-    //                return
-    //            }
-    //            guard let self = self else { return }
-    //            self.currentUser = user
-    //            print("DEBUG - CurrentUser: \(String(describing: self.currentUser))")
-    //
-    //        }
-    //    }
     // MARK: - Helpers
     
     private func updateCell(to data: [(ChannelInfo, DocumentChangeType)]) {
+        var currentChannels = channels.value
         data.forEach { channel, documentChangeType in
             switch documentChangeType {
             case .added:
-                addChannelToTable(channel)
+                print("added")
+                guard currentChannels.contains(channel) == false else { return }
+                currentChannels.append(channel)
+                currentChannels.sort()
+                
             case .modified:
-                updateChannelInTable(channel)
+                print("Modified")
+                guard let index = currentChannels.firstIndex(of: channel) else { return }
+                currentChannels[index] = channel
             case .removed:
-                removeChannelFromTable(channel)
+                print("removed")
+                guard let index = currentChannels.firstIndex(of: channel) else { return }
+                currentChannels.remove(at: index)
             }
         }
+        channels.accept(currentChannels)
     }
-    
-    private func addChannelToTable(_ channel: ChannelInfo) {
-        guard channels.contains(channel) == false else { return }
-        channels.append(channel)
-        channels.sort()
         
-        guard let index = channels.firstIndex(of: channel) else { return }
-        // TODO: - RX 적용하기
-        //                channelTableView.insertRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
-    }
-    
-    private func updateChannelInTable(_ channel: ChannelInfo) {
-        guard let index = channels.firstIndex(of: channel) else { return }
-        channels[index] = channel
-        
-        // TODO: - RX 적용하기
-        //        channtlTableView.reloatRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
-    }
-    
-    private func removeChannelFromTable(_ channel: ChannelInfo) {
-        guard let index = channels.firstIndex(of: channel) else { return }
-        channels.remove(at: index)
-        
-        
-        // TODO: - RX 적용하기
-        //        channtlTableView.deleteRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
-    }
-    
     func transform(_ input: Input) -> Output {
-        let currentUser = configureCurrentUser(by: input.invokedViewDidLoad)
-        let channels = configureChannelInfo(by: input.invokedViewDidLoad, currentUser: currentUser)
+        let currentUser = configureCurrentUser(by: input.invokedViewWillAppear)
+        setupListener(currentUser: currentUser)
         
-        return Output(currentUser: currentUser, channels: channels)
+        return Output(currentUser: currentUser)
     }
     
     
     private func configureCurrentUser(by inputObserver: Observable<Void>) -> Observable<User?> {
-        let uid = Auth.auth().currentUser?.uid ?? UUID().uuidString
-        let fcmToken = UserDefaults.standard.string(forKey: "FCMToken") ?? ""
+        guard let uid = Auth.auth().currentUser?.uid else { return .just(nil) }
+        
         
         return inputObserver
             .withUnretained(self)
             .flatMap { (owner, _) -> Observable<User?> in
-                return FirebaseAPI.shared.updateFCMTokenAndFetchUser(uid: uid, fcmToken: fcmToken)
+                print("inputobserver")
+                return FirebaseAPI.shared.updateFCMTokenAndFetchUser(uid: uid, fcmToken: "fcmToken")
                     .asObservable()
                     .catchAndReturn(nil)
-                
             }
             .do { [weak self] user in
-                self?.currentUser = user
+                self?.currentUser.accept(user)
             }
+            .share()
     }
-    
-    private func configureChannelInfo(by inputObserver: Observable<Void>, currentUser: Observable<User?>) -> Observable<[ChannelInfo]> {
-        return currentUser
-            .withUnretained(self)
-            .flatMap({ owner, user -> Observable<[ChannelInfo]> in
-                guard user != nil else { return .empty() }
-                return ChannelAPI.shared.subscribe().asObservable()
-                    .catchAndReturn([])
-                    .do { result in
-                        owner.updateCell(to: result)
-                    }
-                    .map { _ in owner.channels }
-            })
-    }
-    
     
     
     func showChatView() {
@@ -167,5 +120,9 @@ final class ChannelViewModel {
     
     func showLoginView() {
         coordinator?.presentLoginViewController()
+    }
+    
+    func removeListner() {
+        ChannelAPI.shared.removeListener()
     }
 }
