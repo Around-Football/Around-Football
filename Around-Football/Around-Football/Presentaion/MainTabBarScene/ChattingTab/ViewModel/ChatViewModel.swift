@@ -11,6 +11,7 @@ class ChatViewModel {
     
     weak var coordinator: ChatTabCoordinator?
     
+    let channel = Channel(id: "", members: 2) // 수정
     var messages: [Message] = []
     let chatAPI = ChatAPI.shared
     let channelAPI = ChannelAPI.shared

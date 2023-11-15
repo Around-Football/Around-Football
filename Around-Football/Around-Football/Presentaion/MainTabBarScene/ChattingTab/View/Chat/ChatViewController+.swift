@@ -63,6 +63,44 @@ extension ChatViewController: MessagesDisplayDelegate {
     }
 }
 
+extension ChatViewController: PHPickerViewControllerDelegate {
+    func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
+        picker.dismiss(animated: true)
+        
+        let itemProvider = results.first?.itemProvider
+        if let itemProvider = itemProvider,
+           itemProvider.canLoadObject(ofClass: UIImage.self) {
+            itemProvider.loadObject(ofClass: UIImage.self) { image, error in
+                if let image = image as? UIImage {
+                    self.sendPhoto(image)
+                }
+            }
+        }
+    }
+    
+    private func sendPhoto(_ image: UIImage) {
+        // TODO: - 첫 메시지인경우 채팅방 생성 로직 추가
+        // TODO: - ViewModel 완성 후 아래 로직 전면 재교체 (강제 언래핑, Rx적용)
+        isSendingPhoto = true
+        StorageAPI.uploadImage(image: image, channel: viewModel.channel) { [weak self] url in
+            guard let self = self, let url = url else { return }
+            self.isSendingPhoto = false
+            var message = Message(user: viewModel.currentUser!, image: image)
+            message.downloadURL = url
+            self.viewModel.chatAPI.save(message)
+            self.messagesCollectionView.scrollToLastItem(animated: false)
+            self.viewModel.channelAPI.updateChannelInfo(owner: viewModel.currentUser!, withUser: viewModel.withUser!, channelId: viewModel.channel.id, message: message)
+            // TODO: - NotiManager 적용
+//            NotiManager.shared.pushNotification(channel: channel, content: ("사진"), fcmToken: toUser!.fcmToken, from: user)
+            
+        }
+    }
+    
+    func imagePickerControllerDidCancel(_ picker: PHPickerViewController) {
+        picker.dismiss(animated: true)
+    }
+}
+
 // MARK: - ImageCell Custom DetailView
 
 extension ChatViewController: MessageCellDelegate {

@@ -10,7 +10,7 @@ import Foundation
 import RxSwift
 import FirebaseFirestore
 
-class ChatAPI {
+final class ChatAPI {
     static let shared = ChatAPI()
     var listener: ListenerRegistration?
     var collectionListener: CollectionReference?
