@@ -19,6 +19,9 @@ final class ChatViewController: MessagesViewController {
     
     var viewModel: ChatViewModel
     
+    // ImageTransition 인스턴스 생성
+    let imageTransition = ImageTransition()
+    
     var isSendingPhoto = false {
         didSet {
             messageInputBar.leftStackViewItems.forEach {
