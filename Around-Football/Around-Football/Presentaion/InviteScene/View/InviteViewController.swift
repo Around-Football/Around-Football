@@ -100,16 +100,18 @@ final class InviteViewController: UIViewController, GroundTitleViewDelegate {
                                                       endTime: endTime) { error in
                 if error == nil {
                     print("필드 올리기 성공")
+                    //TODO: - coordinator로 변경
+                    self.dismiss(animated: true)
                 } else {
                     print("createRecruitFieldData Error: \(error?.localizedDescription)")
                 }
             }
-            
-            // MARK: - 창현이가 만든 서치 버튼
-            placeView.searchFieldButton.addTarget(self,
-                                                  action: #selector(searchFieldButtonTapped),
-                                                  for: .touchUpInside)
         }
+        
+        // MARK: - 창현이가 만든 서치 버튼
+        placeView.searchFieldButton.addTarget(self,
+                                              action: #selector(searchFieldButtonTapped),
+                                              for: .touchUpInside)
     }
         
         private func keyboardController() {
