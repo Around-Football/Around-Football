@@ -94,9 +94,16 @@ final class InputInfoViewController: UIViewController {
                                                         "position" : position
                                                        ]))
         
+        // MARK: - UserService의 User 업데이트 해주기
+        
+        FirebaseAPI.shared.readUser { [weak self] user in
+            guard let self else { return }
+            UserService.shared.user = user
+        }
+
         //TODO: - 모달, push에 따라 분기처리
         viewModel?.coordinator?.dismissView()
-
+        viewModel?.coordinator?.popInputInfoViewController()
     }
     
     @objc
