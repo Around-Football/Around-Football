@@ -57,16 +57,16 @@ class PeopleCountView: UIView {
     
     // MARK: - Selectors
     
-    @objc 
+    @objc
     private func minusCount() {
         count = count > 0 ? count - 1 : count
     }
     
-    @objc 
+    @objc
     private func plusCount() {
         count = count < 25 ? count + 1 : count
     }
-
+    
     // MARK: - Helpers
     
     private func configureUI() {
@@ -80,24 +80,24 @@ class PeopleCountView: UIView {
         }
         
         peopleCountLabel.snp.makeConstraints { make in
-            make.top.equalTo(peopleCountTitleLabel.snp.bottom).offset(-10)
+            make.top.equalTo(peopleCountTitleLabel.snp.bottom).offset(5)
             make.centerX.equalToSuperview()
-            make.bottom.equalToSuperview()
+            make.bottom.equalToSuperview().offset(10)
         }
         
         minusButton.snp.makeConstraints { make in
-            make.top.equalTo(peopleCountTitleLabel.snp.bottom).offset(-10)
+            make.top.equalTo(peopleCountTitleLabel.snp.bottom).offset(5)
             make.leading.equalToSuperview()
             make.trailing.equalTo(peopleCountLabel.snp.leading).offset(-10)
-            make.bottom.equalToSuperview()
-            make.height.equalTo(60)
+            make.bottom.equalToSuperview().offset(10)
+            make.width.height.equalTo(35)
         }
         
         plusButton.snp.makeConstraints { make in
-            make.top.equalTo(peopleCountTitleLabel.snp.bottom).offset(-10)
+            make.top.equalTo(peopleCountTitleLabel.snp.bottom).offset(5)
             make.trailing.equalToSuperview()
-            make.bottom.equalToSuperview()
-            make.height.equalTo(60)
+            make.bottom.equalToSuperview().offset(10)
+            make.width.height.equalTo(35)
         }
     }
 }

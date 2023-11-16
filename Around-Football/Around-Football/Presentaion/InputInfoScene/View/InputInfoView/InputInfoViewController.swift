@@ -41,6 +41,8 @@ final class InputInfoViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        isInfoCompleted()
         navigationItem.title = "추가정보 입력"
         keyboardController()
 
@@ -74,6 +76,22 @@ final class InputInfoViewController: UIViewController {
     
     deinit {
         NotificationCenter.default.removeObserver(self)
+    }
+    
+    // MARK: - Helpers
+    private func isInfoCompleted() {
+        guard
+            inputInfoView.userNameTextField.text != nil,
+            inputInfoView.userAgeTextField.text != nil,
+            inputInfoView.userAreaTextField.text != nil,
+            inputInfoView.maleButton.isSelected ||
+            inputInfoView.femaleButton.isSelected,
+            inputInfoView.fwButton.isSelected || inputInfoView.mfButton.isSelected || inputInfoView.dfButton.isSelected || inputInfoView.gkButton.isSelected
+        else {
+            return inputInfoView.nextButton.isEnabled = false
+            
+        }
+        return inputInfoView.nextButton.isEnabled = true
     }
     
     // MARK: - Selectors
@@ -113,6 +131,7 @@ final class InputInfoViewController: UIViewController {
             inputInfoView.femaleButton.isSelected.toggle()
         }
         gender = sender.titleLabel?.text ?? ""
+        isInfoCompleted()
     }
     
     @objc
@@ -122,7 +141,7 @@ final class InputInfoViewController: UIViewController {
             inputInfoView.maleButton.isSelected.toggle()
         }
         gender = sender.titleLabel?.text ?? ""
-        
+        isInfoCompleted()
     }
     
     @objc
@@ -135,6 +154,7 @@ final class InputInfoViewController: UIViewController {
         }
         sender.isSelected.toggle()
         mainUsedFeet = sender.titleLabel?.text ?? ""
+        isInfoCompleted()
     }
     
     @objc
@@ -147,6 +167,7 @@ final class InputInfoViewController: UIViewController {
         }
         sender.isSelected.toggle()
         mainUsedFeet = sender.titleLabel?.text ?? ""
+        isInfoCompleted()
     }
     
     @objc
@@ -159,30 +180,35 @@ final class InputInfoViewController: UIViewController {
         }
         sender.isSelected.toggle()
         mainUsedFeet = sender.titleLabel?.text ?? ""
+        isInfoCompleted()
     }
     
     @objc
     func fwButtonTapped(_ sender: UIButton) {
         sender.isSelected.toggle()
         position = sender.titleLabel?.text ?? ""
+        isInfoCompleted()
     }
     
     @objc
     func mfButtonTapped(_ sender: UIButton) {
         sender.isSelected.toggle()
         position = sender.titleLabel?.text ?? ""
+        isInfoCompleted()
     }
     
     @objc
     func dfButtonTapped(_ sender: UIButton) {
         sender.isSelected.toggle()
         position = sender.titleLabel?.text ?? ""
+        isInfoCompleted()
     }
     
     @objc
     func gkButtonTapped(_ sender: UIButton) {
         sender.isSelected.toggle()
         position = sender.titleLabel?.text ?? ""
+        isInfoCompleted()
     }
     
     private func loadFirebaseUserInfo() {

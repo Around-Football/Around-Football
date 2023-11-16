@@ -22,8 +22,10 @@ import RxSwift
  var position: String
  */
 
-struct FirebaseAPI {
+final class FirebaseAPI {
     static let shared = FirebaseAPI()
+    
+    private init() { }
     
     func createUser(_ result: AuthDataResult) {
         

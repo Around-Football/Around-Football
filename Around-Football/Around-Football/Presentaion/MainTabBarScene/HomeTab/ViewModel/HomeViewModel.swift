@@ -22,7 +22,7 @@ final class HomeViewModel {
     var recruitObservable: BehaviorRelay = BehaviorRelay<[Recruit_Rx]>(value: [])
     
     func fetchRecruitRx() {
-        _ = APIService.fetchfetchRecruitRx()
+        _ = APIService.fetchRecruitRx()
             .map { data -> [Recruit_Rx] in
                 let response = try! JSONDecoder().decode(Response.self, from: data)
                 return response.recruits
