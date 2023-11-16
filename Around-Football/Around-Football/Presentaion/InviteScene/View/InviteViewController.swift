@@ -14,17 +14,38 @@ final class InviteViewController: UIViewController, GroundTitleViewDelegate {
     
     // MARK: - Properties
     
+//    let data = ["id": user.id,
+//                "userName": user.userName,
+//                "fieldID": UUID().uuidString,
+//                "recruitedPeopleCount": 3,
+//                "content": "안녕하세요, 용병 구합니다~",
+//                "matchDate": Date(),
+//                    "startTime": Date(),
+//                    "endTime": Date()
+//    ] as [String : Any]
+    
     var viewModel = SearchViewModel()
     private let placeView = GroundTitleView()
     private let peopleView = PeopleCountView()
+    private let calenderViewController = CalenderViewController()
+    let contentView = UIView()
+    
+    private var id = UserService.shared.user?.id
+    private var userName = UserService.shared.user?.userName
+    private var fieldID = UUID().uuidString
+    private lazy var recruitedPeopleCount = peopleView.count
+    private lazy var content = contentTextView.text
+    private lazy var matchDate = calenderViewController.selectedDateString
+    private lazy var startTime = calenderViewController.selectedDate
+    //TODO: - EndTime 추가
+    private lazy var endTime = calenderViewController.selectedDate
+    
+    
     
     private lazy var scrollView = UIScrollView().then {
         $0.showsVerticalScrollIndicator = false
     }
     
-    let contentView = UIView()
-    private let calenderViewController = CalenderViewController()
-
     private let contentLabel = UILabel().then {
         $0.text = "내용"
     }
@@ -70,26 +91,28 @@ final class InviteViewController: UIViewController, GroundTitleViewDelegate {
             guard let self else { return }
             
             // MARK: - 테스트용 임시 데이터 파베에 올림
-            FirebaseAPI.shared.createRecruitFieldData(
-                user: UserService.shared.user ?? User(dictionary: [:]),
-                fieldID: UUID().uuidString,
-                date: Date()
-            ) { error in
+            FirebaseAPI.shared.createRecruitFieldData(user: UserService.shared.user,
+                                                      fieldID: fieldID,
+                                                      recruitedPeopleCount: recruitedPeopleCount,
+                                                      content: content,
+                                                      matchDate: matchDate,
+                                                      startTime: startTime,
+                                                      endTime: endTime) { error in
                 if error == nil {
                     print("필드 올리기 성공")
                 } else {
                     print("createRecruitFieldData Error: \(error?.localizedDescription)")
                 }
             }
+            
+            // MARK: - 창현이가 만든 서치 버튼
+            placeView.searchFieldButton.addTarget(self,
+                                                  action: #selector(searchFieldButtonTapped),
+                                                  for: .touchUpInside)
         }
-        
-        // MARK: - 창현이가 만든 서치 버튼
-        placeView.searchFieldButton.addTarget(self,
-                                              action: #selector(searchFieldButtonTapped),
-                                              for: .touchUpInside)
     }
-    
-    private func keyboardController() {
+        
+        private func keyboardController() {
         //키보드 올리기
         NotificationCenter.default.addObserver(
             self,

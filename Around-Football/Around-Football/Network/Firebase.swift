@@ -151,29 +151,23 @@ struct FirebaseAPI {
 extension FirebaseAPI {
     
     func createRecruitFieldData(
-        user: User,
+        user: User?,
         fieldID: String,
-        date: Date,
+        recruitedPeopleCount: Int,
+        content: String?,
+        matchDate: String?,
+        startTime: Date?,
+        endTime: Date?,
         completion: @escaping (Error?) -> Void
     ) {
-        
-//        var id: String
-//        var userName: String //작성자이름
-//        var fieldID: String //운동장 ID
-//        var recruitedPeopleCount: Int //용병 몇명 구할건지
-//        var content: String //작성내용
-//        var matchDate: Date //날짜만
-//        var startTime: Date//시작시간
-//        var endTime: Date // 종료시간
-        
-        let data = ["id": user.id,
-                    "userName": user.userName,
-                    "fieldID": UUID().uuidString,
-                    "recruitedPeopleCount": 3,
-                    "content": "안녕하세요, 용병 구합니다~",
-                    "matchDate": Date(),
-                        "startTime": Date(),
-                        "endTime": Date()
+        let data = ["id": user?.id,
+                    "userName": user?.userName,
+                    "fieldID": fieldID,
+                    "recruitedPeopleCount": recruitedPeopleCount,
+                    "content": content,
+                    "matchDate": matchDate,
+                    "startTime": startTime,
+                    "endTime": endTime
         ] as [String : Any]
         
         
