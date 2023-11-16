@@ -55,6 +55,9 @@ struct FirebaseAPI {
         REF_USER.document(currentUserID).getDocument(as: User.self) { result in
             switch result {
             case .success(let user):
+                print("readUser성공: \(user)")
+                // MARK: - UserService user 업데이트
+                UserService.shared.user = user
                 completion(user)
             case .failure(let error):
                 print("Error decoding user: \(error)")

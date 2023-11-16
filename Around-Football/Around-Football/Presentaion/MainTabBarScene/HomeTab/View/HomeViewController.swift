@@ -229,7 +229,7 @@ final class HomeViewController: UIViewController {
     @objc
     func didTapFloatingButton() {
         //TODO: -FirebaseAuth UID 확인해서 로그인 or 초대뷰
-        if Auth.auth().currentUser == nil {
+        if UserService.shared.user?.id == nil {
             viewModel?.coordinator?.presentLoginViewController()
         } else {
             viewModel?.coordinator?.pushInviteView()
