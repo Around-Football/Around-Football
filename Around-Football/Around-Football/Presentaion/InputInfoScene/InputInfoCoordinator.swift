@@ -37,6 +37,10 @@ final class InputInfoCoordinator: BaseCoordinator {
         navigationController?.dismiss(animated: true)
     }
     
+    func popInputInfoViewController() {
+        navigationController?.popViewController(animated: true)
+    }
+    
     func removeThisChildCoordinators() {
         removeThisChildCoordinators(coordinator: self)
     }
