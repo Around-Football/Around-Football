@@ -7,3 +7,6 @@
 
 import Foundation
 
+final class InviteViewModel {
+    
+}

@@ -102,10 +102,15 @@ final class LoginViewController: UIViewController {
     func didRecieveTestNotification(_ notification: Notification) {
         // TODO: - 추가정보 입력 여부에따라 추가정보입력뷰 또는 메인뷰로 이동
         print("DEBUG: 로그인 완료")
-//        if /*추가정보입력*/ = nil {
-        viewModel?.coordinator?.pushInputInfoViewController()
-//        } else {
-//        viewModel?.coordinator?.loginDone()
+//        FirebaseAPI.shared.readUser { [weak self] user in
+//            guard let self else { return }
+        if UserService.shared.user?.userName == nil {
+                print("유저 네임 없음. 상세정보입력으로")
+                viewModel?.coordinator?.pushInputInfoViewController()
+            } else {
+                print("유저 네임 있음. 로그인 완료")
+                viewModel?.coordinator?.loginDone()
+            }
 //        }
     }
     
