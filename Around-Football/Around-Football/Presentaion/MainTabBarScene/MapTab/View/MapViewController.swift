@@ -205,7 +205,7 @@ final class MapViewController: UIViewController {
         else {
             return
         }
-        viewModel?.setSearchLocation(keyword)
+        //viewModel?.setSearchLocation(keyword)
 //        moveCamera(latitude: viewModel?.searchLocation?.latitude ?? 0.0, longitude: viewModel?.searchLocation?.longitude ?? 0.0)
     }
 }
