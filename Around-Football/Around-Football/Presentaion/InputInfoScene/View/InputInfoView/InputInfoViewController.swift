@@ -98,12 +98,12 @@ final class InputInfoViewController: UIViewController {
         
         FirebaseAPI.shared.readUser { [weak self] user in
             guard let self else { return }
-            UserService.shared.user = user
+            print("User로그인 완료: \(user)")
+            
+            //TODO: - 모달, push에 따라 분기처리
+            viewModel?.coordinator?.dismissView()
+            viewModel?.coordinator?.popInputInfoViewController()
         }
-
-        //TODO: - 모달, push에 따라 분기처리
-        viewModel?.coordinator?.dismissView()
-        viewModel?.coordinator?.popInputInfoViewController()
     }
     
     @objc
