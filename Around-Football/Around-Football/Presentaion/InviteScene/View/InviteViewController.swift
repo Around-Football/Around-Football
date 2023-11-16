@@ -10,7 +10,7 @@ import UIKit
 import SnapKit
 import Then
 
-final class InviteViewController: UIViewController, GroundTitleViewDelegate {
+final class InviteViewController: UIViewController {
     
     // MARK: - Properties
     var viewModel: InviteViewModel
@@ -70,8 +70,7 @@ final class InviteViewController: UIViewController, GroundTitleViewDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        placeView.delegate = self
+
         configureUI()
         keyboardController()
         setAddButton()
@@ -159,14 +158,14 @@ final class InviteViewController: UIViewController, GroundTitleViewDelegate {
             make.top.equalTo(contentView.snp.top)
             make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
             make.width.equalTo(UIScreen.main.bounds.width * 2/3)
-            make.height.equalTo(100)
+            make.height.equalTo(50)
         }
         
         peopleView.snp.makeConstraints { make in
             make.top.equalTo(contentView.snp.top)
             make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
             make.width.equalTo(UIScreen.main.bounds.width * 1/3)
-            make.height.equalTo(100)
+            make.height.equalTo(50)
         }
         
         calenderViewController.view.snp.makeConstraints { make in
@@ -196,17 +195,12 @@ final class InviteViewController: UIViewController, GroundTitleViewDelegate {
         }
     }
     
-    func searchBarTapped() {
-        let searchController = SearchViewController()
-        searchController.viewModel = self.searchViewModel
-        present(searchController, animated: true, completion: nil)
-    }
-    
     // MARK: - Selectors
     
     @objc
     func searchFieldButtonTapped() {
-//        viewModel.coordinator?.pushMapView()
-//        print("버튼 tap")
+        let searchController = SearchViewController()
+        searchController.viewModel = self.viewModel
+        present(searchController, animated: true, completion: nil)
     }
 }

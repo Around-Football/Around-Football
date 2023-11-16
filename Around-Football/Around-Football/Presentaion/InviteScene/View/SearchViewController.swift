@@ -7,51 +7,109 @@
 
 import UIKit
 
+import RxSwift
+import SnapKit
+import Then
+
 class SearchViewController: UIViewController {
     
     // MARK: - Properties
     
-    private var tableView = UITableView()
+    private let tableView = UITableView() 
+    
+    private let disposeBag = DisposeBag()
+    
     var viewModel = SearchViewModel()
+    
+    var searchResultsController = SearchResultViewController()
+    
+    private lazy var searchController = UISearchController(searchResultsController: searchResultsController)
+    
+    private lazy var searchBar: UISearchBar = {
+        let searchBar = UISearchBar().then {
+            $0.placeholder = "장소를 검색해주세요."
+            $0.delegate = self
+        }
+        return searchBar
+    }()
+
+    
+    var searchPlaces: [Place] = [] {
+        didSet {
+            tableView.reloadData()
+        }
+    }
     
     // MARK: - Lifecycles
     
     override func viewDidLoad() {
         super.viewDidLoad()
         configureUI()
-        setupTableView()
+        configureSearchController()
+        setTableView()
     }
     
     // MARK: - Helpers
     
+    private func configureSearchController() {
+        navigationItem.searchController = searchController
+    }
+
     private func configureUI() {
-        let searchController = UISearchController(searchResultsController: nil)
-        searchController.searchBar.placeholder = "Search"
-        searchController.hidesNavigationBarDuringPresentation = false
-        self.navigationItem.searchController = searchController
-        self.navigationItem.title = "Search"
-        self.navigationItem.hidesSearchBarWhenScrolling = false
+        view.backgroundColor = .white
+//        
+//        tableView.delegate = self
+//        tableView.dataSource = self
+        view.addSubviews(searchBar,
+                         tableView)
+        searchBar.snp.makeConstraints { make in
+            make.top.equalToSuperview()
+            make.leading.trailing.equalToSuperview()
+        }
+        
+        tableView.snp.makeConstraints { make in
+            make.top.equalTo(searchBar.snp.bottom)
+            make.leading.trailing.equalToSuperview()
+            make.bottom.equalToSuperview().offset(SuperviewOffsets.bottomPadding)
+        }
     }
     
-    func setupTableView() {
-        self.tableView.delegate = self
-        self.tableView.dataSource = self
-        self.view.addSubview(tableView)
+    private func setTableView() {
+        tableView.register(SearchTableViewCell.self, forCellReuseIdentifier: SearchTableViewCell.cellID)
+        tableView.dataSource = nil
+        
+        _ = viewModel.searchResults
+            .debug()
+            .bind(to: tableView.rx.items(cellIdentifier: SearchTableViewCell.cellID, cellType: SearchTableViewCell.self)) { index, place, cell in
+                cell.fieldNameLabel.text = place.name
+                cell.fieldAddressLabel.text = place.address
+            }
+            .disposed(by: disposeBag)
     }
 }
 
-extension SearchViewController: UITableViewDelegate, UITableViewDataSource {
-    
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        
-        return viewModel.searchPlaces.count
+extension SearchViewController: UISearchBarDelegate, UISearchResultsUpdating {
+    func updateSearchResults(for searchController: UISearchController) {
         
     }
     
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = UITableViewCell()
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         
-        cell.textLabel?.text = viewModel.searchPlaces[indexPath.row].name
-        return cell
+    }
+    
+    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
+
+    }
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+//        tableView.reloadData()
+        viewModel.searchField(searchText)
+        // searchPlaces = viewModel.searchPlaces
+        var i : [Place] = []
+        let a = viewModel.searchResults.map { place in
+            i = place
+        }
+        
+        print("=========ViewController: \(i)=========")
     }
 }
