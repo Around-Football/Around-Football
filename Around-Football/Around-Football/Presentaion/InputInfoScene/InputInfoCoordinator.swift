@@ -23,6 +23,7 @@ final class InputInfoCoordinator: BaseCoordinator {
     func start(isHidesBackButton: Bool) {
         let inputInfoViewModel = InputInfoViewModel(coordinator: self)
         let controller = InputInfoViewController(viewModel: inputInfoViewModel)
+        childCoordinators.append(self)
         controller.navigationItem.hidesBackButton = isHidesBackButton
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationController?.pushViewController(controller, animated: true)
@@ -34,6 +35,10 @@ final class InputInfoCoordinator: BaseCoordinator {
     
     func dismissView() {
         navigationController?.dismiss(animated: true)
+    }
+    
+    func popInputInfoViewController() {
+        navigationController?.popViewController(animated: true)
     }
     
     func removeThisChildCoordinators() {

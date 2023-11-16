@@ -13,18 +13,27 @@ import Then
 final class InviteViewController: UIViewController, GroundTitleViewDelegate {
     
     // MARK: - Properties
-    
-    var viewModel = SearchViewModel()
+    var viewModel: InviteViewModel
+    var searchViewModel = SearchViewModel()
     private let placeView = GroundTitleView()
     private let peopleView = PeopleCountView()
+    private let calenderViewController = CalenderViewController()
+    let contentView = UIView()
+    
+    private var id = UserService.shared.user?.id
+    private var userName = UserService.shared.user?.userName
+    private var fieldID = UUID().uuidString
+    private lazy var recruitedPeopleCount = peopleView.count
+    private lazy var content = contentTextView.text
+    private lazy var matchDate = calenderViewController.selectedDateString
+    private lazy var startTime = calenderViewController.selectedDate
+    //TODO: - EndTime 추가
+    private lazy var endTime = calenderViewController.selectedDate
     
     private lazy var scrollView = UIScrollView().then {
         $0.showsVerticalScrollIndicator = false
     }
     
-    let contentView = UIView()
-    private let calenderViewController = CalenderViewController()
-
     private let contentLabel = UILabel().then {
         $0.text = "내용"
     }
@@ -49,11 +58,20 @@ final class InviteViewController: UIViewController, GroundTitleViewDelegate {
     
     // MARK: - Lifecycles
     
+    init(viewModel: InviteViewModel, searchViewModel: SearchViewModel) {
+        self.viewModel = viewModel
+        self.searchViewModel = searchViewModel
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         placeView.delegate = self
-
         configureUI()
         keyboardController()
         setAddButton()
@@ -68,13 +86,25 @@ final class InviteViewController: UIViewController, GroundTitleViewDelegate {
     private func setAddButton() {
         addButton.buttonActionHandler = { [weak self] in
             guard let self else { return }
-            dismiss(animated: true)
+            
+            viewModel.createRecruitFieldData(user: UserService.shared.user ?? User(dictionary: [:]),
+                                             fieldID: fieldID,
+                                             recruitedPeopleCount: recruitedPeopleCount,
+                                             content: content,
+                                             matchDate: matchDate,
+                                             startTime: startTime,
+                                             endTime: endTime)
+            
+            viewModel.coordinator.popInviteViewController()
         }
         
-        placeView.searchFieldButton.addTarget(self, action: #selector(searchFieldButtonTapped), for: .touchUpInside)
+        // MARK: - 창현이가 만든 서치 버튼
+        placeView.searchFieldButton.addTarget(self,
+                                              action: #selector(searchFieldButtonTapped),
+                                              for: .touchUpInside)
     }
-    
-    private func keyboardController() {
+        
+        private func keyboardController() {
         //키보드 올리기
         NotificationCenter.default.addObserver(
             self,
@@ -168,7 +198,7 @@ final class InviteViewController: UIViewController, GroundTitleViewDelegate {
     
     func searchBarTapped() {
         let searchController = SearchViewController()
-        searchController.viewModel = self.viewModel
+        searchController.viewModel = self.searchViewModel
         present(searchController, animated: true, completion: nil)
     }
     

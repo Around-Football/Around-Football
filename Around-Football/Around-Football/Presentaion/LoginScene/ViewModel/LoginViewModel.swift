@@ -71,7 +71,7 @@ class LoginViewModel: NSObject {
                     .setData(["id" : uid ?? UUID().uuidString])
                 
                 // TODO: - Coordinator Refactoring
-                NotificationCenter.default.post(name: NSNotification.Name("TestNotification"),
+                NotificationCenter.default.post(name: NSNotification.Name("LoginNotification"),
                                                 object: nil,
                                                 userInfo: nil)
             }
@@ -169,7 +169,7 @@ class LoginViewModel: NSObject {
         request.requestedScopes = [.fullName, .email]
         request.nonce = sha256(nonce)
         let authorizationController = ASAuthorizationController(authorizationRequests: [request])
-        authorizationController.delegate = self
+//        authorizationController.delegate = self
         authorizationController.performRequests()
     }
     

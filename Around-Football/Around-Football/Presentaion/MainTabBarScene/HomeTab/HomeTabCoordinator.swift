@@ -57,9 +57,8 @@ final class HomeTabCoordinator: BaseCoordinator {
     }
     
     func pushInviteView() {
-        let controller = UINavigationController(rootViewController: InviteViewController())
-        navigationController?.present(controller, animated: true)
-        //TODO: -push방식으로 변경
-//        navigationController?.pushViewController(controller, animated: true)
+        let coordinator = InviteCoordinator(navigationController: navigationController)
+        coordinator.start()
+        coordinator.navigationController?.navigationBar.isHidden = false
     }
 }
