@@ -14,16 +14,6 @@ final class InviteViewController: UIViewController, GroundTitleViewDelegate {
     
     // MARK: - Properties
     
-//    let data = ["id": user.id,
-//                "userName": user.userName,
-//                "fieldID": UUID().uuidString,
-//                "recruitedPeopleCount": 3,
-//                "content": "안녕하세요, 용병 구합니다~",
-//                "matchDate": Date(),
-//                    "startTime": Date(),
-//                    "endTime": Date()
-//    ] as [String : Any]
-    
     var viewModel = SearchViewModel()
     private let placeView = GroundTitleView()
     private let peopleView = PeopleCountView()

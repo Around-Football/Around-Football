@@ -25,13 +25,13 @@ final class InputInfoViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
-    private var id: String = ""
-    private var userName: String = ""
-    private var age: Int = 0
-    private var gender: String = ""
-    private var area: String = ""
-    private var mainUsedFeet: String = ""
-    private var position: String = ""
+    private var id: String? = ""
+    private var userName: String? = ""
+    private var age: Int? = 0
+    private var gender: String? = ""
+    private var area: String? = ""
+    private var mainUsedFeet: String? = ""
+    private var position: String? = ""
     
     // MARK: - Lifecycles
     
@@ -43,6 +43,8 @@ final class InputInfoViewController: UIViewController {
         super.viewDidLoad()
         keyboardController()
         navigationItem.title = "추가정보 입력"
+        
+        loadFirebaseUserInfo()
         
         inputInfoView.userNameTextField.delegate = self
         inputInfoView.userAgeTextField.delegate = self
@@ -170,6 +172,65 @@ final class InputInfoViewController: UIViewController {
     func gkButtonTapped(_ sender: UIButton) {
         sender.isSelected.toggle()
         position = sender.titleLabel?.text ?? ""
+    }
+    
+    /*
+     private var id: String? = ""
+     private var userName: String? = ""
+     private var age: Int? = 0
+     private var gender: String? = ""
+     private var area: String? = ""
+     private var mainUsedFeet: String? = ""
+     private var position: String? = ""
+     */
+    
+    private func loadFirebaseUserInfo() {
+        FirebaseAPI.shared.readUser { [weak self] user in
+            guard let self else { return }
+            print("user: \(user)")
+            inputInfoView.userNameTextField.text = user?.userName
+            inputInfoView.userAgeTextField.text = String(user?.age ?? 0)
+            inputInfoView.userAreaTextField.text = user?.area
+            
+            if let userGender = user?.gender {
+                switch userGender {
+                case "남성":
+                    inputInfoView.maleButton.isSelected = true
+                case "여성":
+                    inputInfoView.femaleButton.isSelected = true
+                default:
+                    print("userFeet 비워져있음")
+                }
+            }
+            
+            if let userFeet = user?.mainUsedFeet {
+                switch userFeet {
+                case "오른발":
+                    inputInfoView.rightFootButton.isSelected = true
+                case "왼발":
+                    inputInfoView.leftFootButton.isSelected = true
+                case "양발":
+                    inputInfoView.bothFeetButton.isSelected = true
+                default:
+                    print("userFeet 비워져있음")
+                }
+            }
+            
+            if let userPosition = user?.position {
+                switch userPosition {
+                case "FW":
+                    inputInfoView.fwButton.isSelected = true
+                case "MF":
+                    inputInfoView.mfButton.isSelected = true
+                case "DF":
+                    inputInfoView.dfButton.isSelected = true
+                case "GK":
+                    inputInfoView.gkButton.isSelected = true
+                default:
+                    print("userPosition 비워져있음")
+                }
+            }
+        }
     }
     
     //TODO: - Keyboard 함수 Utiles로 정리

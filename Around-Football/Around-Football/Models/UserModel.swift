@@ -10,12 +10,13 @@ import Foundation
 struct User: Codable {
     var id: String
     var userName: String
-    var age: Int
-    var gender: String
-    var area: String
-    var mainUsedFeet: String
-    var position: String
-    var fcmToken: String
+    var age: Int?
+    var gender: String?
+    var area: String?
+    var mainUsedFeet: String?
+    var position: String?
+    //TODO: - FCM Token 추가
+//    var fcmToken: String
     
     //TODO: - 연락방식 채팅..?, 쪽지..?, 상남자식 번호..?
     
@@ -37,6 +38,6 @@ struct User: Codable {
         self.area = dictionary["area"] as? String ?? ""
         self.mainUsedFeet = dictionary["mainUsedFeet"] as? String ?? ""
         self.position = dictionary["position"] as? String ?? ""
-        self.fcmToken = dictionary["fcmToken"] as? String ?? ""
+//        self.fcmToken = dictionary["fcmToken"] as? String ?? ""
     }
 }
