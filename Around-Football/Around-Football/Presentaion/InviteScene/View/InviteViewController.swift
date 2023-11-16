@@ -200,7 +200,7 @@ final class InviteViewController: UIViewController {
     @objc
     func searchFieldButtonTapped() {
         let searchController = SearchViewController()
-        searchController.viewModel = self.viewModel
+        searchController.viewModel = self.searchViewModel
         present(searchController, animated: true, completion: nil)
     }
 }
