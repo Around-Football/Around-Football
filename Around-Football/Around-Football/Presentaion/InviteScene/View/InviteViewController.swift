@@ -13,8 +13,8 @@ import Then
 final class InviteViewController: UIViewController, GroundTitleViewDelegate {
     
     // MARK: - Properties
-    
-    var viewModel = SearchViewModel()
+    var viewModel: InviteViewModel
+    var searchViewModel = SearchViewModel()
     private let placeView = GroundTitleView()
     private let peopleView = PeopleCountView()
     private let calenderViewController = CalenderViewController()
@@ -29,8 +29,6 @@ final class InviteViewController: UIViewController, GroundTitleViewDelegate {
     private lazy var startTime = calenderViewController.selectedDate
     //TODO: - EndTime 추가
     private lazy var endTime = calenderViewController.selectedDate
-    
-    
     
     private lazy var scrollView = UIScrollView().then {
         $0.showsVerticalScrollIndicator = false
@@ -60,6 +58,16 @@ final class InviteViewController: UIViewController, GroundTitleViewDelegate {
     
     // MARK: - Lifecycles
     
+    init(viewModel: InviteViewModel, searchViewModel: SearchViewModel) {
+        self.viewModel = viewModel
+        self.searchViewModel = searchViewModel
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -80,22 +88,15 @@ final class InviteViewController: UIViewController, GroundTitleViewDelegate {
         addButton.buttonActionHandler = { [weak self] in
             guard let self else { return }
             
-            // MARK: - 테스트용 임시 데이터 파베에 올림
-            FirebaseAPI.shared.createRecruitFieldData(user: UserService.shared.user,
-                                                      fieldID: fieldID,
-                                                      recruitedPeopleCount: recruitedPeopleCount,
-                                                      content: content,
-                                                      matchDate: matchDate,
-                                                      startTime: startTime,
-                                                      endTime: endTime) { error in
-                if error == nil {
-                    print("필드 올리기 성공")
-                    //TODO: - coordinator로 변경
-                    self.dismiss(animated: true)
-                } else {
-                    print("createRecruitFieldData Error: \(error?.localizedDescription)")
-                }
-            }
+            viewModel.createRecruitFieldData(user: UserService.shared.user ?? User(dictionary: [:]),
+                                             fieldID: fieldID,
+                                             recruitedPeopleCount: recruitedPeopleCount,
+                                             content: content,
+                                             matchDate: matchDate,
+                                             startTime: startTime,
+                                             endTime: endTime)
+            
+            viewModel.coordinator.popInviteViewController()
         }
         
         // MARK: - 창현이가 만든 서치 버튼
@@ -198,7 +199,7 @@ final class InviteViewController: UIViewController, GroundTitleViewDelegate {
     
     func searchBarTapped() {
         let searchController = SearchViewController()
-        searchController.viewModel = self.viewModel
+        searchController.viewModel = self.searchViewModel
         present(searchController, animated: true, completion: nil)
     }
     
