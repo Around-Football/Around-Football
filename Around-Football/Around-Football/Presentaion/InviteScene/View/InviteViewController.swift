@@ -14,7 +14,6 @@ final class InviteViewController: UIViewController {
     
     // MARK: - Properties
     var viewModel: InviteViewModel
-    var searchViewModel = SearchViewModel()
     private let placeView = GroundTitleView()
     private let peopleView = PeopleCountView()
     private let calenderViewController = CalenderViewController()
@@ -58,9 +57,8 @@ final class InviteViewController: UIViewController {
     
     // MARK: - Lifecycles
     
-    init(viewModel: InviteViewModel, searchViewModel: SearchViewModel) {
+    init(viewModel: InviteViewModel) {
         self.viewModel = viewModel
-        self.searchViewModel = searchViewModel
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -199,8 +197,6 @@ final class InviteViewController: UIViewController {
     
     @objc
     func searchFieldButtonTapped() {
-        let searchController = SearchViewController()
-        searchController.viewModel = self.searchViewModel
-        present(searchController, animated: true, completion: nil)
+        viewModel.coordinator.presentSearchViewController()
     }
 }

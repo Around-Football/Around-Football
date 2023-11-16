@@ -6,3 +6,22 @@
 //
 
 import Foundation
+
+//protocol SearchCoordinatorDelegate {
+//    func presentSearchViewController()
+//}
+
+final class SearchCoordinator: BaseCoordinator {
+    var type: CoordinatorType = .map
+    
+    override func start() {
+        let viewModel = SearchViewModel(coordinator: self)
+        let controller = SearchViewController(viewModel: viewModel)
+        navigationController?.present(controller, animated: true)
+    }
+    
+    func dismissSearchViewController() {
+//        navigationController?.dismiss(animated: true)
+        removeThisChildCoordinators(coordinator: self)
+    }
+}

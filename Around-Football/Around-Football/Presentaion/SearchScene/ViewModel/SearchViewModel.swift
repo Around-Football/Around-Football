@@ -13,12 +13,17 @@ import RxAlamofire
 import RxSwift
 import RxRelay
 
-class SearchViewModel {
+final class SearchViewModel {
     
     // MARK: - Properties
     
     private let disposeBag = DisposeBag()
     let searchResults = BehaviorSubject<[Place]>(value: [])
+    var coordinator: SearchCoordinator
+    
+    init(coordinator: SearchCoordinator) {
+        self.coordinator = coordinator
+    }
     
     // MARK: - Helpers
     
