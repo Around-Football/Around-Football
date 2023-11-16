@@ -72,7 +72,6 @@ final class InviteViewController: UIViewController, GroundTitleViewDelegate {
         super.viewDidLoad()
         
         placeView.delegate = self
-
         configureUI()
         keyboardController()
         setAddButton()

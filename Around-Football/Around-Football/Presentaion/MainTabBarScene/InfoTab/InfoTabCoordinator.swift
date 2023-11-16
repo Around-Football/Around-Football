@@ -22,9 +22,7 @@ final class InfoTabCoordinator: BaseCoordinator {
     
     func makeInfoViewController() -> UINavigationController {
         let infoViewModel = InfoViewModel(coordinator: self)
-        //TODO: - 로그인뷰모델 싱글톤으로 수정
-        let loginViewModel = LoginViewModel(coordinator: LoginCoordinator(navigationController: self.navigationController))
-        let infoViewController = InfoViewController(viewModel: infoViewModel, loginViewModel: loginViewModel)
+        let infoViewController = InfoViewController(viewModel: infoViewModel)
         navigationController = UINavigationController(rootViewController: infoViewController)
         navigationController?.navigationBar.prefersLargeTitles = false
         

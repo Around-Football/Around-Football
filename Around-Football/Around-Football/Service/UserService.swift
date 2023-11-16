@@ -21,18 +21,25 @@ final class UserService: NSObject {
     // MARK: - Properties
     static let shared = UserService()
     
-    private override init() { 
-        super.init()
-        FirebaseAPI.shared.readUser { [weak self] user in
-            self?.user = user ?? User(dictionary: [:])
-        }
-    }
-    
     var user: User?
     
     private var userProfile: String?
     private var email: String?
     var currentNonce: String?
+    
+    // MARK: - Lifecycles
+    
+    private override init() {
+        super.init()
+        readUser()
+    }
+    
+    func readUser() {
+        FirebaseAPI.shared.readUser { [weak self] user in
+            guard let self else { return }
+            self.user = user
+        }
+    }
     
     // MARK: - Helpers - Google
     
@@ -68,14 +75,16 @@ final class UserService: NSObject {
                     return
                 }
                 print("로그인 성공: \(String(describing: result?.user))")
-            
+                
                 let uid = result?.user.uid
                 
-                REF_USER.document(uid ?? UUID().uuidString)
-                    .setData(["id" : uid ?? UUID().uuidString])
+                if Auth.auth().currentUser?.uid == nil {
+                    REF_USER.document(uid ?? UUID().uuidString)
+                        .setData(["id" : uid ?? UUID().uuidString])
+                }
                 
                 // TODO: - Coordinator Refactoring
-                NotificationCenter.default.post(name: NSNotification.Name("TestNotification"),
+                NotificationCenter.default.post(name: NSNotification.Name("LoginNotification"),
                                                 object: nil,
                                                 userInfo: nil)
             }
@@ -173,7 +182,7 @@ final class UserService: NSObject {
         request.requestedScopes = [.fullName, .email]
         request.nonce = sha256(nonce)
         let authorizationController = ASAuthorizationController(authorizationRequests: [request])
-//        authorizationController.delegate = self
+        //        authorizationController.delegate = self
         authorizationController.performRequests()
     }
     
@@ -221,9 +230,10 @@ final class UserService: NSObject {
     func logout() {
         let firebaseAuth = Auth.auth()
         do {
-          try firebaseAuth.signOut()
+            try firebaseAuth.signOut()
+            self.user = nil
         } catch let signOutError as NSError {
-          print("Error signing out: %@", signOutError)
+            print("Error signing out: %@", signOutError)
         }
     }
 }
@@ -263,3 +273,48 @@ extension UserService {
         print("로그아웃 성공")
     }
 }
+
+extension UserService: ASAuthorizationControllerDelegate {
+    func authorizationController(controller: ASAuthorizationController, didCompleteWithAuthorization authorization: ASAuthorization) {
+        
+        if let appleIDCredential = authorization.credential as? ASAuthorizationAppleIDCredential {
+            guard let nonce = self.currentNonce else {
+                fatalError("Invalid state: A login callback was received, but no login request was sent.")
+            }
+            guard let appleIDToken = appleIDCredential.identityToken else {
+                print("Unable to fetch identity token")
+                return
+            }
+            guard let idTokenString = String(data: appleIDToken, encoding: .utf8) else {
+                print("Unable to serialize token string from data: \(appleIDToken.debugDescription)")
+                return
+            }
+            
+            let credential = OAuthProvider.credential(withProviderID: "apple.com", idToken: idTokenString, rawNonce: nonce)
+            
+            Auth.auth().signIn(with: credential) { authResult, error in
+                if let error = error {
+                    print ("Error Apple sign in: %@", error)
+                    return
+                }
+                // User is signed in to Firebase with Apple.
+                // ...
+                
+                let uid = authResult?.user.uid
+                
+                REF_USER.document(uid ?? UUID().uuidString)
+                    .setData(["id" : uid ?? UUID().uuidString])
+                
+                // TODO: - Coordinator Refactoring
+                NotificationCenter.default.post(name: NSNotification.Name("TestNotification"),
+                                                object: nil,
+                                                userInfo: nil)
+            }
+        }
+    }
+    
+    func authorizationController(controller: ASAuthorizationController, didCompleteWithError error: Error) {
+        
+    }
+}
+

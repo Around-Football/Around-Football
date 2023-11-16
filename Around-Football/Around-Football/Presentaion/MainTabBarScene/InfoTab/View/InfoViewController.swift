@@ -14,14 +14,10 @@ final class InfoViewController: UIViewController {
     // MARK: - Properties
     
     var viewModel: InfoViewModel
-    
-    //TODO: - 로그인 싱글톤으로 수정
-    var loginViewModel: LoginViewModel
     private let profileAndEditView = ProfileAndEditView()
     
-    init(viewModel: InfoViewModel, loginViewModel: LoginViewModel) {
+    init(viewModel: InfoViewModel) {
         self.viewModel = viewModel
-        self.loginViewModel = loginViewModel
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -73,18 +69,43 @@ final class InfoViewController: UIViewController {
         configureUI()
         configureStackView()
         setButtonDelegate()
+        // TODO: - Coordinator Refactoring
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(didRecieveTestNotification(_:)),
+                                               name: NSNotification.Name("LoginNotification"),
+                                               object: nil)
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        setUserInfo()
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
     }
     
     // MARK: - Selectors
     
+    @objc
+    func didRecieveTestNotification(_ notification: Notification) {
+        setUserInfo()
+    }
+    
     @objc 
     func logoutButtonTapped() {
         UserService.shared.logout()
+        
+        print("로그아웃 완료, 현재 uid: \(UserService.shared.user?.id)")
         viewModel.coordinator?.presentLoginViewController()
         tabBarController?.selectedIndex = 0 //로그아웃하면 메인탭으로 이동
     }
     
     // MARK: - Helpers
+    
+    private func setUserInfo() {
+        profileAndEditView.userName.text = UserService.shared.user?.userName ?? "로그인 해주세요"
+        /*nfoStackView.view*/
+    }
     
     private func configureStackView() {
         if let views = infoStackView.arrangedSubviews as? [InfoArrangedView] {
@@ -135,7 +156,7 @@ final class InfoViewController: UIViewController {
     private func setButtonDelegate() {
         profileAndEditView.editButtonActionHandler = { [weak self] in
             guard let self else { return }
-            if Auth.auth().currentUser == nil {
+            if UserService.shared.user?.id == nil {
                 viewModel.coordinator?.presentLoginViewController()
             } else {
                 viewModel.coordinator?.pushEditView()
@@ -143,7 +164,7 @@ final class InfoViewController: UIViewController {
         }
         profileAndEditView.settingButtonActionHandler = { [weak self] in
             guard let self else { return }
-            if Auth.auth().currentUser == nil {
+            if UserService.shared.user?.id == nil {
                 viewModel.coordinator?.presentLoginViewController()
             } else {
                 viewModel.coordinator?.pushSettingView()
