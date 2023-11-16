@@ -17,8 +17,8 @@ final class CalenderViewController: UIViewController {
     private lazy var calanderDate = calender.date(from: components) ?? Date()
     private var days: [String] = []
     private var selectedIndexPath: IndexPath? //캘린더 선택cell
-    private var selectedDateString: String? //캘린더에서 선택한 날짜 String
-    private var selectedDate: Date? //캘린더에서 선택한 날짜 + picker에서 선택한 시간 Date
+    var selectedDateString: String? //캘린더에서 선택한 날짜 String
+    var selectedDate: Date? //캘린더에서 선택한 날짜 + picker에서 선택한 시간 Date
 
     private lazy var previousButton = UIButton().then {
         $0.setImage(UIImage(systemName: "chevron.left"), for: .normal)
