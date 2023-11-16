@@ -57,6 +57,9 @@ final class FirebaseAPI {
         REF_USER.document(currentUserID).getDocument(as: User.self) { result in
             switch result {
             case .success(let user):
+                print("readUser성공: \(user)")
+                // MARK: - UserService user 업데이트
+                UserService.shared.user = user
                 completion(user)
             case .failure(let error):
                 print("Error decoding user: \(error)")
@@ -102,26 +105,6 @@ final class FirebaseAPI {
         }
     }
     
-    func fetchRecruitFieldData(
-        fieldID: String,
-        date: Date,
-        completion: @escaping(([Recruit]) -> Void)
-    ) {
-        REF_RECRUIT
-            .whereField("fieldID", isEqualTo: fieldID)
-            .whereField("matchDate", isEqualTo: date)
-            .getDocuments { snapshot, error in
-                guard let snapshot = snapshot else {
-                    let errorMessage = error?.localizedDescription ?? "None ERROR"
-                    print("DEBUG: fetchRecruitFieldData Error - \(errorMessage)")
-                    return
-                }
-                
-                let documentsData = snapshot.documents.map { $0.data() }
-                
-            }
-    }
-    
     // MARK: - AuthService
     func updateFCMTokenAndFetchUser(uid: String, fcmToken: String) -> Single<User?> {
         return Single.create { single in
@@ -136,8 +119,6 @@ final class FirebaseAPI {
             }
             return Disposables.create()
         }
-        
-        
     }
     
     func updateFCMToken(uid: String, fcmToken: String, completion: @escaping (Error?) -> Void) {
@@ -168,6 +149,57 @@ final class FirebaseAPI {
         }
     }
 
+}
+
+// MARK: - Recruit create 함수
+
+extension FirebaseAPI {
+    
+    func createRecruitFieldData(
+        user: User?,
+        fieldID: String,
+        recruitedPeopleCount: Int,
+        content: String?,
+        matchDate: String?,
+        startTime: Date?,
+        endTime: Date?,
+        completion: @escaping (Error?) -> Void
+    ) {
+        let data = ["id": user?.id,
+                    "userName": user?.userName,
+                    "fieldID": fieldID,
+                    "recruitedPeopleCount": recruitedPeopleCount,
+                    "content": content,
+                    "matchDate": matchDate,
+                    "startTime": startTime,
+                    "endTime": endTime
+        ] as [String : Any]
+        
+        
+        REF_RECRUIT
+            .document(fieldID)
+            .setData(data, completion: completion)
+    }
+    
+    func fetchRecruitFieldData(
+        fieldID: String,
+        date: Date,
+        completion: @escaping(([Recruit]) -> Void)
+    ) {
+        REF_RECRUIT
+            .whereField("fieldID", isEqualTo: fieldID)
+            .whereField("matchDate", isEqualTo: date)
+            .getDocuments { snapshot, error in
+                guard let snapshot = snapshot else {
+                    let errorMessage = error?.localizedDescription ?? "None ERROR"
+                    print("DEBUG: fetchRecruitFieldData Error - \(errorMessage)")
+                    return
+                }
+                
+                let documentsData = snapshot.documents.map { $0.data() }
+                
+            }
+    }
 }
 
 func saveFieldJsonData<T: Encodable>(data:T) {

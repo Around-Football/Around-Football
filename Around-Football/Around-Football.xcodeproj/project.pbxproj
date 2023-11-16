@@ -115,6 +115,7 @@
 		7CE0143E2AF8C5B700ED77D2 /* EditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CE0143D2AF8C5B700ED77D2 /* EditViewController.swift */; };
 		7CE014402AF8C5C300ED77D2 /* SettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CE0143F2AF8C5C300ED77D2 /* SettingViewController.swift */; };
 		7CE25AE62ACABF620014132F /* AFButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CE25AE52ACABF620014132F /* AFButton.swift */; };
+		7CE2B4F72B06142B00ECF71C /* InviteCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CE2B4F62B06142B00ECF71C /* InviteCoordinator.swift */; };
 		7CE563AA2AD140A9005DE2DF /* LayoutOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CE563A92AD140A9005DE2DF /* LayoutOptions.swift */; };
 		7CE563AC2AD1425F005DE2DF /* DetailViewController+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CE563AB2AD1425F005DE2DF /* DetailViewController+.swift */; };
 /* End PBXBuildFile section */
@@ -214,6 +215,7 @@
 		7CE0143D2AF8C5B700ED77D2 /* EditViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditViewController.swift; sourceTree = "<group>"; };
 		7CE0143F2AF8C5C300ED77D2 /* SettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingViewController.swift; sourceTree = "<group>"; };
 		7CE25AE52ACABF620014132F /* AFButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AFButton.swift; sourceTree = "<group>"; };
+		7CE2B4F62B06142B00ECF71C /* InviteCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InviteCoordinator.swift; sourceTree = "<group>"; };
 		7CE563A92AD140A9005DE2DF /* LayoutOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LayoutOptions.swift; sourceTree = "<group>"; };
 		7CE563AB2AD1425F005DE2DF /* DetailViewController+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DetailViewController+.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -552,8 +554,8 @@
 		7C2B1AD82AF4B2400052EC64 /* ViewModel */ = {
 			isa = PBXGroup;
 			children = (
-				66656F9E2AD921D700AE1AFA /* FieldDetailViewModel.swift */,
 				7C94EBD42B01BF0600A7E42A /* InfoViewModel.swift */,
+				66656F9E2AD921D700AE1AFA /* FieldDetailViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -636,6 +638,7 @@
 		7C2B1AED2AF4BD250052EC64 /* InviteScene */ = {
 			isa = PBXGroup;
 			children = (
+				7CE2B4F62B06142B00ECF71C /* InviteCoordinator.swift */,
 				7C2B1AEF2AF4BD320052EC64 /* View */,
 				7C2B1AEE2AF4BD2E0052EC64 /* ViewModel */,
 			);
@@ -878,6 +881,7 @@
 				7929A31D2ADFFB15006ED4FA /* ApplicationStatusViewController+.swift in Sources */,
 				273674842AC308D1003ADE3F /* FieldModel.swift in Sources */,
 				669674882AC3E82B0067FD48 /* MainTabController.swift in Sources */,
+				7CE2B4F72B06142B00ECF71C /* InviteCoordinator.swift in Sources */,
 				663417D12AD695DE002FE2CA /* MockFields.swift in Sources */,
 				7C5F775C2AC9C698004CE48F /* InviteViewController.swift in Sources */,
 				2729186F2B035CFE009C9042 /* SearchTableViewCell.swift in Sources */,

@@ -39,3 +39,41 @@ final class HomeViewModel {
             .bind(to: recruitObservable)
     }
 }
+
+final class HomeViewModel1 {
+    
+    struct Input {
+        
+    }
+    
+    struct Output {
+        let recruitList: Observable<Recruit>
+    }
+    
+    // MARK: - Properties
+    
+    private let invokedViewDidLoad = PublishRelay<Void>()
+    private let disposeBag = DisposeBag()
+    private weak var coordinator: HomeTabCoordinator?
+    
+    init(coordinator: HomeTabCoordinator) {
+        self.coordinator = coordinator
+    }
+    
+    // MARK: - Helpers
+    
+//    func transform(_ input: Input) -> Output {
+//        
+////        let recruitList = recruitList
+//        
+//        let output = Output(recruitList: <#T##Observable<Recruit>#>)
+//        return output
+//    }
+    
+    private func loadRecruitList(by inputObserver: Observable<Void>) {
+        inputObserver
+            .withUnretained(self)
+//            .accept
+    }
+    
+}
