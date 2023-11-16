@@ -25,8 +25,8 @@ final class ProfileAndEditView: UIView {
         $0.contentMode = .scaleAspectFill
     }
     
-    private var userName = UILabel().then {
-        $0.text = "thekoon"
+    var userName = UILabel().then {
+        $0.text = "로그인 해주세요"
         $0.font = .systemFont(ofSize: 15)
     }
     

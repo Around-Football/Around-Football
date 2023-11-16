@@ -46,6 +46,7 @@ final class LoginCoordinator: BaseCoordinator, InputInfoCoordinatorDelegate {
     
     //InputInfoCoordinatorDelegate
     func loginDone() {
+        navigationController?.dismiss(animated: true)
         removeThisChildCoordinators(coordinator: self)
     }
 }
