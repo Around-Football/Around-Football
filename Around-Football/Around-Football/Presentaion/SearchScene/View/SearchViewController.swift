@@ -19,7 +19,7 @@ class SearchViewController: UIViewController {
     
     private let disposeBag = DisposeBag()
     
-    var viewModel = SearchViewModel()
+    var viewModel: SearchViewModel
     
     var searchResultsController = SearchResultViewController()
     
@@ -42,11 +42,24 @@ class SearchViewController: UIViewController {
     
     // MARK: - Lifecycles
     
+    init(viewModel: SearchViewModel) {
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         configureUI()
         configureSearchController()
         setTableView()
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        viewModel.coordinator.dismissSearchViewController()
     }
     
     // MARK: - Helpers

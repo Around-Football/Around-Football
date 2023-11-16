@@ -17,9 +17,7 @@ final class InviteCoordinator: BaseCoordinator {
     
     override func start() {
         let inviteViewModel = InviteViewModel(coordinator: self)
-        let searchViewModel = SearchViewModel()
-        let controller = InviteViewController(viewModel: inviteViewModel,
-                                              searchViewModel: searchViewModel)
+        let controller = InviteViewController(viewModel: inviteViewModel)
         controller.navigationController?.navigationBar.isHidden = false
         navigationController?.pushViewController(controller, animated: true)
     }
@@ -27,6 +25,13 @@ final class InviteCoordinator: BaseCoordinator {
     func popInviteViewController() {
         navigationController?.popViewController(animated: true)
         removeThisChildCoordinators()
+    }
+    
+    // SearchBViewController Delegate
+    func presentSearchViewController() {
+        let coordinator = SearchCoordinator(navigationController: navigationController)
+        coordinator.start()
+        childCoordinators.append(coordinator)
     }
     
     func removeThisChildCoordinators() {

@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		27058ECC2B0656ED00C107F9 /* KakaoService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27058ECB2B0656ED00C107F9 /* KakaoService.swift */; };
+		27058ED12B06814F00C107F9 /* SearchCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27058ED02B06814F00C107F9 /* SearchCoordinator.swift */; };
 		272918572AFA60A9009C9042 /* UserService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 272918562AFA60A9009C9042 /* UserService.swift */; };
 		2729185B2B022E84009C9042 /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2729185A2B022E84009C9042 /* SearchViewController.swift */; };
 		2729185D2B023682009C9042 /* SearchModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2729185C2B023682009C9042 /* SearchModel.swift */; };
@@ -122,6 +123,7 @@
 
 /* Begin PBXFileReference section */
 		27058ECB2B0656ED00C107F9 /* KakaoService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KakaoService.swift; sourceTree = "<group>"; };
+		27058ED02B06814F00C107F9 /* SearchCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchCoordinator.swift; sourceTree = "<group>"; };
 		272918562AFA60A9009C9042 /* UserService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserService.swift; sourceTree = "<group>"; };
 		2729185A2B022E84009C9042 /* SearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
 		2729185C2B023682009C9042 /* SearchModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchModel.swift; sourceTree = "<group>"; };
@@ -248,6 +250,34 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		27058ECD2B0680DF00C107F9 /* SearchScene */ = {
+			isa = PBXGroup;
+			children = (
+				27058ED02B06814F00C107F9 /* SearchCoordinator.swift */,
+				27058ECF2B06810000C107F9 /* ViewModel */,
+				27058ECE2B0680FC00C107F9 /* View */,
+			);
+			path = SearchScene;
+			sourceTree = "<group>";
+		};
+		27058ECE2B0680FC00C107F9 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				2729185A2B022E84009C9042 /* SearchViewController.swift */,
+				2729186E2B035CFE009C9042 /* SearchTableViewCell.swift */,
+				272918602B034242009C9042 /* SearchResultViewController.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		27058ECF2B06810000C107F9 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				2729185E2B0236A7009C9042 /* SearchViewModel.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
 		272918552AFA6087009C9042 /* Service */ = {
 			isa = PBXGroup;
 			children = (
@@ -401,6 +431,7 @@
 				7C2B1AC92AF4B13C0052EC64 /* MainTabBarScene */,
 				7C2B1AE82AF4BCD40052EC64 /* DetailScene */,
 				7C2B1AED2AF4BD250052EC64 /* InviteScene */,
+				27058ECD2B0680DF00C107F9 /* SearchScene */,
 				7C2B1AF32AF4BDC90052EC64 /* ApplicationStatusScene */,
 			);
 			path = Presentaion;
@@ -649,7 +680,6 @@
 			isa = PBXGroup;
 			children = (
 				7C2B1AF02AF4BD460052EC64 /* InviteViewModel.swift */,
-				2729185E2B0236A7009C9042 /* SearchViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -661,9 +691,6 @@
 				7C2B1AF92AF4C1C90052EC64 /* InviteViewController+.swift */,
 				7C5F775F2AC9DA08004CE48F /* GroundTitleView.swift */,
 				7C5F77612AC9DB7B004CE48F /* PeopleCountView.swift */,
-				2729185A2B022E84009C9042 /* SearchViewController.swift */,
-				2729186E2B035CFE009C9042 /* SearchTableViewCell.swift */,
-				272918602B034242009C9042 /* SearchResultViewController.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -872,6 +899,7 @@
 				7CB21BA32AC94D36001D0058 /* DetailViewController.swift in Sources */,
 				7929A3182ADFECD9006ED4FA /* ApplicationStatusViewController.swift in Sources */,
 				7C5F77622AC9DB7B004CE48F /* PeopleCountView.swift in Sources */,
+				27058ED12B06814F00C107F9 /* SearchCoordinator.swift in Sources */,
 				274C22112AD6D6EF005469E6 /* HomeTableViewCell.swift in Sources */,
 				7C2B1AFC2AF4CE8A0052EC64 /* AppCoordinator.swift in Sources */,
 				7CE563AC2AD1425F005DE2DF /* DetailViewController+.swift in Sources */,
