@@ -38,11 +38,10 @@ final class HomeTabCoordinator: BaseCoordinator {
     }
     
     func pushToDetailView() {
-        let detailVc = DetailViewController()
+        let coordinator = DetailCoordinator(navigationController: navigationController)
         navigationController?.navigationBar.isHidden = false
-        navigationController?.pushViewController(detailVc, animated: true)
+        coordinator.start()
     }
-    
 
     func pushMapView() {
         // MARK: - MapView이동시 coordinator 사용
@@ -53,7 +52,6 @@ final class HomeTabCoordinator: BaseCoordinator {
     func pushApplicationStatusView() {
         let ApplicationStatusVc = ApplicationStatusViewController()
         navigationController?.pushViewController(ApplicationStatusVc, animated: true)
-
     }
     
     func pushInviteView() {
