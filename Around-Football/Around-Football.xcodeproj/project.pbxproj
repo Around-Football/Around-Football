@@ -117,6 +117,7 @@
 		7CE014402AF8C5C300ED77D2 /* SettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CE0143F2AF8C5C300ED77D2 /* SettingViewController.swift */; };
 		7CE25AE62ACABF620014132F /* AFButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CE25AE52ACABF620014132F /* AFButton.swift */; };
 		7CE2B4F72B06142B00ECF71C /* InviteCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CE2B4F62B06142B00ECF71C /* InviteCoordinator.swift */; };
+		7CE2B4F92B073B3500ECF71C /* DetailCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CE2B4F82B073B3500ECF71C /* DetailCoordinator.swift */; };
 		7CE563AA2AD140A9005DE2DF /* LayoutOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CE563A92AD140A9005DE2DF /* LayoutOptions.swift */; };
 		7CE563AC2AD1425F005DE2DF /* DetailViewController+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CE563AB2AD1425F005DE2DF /* DetailViewController+.swift */; };
 /* End PBXBuildFile section */
@@ -218,6 +219,7 @@
 		7CE0143F2AF8C5C300ED77D2 /* SettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingViewController.swift; sourceTree = "<group>"; };
 		7CE25AE52ACABF620014132F /* AFButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AFButton.swift; sourceTree = "<group>"; };
 		7CE2B4F62B06142B00ECF71C /* InviteCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InviteCoordinator.swift; sourceTree = "<group>"; };
+		7CE2B4F82B073B3500ECF71C /* DetailCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailCoordinator.swift; sourceTree = "<group>"; };
 		7CE563A92AD140A9005DE2DF /* LayoutOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LayoutOptions.swift; sourceTree = "<group>"; };
 		7CE563AB2AD1425F005DE2DF /* DetailViewController+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DetailViewController+.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -429,7 +431,6 @@
 				7C2B1AC52AF4B0F40052EC64 /* LoginScene */,
 				7C2B1ADA2AF4B2930052EC64 /* InputInfoScene */,
 				7C2B1AC92AF4B13C0052EC64 /* MainTabBarScene */,
-				7C2B1AE82AF4BCD40052EC64 /* DetailScene */,
 				7C2B1AED2AF4BD250052EC64 /* InviteScene */,
 				27058ECD2B0680DF00C107F9 /* SearchScene */,
 				7C2B1AF32AF4BDC90052EC64 /* ApplicationStatusScene */,
@@ -463,6 +464,7 @@
 				7C2B1ACC2AF4B15A0052EC64 /* View */,
 				7C2B1ACD2AF4B15D0052EC64 /* ViewModel */,
 				7C2B1ACE2AF4B1890052EC64 /* HomeTab */,
+				7C2B1AE82AF4BCD40052EC64 /* DetailScene */,
 				7C2B1AD12AF4B1DD0052EC64 /* MapTab */,
 				7C2B1AD22AF4B1E30052EC64 /* ChattingTab */,
 				7C2B1AD32AF4B1EC0052EC64 /* InfoTab */,
@@ -641,6 +643,7 @@
 		7C2B1AE82AF4BCD40052EC64 /* DetailScene */ = {
 			isa = PBXGroup;
 			children = (
+				7CE2B4F82B073B3500ECF71C /* DetailCoordinator.swift */,
 				7C2B1AE92AF4BCE10052EC64 /* View */,
 				7C2B1AEA2AF4BCE80052EC64 /* ViewModel */,
 			);
@@ -885,6 +888,7 @@
 				668EE4B22AFCBC09007A8844 /* ChannelTableViewCell.swift in Sources */,
 				7CBFED6C2AE6477700915D65 /* CalenderViewController.swift in Sources */,
 				278DAD5B2AE27A660085718C /* LocationFilterViewController.swift in Sources */,
+				7CE2B4F92B073B3500ECF71C /* DetailCoordinator.swift in Sources */,
 				7CC619782AD460D80085DF90 /* InfoArrangedView.swift in Sources */,
 				7CC619742AD433760085DF90 /* ProfileAndEditView.swift in Sources */,
 				7CE25AE62ACABF620014132F /* AFButton.swift in Sources */,
