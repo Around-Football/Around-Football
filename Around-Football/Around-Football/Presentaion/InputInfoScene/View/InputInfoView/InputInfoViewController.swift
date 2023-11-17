@@ -48,7 +48,6 @@ final class InputInfoViewController: UIViewController {
 
         inputInfoView.userNameTextField.delegate = self
         inputInfoView.userAgeTextField.delegate = self
-        inputInfoView.userContactTextField.delegate = self
         inputInfoView.userAreaTextField.delegate = self
         
         inputInfoView.nextButton.addTarget(self, action: #selector(nextButtonTapped), for: .touchUpInside)
@@ -79,6 +78,7 @@ final class InputInfoViewController: UIViewController {
     }
     
     // MARK: - Helpers
+    
     private func isInfoCompleted() {
         guard
             inputInfoView.userNameTextField.text != nil,
@@ -88,9 +88,12 @@ final class InputInfoViewController: UIViewController {
             inputInfoView.femaleButton.isSelected,
             inputInfoView.fwButton.isSelected || inputInfoView.mfButton.isSelected || inputInfoView.dfButton.isSelected || inputInfoView.gkButton.isSelected
         else {
+            inputInfoView.nextButton.setTitle("모든 항목을 작성해주세요", for: .normal)
+            inputInfoView.nextButton.setTitleColor(.gray, for: .normal)
             return inputInfoView.nextButton.isEnabled = false
-            
         }
+        inputInfoView.nextButton.setTitle("작성 완료", for: .normal)
+        inputInfoView.nextButton.setTitleColor(.white, for: .normal)
         return inputInfoView.nextButton.isEnabled = true
     }
     
