@@ -19,9 +19,10 @@ final class SearchViewModel {
     
     private let disposeBag = DisposeBag()
     let searchResults = BehaviorSubject<[Place]>(value: [])
-    var coordinator: SearchCoordinator
+    var coordinator: SearchCoordinator?
+    var dataSubject: PublishSubject = PublishSubject<String>()
     
-    init(coordinator: SearchCoordinator) {
+    init(coordinator: SearchCoordinator?) {
         self.coordinator = coordinator
     }
     
@@ -36,4 +37,5 @@ final class SearchViewModel {
             })
             .disposed(by: disposeBag)
     }
+    
 }
