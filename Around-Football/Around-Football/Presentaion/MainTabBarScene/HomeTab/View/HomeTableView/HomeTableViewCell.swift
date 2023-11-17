@@ -60,11 +60,18 @@ final class HomeTableViewCell: UITableViewCell {
     }
     
     required init?(coder: NSCoder) {
-        
         fatalError("init(coder:) has not been implemented")
     }
     
     // MARK: - Helpers
+    
+    func bindContents(item: Recruit) {
+        self.titleLabel.text = "(장소) \(item.userName)"
+        self.dateLabel.text = "(날짜) \(item.matchDate)"
+        self.fieldAddress.text = "(주소) \(item.fieldID)"
+        self.recruitLabel.text = "(용병 수) \(item.recruitedPeopleCount) 명"
+        self.timeLabel.text = "\(item.startTime)"
+    }
     
     private func configureUI() {
         contentView.addSubviews(titleLabel,
@@ -84,8 +91,7 @@ final class HomeTableViewCell: UITableViewCell {
         }
         
         timelineStackView.addArrangedSubviews(dateLabel,
-                                              timeLabel
-        )
+                                              timeLabel)
         
         timelineStackView.snp.makeConstraints { make in
             make.top.equalTo(fieldAddress).offset(30)

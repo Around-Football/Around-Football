@@ -15,6 +15,9 @@ final class DetailViewController: UIViewController {
     // MARK: - Properties
     
     var viewModel: DetailViewModel
+    private let detailUserInfoView = DetailUserInfoView()
+    private let scrollView = UIScrollView()
+    private let contentView = UIView()
     
     private let mainImageView = UIImageView().then {
         $0.image = UIImage(named: "AppIcon")
@@ -74,12 +77,6 @@ final class DetailViewController: UIViewController {
         $0.clipsToBounds = true
         $0.addTarget(self, action: #selector(clickedMessage), for: .touchUpInside)
     }
-
-    private let detailUserInfoView = DetailUserInfoView()
-    
-    private let scrollView = UIScrollView()
-    
-    private let contentView = UIView()
     
     // MARK: - Lifecycles
     
@@ -120,7 +117,6 @@ final class DetailViewController: UIViewController {
     
     // MARK: - Helper
 
-    
     private func configeUI() {
         view.backgroundColor = .white
         view.addSubview(scrollView)
