@@ -7,6 +7,8 @@
 
 import Foundation
 
+import RxSwift
+
 final class InviteViewModel {
     
     var coordinator: InviteCoordinator

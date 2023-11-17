@@ -5,7 +5,7 @@
 //  Created by 강창현 on 11/17/23.
 //
 
-import Foundation
+import UIKit
 
 //protocol SearchCoordinatorDelegate {
 //    func presentSearchViewController()
@@ -13,15 +13,21 @@ import Foundation
 
 final class SearchCoordinator: BaseCoordinator {
     var type: CoordinatorType = .map
+    var searchViewModel: SearchViewModel
+    
+    init(navigationController: UINavigationController?, searchViewModel: SearchViewModel) {
+        self.searchViewModel = searchViewModel
+        super.init(navigationController: navigationController)
+    }
     
     override func start() {
-        let viewModel = SearchViewModel(coordinator: self)
-        let controller = SearchViewController(viewModel: viewModel)
+        searchViewModel.coordinator = self
+        let controller = SearchViewController(searchViewModel: searchViewModel)
         navigationController?.present(controller, animated: true)
     }
     
     func dismissSearchViewController() {
-//        navigationController?.dismiss(animated: true)
+        navigationController?.dismiss(animated: true)
         removeThisChildCoordinators(coordinator: self)
     }
 }

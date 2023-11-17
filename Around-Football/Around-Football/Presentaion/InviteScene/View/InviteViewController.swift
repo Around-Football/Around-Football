@@ -7,14 +7,19 @@
 
 import UIKit
 
+import RxSwift
+import RxCocoa
 import SnapKit
 import Then
 
 final class InviteViewController: UIViewController {
     
     // MARK: - Properties
-    var viewModel: InviteViewModel
-    private let placeView = GroundTitleView()
+    
+    let disposeBag = DisposeBag()
+    var inviteViewModel: InviteViewModel
+    var searchViewModel: SearchViewModel
+    let placeView = GroundTitleView()
     private let peopleView = PeopleCountView()
     private let calenderViewController = CalenderViewController()
     let contentView = UIView()
@@ -57,8 +62,9 @@ final class InviteViewController: UIViewController {
     
     // MARK: - Lifecycles
     
-    init(viewModel: InviteViewModel) {
-        self.viewModel = viewModel
+    init(inviteViewModel: InviteViewModel, searchViewModel: SearchViewModel) {
+        self.inviteViewModel = inviteViewModel
+        self.searchViewModel = searchViewModel
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -68,7 +74,7 @@ final class InviteViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         configureUI()
         keyboardController()
         setAddButton()
@@ -84,7 +90,7 @@ final class InviteViewController: UIViewController {
         addButton.buttonActionHandler = { [weak self] in
             guard let self else { return }
             
-            viewModel.createRecruitFieldData(user: UserService.shared.user ?? User(dictionary: [:]),
+            inviteViewModel.createRecruitFieldData(user: UserService.shared.user ?? User(dictionary: [:]),
                                              fieldID: fieldID,
                                              recruitedPeopleCount: recruitedPeopleCount,
                                              content: content,
@@ -92,16 +98,20 @@ final class InviteViewController: UIViewController {
                                              startTime: startTime,
                                              endTime: endTime)
             
-            viewModel.coordinator.popInviteViewController()
+            inviteViewModel.coordinator.popInviteViewController()
         }
         
         // MARK: - 창현이가 만든 서치 버튼
         placeView.searchFieldButton.addTarget(self,
                                               action: #selector(searchFieldButtonTapped),
                                               for: .touchUpInside)
-    }
         
-        private func keyboardController() {
+        searchViewModel.dataSubject
+            .bind(to: placeView.searchFieldButton.rx.title(for: .normal))
+            .disposed(by: disposeBag)
+    }
+    
+    private func keyboardController() {
         //키보드 올리기
         NotificationCenter.default.addObserver(
             self,
@@ -197,6 +207,6 @@ final class InviteViewController: UIViewController {
     
     @objc
     func searchFieldButtonTapped() {
-        viewModel.coordinator.presentSearchViewController()
+        inviteViewModel.coordinator.presentSearchViewController()
     }
 }

@@ -14,7 +14,7 @@ final class GroundTitleView: UIView {
     
     // MARK: - Properties
     
-    private var viewModel: MapViewModel?
+    private var viewModel: InviteViewModel?
     private let groundTitleLabel = UILabel().then {
         $0.text = "장소"
         $0.font = .systemFont(ofSize: 15, weight: .bold)
