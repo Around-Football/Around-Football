@@ -3,8 +3,8 @@
 //  Around-Football
 //
 //  Created by 강창현 on 10/12/23.
+////
 //
-
 import UIKit
 
 import RxCocoa
@@ -43,11 +43,12 @@ final class HomeTableViewController: UITableViewController {
             .bind(to: tableView.rx.items(cellIdentifier: HomeTableViewCell.id,
                                          cellType: HomeTableViewCell.self)
             ) { index, item, cell in
-                cell.titleLabel.text = "(장소) \(item.fieldName)"
-                cell.dateLabel.text = "(날짜) \(item.matchDate)"
-                cell.fieldAddress.text = "(주소) \(item.fieldAddress)"
-                cell.recruitLabel.text = "(용병 수) \(item.people)/10 명"
-                cell.timeLabel.text = item.matchTime
+                cell.bindContents(item: item)
+//                cell.titleLabel.text = "(장소) \(item.fieldID)"
+//                cell.dateLabel.text = "(날짜) \(item.matchDate)"
+//                cell.fieldAddress.text = "(주소) \(item.fieldAddress)"
+//                cell.recruitLabel.text = "(용병 수) \(item.people)/10 명"
+//                cell.timeLabel.text = item.startTime
             }
             .disposed(by: disposeBag)
     }

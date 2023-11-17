@@ -9,6 +9,7 @@ import Foundation
 
 import FirebaseAuth
 import FirebaseFirestore
+import RxAlamofire
 import RxSwift
 
 /*
@@ -53,7 +54,7 @@ final class FirebaseAPI {
             completion(nil)
             return
         }
-
+        
         REF_USER.document(currentUserID).getDocument(as: User.self) { result in
             switch result {
             case .success(let user):
@@ -131,7 +132,7 @@ final class FirebaseAPI {
     func fetchUser(uid: String, completion: @escaping (User) -> Void) {
         REF_USER.document(uid).getDocument { snapshot, error in
             guard let dictionary = snapshot?.data() else { return }
-
+            
             let user = User(dictionary: dictionary)
             completion(user)
         }
@@ -148,7 +149,49 @@ final class FirebaseAPI {
             completion(nil)
         }
     }
-
+    
+    // MARK: - RxAlamofire
+    
+    func readRecruitRx() -> Observable<[Recruit]> {
+        return Observable.create { observer in
+            let collectionRef = Firestore.firestore().collection("Recruit")
+            
+            //            let quary = collectionRef.whereField(<#T##field: String##String#>, isEqualTo: <#T##Any#>)
+            
+            collectionRef.getDocuments { snapshot, error in
+                if let error {
+                    observer.onError(error)
+                }
+                
+                guard let snapshot else { return }
+                
+                let recruits = snapshot.documents.compactMap { document -> Recruit? in
+                    //                        guard let fieldID = document["Recruit"]
+                    
+                    let dictionary = [
+                        "id" : document["id"],
+                        "userName" : document["userName"],
+                        "fieldID" : document["fieldID"],
+                        "recruitedPeopleCount" : document["recruitedPeopleCount"],
+                        "content" : document["content"],
+                        "matchDate" : document["matchDate"],
+                        "startTime" : document["startTime"],
+                        "endTime" : document["endTime"],
+                    ]
+                    
+                    print("dictionary: \(dictionary)")
+                    
+                    return Recruit(dictionary: dictionary)
+                }
+                
+                observer.onNext(recruits)
+                observer.onCompleted()
+            }
+            
+            return Disposables.create()
+        }
+        .subscribe(on: MainScheduler.instance)
+    }
 }
 
 // MARK: - Recruit create 함수

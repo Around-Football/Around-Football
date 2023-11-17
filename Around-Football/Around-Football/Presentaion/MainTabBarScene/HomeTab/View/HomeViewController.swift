@@ -9,6 +9,7 @@ import UIKit
 
 import FirebaseAuth
 import RxSwift
+import RxCocoa
 import Then
 import SnapKit
 
@@ -16,11 +17,14 @@ final class HomeViewController: UIViewController {
     
     // MARK: - Properties
     
-    var homeTableViewController: HomeTableViewController
-    var viewModel: HomeViewModel?
+//    var homeTableView = UITableView()
+    lazy var homeTableView = HomeTableViewController(viewModel: viewModel)
+
+    var viewModel: HomeViewModel
+    private var invokedViewDidLoad = PublishSubject<Void>()
+    private var disposeBag = DisposeBag()
     
-    init(homeTableViewController: HomeTableViewController, viewModel: HomeViewModel) {
-        self.homeTableViewController = homeTableViewController
+    init(viewModel: HomeViewModel) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
@@ -88,11 +92,11 @@ final class HomeViewController: UIViewController {
     }()
     
     // MARK: - Lifecycles
-    
     override func viewDidLoad() {
         super.viewDidLoad()
-        addChild(homeTableViewController)
         configureUI()
+        invokedViewDidLoad.onNext(())
+        bind()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -113,6 +117,29 @@ final class HomeViewController: UIViewController {
     }
     
     // MARK: - Helpers
+    
+    func bind() {
+//        let input = HomeViewModel.Input(invokedViewDidLoad: invokedViewDidLoad.asObservable())
+//        
+//        let output = viewModel.transform(input)
+//        
+//        output
+//            .recruitList
+//            .bind(to: homeTableView.rx.items(cellIdentifier: HomeTableViewCell.id,
+//                                             cellType: HomeTableViewCell.self)) { index, item, cell in
+//                print("item: \(item)")
+//                print("왜 프린트 안돼")
+//                cell.bindContents(item: item)
+//            }.disposed(by: disposeBag)
+        
+//                //프린트됨
+//                FirebaseAPI.shared.readRecruitRx()
+//                    .subscribe(onNext: { recruits in
+//        
+//                        print("recruits: \(recruits)")
+//                    })
+//                    .disposed(by: disposeBag)
+    }
     
     func configureUI() {
         view.backgroundColor = .white
@@ -146,10 +173,10 @@ final class HomeViewController: UIViewController {
         filterScrollView.addSubview(optionStackView)
         
         view.addSubviews(filterScrollView,
-                         homeTableViewController.view,
+                         homeTableView.view,
                          floatingButton)
         
-        homeTableViewController.didMove(toParent: self)
+//        homeTableViewController.didMove(toParent: self)
         
         filterScrollView.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide).offset(SuperviewOffsets.topPadding)
@@ -166,7 +193,7 @@ final class HomeViewController: UIViewController {
         }
     
         
-        homeTableViewController.view.snp.makeConstraints { make in
+        homeTableView.view.snp.makeConstraints { make in
             make.top.equalTo(filterScrollView.snp.bottom).offset(10)
             make.leading.equalToSuperview()
             make.trailing.equalToSuperview()
@@ -230,9 +257,9 @@ final class HomeViewController: UIViewController {
     func didTapFloatingButton() {
         //TODO: -FirebaseAuth UID 확인해서 로그인 or 초대뷰
         if UserService.shared.user?.id == nil {
-            viewModel?.coordinator?.presentLoginViewController()
+            viewModel.coordinator?.presentLoginViewController()
         } else {
-            viewModel?.coordinator?.pushInviteView()
+            viewModel.coordinator?.pushInviteView()
         }
         print("DEBUG: didTapFloatingButton")
     }

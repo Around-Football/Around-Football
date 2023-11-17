@@ -22,8 +22,8 @@ final class HomeTabCoordinator: BaseCoordinator {
     
     func makeHomeViewController() -> UINavigationController {
         let homeViewModel = HomeViewModel(coordinator: self)
-        let homeTableViewController = HomeTableViewController(viewModel: homeViewModel)
-        let homeViewController = HomeViewController(homeTableViewController: homeTableViewController, viewModel: homeViewModel)
+//        let homeTableViewController = HomeTableViewController(viewModel: homeViewModel)
+        let homeViewController = HomeViewController(viewModel: homeViewModel)
         navigationController = UINavigationController(rootViewController: homeViewController)
         
         guard let navigationController = navigationController else {
