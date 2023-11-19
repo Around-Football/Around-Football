@@ -76,7 +76,7 @@ final class InfoViewController: UIViewController {
     
     @objc 
     func logoutButtonTapped() {
-        loginViewModel?.logout()
+        try? Auth.auth().signOut()
         viewModel?.coordinator?.presentLoginViewController()
         tabBarController?.selectedIndex = 0 //로그아웃하면 메인탭으로 이동
     }

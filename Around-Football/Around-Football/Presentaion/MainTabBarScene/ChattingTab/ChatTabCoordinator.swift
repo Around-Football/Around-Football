@@ -24,7 +24,7 @@ final class ChatTabCoordinator: BaseCoordinator {
         let channelViewModel = ChannelViewModel(coordinator: self)
         let channelViewController = ChannelViewController(viewModel: channelViewModel)
         navigationController = UINavigationController(rootViewController: channelViewController)
-        navigationController?.navigationBar.isHidden = true
+        navigationController?.navigationBar.isHidden = false
         
         guard let navigationController = navigationController else {
             return UINavigationController()
