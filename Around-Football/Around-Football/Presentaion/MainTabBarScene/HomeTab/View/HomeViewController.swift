@@ -4,7 +4,7 @@
 //
 //  Created by 진태영 on 2023/09/27.
 //
-// 홈(리스트)
+
 import UIKit
 
 import FirebaseAuth
@@ -16,9 +16,6 @@ import SnapKit
 final class HomeViewController: UIViewController {
     
     // MARK: - Properties
-    
-//    var homeTableView = UITableView()
-    lazy var homeTableView = HomeTableViewController(viewModel: viewModel)
 
     var viewModel: HomeViewModel
     private var invokedViewDidLoad = PublishSubject<Void>()
@@ -27,6 +24,11 @@ final class HomeViewController: UIViewController {
     init(viewModel: HomeViewModel) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
+    }
+    
+    lazy var homeTableView = UITableView().then {
+        $0.register(HomeTableViewCell.self, forCellReuseIdentifier: HomeTableViewCell.id)
+        $0.delegate = self
     }
     
     private let filterOptions: [String] = ["모든 날짜", "모든 지역", "매치 유형"] // 필터 옵션
@@ -95,8 +97,10 @@ final class HomeViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         configureUI()
-        invokedViewDidLoad.onNext(())
+        // MARK: - bind함수가 위에 있어야 됨... 이걸로 하루 날림 (연결하고 데이터 날리기)
         bind()
+        invokedViewDidLoad.onNext(())
+
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -119,26 +123,17 @@ final class HomeViewController: UIViewController {
     // MARK: - Helpers
     
     func bind() {
-//        let input = HomeViewModel.Input(invokedViewDidLoad: invokedViewDidLoad.asObservable())
-//        
-//        let output = viewModel.transform(input)
-//        
-//        output
-//            .recruitList
-//            .bind(to: homeTableView.rx.items(cellIdentifier: HomeTableViewCell.id,
-//                                             cellType: HomeTableViewCell.self)) { index, item, cell in
-//                print("item: \(item)")
-//                print("왜 프린트 안돼")
-//                cell.bindContents(item: item)
-//            }.disposed(by: disposeBag)
+        let input = HomeViewModel.Input(invokedViewDidLoad: invokedViewDidLoad.asObservable())
         
-//                //프린트됨
-//                FirebaseAPI.shared.readRecruitRx()
-//                    .subscribe(onNext: { recruits in
-//        
-//                        print("recruits: \(recruits)")
-//                    })
-//                    .disposed(by: disposeBag)
+        let output = viewModel.transform(input)
+        
+        output
+            .recruitList
+            .bind(to: homeTableView.rx.items(cellIdentifier: HomeTableViewCell.id,
+                                             cellType: HomeTableViewCell.self)) { index, item, cell in
+                
+                cell.bindContents(item: item)
+            }.disposed(by: disposeBag)
     }
     
     func configureUI() {
@@ -173,10 +168,8 @@ final class HomeViewController: UIViewController {
         filterScrollView.addSubview(optionStackView)
         
         view.addSubviews(filterScrollView,
-                         homeTableView.view,
+                         homeTableView,
                          floatingButton)
-        
-//        homeTableViewController.didMove(toParent: self)
         
         filterScrollView.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide).offset(SuperviewOffsets.topPadding)
@@ -191,9 +184,8 @@ final class HomeViewController: UIViewController {
             make.trailing.equalTo(filterScrollView)
             make.bottom.equalTo(filterScrollView)
         }
-    
         
-        homeTableView.view.snp.makeConstraints { make in
+        homeTableView.snp.makeConstraints { make in
             make.top.equalTo(filterScrollView.snp.bottom).offset(10)
             make.leading.equalToSuperview()
             make.trailing.equalToSuperview()
@@ -266,5 +258,12 @@ final class HomeViewController: UIViewController {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+}
+
+extension HomeViewController: UITableViewDelegate {
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        viewModel.coordinator?.pushToDetailView()
     }
 }

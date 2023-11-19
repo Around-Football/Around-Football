@@ -103,6 +103,7 @@ final class HomeTableViewCell: UITableViewCell {
         recruitLabel.snp.makeConstraints { make in
             make.top.equalTo(timelineStackView).offset(30)
             make.leading.equalTo(titleLabel)
+            make.bottom.equalToSuperview().offset(-10)
         }
     }
 }
