@@ -12,7 +12,7 @@ let MOCKUP_URL = "https://mocki.io/v1/8f5cd61d-36f3-430a-9013-2f130ffb9cf8"
 
 class APIService {
     
-    static func fetchfetchRecruitRx() -> Observable<Data> {
+    static func fetchRecruitRx() -> Observable<Data> {
         return Observable.create { emitter in
             fetchRecruit() { result in
                 switch result {

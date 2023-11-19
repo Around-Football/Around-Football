@@ -14,6 +14,11 @@ final class DetailViewController: UIViewController {
     
     // MARK: - Properties
     
+    var viewModel: DetailViewModel
+    private let detailUserInfoView = DetailUserInfoView()
+    private let scrollView = UIScrollView()
+    private let contentView = UIView()
+    
     private let mainImageView = UIImageView().then {
         $0.image = UIImage(named: "AppIcon")
         $0.contentMode = .scaleAspectFill
@@ -72,14 +77,17 @@ final class DetailViewController: UIViewController {
         $0.clipsToBounds = true
         $0.addTarget(self, action: #selector(clickedMessage), for: .touchUpInside)
     }
-
-    private let detailUserInfoView = DetailUserInfoView()
-    
-    private let scrollView = UIScrollView()
-    
-    private let contentView = UIView()
     
     // MARK: - Lifecycles
+    
+    init(viewModel: DetailViewModel) {
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -104,14 +112,11 @@ final class DetailViewController: UIViewController {
         )
         applyButton.setAttributedTitle(title, for: .normal)
         
-        //네비게이션 분기처리
-        //TODO: -소미니 뷰 넣기 (여기는 코디네이터 어떻게 전달하지..뷰모델을 또 전달해야하나)
-        let controller = ApplicationStatusViewController()
-        navigationController?.pushViewController(controller, animated: true)
+        viewModel.coordinator.pushApplicationStatusViewController()
     }
     
-    // MARK: - Helpers
-    
+    // MARK: - Helper
+
     private func configeUI() {
         view.backgroundColor = .white
         view.addSubview(scrollView)

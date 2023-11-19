@@ -60,23 +60,24 @@ final class ChannelAPI {
             }
     }
     
-    func subscribe() -> Single<[(ChannelInfo, DocumentChangeType)]> {
-        return Single.create { [weak self] single in
+    func subscribe() -> Observable<[(ChannelInfo, DocumentChangeType)]> {
+        return Observable.create { [weak self] observer in
             let disposable = Disposables.create()
             
             guard let self = self,
                   let channelListener = self.channelListener else { return Disposables.create() }
             
             self.listener = channelListener.addSnapshotListener({ snapshot, error in
+                print("listen snapshot")
                 guard let document = snapshot?.documentChanges else {
-                    single(.failure(error ?? NSError(domain: "", code: -1)))
+                    observer.onError(error ?? NSError(domain: "", code: -1))
                     return
                 }
-                
+                print(document.first!.document.data())
                 let result = document
                     .filter { ChannelInfo($0.document.data()) != nil }
                     .compactMap { (ChannelInfo($0.document.data())!, $0.type) }
-                single(.success(result))
+                observer.onNext(result)
             })
             return disposable
         }

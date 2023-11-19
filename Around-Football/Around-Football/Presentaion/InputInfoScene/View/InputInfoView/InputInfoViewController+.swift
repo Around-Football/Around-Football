@@ -13,8 +13,6 @@ extension InputInfoViewController: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         if textField == inputInfoView.userNameTextField {
             inputInfoView.userAgeTextField.becomeFirstResponder()
-        } else if textField == inputInfoView.userAgeTextField {
-            inputInfoView.userContactTextField.becomeFirstResponder()
         } else {
             textField.resignFirstResponder()
         }
@@ -45,6 +43,5 @@ extension InputInfoViewController: UITextFieldDelegate {
     func dismissKeyboard() {
         view.endEditing(true)
     }
-    
 }
 
