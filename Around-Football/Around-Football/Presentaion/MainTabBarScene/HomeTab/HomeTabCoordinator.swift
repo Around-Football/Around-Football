@@ -22,8 +22,7 @@ final class HomeTabCoordinator: BaseCoordinator {
     
     func makeHomeViewController() -> UINavigationController {
         let homeViewModel = HomeViewModel(coordinator: self)
-        let homeTableViewController = HomeTableViewController(viewModel: homeViewModel)
-        let homeViewController = HomeViewController(homeTableViewController: homeTableViewController, viewModel: homeViewModel)
+        let homeViewController = HomeViewController(viewModel: homeViewModel)
         navigationController = UINavigationController(rootViewController: homeViewController)
         
         guard let navigationController = navigationController else {
@@ -38,11 +37,10 @@ final class HomeTabCoordinator: BaseCoordinator {
     }
     
     func pushToDetailView() {
-        let detailVc = DetailViewController()
+        let coordinator = DetailCoordinator(navigationController: navigationController)
         navigationController?.navigationBar.isHidden = false
-        navigationController?.pushViewController(detailVc, animated: true)
+        coordinator.start()
     }
-    
 
     func pushMapView() {
         // MARK: - MapView이동시 coordinator 사용
@@ -53,13 +51,11 @@ final class HomeTabCoordinator: BaseCoordinator {
     func pushApplicationStatusView() {
         let ApplicationStatusVc = ApplicationStatusViewController()
         navigationController?.pushViewController(ApplicationStatusVc, animated: true)
-
     }
     
     func pushInviteView() {
-        let controller = UINavigationController(rootViewController: InviteViewController())
-        navigationController?.present(controller, animated: true)
-        //TODO: -push방식으로 변경
-//        navigationController?.pushViewController(controller, animated: true)
+        let coordinator = InviteCoordinator(navigationController: navigationController)
+        coordinator.start()
+        coordinator.navigationController?.navigationBar.isHidden = false
     }
 }

@@ -10,21 +10,29 @@ import UIKit
 import SnapKit
 import Then
 
-final class InviteViewController: UIViewController, GroundTitleViewDelegate {
+final class InviteViewController: UIViewController {
     
     // MARK: - Properties
-    
-    var viewModel = SearchViewModel()
+    var viewModel: InviteViewModel
     private let placeView = GroundTitleView()
     private let peopleView = PeopleCountView()
+    private let calenderViewController = CalenderViewController()
+    let contentView = UIView()
+    
+    private var id = UserService.shared.user?.id
+    private var userName = UserService.shared.user?.userName
+    private var fieldID = UUID().uuidString
+    private lazy var recruitedPeopleCount = peopleView.count
+    private lazy var content = contentTextView.text
+    private lazy var matchDate = calenderViewController.selectedDateString
+    private lazy var startTime = calenderViewController.selectedDate
+    //TODO: - EndTime 추가
+    private lazy var endTime = calenderViewController.selectedDate
     
     private lazy var scrollView = UIScrollView().then {
         $0.showsVerticalScrollIndicator = false
     }
     
-    let contentView = UIView()
-    private let calenderViewController = CalenderViewController()
-
     private let contentLabel = UILabel().then {
         $0.text = "내용"
     }
@@ -49,10 +57,17 @@ final class InviteViewController: UIViewController, GroundTitleViewDelegate {
     
     // MARK: - Lifecycles
     
+    init(viewModel: InviteViewModel) {
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        placeView.delegate = self
 
         configureUI()
         keyboardController()
@@ -68,13 +83,25 @@ final class InviteViewController: UIViewController, GroundTitleViewDelegate {
     private func setAddButton() {
         addButton.buttonActionHandler = { [weak self] in
             guard let self else { return }
-            dismiss(animated: true)
+            
+            viewModel.createRecruitFieldData(user: UserService.shared.user ?? User(dictionary: [:]),
+                                             fieldID: fieldID,
+                                             recruitedPeopleCount: recruitedPeopleCount,
+                                             content: content,
+                                             matchDate: matchDate,
+                                             startTime: startTime,
+                                             endTime: endTime)
+            
+            viewModel.coordinator.popInviteViewController()
         }
         
-        placeView.searchFieldButton.addTarget(self, action: #selector(searchFieldButtonTapped), for: .touchUpInside)
+        // MARK: - 창현이가 만든 서치 버튼
+        placeView.searchFieldButton.addTarget(self,
+                                              action: #selector(searchFieldButtonTapped),
+                                              for: .touchUpInside)
     }
-    
-    private func keyboardController() {
+        
+        private func keyboardController() {
         //키보드 올리기
         NotificationCenter.default.addObserver(
             self,
@@ -129,14 +156,14 @@ final class InviteViewController: UIViewController, GroundTitleViewDelegate {
             make.top.equalTo(contentView.snp.top)
             make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
             make.width.equalTo(UIScreen.main.bounds.width * 2/3)
-            make.height.equalTo(100)
+            make.height.equalTo(50)
         }
         
         peopleView.snp.makeConstraints { make in
             make.top.equalTo(contentView.snp.top)
             make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
             make.width.equalTo(UIScreen.main.bounds.width * 1/3)
-            make.height.equalTo(100)
+            make.height.equalTo(50)
         }
         
         calenderViewController.view.snp.makeConstraints { make in
@@ -166,17 +193,10 @@ final class InviteViewController: UIViewController, GroundTitleViewDelegate {
         }
     }
     
-    func searchBarTapped() {
-        let searchController = SearchViewController()
-        searchController.viewModel = self.viewModel
-        present(searchController, animated: true, completion: nil)
-    }
-    
     // MARK: - Selectors
     
     @objc
     func searchFieldButtonTapped() {
-//        viewModel.coordinator?.pushMapView()
-//        print("버튼 tap")
+        viewModel.coordinator.presentSearchViewController()
     }
 }
