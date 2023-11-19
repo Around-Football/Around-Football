@@ -17,8 +17,8 @@ final class CalenderViewController: UIViewController {
     private lazy var calanderDate = calender.date(from: components) ?? Date()
     private var days: [String] = []
     private var selectedIndexPath: IndexPath? //캘린더 선택cell
-    private var selectedDateString: String? //캘린더에서 선택한 날짜 String
-    private var selectedDate: Date? //캘린더에서 선택한 날짜 + picker에서 선택한 시간 Date
+    var selectedDateString: String? //캘린더에서 선택한 날짜 String
+    var selectedDate: Date? //캘린더에서 선택한 날짜 + picker에서 선택한 시간 Date
 
     private lazy var previousButton = UIButton().then {
         $0.setImage(UIImage(systemName: "chevron.left"), for: .normal)
@@ -69,11 +69,23 @@ final class CalenderViewController: UIViewController {
         return cv
     }()
     
-    private let timeLabel = UILabel().then {
-        $0.text = "Time"
+    private let startTimeLabel = UILabel().then {
+        $0.text = "시작시간"
     }
     
-    private lazy var timePicker = UIDatePicker().then {
+    private let endTimeLabel = UILabel().then {
+        $0.text = "종료시간"
+    }
+    
+    private lazy var startTimePicker = UIDatePicker().then {
+        $0.datePickerMode = .time
+        $0.locale = Locale(identifier: "ko_kr")
+        $0.locale = Locale.autoupdatingCurrent
+        $0.minuteInterval = 10
+        $0.addTarget(self, action: #selector(timePickerSelected), for: .valueChanged)
+    }
+    
+    private lazy var endTimePicker = UIDatePicker().then {
         $0.datePickerMode = .time
         $0.locale = Locale(identifier: "ko_kr")
         $0.locale = Locale.autoupdatingCurrent
@@ -117,8 +129,10 @@ final class CalenderViewController: UIViewController {
                          previousButton,
                          dayStackView,
                          dateCollectionView,
-                         timeLabel,
-                         timePicker)
+                         startTimeLabel,
+                         startTimePicker,
+                         endTimeLabel,
+                         endTimePicker)
         
         monthLabel.snp.makeConstraints { make in
             make.top.equalToSuperview()
@@ -150,13 +164,25 @@ final class CalenderViewController: UIViewController {
             make.height.equalTo(((UIScreen.main.bounds.width - 40) / 7) * 6)
         }
         
-        timeLabel.snp.makeConstraints { make in
+        startTimeLabel.snp.makeConstraints { make in
             make.top.equalTo(dateCollectionView.snp.bottom)
             make.leading.equalToSuperview()
         }
         
-        timePicker.snp.makeConstraints { make in
-            make.centerY.equalTo(timeLabel)
+        startTimePicker.snp.makeConstraints { make in
+            make.centerY.equalTo(startTimeLabel)
+            make.trailing.equalToSuperview()
+            make.height.equalTo(50)
+            make.width.equalTo(100)
+        }
+        
+        endTimeLabel.snp.makeConstraints { make in
+            make.top.equalTo(startTimeLabel.snp.bottom).offset(20)
+            make.leading.equalToSuperview()
+        }
+        
+        endTimePicker.snp.makeConstraints { make in
+            make.centerY.equalTo(endTimeLabel)
             make.trailing.equalToSuperview()
             make.height.equalTo(50)
             make.width.equalTo(100)
@@ -217,7 +243,7 @@ extension CalenderViewController {
         }
         
         //picker에서 선택한 시간 반영
-        let selectedTime = timePicker.date
+        let selectedTime = startTimePicker.date
         let calendar = Calendar.current
         let dateComponents = calendar.dateComponents([.year, .month, .day], from: date)
         let timeComponents = calendar.dateComponents([.hour, .minute], from: selectedTime)

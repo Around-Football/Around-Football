@@ -65,31 +65,8 @@ class InputInfoView: UIView {
         $0.font = .systemFont(ofSize: 15)
     }
     
-    // 연락처
-    private lazy var userContactStackView = UIStackView().then{
-        $0.axis = .vertical
-        $0.distribution = .fill
-        $0.alignment = .leading
-        $0.spacing = 10
-        $0.addArrangedSubviews(userContactLabel,
-                               userContactTextField)
-        userContactTextField.makeSideAutoLayout()
-    }
-    
-    private let userContactLabel = UILabel().then{
-        $0.text = "연락처"
-        $0.font = .boldSystemFont(ofSize: 16)
-    }
-    
-    let userContactTextField = UITextField().then {
-        $0.layer.cornerRadius = LayoutOptions.cornerRadious
-        $0.placeholder = "연락처를 입력해주세요"
-        $0.borderStyle = .roundedRect
-        $0.font = .systemFont(ofSize: 15)
-    }
-    
     // 성별
-    private lazy var userDetailSexStackView = UIStackView().then {
+    private lazy var userGenderStackView = UIStackView().then {
         $0.axis = .vertical
         $0.distribution = .fill
         $0.alignment = .leading
@@ -139,6 +116,8 @@ class InputInfoView: UIView {
                                userAreaTextField)
         userAreaTextField.makeSideAutoLayout()
     }
+    
+    //TODO: -Picker로 선택할 수 있도록 구현
     
     private let userAreaLabel = UILabel().then{
         $0.text = "지역(시/군/구)"
@@ -299,8 +278,7 @@ class InputInfoView: UIView {
         mainScrollView.addSubview(contentView)
         contentView.addSubviews(userNameStackView,
                                 userAgeStackView,
-                                userContactStackView,
-                                userDetailSexStackView,
+                                userGenderStackView,
                                 userAreaStackView,
                                 userMainUsedFeetStackView,
                                 userPositionStackView,
@@ -308,14 +286,15 @@ class InputInfoView: UIView {
         
         mainScrollView.snp.makeConstraints { make in
             make.top.equalTo(safeAreaLayoutGuide)
-            make.bottom.equalTo(safeAreaLayoutGuide).offset(4)
+            make.bottom.equalTo(safeAreaLayoutGuide)
             make.leading.equalToSuperview()
             make.trailing.equalToSuperview()
         }
         
         contentView.snp.makeConstraints { make in
-            make.edges.equalTo(mainScrollView.contentLayoutGuide)
-            make.width.equalTo(mainScrollView.frameLayoutGuide)
+//            make.edges.equalTo(mainScrollView.contentLayoutGuide)
+            make.width.equalTo(mainScrollView.snp.width)
+            make.height.equalTo(mainScrollView.snp.height)
         }
         
         userNameStackView.snp.makeConstraints { make in
@@ -328,25 +307,18 @@ class InputInfoView: UIView {
             make.top.equalTo(userNameStackView.snp.bottom).offset(SuperviewOffsets.topPadding)
             make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
             make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
-            make.bottom.equalTo(userContactStackView.snp.top).offset(SuperviewOffsets.bottomPadding)
+            make.bottom.equalTo(userGenderStackView.snp.top).offset(SuperviewOffsets.bottomPadding)
         }
         
-        userContactStackView.snp.makeConstraints { make in
+        userGenderStackView.snp.makeConstraints { make in
             make.top.equalTo(userAgeStackView.snp.bottom).offset(SuperviewOffsets.topPadding)
-            make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
-            make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
-            make.bottom.equalTo(userDetailSexStackView.snp.top).offset(SuperviewOffsets.bottomPadding)
-        }
-        
-        userDetailSexStackView.snp.makeConstraints { make in
-            make.top.equalTo(userContactStackView.snp.bottom).offset(SuperviewOffsets.topPadding)
             make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
             make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
             make.bottom.equalTo(userAreaStackView.snp.top).offset(SuperviewOffsets.bottomPadding)
         }
         
         userAreaStackView.snp.makeConstraints { make in
-            make.top.equalTo(userDetailSexStackView.snp.bottom).offset(SuperviewOffsets.topPadding)
+            make.top.equalTo(userGenderStackView.snp.bottom).offset(SuperviewOffsets.topPadding)
             make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
             make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
             make.bottom.equalTo(userMainUsedFeetStackView.snp.top).offset(SuperviewOffsets.bottomPadding)
@@ -363,14 +335,14 @@ class InputInfoView: UIView {
             make.top.equalTo(userMainUsedFeetStackView.snp.bottom).offset(SuperviewOffsets.topPadding)
             make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
             make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
-            make.bottom.equalTo(nextButton.snp.top).offset(SuperviewOffsets.bottomPadding)
+//            make.bottom.equalTo(nextButton.snp.top).offset(SuperviewOffsets.bottomPadding)
         }
         
         nextButton.snp.makeConstraints { make in
-            make.top.equalTo(userPositionStackView.snp.bottom).offset(SuperviewOffsets.topPadding)
+//            make.top.equalTo(userPositionStackView.snp.bottom).offset(SuperviewOffsets.topPadding)
             make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
             make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
-            make.bottom.equalToSuperview()
+            make.bottom.equalToSuperview().offset(SuperviewOffsets.bottomPadding)
             make.height.equalTo(50)
         }
     }
