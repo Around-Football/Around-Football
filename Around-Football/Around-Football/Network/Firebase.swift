@@ -156,8 +156,6 @@ final class FirebaseAPI {
         return Observable.create { observer in
             let collectionRef = Firestore.firestore().collection("Recruit")
             
-            //            let quary = collectionRef.whereField(<#T##field: String##String#>, isEqualTo: <#T##Any#>)
-            
             collectionRef.getDocuments { snapshot, error in
                 if let error {
                     observer.onError(error)
@@ -166,7 +164,6 @@ final class FirebaseAPI {
                 guard let snapshot else { return }
                 
                 let recruits = snapshot.documents.compactMap { document -> Recruit? in
-                    //                        guard let fieldID = document["Recruit"]
                     
                     let dictionary = [
                         "id" : document["id"],
@@ -179,7 +176,7 @@ final class FirebaseAPI {
                         "endTime" : document["endTime"],
                     ]
                     
-                    print("dictionary: \(dictionary)")
+//                    print("dictionary: \(dictionary)")
                     
                     return Recruit(dictionary: dictionary)
                 }
@@ -190,7 +187,7 @@ final class FirebaseAPI {
             
             return Disposables.create()
         }
-        .subscribe(on: MainScheduler.instance)
+        .subscribe(on: ConcurrentDispatchQueueScheduler(qos: .background))
     }
 }
 
