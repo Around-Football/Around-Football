@@ -27,6 +27,7 @@ final class InviteViewController: UIViewController {
     private var id = UserService.shared.user?.id
     private var userName = UserService.shared.user?.userName
     private var fieldID = UUID().uuidString
+    private lazy var fieldName = placeView.searchFieldButton.titleLabel?.text
     private lazy var recruitedPeopleCount = peopleView.count
     private lazy var content = contentTextView.text
     private lazy var matchDate = calenderViewController.selectedDateString
@@ -91,7 +92,8 @@ final class InviteViewController: UIViewController {
             guard let self else { return }
             
             inviteViewModel.createRecruitFieldData(user: UserService.shared.user ?? User(dictionary: [:]),
-                                             fieldID: fieldID,
+                                                   fieldID: fieldID, 
+                                                   fieldName: fieldName ?? "장소 입력 오류",
                                              recruitedPeopleCount: recruitedPeopleCount,
                                              content: content,
                                              matchDate: matchDate,
