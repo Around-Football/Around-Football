@@ -15,12 +15,12 @@ class SearchViewController: UIViewController {
     
     // MARK: - Properties
     
-    private let tableView = UITableView() 
+    private let tableView = UITableView()
     
     private let disposeBag = DisposeBag()
     
-    var viewModel: SearchViewModel
-    
+    var searchViewModel: SearchViewModel
+    var searchCoordinator: SearchCoordinator?
     var searchResultsController = SearchResultViewController()
     
     private lazy var searchController = UISearchController(searchResultsController: searchResultsController)
@@ -42,8 +42,9 @@ class SearchViewController: UIViewController {
     
     // MARK: - Lifecycles
     
-    init(viewModel: SearchViewModel) {
-        self.viewModel = viewModel
+    init(searchViewModel: SearchViewModel) {
+        self.searchViewModel = searchViewModel
+//        self.searchCoordinator = searchCoordinator
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -59,7 +60,7 @@ class SearchViewController: UIViewController {
     }
     
     override func viewDidDisappear(_ animated: Bool) {
-        viewModel.coordinator.dismissSearchViewController()
+        searchViewModel.coordinator?.dismissSearchViewController()
     }
     
     // MARK: - Helpers
@@ -70,9 +71,7 @@ class SearchViewController: UIViewController {
 
     private func configureUI() {
         view.backgroundColor = .white
-//        
-//        tableView.delegate = self
-//        tableView.dataSource = self
+
         view.addSubviews(searchBar,
                          tableView)
         searchBar.snp.makeConstraints { make in
@@ -91,7 +90,19 @@ class SearchViewController: UIViewController {
         tableView.register(SearchTableViewCell.self, forCellReuseIdentifier: SearchTableViewCell.cellID)
         tableView.dataSource = nil
         
-        _ = viewModel.searchResults
+        let selectedItem = tableView.rx.modelSelected(Place.self)
+
+        selectedItem
+            .subscribe(onNext: { [weak self] place in
+                guard let self = self else { return }
+                searchViewModel.dataSubject
+                    .onNext(place.name)
+                searchViewModel.coordinator?.dismissSearchViewController()
+                print("\(String(describing: searchViewModel.coordinator))")
+            })
+            .disposed(by: disposeBag)
+        
+        _ = searchViewModel.searchResults
             .debug()
             .bind(to: tableView.rx.items(cellIdentifier: SearchTableViewCell.cellID, cellType: SearchTableViewCell.self)) { index, place, cell in
                 cell.fieldNameLabel.text = place.name
@@ -115,14 +126,6 @@ extension SearchViewController: UISearchBarDelegate, UISearchResultsUpdating {
     }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-//        tableView.reloadData()
-        viewModel.searchField(searchText)
-        // searchPlaces = viewModel.searchPlaces
-        var i : [Place] = []
-        let a = viewModel.searchResults.map { place in
-            i = place
-        }
-        
-        print("=========ViewController: \(i)=========")
+        searchViewModel.searchField(searchText)
     }
 }

@@ -17,7 +17,6 @@ final class MapViewController: UIViewController {
     
     // MARK: - Properties
     
-
     private let disposeBag = DisposeBag()
     var viewModel: MapViewModel?
     
