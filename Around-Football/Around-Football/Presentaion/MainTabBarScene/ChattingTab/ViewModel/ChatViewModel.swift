@@ -15,8 +15,8 @@ class ChatViewModel {
     var messages: [Message] = []
     let chatAPI = ChatAPI.shared
     let channelAPI = ChannelAPI.shared
-    let currentUser: User?
-    let withUser: User?
+    let currentUser: User? = nil
+    let withUser: User? = nil
     var isNewChat: Bool = false
     
     init(coordinator: ChatTabCoordinator) {

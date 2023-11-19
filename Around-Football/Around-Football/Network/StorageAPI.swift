@@ -11,6 +11,8 @@ import FirebaseStorage
 import Kingfisher
 
 struct StorageAPI {
+    public typealias ImageResource = KF.ImageResource
+
     static func uploadImage(image: UIImage, channel: Channel, completion: @escaping(URL?) -> Void) {
         guard let data = image.jpegData(compressionQuality: 0.4) else { return completion(nil) }
         let metaData = StorageMetadata()
@@ -25,7 +27,7 @@ struct StorageAPI {
         }
     }
     
-    static func downloadImage(url: URL, completion: @escaping(UIImage?) -> Void) {
+    static func downloadImage(url: URL, completion: @escaping (UIImage?) -> Void) {
         let storageRef = Storage.storage().reference(forURL: url.absoluteString)
         storageRef.downloadURL { url, error in
             if let error = error {
@@ -60,5 +62,6 @@ struct StorageAPI {
                 }
             }
         }
+        
     }
 }
