@@ -185,6 +185,7 @@ extension FirebaseAPI {
     func createRecruitFieldData(
         user: User?,
         fieldID: String,
+        fieldName: String,
         recruitedPeopleCount: Int,
         content: String?,
         matchDate: String?,
@@ -195,6 +196,7 @@ extension FirebaseAPI {
         let data = ["id": user?.id,
                     "userName": user?.userName,
                     "fieldID": fieldID,
+                    "fieldName": fieldName,
                     "recruitedPeopleCount": recruitedPeopleCount,
                     "content": content,
                     "matchDate": matchDate,

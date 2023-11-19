@@ -19,6 +19,7 @@ final class InviteViewModel {
 
     func createRecruitFieldData(user: User?,
                                  fieldID: String,
+                                fieldName: String,
                                  recruitedPeopleCount: Int,
                                  content: String?,
                                  matchDate: String?,
@@ -27,6 +28,7 @@ final class InviteViewModel {
         // MARK: - 테스트용 임시 데이터 파베에 올림
         FirebaseAPI.shared.createRecruitFieldData(user: user,
                                                   fieldID: fieldID,
+                                                  fieldName: fieldName,
                                                   recruitedPeopleCount: recruitedPeopleCount,
                                                   content: content,
                                                   matchDate: matchDate,
