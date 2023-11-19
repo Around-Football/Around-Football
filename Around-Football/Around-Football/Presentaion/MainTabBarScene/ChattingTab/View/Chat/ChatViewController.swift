@@ -83,7 +83,7 @@ final class ChatViewController: MessagesViewController {
         messagesCollectionView.messagesDisplayDelegate = self
         messagesCollectionView.messageCellDelegate = self
         
-        messageInputBar.delegate = self
+//        messageInputBar.delegate = self
     }
 
     private func setupMessageInputBar() {
