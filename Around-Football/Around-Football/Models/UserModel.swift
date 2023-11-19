@@ -18,8 +18,6 @@ struct User: Codable {
     //TODO: - FCM Token 추가
     var fcmToken: String?
     
-    //TODO: - 연락방식 채팅..?, 쪽지..?, 상남자식 번호..?
-    
     static func convertToArray(documents: [[String: Any]]) -> [User] {
         var array: [User] = []
         for document in documents {
