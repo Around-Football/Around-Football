@@ -82,12 +82,13 @@ final class HomeTableViewCell: UITableViewCell {
         
         titleLabel.snp.makeConstraints { make in
             make.top.equalToSuperview().offset(10)
-            make.leading.equalToSuperview().offset(20)
+            make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
         }
         
         fieldAddress.snp.makeConstraints { make in
             make.top.equalTo(titleLabel).offset(30)
             make.leading.equalTo(titleLabel)
+            make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
         }
         
         timelineStackView.addArrangedSubviews(dateLabel,
@@ -96,6 +97,7 @@ final class HomeTableViewCell: UITableViewCell {
         timelineStackView.snp.makeConstraints { make in
             make.top.equalTo(fieldAddress).offset(30)
             make.leading.equalTo(titleLabel)
+            make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
         }
         
         recruitLabel.snp.makeConstraints { make in
