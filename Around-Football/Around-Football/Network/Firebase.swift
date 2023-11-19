@@ -9,6 +9,7 @@ import Foundation
 
 import FirebaseAuth
 import FirebaseFirestore
+import RxAlamofire
 import RxSwift
 
 /*
@@ -22,8 +23,10 @@ import RxSwift
  var position: String
  */
 
-struct FirebaseAPI {
+final class FirebaseAPI {
     static let shared = FirebaseAPI()
+    
+    private init() { }
     
     func createUser(_ result: AuthDataResult) {
         
@@ -51,10 +54,13 @@ struct FirebaseAPI {
             completion(nil)
             return
         }
-
+        
         REF_USER.document(currentUserID).getDocument(as: User.self) { result in
             switch result {
             case .success(let user):
+                print("readUser성공: \(user)")
+                // MARK: - UserService user 업데이트
+                UserService.shared.user = user
                 completion(user)
             case .failure(let error):
                 print("Error decoding user: \(error)")
@@ -100,6 +106,121 @@ struct FirebaseAPI {
         }
     }
     
+    // MARK: - AuthService
+    func updateFCMTokenAndFetchUser(uid: String, fcmToken: String) -> Single<User?> {
+        return Single.create { single in
+            self.updateFCMToken(uid: uid, fcmToken: fcmToken) { error in
+                if let error = error {
+                    single(.failure(error))
+                    return
+                }
+                self.fetchUser(uid: uid) { user in
+                    single(.success(user))
+                }
+            }
+            return Disposables.create()
+        }
+    }
+    
+    func updateFCMToken(uid: String, fcmToken: String, completion: @escaping (Error?) -> Void) {
+        let ref = REF_USER.document(uid)
+        let data = ["fcmToken": fcmToken]
+        updateRefData(ref: ref, data: data, completion: completion)
+    }
+    
+    // TODO: - 창현이와 readUser 함수 맞추기
+    func fetchUser(uid: String, completion: @escaping (User) -> Void) {
+        REF_USER.document(uid).getDocument { snapshot, error in
+            guard let dictionary = snapshot?.data() else { return }
+            
+            let user = User(dictionary: dictionary)
+            completion(user)
+        }
+    }
+    
+    // TODO: - ChannelAPI와 통합하기
+    func updateRefData(ref: DocumentReference, data: [String: Any], completion: @escaping ((Error?) -> Void)) {
+        ref.updateData(data) { error in
+            if let error = error {
+                completion(error)
+                return
+            }
+            print("DEBUG - Document successfully updated")
+            completion(nil)
+        }
+    }
+    
+    // MARK: - RxAlamofire
+    
+    func readRecruitRx() -> Observable<[Recruit]> {
+        return Observable.create { observer in
+            let collectionRef = Firestore.firestore().collection("Recruit")
+            
+            collectionRef.getDocuments { snapshot, error in
+                if let error {
+                    observer.onError(error)
+                }
+                
+                guard let snapshot else { return }
+                
+                let recruits = snapshot.documents.compactMap { document -> Recruit? in
+                    
+                    let dictionary = [
+                        "id" : document["id"],
+                        "userName" : document["userName"],
+                        "fieldID" : document["fieldID"],
+                        "recruitedPeopleCount" : document["recruitedPeopleCount"],
+                        "content" : document["content"],
+                        "matchDate" : document["matchDate"],
+                        "startTime" : document["startTime"],
+                        "endTime" : document["endTime"],
+                    ]
+                    
+//                    print("dictionary: \(dictionary)")
+                    
+                    return Recruit(dictionary: dictionary)
+                }
+                
+                observer.onNext(recruits)
+                observer.onCompleted()
+            }
+            
+            return Disposables.create()
+        }
+        .subscribe(on: ConcurrentDispatchQueueScheduler(qos: .background))
+    }
+}
+
+// MARK: - Recruit create 함수
+
+extension FirebaseAPI {
+    
+    func createRecruitFieldData(
+        user: User?,
+        fieldID: String,
+        recruitedPeopleCount: Int,
+        content: String?,
+        matchDate: String?,
+        startTime: Date?,
+        endTime: Date?,
+        completion: @escaping (Error?) -> Void
+    ) {
+        let data = ["id": user?.id,
+                    "userName": user?.userName,
+                    "fieldID": fieldID,
+                    "recruitedPeopleCount": recruitedPeopleCount,
+                    "content": content,
+                    "matchDate": matchDate,
+                    "startTime": startTime,
+                    "endTime": endTime
+        ] as [String : Any]
+        
+        
+        REF_RECRUIT
+            .document(fieldID)
+            .setData(data, completion: completion)
+    }
+    
     func fetchRecruitFieldData(
         fieldID: String,
         date: Date,
@@ -119,53 +240,6 @@ struct FirebaseAPI {
                 
             }
     }
-    
-    // MARK: - AuthService
-    func updateFCMTokenAndFetchUser(uid: String, fcmToken: String) -> Single<User?> {
-        return Single.create { single in
-            self.updateFCMToken(uid: uid, fcmToken: fcmToken) { error in
-                if let error = error {
-                    single(.failure(error))
-                    return
-                }
-                self.fetchUser(uid: uid) { user in
-                    single(.success(user))
-                }
-            }
-            return Disposables.create()
-        }
-        
-        
-    }
-    
-    func updateFCMToken(uid: String, fcmToken: String, completion: @escaping (Error?) -> Void) {
-        let ref = REF_USER.document(uid)
-        let data = ["fcmToken": fcmToken]
-        updateRefData(ref: ref, data: data, completion: completion)
-    }
-    
-    // TODO: - 창현이와 readUser 함수 맞추기
-    func fetchUser(uid: String, completion: @escaping (User) -> Void) {
-        REF_USER.document(uid).getDocument { snapshot, error in
-            guard let dictionary = snapshot?.data() else { return }
-
-            let user = User(dictionary: dictionary)
-            completion(user)
-        }
-    }
-    
-    // TODO: - ChannelAPI와 통합하기
-    func updateRefData(ref: DocumentReference, data: [String: Any], completion: @escaping ((Error?) -> Void)) {
-        ref.updateData(data) { error in
-            if let error = error {
-                completion(error)
-                return
-            }
-            print("DEBUG - Document successfully updated")
-            completion(nil)
-        }
-    }
-
 }
 
 func saveFieldJsonData<T: Encodable>(data:T) {

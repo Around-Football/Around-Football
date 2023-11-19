@@ -88,7 +88,7 @@ final class LoginViewController: UIViewController {
         // TODO: - Coordinator Refactoring
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(didRecieveTestNotification(_:)),
-                                               name: NSNotification.Name("TestNotification"),
+                                               name: NSNotification.Name("LoginNotification"),
                                                object: nil)
     }
     
@@ -100,28 +100,35 @@ final class LoginViewController: UIViewController {
     
     @objc
     func didRecieveTestNotification(_ notification: Notification) {
-        // TODO: - 추가정보 입력 여부에따라 추가정보입력뷰 또는 메인뷰로 이동
-        print("DEBUG: 로그인 완료")
-//        if /*추가정보입력*/ = nil {
-        viewModel?.coordinator?.pushInputInfoViewController()
-//        } else {
-//        viewModel?.coordinator?.loginDone()
-//        }
+        FirebaseAPI.shared.readUser { [weak self] _ in
+            guard let self else { return }
+            // TODO: - 추가정보 입력 여부에따라 추가정보입력뷰 또는 메인뷰로 이동
+            print("DEBUG: 로그인 완료")
+            if UserService.shared.user?.userName == "" {
+                print("유저 네임 없음. 상세정보입력으로")
+                viewModel?.coordinator?.pushInputInfoViewController()
+            } else {
+                print("유저 네임 있음. 로그인 완료")
+                viewModel?.coordinator?.loginDone()
+            }
+        }
     }
+    
+    // MARK: - 로그인로직 뷰모델에서 UserService로 바꿈
     
     @objc
     func kakaoLoginButtonTapped() {
-        viewModel?.kakaoSignIn()
+        UserService.shared.kakaoSignIn()
     }
     
     @objc
     func googleLoginButtonTapped() {
-        viewModel?.googleSignIn(self)
+        UserService.shared.googleSignIn(self)
     }
     
     @objc
     func appleLoginButtonTapped() {
-        viewModel?.appleSignIn()
+        UserService.shared.appleSignIn()
     }
     
     // MARK: - Helpers
