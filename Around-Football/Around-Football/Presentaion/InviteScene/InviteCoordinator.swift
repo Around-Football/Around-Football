@@ -12,12 +12,19 @@ protocol InviteCoordinatorDelegate {
 }
 
 final class InviteCoordinator: BaseCoordinator {
-    
+
     var type: CoordinatorType = .home
+    var searchViewModel = SearchViewModel(coordinator: nil)
+
+//    init(navigationController: UINavigationController?) {
+//        
+//        super.init(navigationController: navigationController)
+//    }
     
     override func start() {
         let inviteViewModel = InviteViewModel(coordinator: self)
-        let controller = InviteViewController(viewModel: inviteViewModel)
+        let controller = InviteViewController(inviteViewModel: inviteViewModel, 
+                                              searchViewModel: searchViewModel)
         controller.navigationController?.navigationBar.isHidden = false
         navigationController?.pushViewController(controller, animated: true)
     }
@@ -29,7 +36,8 @@ final class InviteCoordinator: BaseCoordinator {
     
     // SearchBViewController Delegate
     func presentSearchViewController() {
-        let coordinator = SearchCoordinator(navigationController: navigationController)
+        let coordinator = SearchCoordinator(navigationController: navigationController, 
+                                            searchViewModel: searchViewModel)
         coordinator.start()
         childCoordinators.append(coordinator)
     }
