@@ -36,7 +36,6 @@
 		274C21C72ACFF902005469E6 /* TextFieldDelegateHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 274C21C62ACFF901005469E6 /* TextFieldDelegateHandler.swift */; };
 		274C22112AD6D6EF005469E6 /* HomeTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 274C22102AD6D6EF005469E6 /* HomeTableViewCell.swift */; };
 		274C22132AD7C16A005469E6 /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 274C22122AD7C169005469E6 /* HomeViewModel.swift */; };
-		274C22172AD7D826005469E6 /* HomeTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 274C22162AD7D826005469E6 /* HomeTableViewController.swift */; };
 		278DAD5B2AE27A660085718C /* LocationFilterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 278DAD5A2AE27A660085718C /* LocationFilterViewController.swift */; };
 		278DAD5E2AE295C70085718C /* DateFilterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 278DAD5D2AE295C70085718C /* DateFilterViewController.swift */; };
 		278E555B2AD800BC00C328D3 /* APIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 278E555A2AD800BC00C328D3 /* APIService.swift */; };
@@ -152,7 +151,6 @@
 		274C21C62ACFF901005469E6 /* TextFieldDelegateHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldDelegateHandler.swift; sourceTree = "<group>"; };
 		274C22102AD6D6EF005469E6 /* HomeTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeTableViewCell.swift; sourceTree = "<group>"; };
 		274C22122AD7C169005469E6 /* HomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewModel.swift; sourceTree = "<group>"; };
-		274C22162AD7D826005469E6 /* HomeTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeTableViewController.swift; sourceTree = "<group>"; };
 		278DAD5A2AE27A660085718C /* LocationFilterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationFilterViewController.swift; sourceTree = "<group>"; };
 		278DAD5D2AE295C70085718C /* DateFilterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateFilterViewController.swift; sourceTree = "<group>"; };
 		278E555A2AD800BC00C328D3 /* APIService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIService.swift; sourceTree = "<group>"; };
@@ -662,7 +660,6 @@
 		7C2B1AE32AF4B6470052EC64 /* HomeTableView */ = {
 			isa = PBXGroup;
 			children = (
-				274C22162AD7D826005469E6 /* HomeTableViewController.swift */,
 				274C22102AD6D6EF005469E6 /* HomeTableViewCell.swift */,
 			);
 			path = HomeTableView;
@@ -944,7 +941,6 @@
 				7CE563AC2AD1425F005DE2DF /* DetailViewController+.swift in Sources */,
 				7C2B1ADE2AF4B2DA0052EC64 /* InputInfoCoordinator.swift in Sources */,
 				7929A31A2ADFED07006ED4FA /* ApplicationStatusTableViewCell.swift in Sources */,
-				274C22172AD7D826005469E6 /* HomeTableViewController.swift in Sources */,
 				7929A31D2ADFFB15006ED4FA /* ApplicationStatusViewController+.swift in Sources */,
 				273674842AC308D1003ADE3F /* FieldModel.swift in Sources */,
 				669674882AC3E82B0067FD48 /* MainTabController.swift in Sources */,

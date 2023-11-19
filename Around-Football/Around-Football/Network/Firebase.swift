@@ -165,20 +165,7 @@ final class FirebaseAPI {
                 
                 let recruits = snapshot.documents.compactMap { document -> Recruit? in
                     
-                    let dictionary = [
-                        "id" : document["id"],
-                        "userName" : document["userName"],
-                        "fieldID" : document["fieldID"],
-                        "recruitedPeopleCount" : document["recruitedPeopleCount"],
-                        "content" : document["content"],
-                        "matchDate" : document["matchDate"],
-                        "startTime" : document["startTime"],
-                        "endTime" : document["endTime"],
-                    ]
-                    
-//                    print("dictionary: \(dictionary)")
-                    
-                    return Recruit(dictionary: dictionary)
+                    return Recruit(dictionary: document.data())
                 }
                 
                 observer.onNext(recruits)
