@@ -65,6 +65,14 @@
 		668EE4B42AFF552F007A8844 /* ChannelAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 668EE4B32AFF552F007A8844 /* ChannelAPI.swift */; };
 		668EE4B62AFF5E89007A8844 /* ChannelModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 668EE4B52AFF5E89007A8844 /* ChannelModel.swift */; };
 		668EE4B82B01A60E007A8844 /* ChannelViewController+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 668EE4B72B01A60E007A8844 /* ChannelViewController+.swift */; };
+		668EE4BA2B04E37C007A8844 /* ChatAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 668EE4B92B04E37C007A8844 /* ChatAPI.swift */; };
+		668EE4BD2B04E3A6007A8844 /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = 668EE4BC2B04E3A6007A8844 /* FirebaseStorage */; };
+		668EE4BF2B0500D5007A8844 /* ChatViewController+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 668EE4BE2B0500D5007A8844 /* ChatViewController+.swift */; };
+		668EE4C12B050305007A8844 /* ImageMessageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 668EE4C02B050305007A8844 /* ImageMessageViewController.swift */; };
+		668EE4C32B050373007A8844 /* ImageTransition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 668EE4C22B050373007A8844 /* ImageTransition.swift */; };
+		668EE4C52B05038B007A8844 /* DisMissAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 668EE4C42B05038B007A8844 /* DisMissAnimation.swift */; };
+		668EE4C72B05048C007A8844 /* StorageAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 668EE4C62B05048C007A8844 /* StorageAPI.swift */; };
+		668EE4CA2B0504CB007A8844 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 668EE4C92B0504CB007A8844 /* Kingfisher */; };
 		669674882AC3E82B0067FD48 /* MainTabController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 669674872AC3E82B0067FD48 /* MainTabController.swift */; };
 		6696748F2AC3E9CE0067FD48 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6696748E2AC3E9CE0067FD48 /* HomeViewController.swift */; };
 		669674912AC3E9D40067FD48 /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 669674902AC3E9D40067FD48 /* MapViewController.swift */; };
@@ -171,6 +179,12 @@
 		668EE4B32AFF552F007A8844 /* ChannelAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChannelAPI.swift; sourceTree = "<group>"; };
 		668EE4B52AFF5E89007A8844 /* ChannelModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChannelModel.swift; sourceTree = "<group>"; };
 		668EE4B72B01A60E007A8844 /* ChannelViewController+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ChannelViewController+.swift"; sourceTree = "<group>"; };
+		668EE4B92B04E37C007A8844 /* ChatAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatAPI.swift; sourceTree = "<group>"; };
+		668EE4BE2B0500D5007A8844 /* ChatViewController+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ChatViewController+.swift"; sourceTree = "<group>"; };
+		668EE4C02B050305007A8844 /* ImageMessageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageMessageViewController.swift; sourceTree = "<group>"; };
+		668EE4C22B050373007A8844 /* ImageTransition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageTransition.swift; sourceTree = "<group>"; };
+		668EE4C42B05038B007A8844 /* DisMissAnimation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisMissAnimation.swift; sourceTree = "<group>"; };
+		668EE4C62B05048C007A8844 /* StorageAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageAPI.swift; sourceTree = "<group>"; };
 		669674872AC3E82B0067FD48 /* MainTabController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabController.swift; sourceTree = "<group>"; };
 		6696748E2AC3E9CE0067FD48 /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		669674902AC3E9D40067FD48 /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
@@ -240,11 +254,13 @@
 				2736746F2AC30786003ADE3F /* RxAlamofire in Frameworks */,
 				7C141C672ADA6008002CF180 /* KakaoSDKAuth in Frameworks */,
 				668EE4A12AFCAC2C007A8844 /* MessageKit in Frameworks */,
+				668EE4BD2B04E3A6007A8844 /* FirebaseStorage in Frameworks */,
 				272B448B2ADD375700ACEC41 /* GoogleSignIn in Frameworks */,
 				2736746A2AC3071A003ADE3F /* RxCocoa in Frameworks */,
 				273674742AC307D6003ADE3F /* FirebaseFirestore in Frameworks */,
 				273674722AC307D6003ADE3F /* FirebaseAuth in Frameworks */,
 				273674762AC307D6003ADE3F /* FirebaseFirestoreSwift in Frameworks */,
+				668EE4CA2B0504CB007A8844 /* Kingfisher in Frameworks */,
 				272B448D2ADD375700ACEC41 /* GoogleSignInSwift in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -293,6 +309,7 @@
 			children = (
 				2736744B2AC3061C003ADE3F /* Around-Football */,
 				2736744A2AC3061C003ADE3F /* Products */,
+				668EE4BB2B04E3A6007A8844 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -361,6 +378,8 @@
 				668EE4B32AFF552F007A8844 /* ChannelAPI.swift */,
 				278E555A2AD800BC00C328D3 /* APIService.swift */,
 				27058ECB2B0656ED00C107F9 /* KakaoService.swift */,
+				668EE4B92B04E37C007A8844 /* ChatAPI.swift */,
+				668EE4C62B05048C007A8844 /* StorageAPI.swift */,
 			);
 			path = Network;
 			sourceTree = "<group>";
@@ -401,8 +420,17 @@
 			isa = PBXGroup;
 			children = (
 				7C2B1AE42AF4BCA80052EC64 /* ChatViewController.swift */,
+				668EE4BE2B0500D5007A8844 /* ChatViewController+.swift */,
+				668EE4C02B050305007A8844 /* ImageMessageViewController.swift */,
 			);
 			path = Chat;
+			sourceTree = "<group>";
+		};
+		668EE4BB2B04E3A6007A8844 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 		7929A30D2ADE4AD8006ED4FA /* InputInfoView */ = {
@@ -769,6 +797,8 @@
 				7CE25AE52ACABF620014132F /* AFButton.swift */,
 				663417CB2AD68413002FE2CA /* Constants.swift */,
 				278E55692AD930F900C328D3 /* Response.swift */,
+				668EE4C22B050373007A8844 /* ImageTransition.swift */,
+				668EE4C42B05038B007A8844 /* DisMissAnimation.swift */,
 			);
 			path = Utiles;
 			sourceTree = "<group>";
@@ -807,6 +837,8 @@
 				272B448A2ADD375700ACEC41 /* GoogleSignIn */,
 				272B448C2ADD375700ACEC41 /* GoogleSignInSwift */,
 				668EE4A02AFCAC2C007A8844 /* MessageKit */,
+				668EE4BC2B04E3A6007A8844 /* FirebaseStorage */,
+				668EE4C92B0504CB007A8844 /* Kingfisher */,
 			);
 			productName = "Around-Football";
 			productReference = 273674492AC3061C003ADE3F /* Around-Football.app */;
@@ -846,6 +878,7 @@
 				7C141C632ADA6008002CF180 /* XCRemoteSwiftPackageReference "kakao-ios-sdk" */,
 				272B44892ADD375700ACEC41 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
 				668EE49F2AFCAC2C007A8844 /* XCRemoteSwiftPackageReference "MessageKit" */,
+				668EE4C82B0504CB007A8844 /* XCRemoteSwiftPackageReference "Kingfisher" */,
 			);
 			productRefGroup = 2736744A2AC3061C003ADE3F /* Products */;
 			projectDirPath = "";
@@ -877,6 +910,7 @@
 			files = (
 				278DAD5E2AE295C70085718C /* DateFilterViewController.swift in Sources */,
 				7C2B1AE22AF4B6180052EC64 /* MainTabViewModel.swift in Sources */,
+				668EE4C72B05048C007A8844 /* StorageAPI.swift in Sources */,
 				663417CA2AD682AB002FE2CA /* Firebase.swift in Sources */,
 				7CE563AA2AD140A9005DE2DF /* LayoutOptions.swift in Sources */,
 				2729185F2B0236A7009C9042 /* SearchViewModel.swift in Sources */,
@@ -894,6 +928,7 @@
 				7CE25AE62ACABF620014132F /* AFButton.swift in Sources */,
 				66656F9D2AD9219F00AE1AFA /* FieldDetailViewController.swift in Sources */,
 				272918612B034242009C9042 /* SearchResultViewController.swift in Sources */,
+				668EE4C12B050305007A8844 /* ImageMessageViewController.swift in Sources */,
 				668EE4B42AFF552F007A8844 /* ChannelAPI.swift in Sources */,
 				7C5F775E2AC9CE8A004CE48F /* DateCell.swift in Sources */,
 				7C94EBD52B01BF0600A7E42A /* InfoViewModel.swift in Sources */,
@@ -926,8 +961,10 @@
 				7CBFED752AE69FE400915D65 /* UserModel.swift in Sources */,
 				7C5F77642AC9E180004CE48F /* UIView+.swift in Sources */,
 				669674932AC3E9DF0067FD48 /* InfoViewController.swift in Sources */,
+				668EE4C32B050373007A8844 /* ImageTransition.swift in Sources */,
 				7929A3112ADEAD35006ED4FA /* InputInfoView.swift in Sources */,
 				7C2B1AE52AF4BCA80052EC64 /* ChatViewController.swift in Sources */,
+				668EE4BA2B04E37C007A8844 /* ChatAPI.swift in Sources */,
 				7C2B1AE02AF4B5DB0052EC64 /* InputInfoViewModel.swift in Sources */,
 				66656F9F2AD921D700AE1AFA /* FieldDetailViewModel.swift in Sources */,
 				7C2B1AF72AF4BE160052EC64 /* ApplicationStatusViewModel.swift in Sources */,
@@ -948,6 +985,7 @@
 				7C2B1AFE2AF4D28D0052EC64 /* HomeTabCoordinator.swift in Sources */,
 				274C21C42ACFE932005469E6 /* LoginViewModel.swift in Sources */,
 				2736744D2AC3061C003ADE3F /* AppDelegate.swift in Sources */,
+				668EE4C52B05038B007A8844 /* DisMissAnimation.swift in Sources */,
 				7C5F77602AC9DA08004CE48F /* GroundTitleView.swift in Sources */,
 				7CB21BA52AC94EE4001D0058 /* DetailUserInfoView.swift in Sources */,
 				273674832AC308D1003ADE3F /* RecruitModel.swift in Sources */,
@@ -958,6 +996,7 @@
 				7929A3132ADEB319006ED4FA /* InputInfoViewController+.swift in Sources */,
 				274C21C72ACFF902005469E6 /* TextFieldDelegateHandler.swift in Sources */,
 				7CE0143E2AF8C5B700ED77D2 /* EditViewController.swift in Sources */,
+				668EE4BF2B0500D5007A8844 /* ChatViewController+.swift in Sources */,
 				2736744F2AC3061C003ADE3F /* SceneDelegate.swift in Sources */,
 				2729185B2B022E84009C9042 /* SearchViewController.swift in Sources */,
 				7C2B1B002AF4D2B40052EC64 /* MapTabCoordinator.swift in Sources */,
@@ -1252,6 +1291,14 @@
 				minimumVersion = 4.2.0;
 			};
 		};
+		668EE4C82B0504CB007A8844 /* XCRemoteSwiftPackageReference "Kingfisher" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/onevcat/Kingfisher";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 7.10.0;
+			};
+		};
 		7C141C632ADA6008002CF180 /* XCRemoteSwiftPackageReference "kakao-ios-sdk" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/kakao/kakao-ios-sdk";
@@ -1322,6 +1369,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 668EE49F2AFCAC2C007A8844 /* XCRemoteSwiftPackageReference "MessageKit" */;
 			productName = MessageKit;
+		};
+		668EE4BC2B04E3A6007A8844 /* FirebaseStorage */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 273674702AC307D6003ADE3F /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseStorage;
+		};
+		668EE4C92B0504CB007A8844 /* Kingfisher */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 668EE4C82B0504CB007A8844 /* XCRemoteSwiftPackageReference "Kingfisher" */;
+			productName = Kingfisher;
 		};
 		7C141C642ADA6008002CF180 /* KakaoSDK */ = {
 			isa = XCSwiftPackageProductDependency;

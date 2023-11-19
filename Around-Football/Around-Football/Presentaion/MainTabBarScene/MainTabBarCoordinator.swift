@@ -42,7 +42,8 @@ final class MainTabBarCoordinator: BaseCoordinator,
         
         homeTabCoordinator.delegate = self
         infoTabCoordinator.delegate = self
-
+        chatTabCoordinator.delegate = self
+        
         let homeViewController = homeTabCoordinator.makeHomeViewController()
         let mapViewController = mapTabCoordinator.makeMapViewController()
         let channelViewController = chatTabCoordinator.makeChannelViewController()
