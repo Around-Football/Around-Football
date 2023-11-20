@@ -96,7 +96,7 @@ class SearchViewController: UIViewController {
             .subscribe(onNext: { [weak self] place in
                 guard let self = self else { return }
                 searchViewModel.dataSubject
-                    .onNext(place.name)
+                    .onNext(place)
                 searchViewModel.coordinator?.dismissSearchViewController()
                 print("\(String(describing: searchViewModel.coordinator))")
             })
