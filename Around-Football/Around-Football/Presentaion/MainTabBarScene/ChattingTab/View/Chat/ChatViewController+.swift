@@ -91,13 +91,50 @@ extension ChatViewController: PHPickerViewControllerDelegate {
             self.messagesCollectionView.scrollToLastItem(animated: false)
             self.viewModel.channelAPI.updateChannelInfo(owner: viewModel.currentUser!, withUser: viewModel.withUser!, channelId: viewModel.channel.id, message: message)
             // TODO: - NotiManager 적용
-//            NotiManager.shared.pushNotification(channel: channel, content: ("사진"), fcmToken: toUser!.fcmToken, from: user)
+            //            NotiManager.shared.pushNotification(channel: channel, content: ("사진"), fcmToken: toUser!.fcmToken, from: user)
             
         }
     }
     
     func imagePickerControllerDidCancel(_ picker: PHPickerViewController) {
         picker.dismiss(animated: true)
+    }
+}
+
+extension ChatViewController: InputBarAccessoryViewDelegate {
+    func inputBar(_ inputBar: InputBarAccessoryView, didPressSendButtonWith text: String) {
+        let message = Message(user: viewModel.currentUser!, content: text)
+        if self.viewModel.isNewChat {
+            print("isNewChat = \(self.viewModel.isNewChat)")
+            viewModel.channelAPI.createChannel(channel: viewModel.channel, owner: viewModel.currentUser!, withUser: viewModel.withUser!) {
+                self.viewModel.chatAPI.save(message) { [weak self] error in
+                    if let error = error {
+                        print("DEBUG - inputBar Error: \(error.localizedDescription)")
+                        return
+                    }
+                    guard let self = self else { return }
+                    self.viewModel.isNewChat = false
+                    self.messagesCollectionView.scrollToLastItem(animated: false)
+                    self.viewModel.channelAPI.updateChannelInfo(owner: viewModel.currentUser!, withUser: viewModel.withUser!, channelId: viewModel.channel.id, message: message)
+                    //                NotiManager.shared.pushNotification(channel: channel, content: text, fcmToken: toUser!.fcmToken, from: user)
+                    
+                }
+            }
+        } else {
+            print("isNewChat = \(self.viewModel.isNewChat)")
+            viewModel.chatAPI.save(message) { [weak self] error in
+                if let error = error {
+                    print("DEBUG - inputBar Error: \(error.localizedDescription)")
+                    return
+                }
+                guard let self = self else { return }
+                self.messagesCollectionView.scrollToLastItem(animated: false)
+                self.viewModel.channelAPI.updateChannelInfo(owner: viewModel.currentUser!, withUser: viewModel.withUser!, channelId: viewModel.channel.id, message: message)
+                //                NotiManager.shared.pushNotification(channel: channel, content: text, fcmToken: toUser!.fcmToken, from: user)
+
+            }
+        }
+        inputBar.inputTextView.text.removeAll()
     }
 }
 

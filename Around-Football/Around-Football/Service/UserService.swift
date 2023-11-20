@@ -15,6 +15,8 @@ import KakaoSDKUser
 import FirebaseCore
 import GoogleSignIn
 import AuthenticationServices
+import RxSwift
+import RxRelay
 
 final class UserService: NSObject {
     
@@ -22,6 +24,7 @@ final class UserService: NSObject {
     static let shared = UserService()
     
     var user: User?
+    var currentUser_Rx: BehaviorRelay<User?> = BehaviorRelay(value: nil)
     
     private var userProfile: String?
     private var email: String?
@@ -38,6 +41,8 @@ final class UserService: NSObject {
         FirebaseAPI.shared.readUser { [weak self] user in
             guard let self else { return }
             self.user = user
+            self.currentUser_Rx.accept(user)
+            print("DEBUG - LOGIN: \(String(describing: user))")
         }
     }
     
@@ -232,6 +237,7 @@ final class UserService: NSObject {
         do {
             try firebaseAuth.signOut()
             self.user = nil
+            self.currentUser_Rx.accept(nil)
         } catch let signOutError as NSError {
             print("Error signing out: %@", signOutError)
         }
