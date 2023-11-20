@@ -34,8 +34,6 @@ extension ChannelViewController {
                 cell.recentDateLabel.text = self.formatDate(date)
             }
             .disposed(by: disposeBag)
-        
-        
     }
     
     func bindLoginModalView(with outputObservable: Observable<Bool>) {
@@ -48,7 +46,15 @@ extension ChannelViewController {
                 }
             })
             .disposed(by: disposeBag)
-        
+    }
+    
+    func bindNavigateChannelView(with outputObservable: Observable<ChannelInfo>) {
+        outputObservable
+            .withUnretained(self)
+            .subscribe { (owner, channelInfo) in
+                owner.viewModel.showChatView(channelInfo: channelInfo)
+            }
+            .disposed(by: disposeBag)
     }
     
     private func hideChatAlarmNumber(cell: ChannelTableViewCell) {

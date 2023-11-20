@@ -25,18 +25,19 @@ final class ChannelViewModel {
     
     struct Input {
         let invokedViewWillAppear: Observable<Void>
+        let selectedChannel: Observable<IndexPath>
     }
     
     struct Output {
-//        let currentUser: Observable<User?>
         let isShowing: Observable<Bool>
+        let navigateTo: Observable<ChannelInfo>
     }
     
     // MARK: - Lifecycles
     
-        init(coordinator: ChatTabCoordinator) {
-            self.coordinator = coordinator
-        }
+    init(coordinator: ChatTabCoordinator) {
+        self.coordinator = coordinator
+    }
     
     // MARK: - API
     
@@ -54,7 +55,7 @@ final class ChannelViewModel {
                             owner.updateCell(to: result)
                         }, onError: { error in
                             print("DEBUG - setupListener Error: \(error.localizedDescription)")
-
+                            
                         })
                         .disposed(by: owner.disposeBag)
                 } else {
@@ -89,13 +90,13 @@ final class ChannelViewModel {
         }
         channels.accept(currentChannels)
     }
-        
+    
     func transform(_ input: Input) -> Output {
-//        let currentUser = configureCurrentUser()
         setupListener(currentUser: self.currentUser.asObservable())
         let isShowing = configureShowingLoginView(by: input.invokedViewWillAppear)
+        let navigateTo = emitSelectedChannelInfo(by: input.selectedChannel)
         
-        return Output(isShowing: isShowing)
+        return Output(isShowing: isShowing, navigateTo: navigateTo)
     }
     
     private func configureShowingLoginView(by inputObserver: Observable<Void>) -> Observable<Bool> {
@@ -108,8 +109,14 @@ final class ChannelViewModel {
             })
     }
     
+    private func emitSelectedChannelInfo(by inputObserver: Observable<IndexPath>) -> Observable<ChannelInfo> {
+        inputObserver.withLatestFrom(channels) { (indexPath, channels) -> ChannelInfo in
+            return channels[indexPath.row]
+        }
+    }
     
-    func showChatView() {
+    
+    func showChatView(channelInfo: ChannelInfo) {
         coordinator?.pushChatView()
     }
     
