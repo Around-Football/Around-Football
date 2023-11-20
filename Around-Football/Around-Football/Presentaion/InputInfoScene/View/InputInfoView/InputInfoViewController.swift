@@ -28,7 +28,7 @@ final class InputInfoViewController: UIViewController {
     private var gender: String? = ""
     private lazy var area: String? = inputInfoView.userAreaTextField.text
     private var mainUsedFeet: String? = ""
-    private var position: String? = ""
+    private var position: Set<String> = []
     
     // MARK: - Lifecycles
     
@@ -47,8 +47,7 @@ final class InputInfoViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
-//        isInfoCompleted()
+        
         bindUI()
         navigationItem.title = "추가정보 입력"
         keyboardController()
@@ -114,14 +113,16 @@ final class InputInfoViewController: UIViewController {
             .disposed(by: disposeBag)
         
         output?.userInfo
+            .observe(on: MainScheduler.instance)
             .do(onNext: { [weak self] user in
+                guard let self else { return }
                 switch user?.gender {
                 case "남성":
-                    self?.inputInfoView.maleButton.isSelected = true
-                    self?.inputInfoView.femaleButton.isSelected = false
+                    inputInfoView.maleButton.isSelected = true
+                    gender = "남성"
                 case "여성":
-                    self?.inputInfoView.maleButton.isSelected = false
-                    self?.inputInfoView.femaleButton.isSelected = true
+                    inputInfoView.femaleButton.isSelected = true
+                    gender = "여성"
                 default:
                     print("userFeet 비워져있음")
                 }
@@ -130,14 +131,19 @@ final class InputInfoViewController: UIViewController {
             .disposed(by: disposeBag)
         
         output?.userInfo
+            .observe(on: MainScheduler.instance)
             .do(onNext: { [weak self] user in
+                guard let self else { return }
                 switch user?.mainUsedFeet {
                 case "오른발":
-                    self?.inputInfoView.rightFootButton.isSelected = true
+                    inputInfoView.rightFootButton.isSelected = true
+                    mainUsedFeet = "오른발"
                 case "왼발":
-                    self?.inputInfoView.leftFootButton.isSelected = true
+                    inputInfoView.leftFootButton.isSelected = true
+                    mainUsedFeet = "왼발"
                 case "양발":
-                    self?.inputInfoView.bothFeetButton.isSelected = true
+                    inputInfoView.bothFeetButton.isSelected = true
+                    mainUsedFeet = "양발"
                 default:
                     print("userFeet 비워져있음")
                 }
@@ -146,41 +152,51 @@ final class InputInfoViewController: UIViewController {
             .disposed(by: disposeBag)
         
         output?.userInfo
+            .observe(on: MainScheduler.instance)
             .do(onNext: { [weak self] user in
-                switch user?.position {
-                case "FW":
-                    self?.inputInfoView.fwButton.isSelected = true
-                case "MF":
-                    self?.inputInfoView.mfButton.isSelected = true
-                case "DF":
-                    self?.inputInfoView.dfButton.isSelected = true
-                case "GK":
-                    self?.inputInfoView.gkButton.isSelected = true
-                default:
-                    print("userPosition 비워져있음")
+                guard let self else { return }
+                if let userPosition = user?.position {
+                    for position in userPosition {
+                        switch position {
+                        case "FW":
+                            inputInfoView.fwButton.isSelected = true
+                            self.position.insert("FW")
+                        case "MF":
+                            inputInfoView.mfButton.isSelected = true
+                            self.position.insert("MF")
+                        case "DF":
+                            inputInfoView.dfButton.isSelected = true
+                            self.position.insert("DF")
+                        case "GK":
+                            inputInfoView.gkButton.isSelected = true
+                            self.position.insert("GK")
+                        default:
+                            print("userPosition 비워져있음")
+                        }
+                    }
                 }
             })
             .subscribe()
             .disposed(by: disposeBag)
-        
-        //    private func isInfoCompleted() {
-        //        guard
-        //            inputInfoView.userNameTextField.text != nil,
-        //            inputInfoView.userAgeTextField.text != nil,
-        //            inputInfoView.userAreaTextField.text != nil,
-        //            inputInfoView.maleButton.isSelected ||
-        //            inputInfoView.femaleButton.isSelected,
-        //            inputInfoView.fwButton.isSelected || inputInfoView.mfButton.isSelected || inputInfoView.dfButton.isSelected || inputInfoView.gkButton.isSelected
-        //        else {
-        //            inputInfoView.nextButton.setTitle("모든 항목을 작성해주세요", for: .normal)
-        //            inputInfoView.nextButton.setTitleColor(.gray, for: .normal)
-        //            return inputInfoView.nextButton.isEnabled = false
-        //        }
-        //        inputInfoView.nextButton.setTitle("작성 완료", for: .normal)
-        //        inputInfoView.nextButton.setTitleColor(.white, for: .normal)
-        //        return inputInfoView.nextButton.isEnabled = true
-        //    }
     }
+    
+//    private func isInfoCompleted() {
+//        guard
+//            inputInfoView.userNameTextField.text != nil,
+//            inputInfoView.userAgeTextField.text != nil,
+//            inputInfoView.userAreaTextField.text != nil,
+//            inputInfoView.maleButton.isSelected ||
+//            inputInfoView.femaleButton.isSelected,
+//            inputInfoView.fwButton.isSelected || inputInfoView.mfButton.isSelected || inputInfoView.dfButton.isSelected || inputInfoView.gkButton.isSelected
+//        else {
+//            inputInfoView.nextButton.setTitle("모든 항목을 작성해주세요", for: .normal)
+//            inputInfoView.nextButton.setTitleColor(.gray, for: .normal)
+//            return inputInfoView.nextButton.isEnabled = false
+//        }
+//        inputInfoView.nextButton.setTitle("작성 완료", for: .normal)
+//        inputInfoView.nextButton.setTitleColor(.white, for: .normal)
+//        return inputInfoView.nextButton.isEnabled = true
+//    }
     
     // MARK: - Selectors
     
@@ -193,7 +209,7 @@ final class InputInfoViewController: UIViewController {
                                                         "gender" : gender,
                                                         "area" : area,
                                                         "mainUsedFeet" : mainUsedFeet,
-                                                        "position" : position
+                                                        "position" : Array(position)
                                                        ]))
         
         // MARK: - UserService의 User 업데이트 해주기
@@ -210,7 +226,7 @@ final class InputInfoViewController: UIViewController {
     
     @objc
     func maleButtonTapped(_ sender: UIButton) {
-        sender.isSelected.toggle()
+        sender.isSelected = true
         if inputInfoView.femaleButton.isSelected {
             inputInfoView.femaleButton.isSelected.toggle()
         }
@@ -265,26 +281,43 @@ final class InputInfoViewController: UIViewController {
     @objc
     func fwButtonTapped(_ sender: UIButton) {
         sender.isSelected.toggle()
-        position = sender.titleLabel?.text ?? ""
+        if sender.isSelected {
+            position.insert(sender.titleLabel?.text ?? "")
+        } else {
+            position.remove(sender.titleLabel?.text ?? "")
+        }
     }
     
     @objc
     func mfButtonTapped(_ sender: UIButton) {
         sender.isSelected.toggle()
-        position = sender.titleLabel?.text ?? ""
+        if sender.isSelected {
+            position.insert(sender.titleLabel?.text ?? "")
+        } else {
+            position.remove(sender.titleLabel?.text ?? "")
+        }
     }
     
     @objc
     func dfButtonTapped(_ sender: UIButton) {
         sender.isSelected.toggle()
-        position = sender.titleLabel?.text ?? ""
+        if sender.isSelected {
+            position.insert(sender.titleLabel?.text ?? "")
+        } else {
+            position.remove(sender.titleLabel?.text ?? "")
+        }
     }
     
     @objc
     func gkButtonTapped(_ sender: UIButton) {
         sender.isSelected.toggle()
-        position = sender.titleLabel?.text ?? ""
+        if sender.isSelected {
+            position.insert(sender.titleLabel?.text ?? "")
+        } else {
+            position.remove(sender.titleLabel?.text ?? "")
+        }
     }
+
     
     //TODO: - Keyboard 함수 Utiles로 정리
     private func keyboardController() {

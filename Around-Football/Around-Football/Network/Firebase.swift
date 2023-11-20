@@ -12,17 +12,6 @@ import FirebaseFirestore
 import RxAlamofire
 import RxSwift
 
-/*
- var id: String
- var userName: String
- var age: Int
- var contact: Int?
- var detailSex: String
- var area: String
- var mainUsedFeet: String
- var position: String
- */
-
 final class FirebaseAPI {
     static let shared = FirebaseAPI()
     
