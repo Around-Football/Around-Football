@@ -69,15 +69,17 @@ final class InfoViewController: UIViewController {
         configureUI()
         configureStackView()
         setButtonDelegate()
+        setUserInfo()
         // TODO: - Coordinator Refactoring
         NotificationCenter.default.addObserver(self,
-                                               selector: #selector(didRecieveTestNotification(_:)),
+                                               selector: #selector(didRecieveLoginNotification(_:)),
                                                name: NSNotification.Name("LoginNotification"),
                                                object: nil)
     }
     
     override func viewWillAppear(_ animated: Bool) {
         setUserInfo()
+        setLogoutButton()
     }
     
     deinit {
@@ -87,7 +89,7 @@ final class InfoViewController: UIViewController {
     // MARK: - Selectors
     
     @objc
-    func didRecieveTestNotification(_ notification: Notification) {
+    func didRecieveLoginNotification(_ notification: Notification) {
         setUserInfo()
     }
     
@@ -102,6 +104,14 @@ final class InfoViewController: UIViewController {
     }
     
     // MARK: - Helpers
+    
+    private func setLogoutButton() {
+        if UserService.shared.user?.id != nil {
+            logoutButton.setTitle("로그아웃", for: .normal)
+        } else {
+            logoutButton.setTitle("로그인", for: .normal)
+        }
+    }
     
     private func setUserInfo() {
         profileAndEditView.userName.text = UserService.shared.user?.userName ?? "로그인 해주세요"

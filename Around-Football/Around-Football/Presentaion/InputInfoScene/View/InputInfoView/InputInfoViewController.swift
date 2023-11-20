@@ -71,7 +71,6 @@ final class InputInfoViewController: UIViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
-//        loadFirebaseUserInfo()
         invokedViewWillAppear.onNext(())
     }
     
@@ -179,30 +178,31 @@ final class InputInfoViewController: UIViewController {
             .disposed(by: disposeBag)
     }
     
-//        private func isInfoCompleted() {
-//            guard
-//                inputInfoView.userNameTextField.text != nil,
-//            inputInfoView.userAgeTextField.text != nil,
-//            inputInfoView.userAreaTextField.text != nil,
-//            inputInfoView.maleButton.isSelected ||
-//            inputInfoView.femaleButton.isSelected,
-//            inputInfoView.fwButton.isSelected || inputInfoView.mfButton.isSelected || inputInfoView.dfButton.isSelected || inputInfoView.gkButton.isSelected
-//        else {
-//            inputInfoView.nextButton.setTitle("모든 항목을 작성해주세요", for: .normal)
-//            inputInfoView.nextButton.setTitleColor(.gray, for: .normal)
-//            return inputInfoView.nextButton.isEnabled = false
-//        }
-//        inputInfoView.nextButton.setTitle("작성 완료", for: .normal)
-//        inputInfoView.nextButton.setTitleColor(.white, for: .normal)
-//        return inputInfoView.nextButton.isEnabled = true
-//    }
+    private func isInfoCompleted() {
+        guard
+            inputInfoView.userNameTextField.text?.isEmpty == false,
+            inputInfoView.userAgeTextField.text?.isEmpty == false,
+            inputInfoView.userAreaTextField.text?.isEmpty == false,
+            inputInfoView.maleButton.isSelected || inputInfoView.femaleButton.isSelected,
+            inputInfoView.leftFootButton.isSelected || inputInfoView.rightFootButton.isSelected || inputInfoView.bothFeetButton.isSelected,
+            inputInfoView.fwButton.isSelected || inputInfoView.mfButton.isSelected ||
+                inputInfoView.dfButton.isSelected || inputInfoView.gkButton.isSelected
+        else {
+            inputInfoView.nextButton.setTitle("모든 항목을 작성해주세요", for: .normal)
+            inputInfoView.nextButton.setTitleColor(.gray, for: .normal)
+            return inputInfoView.nextButton.isEnabled = false
+        }
+        inputInfoView.nextButton.setTitle("작성 완료", for: .normal)
+        inputInfoView.nextButton.setTitleColor(.white, for: .normal)
+        return inputInfoView.nextButton.isEnabled = true
+    }
     
     // MARK: - Selectors
     
     @objc
     func nextButtonTapped(_ sender: UIButton) {
         print("DEBUG: InputInfoViewController - nextButtonTapped")
-        
+        isInfoCompleted()
         FirebaseAPI.shared.updateUser(User(dictionary: ["userName" : userName,
                                                         "age" : age,
                                                         "gender" : gender,
@@ -229,7 +229,12 @@ final class InputInfoViewController: UIViewController {
         if inputInfoView.femaleButton.isSelected {
             inputInfoView.femaleButton.isSelected.toggle()
         }
-        gender = sender.titleLabel?.text
+        if sender.isSelected {
+            gender = sender.titleLabel?.text
+        } else {
+            gender = nil
+        }
+        isInfoCompleted()
     }
     
     @objc
@@ -238,7 +243,12 @@ final class InputInfoViewController: UIViewController {
         if inputInfoView.maleButton.isSelected {
             inputInfoView.maleButton.isSelected.toggle()
         }
-        gender = sender.titleLabel?.text
+        if sender.isSelected {
+            gender = sender.titleLabel?.text
+        } else {
+            gender = nil
+        }
+        isInfoCompleted()
     }
     
     @objc
@@ -249,8 +259,14 @@ final class InputInfoViewController: UIViewController {
         if inputInfoView.bothFeetButton.isSelected {
             inputInfoView.bothFeetButton.isSelected.toggle()
         }
+        
         sender.isSelected.toggle()
-        mainUsedFeet = sender.titleLabel?.text
+        if sender.isSelected {
+            mainUsedFeet = sender.titleLabel?.text
+        } else {
+            mainUsedFeet = nil
+        }
+        isInfoCompleted()
     }
     
     @objc
@@ -261,8 +277,14 @@ final class InputInfoViewController: UIViewController {
         if inputInfoView.bothFeetButton.isSelected {
             inputInfoView.bothFeetButton.isSelected.toggle()
         }
+        
         sender.isSelected.toggle()
-        mainUsedFeet = sender.titleLabel?.text
+        if sender.isSelected {
+            mainUsedFeet = sender.titleLabel?.text
+        } else {
+            mainUsedFeet = nil
+        }
+        isInfoCompleted()
     }
     
     @objc
@@ -273,8 +295,14 @@ final class InputInfoViewController: UIViewController {
         if inputInfoView.leftFootButton.isSelected {
             inputInfoView.leftFootButton.isSelected.toggle()
         }
+        
         sender.isSelected.toggle()
-        mainUsedFeet = sender.titleLabel?.text
+        if sender.isSelected {
+            mainUsedFeet = sender.titleLabel?.text
+        } else {
+            mainUsedFeet = nil
+        }
+        isInfoCompleted()
     }
     
     @objc
@@ -285,6 +313,7 @@ final class InputInfoViewController: UIViewController {
         } else {
             position.remove(sender.titleLabel?.text)
         }
+        isInfoCompleted()
     }
     
     @objc
@@ -295,6 +324,7 @@ final class InputInfoViewController: UIViewController {
         } else {
             position.remove(sender.titleLabel?.text)
         }
+        isInfoCompleted()
     }
     
     @objc
@@ -305,6 +335,7 @@ final class InputInfoViewController: UIViewController {
         } else {
             position.remove(sender.titleLabel?.text)
         }
+        isInfoCompleted()
     }
     
     @objc
@@ -315,6 +346,7 @@ final class InputInfoViewController: UIViewController {
         } else {
             position.remove(sender.titleLabel?.text)
         }
+        isInfoCompleted()
     }
 
     
