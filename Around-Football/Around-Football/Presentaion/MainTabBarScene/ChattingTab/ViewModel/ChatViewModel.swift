@@ -7,6 +7,9 @@
 
 import Foundation
 
+import RxSwift
+import RxRelay
+
 class ChatViewModel {
     
     weak var coordinator: ChatTabCoordinator?
@@ -19,6 +22,15 @@ class ChatViewModel {
     let withUser: User? = nil
     var isNewChat: Bool = false
     
+    struct Input {
+        let invokedViewWillAppear: Observable<Void>
+    }
+    
+    struct Output {
+//        let currentUser: Observable<User?>
+        let isShowing: Observable<Bool>
+    }
+
     init(coordinator: ChatTabCoordinator) {
         self.coordinator = coordinator
     }
