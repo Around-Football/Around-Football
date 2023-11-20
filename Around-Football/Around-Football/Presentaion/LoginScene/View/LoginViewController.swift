@@ -82,12 +82,11 @@ final class LoginViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
         configureUI()
         
         // TODO: - Coordinator Refactoring
         NotificationCenter.default.addObserver(self,
-                                               selector: #selector(didRecieveTestNotification(_:)),
+                                               selector: #selector(didRecieveLoginNotification(_:)),
                                                name: NSNotification.Name("LoginNotification"),
                                                object: nil)
     }
@@ -99,7 +98,7 @@ final class LoginViewController: UIViewController {
     // MARK: - Selectors
     
     @objc
-    func didRecieveTestNotification(_ notification: Notification) {
+    func didRecieveLoginNotification(_ notification: Notification) {
         FirebaseAPI.shared.readUser { [weak self] _ in
             guard let self else { return }
             // TODO: - 추가정보 입력 여부에따라 추가정보입력뷰 또는 메인뷰로 이동
