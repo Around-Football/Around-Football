@@ -73,11 +73,7 @@ class ChatViewModel {
     private func fetchWithUser(by inputObserver: Observable<Void>) {
         
     }
-    
-    private func fetchChannel(by inputObserver: Observable<Void>) {
         
-    }
-    
     // MARK: - Helpers
     
 //    func transform(_ input: Input) -> Output {
