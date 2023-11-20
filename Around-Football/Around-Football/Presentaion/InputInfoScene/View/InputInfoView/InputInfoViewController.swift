@@ -48,6 +48,7 @@ final class InputInfoViewController: UIViewController {
         super.viewDidLoad()
         
         bindUI()
+        isInfoCompleted()
         navigationItem.title = "추가정보 입력"
         keyboardController()
 
