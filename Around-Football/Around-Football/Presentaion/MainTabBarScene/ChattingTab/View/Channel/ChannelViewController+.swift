@@ -45,19 +45,6 @@ extension ChannelViewController {
                 if isShowing {
                     print("currentUser nil")
                     owner.viewModel.coordinator?.presentLoginViewController()
-                    // TODO: - AuthService 나오면 제거
-                    DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 5) {
-                        owner.viewModel.currentUser.accept(User(dictionary: [
-                            "age": 312321311,
-                            "area": "Efefe",
-                            "gender": "남성",
-                            "id": "nTUShiSwx2UXVZudPiWSnGE6XNf1",
-                            "mainUserFeet": "왼발",
-                            "position": "MF",
-                            "userName": "1312312"
-                        ]))
-                    }
-                    
                 }
             })
             .disposed(by: disposeBag)

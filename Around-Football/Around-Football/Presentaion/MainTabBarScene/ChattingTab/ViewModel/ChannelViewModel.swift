@@ -18,7 +18,7 @@ final class ChannelViewModel {
     
     var channels: BehaviorRelay<[ChannelInfo]> = BehaviorRelay(value: [])
     let channelAPI: ChannelAPI = ChannelAPI.shared
-    var currentUser: BehaviorRelay<User?> = BehaviorRelay(value: nil)
+    var currentUser = UserService.shared.currentUser_Rx
     
     weak var coordinator: ChatTabCoordinator?
     private let disposeBag = DisposeBag()
@@ -44,7 +44,7 @@ final class ChannelViewModel {
         currentUser
             .withUnretained(self)
             .subscribe(onNext: { (owner, user) in
-                print(#function, "user:", user)
+                print(#function, "user:", user as Any)
                 if let _ = user {
                     owner.channelAPI.subscribe()
                         .asObservable()
@@ -52,7 +52,6 @@ final class ChannelViewModel {
                             print("channels")
                             print(result)
                             owner.updateCell(to: result)
-
                         }, onError: { error in
                             print("DEBUG - setupListener Error: \(error.localizedDescription)")
 
@@ -99,26 +98,6 @@ final class ChannelViewModel {
         return Output(isShowing: isShowing)
     }
     
-    // TODO: - AuthService 나오면 제거
-    private func configureCurrentUser() {
-        guard let uid = Auth.auth().currentUser?.uid else { return }
-        
-        
-        currentUser
-            .withUnretained(self)
-            .filter { (_, user) in user != nil }
-            .flatMap { (owner, _) -> Observable<User?> in
-                print("inputobserver")
-                return FirebaseAPI.shared.updateFCMTokenAndFetchUser(uid: uid, fcmToken: "fcmToken")
-                    .asObservable()
-                    .catchAndReturn(nil)
-            }
-            .do { [weak self] user in
-                self?.currentUser.accept(user)
-            }
-//            .share()
-    }
-    
     private func configureShowingLoginView(by inputObserver: Observable<Void>) -> Observable<Bool> {
         
         return inputObserver
@@ -127,7 +106,6 @@ final class ChannelViewModel {
                 if owner.currentUser.value != nil { return .just(false) }
                 return .just(true)
             })
-            
     }
     
     

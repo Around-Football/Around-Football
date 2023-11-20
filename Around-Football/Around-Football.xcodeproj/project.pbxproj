@@ -77,6 +77,7 @@
 		669674912AC3E9D40067FD48 /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 669674902AC3E9D40067FD48 /* MapViewController.swift */; };
 		669674932AC3E9DF0067FD48 /* InfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 669674922AC3E9DF0067FD48 /* InfoViewController.swift */; };
 		66BD86E52AE646CB00B1B256 /* FieldDetailViewController+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66BD86E42AE646CB00B1B256 /* FieldDetailViewController+.swift */; };
+		66C374362B0B010800DB2C2A /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = 66C374352B0B010800DB2C2A /* FirebaseMessaging */; };
 		7929A30F2ADE4B45006ED4FA /* InputInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7929A30E2ADE4B45006ED4FA /* InputInfoViewController.swift */; };
 		7929A3112ADEAD35006ED4FA /* InputInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7929A3102ADEAD35006ED4FA /* InputInfoView.swift */; };
 		7929A3132ADEB319006ED4FA /* InputInfoViewController+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7929A3122ADEB319006ED4FA /* InputInfoViewController+.swift */; };
@@ -253,6 +254,7 @@
 				7C141C672ADA6008002CF180 /* KakaoSDKAuth in Frameworks */,
 				668EE4A12AFCAC2C007A8844 /* MessageKit in Frameworks */,
 				668EE4BD2B04E3A6007A8844 /* FirebaseStorage in Frameworks */,
+				66C374362B0B010800DB2C2A /* FirebaseMessaging in Frameworks */,
 				272B448B2ADD375700ACEC41 /* GoogleSignIn in Frameworks */,
 				2736746A2AC3071A003ADE3F /* RxCocoa in Frameworks */,
 				273674742AC307D6003ADE3F /* FirebaseFirestore in Frameworks */,
@@ -836,6 +838,7 @@
 				668EE4A02AFCAC2C007A8844 /* MessageKit */,
 				668EE4BC2B04E3A6007A8844 /* FirebaseStorage */,
 				668EE4C92B0504CB007A8844 /* Kingfisher */,
+				66C374352B0B010800DB2C2A /* FirebaseMessaging */,
 			);
 			productName = "Around-Football";
 			productReference = 273674492AC3061C003ADE3F /* Around-Football.app */;
@@ -1375,6 +1378,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 668EE4C82B0504CB007A8844 /* XCRemoteSwiftPackageReference "Kingfisher" */;
 			productName = Kingfisher;
+		};
+		66C374352B0B010800DB2C2A /* FirebaseMessaging */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 273674702AC307D6003ADE3F /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseMessaging;
 		};
 		7C141C642ADA6008002CF180 /* KakaoSDK */ = {
 			isa = XCSwiftPackageProductDependency;
