@@ -43,12 +43,3 @@ class InputInfoViewModel {
         return userObserver
     }
 }
-
-/*
- private var userName: String? = ""
- private var age: Int? = 0
- private var gender: String? = ""
- private var area: String? = ""
- private var mainUsedFeet: String? = ""
- private var position: String? = ""
- */
