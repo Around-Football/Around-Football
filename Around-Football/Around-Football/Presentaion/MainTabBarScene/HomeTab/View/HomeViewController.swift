@@ -18,7 +18,7 @@ final class HomeViewController: UIViewController {
     // MARK: - Properties
 
     var viewModel: HomeViewModel
-    private var invokedViewDidLoad = PublishSubject<Void>()
+    private var invokedViewWillAppear = PublishSubject<Void>()
     private var disposeBag = DisposeBag()
     
     init(viewModel: HomeViewModel) {
@@ -97,12 +97,12 @@ final class HomeViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         configureUI()
-        bind()
+        bindUI()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         navigationController?.navigationBar.isHidden = true
-        invokedViewDidLoad.onNext(())
+        invokedViewWillAppear.onNext(())
     }
     
     override func viewDidLayoutSubviews() {
@@ -120,8 +120,8 @@ final class HomeViewController: UIViewController {
     
     // MARK: - Helpers
     
-    func bind() {
-        let input = HomeViewModel.Input(invokedViewDidLoad: invokedViewDidLoad.asObservable())
+    func bindUI() {
+        let input = HomeViewModel.Input(invokedViewWillAppear: invokedViewWillAppear.asObservable())
         
         let output = viewModel.transform(input)
         
