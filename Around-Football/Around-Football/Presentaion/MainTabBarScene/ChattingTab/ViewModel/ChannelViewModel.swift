@@ -122,7 +122,7 @@ final class ChannelViewModel {
     
     func showChatView(channelInfo: ChannelInfo) {
         fetchChannel(channelInfo: channelInfo) { channel in
-            coordinator?.pushChatView(channel: channel)
+            self.coordinator?.pushChatView(channel: channel)
         }
     }
     
