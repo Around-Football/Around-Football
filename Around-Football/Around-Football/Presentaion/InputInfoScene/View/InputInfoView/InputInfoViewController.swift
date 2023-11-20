@@ -198,7 +198,8 @@ final class InputInfoViewController: UIViewController {
     }
     
     // MARK: - Selectors
-    
+
+    // FIXME: - 버튼 다 옵저버블로 만들어서 뷰모델에서 관리하기..?
     @objc
     func nextButtonTapped(_ sender: UIButton) {
         print("DEBUG: InputInfoViewController - nextButtonTapped")
