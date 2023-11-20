@@ -12,17 +12,6 @@ import FirebaseFirestore
 import RxAlamofire
 import RxSwift
 
-/*
- var id: String
- var userName: String
- var age: Int
- var contact: Int?
- var detailSex: String
- var area: String
- var mainUsedFeet: String
- var position: String
- */
-
 final class FirebaseAPI {
     static let shared = FirebaseAPI()
     
@@ -185,6 +174,8 @@ extension FirebaseAPI {
     func createRecruitFieldData(
         user: User?,
         fieldID: String,
+        fieldName: String,
+        fieldAddress: String,
         recruitedPeopleCount: Int,
         content: String?,
         matchDate: String?,
@@ -195,6 +186,8 @@ extension FirebaseAPI {
         let data = ["id": user?.id,
                     "userName": user?.userName,
                     "fieldID": fieldID,
+                    "fieldName": fieldName,
+                    "fieldAddress": fieldAddress,
                     "recruitedPeopleCount": recruitedPeopleCount,
                     "content": content,
                     "matchDate": matchDate,

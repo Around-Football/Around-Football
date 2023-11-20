@@ -66,9 +66,9 @@ final class HomeTableViewCell: UITableViewCell {
     // MARK: - Helpers
     
     func bindContents(item: Recruit) {
-        self.titleLabel.text = "(장소) \(item.userName)"
+        self.titleLabel.text = "(장소) \(item.fieldName)"
         self.dateLabel.text = "(날짜) \(item.matchDate)"
-        self.fieldAddress.text = "(주소) \(item.fieldID)"
+        self.fieldAddress.text = "(주소) \(item.fieldAddress)"
         self.recruitLabel.text = "(용병 수) \(item.recruitedPeopleCount) 명"
         self.timeLabel.text = "\(item.startTime)"
     }

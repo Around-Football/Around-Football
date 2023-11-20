@@ -7,10 +7,6 @@
 
 import UIKit
 
-//protocol SearchCoordinatorDelegate {
-//    func presentSearchViewController()
-//}
-
 final class SearchCoordinator: BaseCoordinator {
     var type: CoordinatorType = .map
     var searchViewModel: SearchViewModel
