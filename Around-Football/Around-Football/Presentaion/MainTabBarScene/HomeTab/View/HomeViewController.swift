@@ -97,9 +97,7 @@ final class HomeViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         configureUI()
-        // MARK: - bind함수가 위에 있어야 됨... 이걸로 하루 날림 (연결하고 데이터 날리기)
         bind()
-//        invokedViewDidLoad.onNext(())
     }
     
     override func viewWillAppear(_ animated: Bool) {
