@@ -335,11 +335,10 @@ class InputInfoView: UIView {
             make.top.equalTo(userMainUsedFeetStackView.snp.bottom).offset(SuperviewOffsets.topPadding)
             make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
             make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
-//            make.bottom.equalTo(nextButton.snp.top).offset(SuperviewOffsets.bottomPadding)
         }
         
         nextButton.snp.makeConstraints { make in
-//            make.top.equalTo(userPositionStackView.snp.bottom).offset(SuperviewOffsets.topPadding)
+            make.top.equalTo(userPositionStackView.snp.bottom).offset(SuperviewOffsets.topPadding).priority(1)
             make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
             make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
             make.bottom.equalToSuperview().offset(SuperviewOffsets.bottomPadding)

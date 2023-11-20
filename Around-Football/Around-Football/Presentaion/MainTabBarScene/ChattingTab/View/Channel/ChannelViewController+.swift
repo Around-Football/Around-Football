@@ -53,7 +53,7 @@ extension ChannelViewController {
                             "gender": "남성",
                             "id": "nTUShiSwx2UXVZudPiWSnGE6XNf1",
                             "mainUserFeet": "왼발",
-                            "position": "MF",
+                            "position": ["MF"],
                             "userName": "1312312"
                         ]))
                     }

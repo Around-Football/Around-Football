@@ -232,8 +232,25 @@ final class UserService: NSObject {
         do {
             try firebaseAuth.signOut()
             self.user = nil
+            print("userLogout")
         } catch let signOutError as NSError {
             print("Error signing out: %@", signOutError)
+        }
+    }
+    
+    func deleteUser() {
+        guard let user = Auth.auth().currentUser else {
+            // 유저가 현재 로그인되어 있지 않은 경우
+            print("No user is currently signed in.")
+            return
+        }
+        
+        user.delete { error in
+            if let error = error {
+                print("Error deleting user: \(error.localizedDescription)")
+            } else {
+                print("User deleted successfully.")
+            }
         }
     }
 }
