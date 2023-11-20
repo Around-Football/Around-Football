@@ -66,6 +66,10 @@ final class ChannelViewModel {
             .disposed(by: disposeBag)
     }
     
+    private func fetchChannel(channelInfo: ChannelInfo, completion: @escaping(Channel) -> Void) {
+        
+    }
+    
     // MARK: - Helpers
     
     private func updateCell(to data: [(ChannelInfo, DocumentChangeType)]) {
@@ -117,7 +121,9 @@ final class ChannelViewModel {
     
     
     func showChatView(channelInfo: ChannelInfo) {
-        coordinator?.pushChatView()
+        fetchChannel(channelInfo: channelInfo) { channel in
+            coordinator?.pushChatView(channel: channel)
+        }
     }
     
     func showLoginView() {
