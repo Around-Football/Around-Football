@@ -22,12 +22,11 @@ final class InputInfoViewController: UIViewController {
     private var invokedViewWillAppear = PublishSubject<Void>()
     private var disposeBag = DisposeBag()
     
-    private var id: String? = ""
     private lazy var userName: String? = inputInfoView.userNameTextField.text
     private lazy var age: Int? = Int(inputInfoView.userAgeTextField.text ?? "")
-    private var gender: String? = ""
+    private var gender: String?
     private lazy var area: String? = inputInfoView.userAreaTextField.text
-    private var mainUsedFeet: String? = ""
+    private var mainUsedFeet: String?
     private var position: Set<String?> = []
     
     // MARK: - Lifecycles
@@ -226,11 +225,11 @@ final class InputInfoViewController: UIViewController {
     
     @objc
     func maleButtonTapped(_ sender: UIButton) {
-        sender.isSelected = true
+        sender.isSelected.toggle()
         if inputInfoView.femaleButton.isSelected {
             inputInfoView.femaleButton.isSelected.toggle()
         }
-        gender = sender.titleLabel?.text ?? ""
+        gender = sender.titleLabel?.text
     }
     
     @objc
@@ -239,7 +238,7 @@ final class InputInfoViewController: UIViewController {
         if inputInfoView.maleButton.isSelected {
             inputInfoView.maleButton.isSelected.toggle()
         }
-        gender = sender.titleLabel?.text ?? ""
+        gender = sender.titleLabel?.text
     }
     
     @objc
@@ -251,7 +250,7 @@ final class InputInfoViewController: UIViewController {
             inputInfoView.bothFeetButton.isSelected.toggle()
         }
         sender.isSelected.toggle()
-        mainUsedFeet = sender.titleLabel?.text ?? ""
+        mainUsedFeet = sender.titleLabel?.text
     }
     
     @objc
@@ -263,7 +262,7 @@ final class InputInfoViewController: UIViewController {
             inputInfoView.bothFeetButton.isSelected.toggle()
         }
         sender.isSelected.toggle()
-        mainUsedFeet = sender.titleLabel?.text ?? ""
+        mainUsedFeet = sender.titleLabel?.text
     }
     
     @objc
@@ -275,7 +274,7 @@ final class InputInfoViewController: UIViewController {
             inputInfoView.leftFootButton.isSelected.toggle()
         }
         sender.isSelected.toggle()
-        mainUsedFeet = sender.titleLabel?.text ?? ""
+        mainUsedFeet = sender.titleLabel?.text
     }
     
     @objc
