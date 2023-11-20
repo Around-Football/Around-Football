@@ -14,7 +14,7 @@ struct User: Codable {
     var gender: String?
     var area: String?
     var mainUsedFeet: String?
-    var position: [String]?
+    var position: [String?]
     //TODO: - FCM Token 추가
     var fcmToken: String?
     
@@ -35,7 +35,7 @@ struct User: Codable {
         self.gender = dictionary["gender"] as? String ?? ""
         self.area = dictionary["area"] as? String ?? ""
         self.mainUsedFeet = dictionary["mainUsedFeet"] as? String ?? ""
-        self.position = dictionary["position"] as? [String] ?? [""]
+        self.position = dictionary["position"] as? [String] ?? []
         self.fcmToken = dictionary["fcmToken"] as? String ?? ""
     }
 }

@@ -28,7 +28,7 @@ final class InputInfoViewController: UIViewController {
     private var gender: String? = ""
     private lazy var area: String? = inputInfoView.userAreaTextField.text
     private var mainUsedFeet: String? = ""
-    private var position: Set<String> = []
+    private var position: Set<String?> = []
     
     // MARK: - Lifecycles
     
@@ -180,9 +180,9 @@ final class InputInfoViewController: UIViewController {
             .disposed(by: disposeBag)
     }
     
-//    private func isInfoCompleted() {
-//        guard
-//            inputInfoView.userNameTextField.text != nil,
+//        private func isInfoCompleted() {
+//            guard
+//                inputInfoView.userNameTextField.text != nil,
 //            inputInfoView.userAgeTextField.text != nil,
 //            inputInfoView.userAreaTextField.text != nil,
 //            inputInfoView.maleButton.isSelected ||
@@ -282,9 +282,9 @@ final class InputInfoViewController: UIViewController {
     func fwButtonTapped(_ sender: UIButton) {
         sender.isSelected.toggle()
         if sender.isSelected {
-            position.insert(sender.titleLabel?.text ?? "")
+            position.insert(sender.titleLabel?.text)
         } else {
-            position.remove(sender.titleLabel?.text ?? "")
+            position.remove(sender.titleLabel?.text)
         }
     }
     
@@ -292,9 +292,9 @@ final class InputInfoViewController: UIViewController {
     func mfButtonTapped(_ sender: UIButton) {
         sender.isSelected.toggle()
         if sender.isSelected {
-            position.insert(sender.titleLabel?.text ?? "")
+            position.insert(sender.titleLabel?.text)
         } else {
-            position.remove(sender.titleLabel?.text ?? "")
+            position.remove(sender.titleLabel?.text)
         }
     }
     
@@ -302,9 +302,9 @@ final class InputInfoViewController: UIViewController {
     func dfButtonTapped(_ sender: UIButton) {
         sender.isSelected.toggle()
         if sender.isSelected {
-            position.insert(sender.titleLabel?.text ?? "")
+            position.insert(sender.titleLabel?.text)
         } else {
-            position.remove(sender.titleLabel?.text ?? "")
+            position.remove(sender.titleLabel?.text)
         }
     }
     
@@ -312,9 +312,9 @@ final class InputInfoViewController: UIViewController {
     func gkButtonTapped(_ sender: UIButton) {
         sender.isSelected.toggle()
         if sender.isSelected {
-            position.insert(sender.titleLabel?.text ?? "")
+            position.insert(sender.titleLabel?.text)
         } else {
-            position.remove(sender.titleLabel?.text ?? "")
+            position.remove(sender.titleLabel?.text)
         }
     }
 
