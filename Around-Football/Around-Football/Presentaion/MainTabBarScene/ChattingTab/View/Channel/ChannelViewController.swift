@@ -44,9 +44,9 @@ final class ChannelViewController: UIViewController {
         super.init(nibName: nil, bundle: nil)
         navigationController?.navigationBar.backgroundColor = .systemBackground
         title = "채팅"
-
         
-        print("\(Auth.auth().currentUser?.uid)")
+        
+        print("\(String(describing: Auth.auth().currentUser?.uid))")
         
     }
     
@@ -64,7 +64,7 @@ final class ChannelViewController: UIViewController {
         
         configureUI()
         bind()
-
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -92,7 +92,10 @@ final class ChannelViewController: UIViewController {
     }
     
     func bind() {
-        let input = ChannelViewModel.Input(invokedViewWillAppear: invokedViewWillAppear)
+        let input = ChannelViewModel.Input(
+            invokedViewWillAppear: invokedViewWillAppear,
+            selectedChannel: channelTableView.rx.itemSelected.asObservable()
+        )
         
         let output = viewModel.transform(input)
         
