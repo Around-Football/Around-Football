@@ -11,6 +11,7 @@ import Alamofire
 import RxAlamofire
 import RxSwift
 
+// TODO: - APIService 타입명 변경
 final class KakaoService {
     static let shared = KakaoService()
     
