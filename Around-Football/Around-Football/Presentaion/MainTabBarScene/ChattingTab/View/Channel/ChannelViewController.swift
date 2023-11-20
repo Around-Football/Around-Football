@@ -102,5 +102,6 @@ final class ChannelViewController: UIViewController {
         bindContentView()
         bindChannels()
         bindLoginModalView(with: output.isShowing)
+        bindNavigateChannelView(with: output.navigateTo)
     }
 }

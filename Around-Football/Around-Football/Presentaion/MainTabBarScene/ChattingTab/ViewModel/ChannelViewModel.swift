@@ -41,7 +41,7 @@ final class ChannelViewModel {
     
     // MARK: - API
     
-    func setupListener(currentUser: Observable<User?>) {
+    private func setupListener(currentUser: Observable<User?>) {
         currentUser
             .withUnretained(self)
             .subscribe(onNext: { (owner, user) in
