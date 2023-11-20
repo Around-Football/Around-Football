@@ -32,7 +32,7 @@ class SearchViewController: UIViewController {
         }
         return searchBar
     }()
-
+    
     
     var searchPlaces: [Place] = [] {
         didSet {
@@ -44,7 +44,7 @@ class SearchViewController: UIViewController {
     
     init(searchViewModel: SearchViewModel) {
         self.searchViewModel = searchViewModel
-//        self.searchCoordinator = searchCoordinator
+        //        self.searchCoordinator = searchCoordinator
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -68,10 +68,10 @@ class SearchViewController: UIViewController {
     private func configureSearchController() {
         navigationItem.searchController = searchController
     }
-
+    
     private func configureUI() {
         view.backgroundColor = .white
-
+        
         view.addSubviews(searchBar,
                          tableView)
         searchBar.snp.makeConstraints { make in
@@ -87,16 +87,17 @@ class SearchViewController: UIViewController {
     }
     
     private func setTableView() {
-        tableView.register(SearchTableViewCell.self, forCellReuseIdentifier: SearchTableViewCell.cellID)
+        tableView.register(SearchTableViewCell.self, 
+                           forCellReuseIdentifier: SearchTableViewCell.cellID)
         tableView.dataSource = nil
         
         let selectedItem = tableView.rx.modelSelected(Place.self)
-
+        
         selectedItem
             .subscribe(onNext: { [weak self] place in
                 guard let self = self else { return }
                 searchViewModel.dataSubject
-                    .onNext(place.name)
+                    .onNext(place)
                 searchViewModel.coordinator?.dismissSearchViewController()
                 print("\(String(describing: searchViewModel.coordinator))")
             })
@@ -104,11 +105,13 @@ class SearchViewController: UIViewController {
         
         _ = searchViewModel.searchResults
             .debug()
-            .bind(to: tableView.rx.items(cellIdentifier: SearchTableViewCell.cellID, cellType: SearchTableViewCell.self)) { index, place, cell in
-                cell.fieldNameLabel.text = place.name
-                cell.fieldAddressLabel.text = place.address
-            }
-            .disposed(by: disposeBag)
+            .bind(to: tableView.rx.items(
+                cellIdentifier: SearchTableViewCell.cellID,
+                cellType: SearchTableViewCell.self)) { index, place, cell in
+                    cell.fieldNameLabel.text = place.name
+                    cell.fieldAddressLabel.text = place.address
+                }
+                .disposed(by: disposeBag)
     }
 }
 
@@ -122,7 +125,7 @@ extension SearchViewController: UISearchBarDelegate, UISearchResultsUpdating {
     }
     
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
-
+        
     }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {

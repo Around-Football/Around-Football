@@ -11,6 +11,8 @@ struct Recruit: Codable, Identifiable {
     var id: String
     var userName: String //작성자이름
     var fieldID: String //운동장 ID
+    var fieldName: String // 운동장 이름
+    var fieldAddress: String // 운동장 주소
     var recruitedPeopleCount: Int //용병 몇명 구할건지
     var content: String? //작성내용
     var matchDate: String? //날짜만, String으로 일단 수정
@@ -33,6 +35,8 @@ struct Recruit: Codable, Identifiable {
         self.id = dictionary["id"] as? String ?? UUID().uuidString
         self.userName = dictionary["userName"] as? String ?? ""
         self.fieldID = dictionary["fieldID"] as? String ?? ""
+        self.fieldName = dictionary["fieldName"] as? String ?? ""
+        self.fieldAddress = dictionary["fieldAddress"] as? String ?? ""
         self.recruitedPeopleCount = dictionary["recruitedPeopleCount"] as? Int ?? Int()
         self.content = dictionary["content"] as? String ?? ""
         self.matchDate = dictionary["matchDate"] as? String ?? ""

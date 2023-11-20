@@ -27,6 +27,8 @@ final class InviteViewController: UIViewController {
     private var id = UserService.shared.user?.id
     private var userName = UserService.shared.user?.userName
     private var fieldID = UUID().uuidString
+    private lazy var fieldName: String = ""
+    private lazy var fieldAddress: String = ""
     private lazy var recruitedPeopleCount = peopleView.count
     private lazy var content = contentTextView.text
     private lazy var matchDate = calenderViewController.selectedDateString
@@ -87,16 +89,27 @@ final class InviteViewController: UIViewController {
     // MARK: - Helpers
     
     private func setAddButton() {
+        
+        searchViewModel.dataSubject
+            .subscribe(onNext: { [weak self] place in
+                self?.fieldName = place.name
+                self?.fieldAddress = place.address
+            })
+            .disposed(by: disposeBag)
+        
+        
         addButton.buttonActionHandler = { [weak self] in
             guard let self else { return }
-            
             inviteViewModel.createRecruitFieldData(user: UserService.shared.user ?? User(dictionary: [:]),
-                                             fieldID: fieldID,
-                                             recruitedPeopleCount: recruitedPeopleCount,
-                                             content: content,
-                                             matchDate: matchDate,
-                                             startTime: startTime,
-                                             endTime: endTime)
+                                                   fieldID: fieldID,
+                                                   fieldName: fieldName,
+                                                   fieldAddress: fieldAddress,
+                                                   recruitedPeopleCount: recruitedPeopleCount,
+                                                   content: content,
+                                                   matchDate: matchDate,
+                                                   startTime: startTime,
+                                                   endTime: endTime)
+            
             
             inviteViewModel.coordinator.popInviteViewController()
         }
@@ -107,7 +120,10 @@ final class InviteViewController: UIViewController {
                                               for: .touchUpInside)
         
         searchViewModel.dataSubject
-            .bind(to: placeView.searchFieldButton.rx.title(for: .normal))
+            .map {
+                $0.name
+            }
+            .bind(to: placeView.searchFieldButton.rx.title())
             .disposed(by: disposeBag)
     }
     
@@ -140,7 +156,7 @@ final class InviteViewController: UIViewController {
     private func configureUI() {
         view.backgroundColor = .white
         navigationItem.title = "용병 구하기"
-
+        
         addChild(calenderViewController)
         view.addSubview(scrollView)
         scrollView.addSubview(contentView)
