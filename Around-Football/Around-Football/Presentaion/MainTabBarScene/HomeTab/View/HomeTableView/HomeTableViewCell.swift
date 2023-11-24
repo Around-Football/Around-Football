@@ -71,7 +71,7 @@ final class HomeTableViewCell: UITableViewCell {
     
     func bindContents(item: Recruit) {
         self.titleLabel.text = "장소: \(item.fieldName)"
-        self.dateLabel.text = "날짜: \(item.matchDate ?? "")"
+        self.dateLabel.text = "날짜: \(item.matchDateString ?? "")"
         self.fieldAddress.text = "주소: \(item.fieldAddress)"
         self.recruitLabel.text = "용병 수: \(item.recruitedPeopleCount) 명"
         self.timeLabel.text = "\(item.startTime)"

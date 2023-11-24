@@ -178,7 +178,7 @@ extension FirebaseAPI {
         fieldAddress: String,
         recruitedPeopleCount: Int,
         content: String?,
-        matchDate: String?,
+        matchDateString: String?,
         startTime: Date?,
         endTime: Date?,
         completion: @escaping (Error?) -> Void
@@ -193,7 +193,7 @@ extension FirebaseAPI {
                     "fieldAddress": fieldAddress,
                     "recruitedPeopleCount": recruitedPeopleCount,
                     "content": content,
-                    "matchDate": matchDate,
+                    "matchDateString": matchDateString,
                     "startTime": startTime,
                     "endTime": endTime
         ] as [String : Any]
@@ -210,7 +210,7 @@ extension FirebaseAPI {
     ) {
         REF_RECRUIT
             .whereField("fieldID", isEqualTo: fieldID)
-            .whereField("matchDate", isEqualTo: date)
+            .whereField("matchDateString", isEqualTo: date)
             .getDocuments { snapshot, error in
                 guard let snapshot = snapshot else {
                     let errorMessage = error?.localizedDescription ?? "None ERROR"

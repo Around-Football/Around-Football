@@ -31,7 +31,7 @@ final class InviteViewController: UIViewController {
     private lazy var fieldAddress: String = ""
     private lazy var recruitedPeopleCount = peopleView.count
     private lazy var content = contentTextView.text
-    private lazy var matchDate = calenderViewController.selectedDateString
+    private lazy var matchDateString = calenderViewController.selectedDateString
     private lazy var startTime = calenderViewController.selectedDate
     //TODO: - EndTime 추가
     private lazy var endTime = calenderViewController.selectedDate
@@ -106,7 +106,7 @@ final class InviteViewController: UIViewController {
                                                    fieldAddress: fieldAddress,
                                                    recruitedPeopleCount: recruitedPeopleCount,
                                                    content: content,
-                                                   matchDate: matchDate,
+                                                   matchDateString: matchDateString,
                                                    startTime: startTime,
                                                    endTime: endTime)
             
