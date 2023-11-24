@@ -26,7 +26,7 @@ final class DetailUserInfoView: UIView {
         $0.font = .systemFont(ofSize: 20, weight: .bold)
     }
     
-    private let userDetailSex = UILabel().then {
+    private let userGenderLabel = UILabel().then {
         $0.text = "남"
         $0.textColor = .gray
         $0.font = .systemFont(ofSize: 10)
@@ -51,7 +51,7 @@ final class DetailUserInfoView: UIView {
     }
     
     private lazy var userDetailInfoStackView = UIStackView().then { view in
-        let subViews = [userDetailSex,
+        let subViews = [userGenderLabel,
                         createDotView(),
                         userDetailReviewGrade,
                         createDotView(),
@@ -80,6 +80,12 @@ final class DetailUserInfoView: UIView {
     }
     
     // MARK: - Helpers
+    
+    //TODO: - 표시할 유저정보 정하고 바인딩하기
+    
+    func setUI(userName: String) {
+        userNameLabel.text = userName
+    }
     
     private func configureUI() {
         addSubviews(profileImageView,
