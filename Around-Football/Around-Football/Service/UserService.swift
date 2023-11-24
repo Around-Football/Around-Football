@@ -67,6 +67,9 @@ final class UserService: NSObject {
             }
             .subscribe { user in
                 self.currentUser_Rx.accept(user)
+                NotificationCenter.default.post(name: NSNotification.Name("LoginNotification"),
+                                                object: nil,
+                                                userInfo: nil)
             }
             .disposed(by: disposeBag)
     }
@@ -135,7 +138,7 @@ final class UserService: NSObject {
                 
                 let uid = result?.user.uid
                 
-                if Auth.auth().currentUser?.uid == nil {
+                if Auth.auth().currentUser?.uid != nil {
                     REF_USER.document(uid ?? UUID().uuidString)
                         .setData(["id" : uid ?? UUID().uuidString])
                 }
@@ -211,11 +214,14 @@ final class UserService: NSObject {
             self.email = user?.kakaoAccount?.email
             print("userProfile: \(String(describing: self.userProfile)), email: \(String(describing: self.email))")
             self.createGoogleUser(email: self.email!, password: "\(self.email!)")
+            Auth.auth().signIn(withEmail: self.email!, password: self.email!) { _, error in
+                guard let error = error else { return }
+                self.isLoginObservable.onNext(())
+            }
             
-            self.isLoginObservable.onNext(())
 
             // TODO: - Coordinator Refactoring
-            NotificationCenter.default.post(name: NSNotification.Name("TestNotification"),
+            NotificationCenter.default.post(name: NSNotification.Name("LoginNotification"),
                                             object: nil,
                                             userInfo: nil)
         }

@@ -73,7 +73,7 @@ final class ChannelAPI {
                     observer.onError(error ?? NSError(domain: "", code: -1))
                     return
                 }
-                print(document.first!.document.data())
+                print(document.first?.document.data() as Any)
                 let result = document
                     .filter { ChannelInfo($0.document.data()) != nil }
                     .compactMap { (ChannelInfo($0.document.data())!, $0.type) }
