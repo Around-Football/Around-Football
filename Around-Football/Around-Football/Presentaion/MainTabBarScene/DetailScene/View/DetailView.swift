@@ -8,8 +8,7 @@
 import UIKit
 
 final class DetailView: UIView {
-//    let cellTitles = ["일시", "유형", "모집", "게임비", "내용"]
-    
+
     // MARK: - Properties
     
     private var matchDayTitleLabel = UILabel().then {
@@ -85,18 +84,12 @@ final class DetailView: UIView {
     
     // MARK: - Helpers
     
-    func setValues(
-        matchDay: String?,
-        type: String?,
-        recruitingCount: Int?,
-        gamePrice: String?,
-        content: String?
-    ) {
-        matchDayLabel.text = matchDay
-        typeLabel.text = type
-        recruitingLabel.text = String(recruitingCount ?? 0)
-        gamePriceLabel.text = gamePrice
-        contentLabel.text = content
+    func setValues(item: Recruit) {
+        matchDayLabel.text = item.matchDate
+        typeLabel.text = item.id
+        recruitingLabel.text = String(item.recruitedPeopleCount)
+        gamePriceLabel.text = item.fieldID
+        contentLabel.text = item.content
     }
     
     private func configureUI() {

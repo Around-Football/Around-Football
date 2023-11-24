@@ -154,15 +154,9 @@ final class DetailViewController: UIViewController {
             .do(onNext: { [weak self] item in
                 guard let self else { return }
                 groundLabel.text = item.fieldName
+                
                 groundAddressLabel.text = item.fieldAddress
-          
-                detailView.setValues(
-                    matchDay: item.matchDate,
-                    type: item.id, //풋살, 축구로 바꾸기
-                    recruitingCount: item.recruitedPeopleCount,
-                    gamePrice: item.fieldID, //게임비로 바꾸기
-                    content: item.content
-                )
+                detailView.setValues(item: item)
             })
             .subscribe()
             .disposed(by: disposeBag)
