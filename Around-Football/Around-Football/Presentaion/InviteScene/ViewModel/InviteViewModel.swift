@@ -23,7 +23,7 @@ final class InviteViewModel {
                                 fieldAddress: String,
                                  recruitedPeopleCount: Int,
                                  content: String?,
-                                 matchDate: String?,
+                                 matchDateString: String?,
                                  startTime: Date?,
                                  endTime: Date?) {
         // MARK: - 테스트용 임시 데이터 파베에 올림
@@ -33,7 +33,7 @@ final class InviteViewModel {
                                                   fieldAddress: fieldAddress,
                                                   recruitedPeopleCount: recruitedPeopleCount,
                                                   content: content,
-                                                  matchDate: matchDate,
+                                                  matchDateString: matchDateString,
                                                   startTime: startTime,
                                                   endTime: endTime) { error in
             if error == nil {
