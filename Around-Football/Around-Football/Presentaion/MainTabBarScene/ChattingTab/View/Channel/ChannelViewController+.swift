@@ -42,7 +42,7 @@ extension ChannelViewController {
             .subscribe(onNext: { (owner, isShowing) in
                 if isShowing {
                     print("currentUser nil")
-                    owner.viewModel.coordinator?.presentLoginViewController()
+                    owner.viewModel.showLoginView()
                 }
             })
             .disposed(by: disposeBag)
