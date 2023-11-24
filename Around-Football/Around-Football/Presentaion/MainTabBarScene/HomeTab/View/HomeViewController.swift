@@ -28,7 +28,6 @@ final class HomeViewController: UIViewController {
     
     lazy var homeTableView = UITableView().then {
         $0.register(HomeTableViewCell.self, forCellReuseIdentifier: HomeTableViewCell.id)
-        $0.delegate = self
     }
     
     private let filterOptions: [String] = ["모든 날짜", "모든 지역", "매치 유형"] // 필터 옵션
@@ -129,9 +128,19 @@ final class HomeViewController: UIViewController {
             .recruitList
             .bind(to: homeTableView.rx.items(cellIdentifier: HomeTableViewCell.id,
                                              cellType: HomeTableViewCell.self)) { index, item, cell in
-                
                 cell.bindContents(item: item)
             }.disposed(by: disposeBag)
+        
+        homeTableView.rx.modelSelected(Recruit.self)
+            .subscribe(onNext: { [weak self] selectedRecruit in
+                guard let self = self else { return }
+                self.handleItemSelected(selectedRecruit)
+            })
+            .disposed(by: disposeBag)
+    }
+    
+    func handleItemSelected(_ item: Recruit) {
+        viewModel.coordinator?.pushToDetailView(recruitItem: item)
     }
     
     func configureUI() {
@@ -256,12 +265,5 @@ final class HomeViewController: UIViewController {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-}
-
-extension HomeViewController: UITableViewDelegate {
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        viewModel.coordinator?.pushToDetailView()
     }
 }
