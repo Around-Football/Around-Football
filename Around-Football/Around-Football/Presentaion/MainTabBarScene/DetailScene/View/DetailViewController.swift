@@ -131,15 +131,31 @@ final class DetailViewController: UIViewController {
         
         let output = viewModel.transform(input)
         
+        output.recruitItem
+            .do { recruit in
+            let userRef = REF_USER.document(recruit.userID)
+            
+            userRef.getDocument(as: User.self) { [weak self] result in
+                guard let self else { return }
+                switch result {
+                case .success(let user):
+                    print("readUser성공: \(user)")
+                    detailUserInfoView.setValues(user: user)
+                case .failure(let error):
+                    print("Error decoding user: \(error)")
+                }
+            }
+        }
+        .subscribe()
+        .disposed(by: disposeBag)
+        
         output
             .recruitItem
             .do(onNext: { [weak self] item in
                 guard let self else { return }
                 groundLabel.text = item.fieldName
                 groundAddressLabel.text = item.fieldAddress
-                
-                detailUserInfoView.setUI(userName: item.userName)
-                
+          
                 detailView.setValues(
                     matchDay: item.matchDate,
                     type: item.id, //풋살, 축구로 바꾸기
@@ -150,27 +166,6 @@ final class DetailViewController: UIViewController {
             })
             .subscribe()
             .disposed(by: disposeBag)
-        
-//        output
-//            .recruitItem
-//            .map { [$0] }
-//            .do { [weak self] recruit in
-//                guard let self else { return }
-//                detailUserInfoView.setUI(userName: recruit[0].userName)
-//            }
-//            .map { recruit in
-//                let item: [String?] = [recruit[0].userName,
-//                                      recruit[0].matchDate,
-//                                      recruit[0].startTime, //유형 추가
-//                                      recruit[0].recruitedPeopleCount,
-//                                      recruit[0].userName, //게임비 추가
-//                                      recruit[0].content]
-//                return item
-//            }
-////            .bind(to: detailTableView.rx.items(cellIdentifier: DetailUserInfoCell.cellID,
-//                                               cellType: DetailUserInfoCell.self)) { index, item, cell in
-//                cell.setValues(contents: item[index])
-//            }.disposed(by: disposeBag)
     }
     
     private func configeUI() {

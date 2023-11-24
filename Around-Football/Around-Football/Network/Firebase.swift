@@ -48,7 +48,7 @@ final class FirebaseAPI {
             switch result {
             case .success(let user):
                 print("readUser성공: \(user)")
-                // MARK: - UserService user 업데이트
+                // MARK: - UserService user 업데이
                 UserService.shared.user = user
                 completion(user)
             case .failure(let error):
@@ -183,8 +183,11 @@ extension FirebaseAPI {
         endTime: Date?,
         completion: @escaping (Error?) -> Void
     ) {
-        let data = ["id": user?.id,
-                    "userName": user?.userName,
+        guard let user else { return }
+        
+        let data = ["id": UUID().uuidString,
+                    "userID": user.id,
+                    "userName": user.userName,
                     "fieldID": fieldID,
                     "fieldName": fieldName,
                     "fieldAddress": fieldAddress,
@@ -194,7 +197,6 @@ extension FirebaseAPI {
                     "startTime": startTime,
                     "endTime": endTime
         ] as [String : Any]
-        
         
         REF_RECRUIT
             .document(fieldID)
