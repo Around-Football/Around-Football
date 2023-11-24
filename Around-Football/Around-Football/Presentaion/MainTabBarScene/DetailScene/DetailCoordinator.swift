@@ -5,14 +5,14 @@
 //  Created by Deokhun KIM on 11/17/23.
 //
 
-import Foundation
+import UIKit
 
 final class DetailCoordinator: BaseCoordinator {
     
     var type: CoordinatorType = .detailScene
     
-    override func start() {
-        let viewModel = DetailViewModel(coordinator: self)
+    func start(recruitItem: Recruit?) {
+        let viewModel = DetailViewModel(coordinator: self, recruitItem: recruitItem)
         let controller = DetailViewController(viewModel: viewModel)
         navigationController?.pushViewController(controller, animated: true)
         childCoordinators.append(self)
