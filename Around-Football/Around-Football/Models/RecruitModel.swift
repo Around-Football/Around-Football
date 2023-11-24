@@ -9,7 +9,8 @@ import Foundation
 
 struct Recruit: Codable, Identifiable {
     var id: String
-    var userName: String //작성자이름
+    var userID: String //작성자이름
+    var userName: String
     var fieldID: String //운동장 ID
     var fieldName: String // 운동장 이름
     var fieldAddress: String // 운동장 주소
@@ -33,6 +34,7 @@ struct Recruit: Codable, Identifiable {
     
     init(dictionary: [String: Any]) {
         self.id = dictionary["id"] as? String ?? UUID().uuidString
+        self.userID = dictionary["userID"] as? String ?? ""
         self.userName = dictionary["userName"] as? String ?? ""
         self.fieldID = dictionary["fieldID"] as? String ?? ""
         self.fieldName = dictionary["fieldName"] as? String ?? ""

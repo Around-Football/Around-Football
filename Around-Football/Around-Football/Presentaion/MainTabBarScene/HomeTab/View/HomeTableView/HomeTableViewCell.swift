@@ -45,6 +45,10 @@ final class HomeTableViewCell: UITableViewCell {
         $0.text = "Recurit 0명"
     }
     
+    var userNameLabel = UILabel().then {
+        $0.text = "Recurit 0명"
+    }
+    
     var timelineStackView = UIStackView().then {
         $0.axis = .horizontal
         $0.distribution = .fill
@@ -66,19 +70,20 @@ final class HomeTableViewCell: UITableViewCell {
     // MARK: - Helpers
     
     func bindContents(item: Recruit) {
-        self.titleLabel.text = "(장소) \(item.fieldName)"
-        self.dateLabel.text = "(날짜) \(item.matchDate)"
-        self.fieldAddress.text = "(주소) \(item.fieldAddress)"
-        self.recruitLabel.text = "(용병 수) \(item.recruitedPeopleCount) 명"
+        self.titleLabel.text = "장소: \(item.fieldName)"
+        self.dateLabel.text = "날짜: \(item.matchDate ?? "")"
+        self.fieldAddress.text = "주소: \(item.fieldAddress)"
+        self.recruitLabel.text = "용병 수: \(item.recruitedPeopleCount) 명"
         self.timeLabel.text = "\(item.startTime)"
+        self.userNameLabel.text = "유저: \(item.userName)"
     }
     
     private func configureUI() {
         contentView.addSubviews(titleLabel,
                                 fieldAddress,
                                 timelineStackView,
-                                recruitLabel
-        )
+                                recruitLabel,
+                                userNameLabel)
         
         titleLabel.snp.makeConstraints { make in
             make.top.equalToSuperview().offset(10)
@@ -102,6 +107,11 @@ final class HomeTableViewCell: UITableViewCell {
         
         recruitLabel.snp.makeConstraints { make in
             make.top.equalTo(timelineStackView).offset(30)
+            make.leading.equalTo(titleLabel)
+        }
+        
+        userNameLabel.snp.makeConstraints { make in
+            make.top.equalTo(recruitLabel).offset(30)
             make.leading.equalTo(titleLabel)
             make.bottom.equalToSuperview().offset(-10)
         }

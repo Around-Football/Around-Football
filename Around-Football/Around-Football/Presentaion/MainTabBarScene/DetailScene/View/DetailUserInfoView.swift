@@ -27,25 +27,31 @@ final class DetailUserInfoView: UIView {
     }
     
     private let userGenderLabel = UILabel().then {
-        $0.text = "남"
+        $0.text = "성별"
         $0.textColor = .gray
         $0.font = .systemFont(ofSize: 10)
     }
     
-    private let userDetailReviewGrade = UILabel().then {
-        $0.text = "리뷰"
+    private let userAgeLabel = UILabel().then {
+        $0.text = "나이"
         $0.textColor = .gray
         $0.font = .systemFont(ofSize: 10)
     }
     
-    private let userDetailCareer = UILabel().then {
-        $0.text = "경력2년"
+    private let userArea = UILabel().then {
+        $0.text = "지역"
         $0.textColor = .gray
         $0.font = .systemFont(ofSize: 10)
     }
     
-    private let userDetailManner = UILabel().then {
-        $0.text = "매너 0"
+    private let mainUsedFeet = UILabel().then {
+        $0.text = "주발"
+        $0.textColor = .gray
+        $0.font = .systemFont(ofSize: 10)
+    }
+    
+    private let userPosition = UILabel().then {
+        $0.text = "포지션"
         $0.textColor = .gray
         $0.font = .systemFont(ofSize: 10)
     }
@@ -53,11 +59,13 @@ final class DetailUserInfoView: UIView {
     private lazy var userDetailInfoStackView = UIStackView().then { view in
         let subViews = [userGenderLabel,
                         createDotView(),
-                        userDetailReviewGrade,
+                        userAgeLabel,
                         createDotView(),
-                        userDetailCareer,
+                        userArea,
                         createDotView(),
-                        userDetailManner]
+                        mainUsedFeet,
+                        createDotView(),
+                        userPosition]
         
         view.axis = .horizontal
         view.spacing = 5
@@ -83,8 +91,13 @@ final class DetailUserInfoView: UIView {
     
     //TODO: - 표시할 유저정보 정하고 바인딩하기
     
-    func setUI(userName: String) {
-        userNameLabel.text = userName
+    func setValues(user: User) {
+        userNameLabel.text = user.userName
+        userGenderLabel.text = user.gender
+        userAgeLabel.text = String(user.age ?? 0) + "세"
+        userArea.text = user.area
+        mainUsedFeet.text = user.mainUsedFeet
+        userPosition.text = user.position.map { $0 ?? "" }.joined(separator: ", ")
     }
     
     private func configureUI() {
