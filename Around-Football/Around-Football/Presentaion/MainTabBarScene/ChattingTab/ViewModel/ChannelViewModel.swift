@@ -66,10 +66,6 @@ final class ChannelViewModel {
             .disposed(by: disposeBag)
     }
     
-    private func fetchChannel(channelInfo: ChannelInfo, completion: @escaping(Channel) -> Void) {
-        
-    }
-    
     // MARK: - Helpers
     
     private func updateCell(to data: [(ChannelInfo, DocumentChangeType)]) {
@@ -114,16 +110,15 @@ final class ChannelViewModel {
     }
     
     private func emitSelectedChannelInfo(by inputObserver: Observable<IndexPath>) -> Observable<ChannelInfo> {
-        inputObserver.withLatestFrom(channels) { (indexPath, channels) -> ChannelInfo in
+        inputObserver
+            .withLatestFrom(channels) { (indexPath, channels) -> ChannelInfo in
             return channels[indexPath.row]
         }
     }
     
     
     func showChatView(channelInfo: ChannelInfo) {
-        fetchChannel(channelInfo: channelInfo) { channel in
-            self.coordinator?.pushChatView(channel: channel)
-        }
+        coordinator?.pushChatView(channelInfo: channelInfo)
     }
     
     func showLoginView() {
