@@ -7,6 +7,8 @@
 
 import UIKit
 
+import RxCocoa
+import RxSwift
 import SnapKit
 import Then
 
@@ -16,6 +18,7 @@ final class DetailViewController: UIViewController {
     
     var viewModel: DetailViewModel
     private let detailUserInfoView = DetailUserInfoView()
+    private let detailView = DetailView()
     private let scrollView = UIScrollView()
     private let contentView = UIView()
     
@@ -26,12 +29,12 @@ final class DetailViewController: UIViewController {
     }
     
     private let groundLabel = UILabel().then {
-        $0.text = "중랑구립테니스장"
+        $0.text = "축구장 이름"
         $0.font = .systemFont(ofSize: 20, weight: .bold)
     }
     
     private let groundAddressLabel = UILabel().then {
-        $0.text = "서울 중랑구 구리포천고속도로 3"
+        $0.text = "축구장 주소"
         $0.textColor = .gray
         $0.font = .systemFont(ofSize: 10)
     }
@@ -61,13 +64,13 @@ final class DetailViewController: UIViewController {
         $0.backgroundColor = .secondarySystemBackground
     }
     
-    private(set) lazy var detailTableView = UITableView().then {
-        $0.delegate = self
-        $0.dataSource = self
-        $0.register(DetailUserInfoCell.self, forCellReuseIdentifier: DetailUserInfoCell.cellID)
-        $0.separatorStyle = .none
-        $0.isScrollEnabled = false
-    }
+//    private(set) lazy var detailTableView = UITableView().then {
+//        $0.register(DetailUserInfoCell.self, forCellReuseIdentifier: DetailUserInfoCell.cellID)
+//        //        $0.delegate = self
+//        //        $0.dataSource = self
+//        $0.separatorStyle = .none
+//        $0.isScrollEnabled = false
+//    }
     
     private lazy var sendMessageButton = UIButton().then {
         $0.setTitle("메세지 보내기", for: .normal)
@@ -77,6 +80,9 @@ final class DetailViewController: UIViewController {
         $0.clipsToBounds = true
         $0.addTarget(self, action: #selector(clickedMessage), for: .touchUpInside)
     }
+    
+    var invokedViewWillAppear = PublishSubject<Void>()
+    var disposeBag = DisposeBag()
     
     // MARK: - Lifecycles
     
@@ -92,12 +98,15 @@ final class DetailViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         configeUI()
+        bindUI()
+        invokedViewWillAppear.onNext(())
     }
     
     // MARK: - Selector
     
     @objc
     private func clickedMessage() {
+        //TODO: - 진태 메세지 화면으로 전환
         //메세지 보내기 화면으로 넘어가기
     }
     
@@ -112,11 +121,58 @@ final class DetailViewController: UIViewController {
         )
         applyButton.setAttributedTitle(title, for: .normal)
         
-        viewModel.coordinator.pushApplicationStatusViewController()
+        viewModel.coordinator?.pushApplicationStatusViewController()
     }
     
     // MARK: - Helper
-
+    
+    private func bindUI() {
+        let input = DetailViewModel.Input(invokedViewWillAppear: invokedViewWillAppear.asObserver())
+        
+        let output = viewModel.transform(input)
+        
+        output
+            .recruitItem
+            .do(onNext: { [weak self] item in
+                guard let self else { return }
+                groundLabel.text = item.fieldName
+                groundAddressLabel.text = item.fieldAddress
+                
+                detailUserInfoView.setUI(userName: item.userName)
+                
+                detailView.setValues(
+                    matchDay: item.matchDate,
+                    type: item.id, //풋살, 축구로 바꾸기
+                    recruitingCount: item.recruitedPeopleCount,
+                    gamePrice: item.fieldID, //게임비로 바꾸기
+                    content: item.content
+                )
+            })
+            .subscribe()
+            .disposed(by: disposeBag)
+        
+//        output
+//            .recruitItem
+//            .map { [$0] }
+//            .do { [weak self] recruit in
+//                guard let self else { return }
+//                detailUserInfoView.setUI(userName: recruit[0].userName)
+//            }
+//            .map { recruit in
+//                let item: [String?] = [recruit[0].userName,
+//                                      recruit[0].matchDate,
+//                                      recruit[0].startTime, //유형 추가
+//                                      recruit[0].recruitedPeopleCount,
+//                                      recruit[0].userName, //게임비 추가
+//                                      recruit[0].content]
+//                return item
+//            }
+////            .bind(to: detailTableView.rx.items(cellIdentifier: DetailUserInfoCell.cellID,
+//                                               cellType: DetailUserInfoCell.self)) { index, item, cell in
+//                cell.setValues(contents: item[index])
+//            }.disposed(by: disposeBag)
+    }
+    
     private func configeUI() {
         view.backgroundColor = .white
         view.addSubview(scrollView)
@@ -128,7 +184,7 @@ final class DetailViewController: UIViewController {
                                 grayLineView1,
                                 detailUserInfoView,
                                 grayLineView2,
-                                detailTableView,
+                                detailView,
                                 sendMessageButton)
         
         scrollView.snp.makeConstraints { make in
@@ -155,7 +211,7 @@ final class DetailViewController: UIViewController {
         groundAddressLabel.snp.makeConstraints { make in
             make.top.equalTo(groundLabel.snp.bottom)
             make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
-//            make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
+            //            make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
             make.bottom.equalTo(grayLineView1.snp.top).offset(SuperviewOffsets.bottomPadding)
         }
         
@@ -184,16 +240,14 @@ final class DetailViewController: UIViewController {
             make.width.equalToSuperview()
         }
         
-        detailTableView.snp.makeConstraints { make in
+        detailView.snp.makeConstraints { make in
             make.top.equalTo(grayLineView2).offset(SuperviewOffsets.topPadding)
             make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
             make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
             make.bottom.equalTo(sendMessageButton.snp.top).offset(SuperviewOffsets.bottomPadding)
-            make.height.equalTo(350)
         }
         
         sendMessageButton.snp.makeConstraints { make in
-            make.top.equalTo(detailTableView.snp.bottom).offset(SuperviewOffsets.topPadding)
             make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
             make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
             make.bottom.equalToSuperview().offset(SuperviewOffsets.bottomPadding)
