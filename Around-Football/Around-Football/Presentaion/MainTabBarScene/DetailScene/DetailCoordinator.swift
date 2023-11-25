@@ -11,6 +11,8 @@ final class DetailCoordinator: BaseCoordinator {
     
     var type: CoordinatorType = .detailScene
     
+    // MARK: - 이동할때 각 DetailView에 Recruit 전해줌. 다른 뷰에서 쓸 수도 있어서 옵셔널
+    
     func start(recruitItem: Recruit?) {
         let viewModel = DetailViewModel(coordinator: self, recruitItem: recruitItem)
         let controller = DetailViewController(viewModel: viewModel)

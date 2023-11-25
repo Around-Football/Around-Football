@@ -9,6 +9,8 @@
 //
 //import SnapKit
 //import Then
+
+// TODO: - Rx 이전 함수. 삭제하기
 //
 //final class DetailUserInfoCell: UITableViewCell {
 //    
