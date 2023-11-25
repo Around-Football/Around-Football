@@ -7,6 +7,8 @@
 
 import UIKit
 
+// TODO: - Rx 이전 함수. 삭제하기
+
 //extension DetailViewController: UITableViewDelegate, UITableViewDataSource {
 //    //셀 갯수 (임시)
 //    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
