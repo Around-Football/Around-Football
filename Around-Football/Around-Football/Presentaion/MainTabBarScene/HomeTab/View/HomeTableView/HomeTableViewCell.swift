@@ -37,23 +37,12 @@ final class HomeTableViewCell: UITableViewCell {
         $0.text = "DateLabel"
     }
     
-    var timeLabel = UILabel().then {
-        $0.text = "TimeLabel"
-    }
-    
     var recruitLabel = UILabel().then {
         $0.text = "Recurit 0명"
     }
     
     var userNameLabel = UILabel().then {
         $0.text = "Recurit 0명"
-    }
-    
-    var timelineStackView = UIStackView().then {
-        $0.axis = .horizontal
-        $0.distribution = .fill
-        $0.alignment = .fill
-        $0.spacing = 6
     }
     
     // MARK: - Lifecycles
@@ -70,18 +59,17 @@ final class HomeTableViewCell: UITableViewCell {
     // MARK: - Helpers
     
     func bindContents(item: Recruit) {
-        self.titleLabel.text = "장소: \(item.fieldName)"
-        self.dateLabel.text = "날짜: \(item.matchDateString ?? "")"
+        self.titleLabel.text = item.title
         self.fieldAddress.text = "주소: \(item.fieldAddress)"
-        self.recruitLabel.text = "용병 수: \(item.recruitedPeopleCount) 명"
-        self.timeLabel.text = "\(item.startTime)"
-        self.userNameLabel.text = "유저: \(item.userName)"
+        self.dateLabel.text = "일정: \(item.matchDateString ?? "")  \(item.startTime ?? "") - \(item.endTime ?? "")"
+        self.recruitLabel.text = "모집 용병: \(item.recruitedPeopleCount) 명"
+        self.userNameLabel.text = "by. \(item.userName)"
     }
     
     private func configureUI() {
         contentView.addSubviews(titleLabel,
                                 fieldAddress,
-                                timelineStackView,
+                                dateLabel,
                                 recruitLabel,
                                 userNameLabel)
         
@@ -90,28 +78,25 @@ final class HomeTableViewCell: UITableViewCell {
             make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
         }
         
-        fieldAddress.snp.makeConstraints { make in
-            make.top.equalTo(titleLabel).offset(30)
+        dateLabel.snp.makeConstraints { make in
+            make.top.equalTo(titleLabel.snp.bottom).offset(10)
             make.leading.equalTo(titleLabel)
             make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
         }
         
-        timelineStackView.addArrangedSubviews(dateLabel,
-                                              timeLabel)
-        
-        timelineStackView.snp.makeConstraints { make in
-            make.top.equalTo(fieldAddress).offset(30)
+        fieldAddress.snp.makeConstraints { make in
+            make.top.equalTo(dateLabel.snp.bottom).offset(10)
             make.leading.equalTo(titleLabel)
             make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
         }
         
         recruitLabel.snp.makeConstraints { make in
-            make.top.equalTo(timelineStackView).offset(30)
+            make.top.equalTo(fieldAddress.snp.bottom).offset(10)
             make.leading.equalTo(titleLabel)
         }
         
         userNameLabel.snp.makeConstraints { make in
-            make.top.equalTo(recruitLabel).offset(30)
+            make.top.equalTo(recruitLabel.snp.bottom).offset(10)
             make.leading.equalTo(titleLabel)
             make.bottom.equalToSuperview().offset(-10)
         }
