@@ -23,7 +23,7 @@ final class DetailViewModel {
     
     private let disposeBag = DisposeBag()
     weak var coordinator: DetailCoordinator?
-    private let recruitItem: Recruit?
+    let recruitItem: Recruit?
     
     // MARK: - Lifecycles
     

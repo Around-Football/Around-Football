@@ -31,7 +31,7 @@ struct Recruit: Codable, Identifiable {
     }
 
     //서브콜렉션에 신청자 추가
-    func apply(withUserID userID: String) {
+    func apply(withUserID userID: String?) {
         applicantsCollectionRef.addDocument(data: ["userID": userID])
     }
 
