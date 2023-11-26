@@ -181,8 +181,8 @@ extension FirebaseAPI {
         title: String?,
         content: String?,
         matchDateString: String?,
-        startTime: Date?,
-        endTime: Date?,
+        startTime: String?,
+        endTime: String?,
         completion: @escaping (Error?) -> Void
     ) {
         guard let user else { return }
