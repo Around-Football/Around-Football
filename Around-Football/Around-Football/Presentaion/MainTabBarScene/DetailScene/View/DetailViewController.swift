@@ -7,6 +7,7 @@
 
 import UIKit
 
+import Firebase
 import RxCocoa
 import RxSwift
 import SnapKit
@@ -100,6 +101,7 @@ final class DetailViewController: UIViewController {
         configeUI()
         bindUI()
         invokedViewWillAppear.onNext(())
+        setButtonTitle()
     }
     
     // MARK: - Selector
@@ -113,15 +115,29 @@ final class DetailViewController: UIViewController {
     @objc
     private func clickedApplyButton() {
         //TODO: -메세지 버튼 타이틀 분기처리 (작성자 or 신청자)
-        
-        //TODO: -신청하기 버튼 타이틀 분기처리
-        let title = NSAttributedString(
-            string: "신청 중",
-            attributes: [.font: UIFont.systemFont(ofSize: 15, weight: .semibold)]
-        )
-        applyButton.setAttributedTitle(title, for: .normal)
-        
-        viewModel.coordinator?.pushApplicationStatusViewController()
+        ///글쓴이면 신청현황보기, 아니면 신청한 UID에 추가
+        if Auth.auth().currentUser?.uid == viewModel.recruitItem?.userID {
+            viewModel.coordinator?.pushApplicationStatusViewController()
+        } else {
+            viewModel.recruitItem?.apply(withUserID: Auth.auth().currentUser?.uid)
+        }
+    }
+    
+    private func setButtonTitle() {
+        //글쓴이면 신청현황, 아니면 신청하기로
+        if Auth.auth().currentUser?.uid == viewModel.recruitItem?.userID {
+            let title = NSAttributedString(
+                string: "신청 현황",
+                attributes: [.font: UIFont.systemFont(ofSize: 15, weight: .semibold)]
+            )
+            applyButton.setAttributedTitle(title, for: .normal)
+        } else {
+            let title = NSAttributedString(
+                string: "신청 하기",
+                attributes: [.font: UIFont.systemFont(ofSize: 15, weight: .semibold)]
+            )
+            applyButton.setAttributedTitle(title, for: .normal)
+        }
     }
     
     // MARK: - Helper

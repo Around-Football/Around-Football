@@ -25,5 +25,4 @@ class InfoViewModel {
         
         completion(user)
     }
-    
 }
