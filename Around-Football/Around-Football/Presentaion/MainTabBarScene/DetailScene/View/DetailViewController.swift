@@ -170,7 +170,7 @@ final class DetailViewController: UIViewController {
     
     private func configeUI() {
         setButtonTitle() //신청하기 버튼 세팅
-        
+        navigationItem.title = viewModel.recruitItem?.title
         view.backgroundColor = .white
         view.addSubview(scrollView)
         scrollView.addSubview(contentView)

@@ -197,7 +197,6 @@ final class DetailView: UIView {
             make.top.equalTo(gamePriceLabel.snp.bottom).offset(20)
             make.leading.equalTo(contentTitleLabel.snp.trailing).offset(SuperviewOffsets.leadingPadding)
             make.trailing.equalToSuperview()
-            make.bottom.equalToSuperview()
         }
     }
 }
