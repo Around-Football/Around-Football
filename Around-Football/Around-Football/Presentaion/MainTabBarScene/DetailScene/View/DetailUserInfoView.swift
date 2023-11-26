@@ -22,38 +22,38 @@ final class DetailUserInfoView: UIView {
     }
     
     private let userNameLabel = UILabel().then {
-        $0.text = "최승현"
+        $0.text = "유저 이름"
         $0.font = .systemFont(ofSize: 20, weight: .bold)
     }
     
     private let userGenderLabel = UILabel().then {
         $0.text = "성별"
         $0.textColor = .gray
-        $0.font = .systemFont(ofSize: 10)
+        $0.font = .systemFont(ofSize: 12)
     }
     
     private let userAgeLabel = UILabel().then {
         $0.text = "나이"
         $0.textColor = .gray
-        $0.font = .systemFont(ofSize: 10)
+        $0.font = .systemFont(ofSize: 12)
     }
     
     private let userArea = UILabel().then {
         $0.text = "지역"
         $0.textColor = .gray
-        $0.font = .systemFont(ofSize: 10)
+        $0.font = .systemFont(ofSize: 12)
     }
     
     private let mainUsedFeet = UILabel().then {
         $0.text = "주발"
         $0.textColor = .gray
-        $0.font = .systemFont(ofSize: 10)
+        $0.font = .systemFont(ofSize: 12)
     }
     
     private let userPosition = UILabel().then {
         $0.text = "포지션"
         $0.textColor = .gray
-        $0.font = .systemFont(ofSize: 10)
+        $0.font = .systemFont(ofSize: 12)
     }
     
     private lazy var userDetailInfoStackView = UIStackView().then { view in
