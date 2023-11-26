@@ -11,37 +11,35 @@ import RxSwift
 import RxCocoa
 import Then
 import SnapKit
-/*
- 1. Properties
- 2. Lifecycles
- 3. API
- 4. Selectors
- 5. Helpers
- */
+
 final class HomeTableViewCell: UITableViewCell {
     
     // MARK: - Properties
     
     static let id: String = "HomeTableViewCell"
     
-    var titleLabel = UILabel().then {
+    private var titleLabel = UILabel().then {
         $0.text = "Title Text"
         $0.font = .boldSystemFont(ofSize: 20)
     }
     
-    var fieldAddress = UILabel().then {
+    private var fieldAddress = UILabel().then {
         $0.text = "Field Address"
     }
     
-    var dateLabel = UILabel().then {
+    private var typeLabel = UILabel().then {
+        $0.text = "Field Address"
+    }
+    
+    private var dateLabel = UILabel().then {
         $0.text = "DateLabel"
     }
     
-    var recruitLabel = UILabel().then {
+    private var recruitLabel = UILabel().then {
         $0.text = "Recurit 0명"
     }
     
-    var userNameLabel = UILabel().then {
+    private var userNameLabel = UILabel().then {
         $0.text = "Recurit 0명"
     }
     
@@ -59,17 +57,19 @@ final class HomeTableViewCell: UITableViewCell {
     // MARK: - Helpers
     
     func bindContents(item: Recruit) {
-        self.titleLabel.text = item.title
-        self.fieldAddress.text = "주소: \(item.fieldAddress)"
-        self.dateLabel.text = "일정: \(item.matchDateString ?? "")  \(item.startTime ?? "") - \(item.endTime ?? "")"
-        self.recruitLabel.text = "모집 용병: \(item.recruitedPeopleCount) 명"
-        self.userNameLabel.text = "by. \(item.userName)"
+        titleLabel.text = item.title
+        fieldAddress.text = "주소: \(item.fieldAddress)"
+        typeLabel.text = "유형: \(item.type)"
+        dateLabel.text = "일정: \(item.matchDateString ?? "") \(item.startTime ?? "") - \(item.endTime ?? "")"
+        recruitLabel.text = "모집 용병: \(item.recruitedPeopleCount) 명"
+        userNameLabel.text = "by. \(item.userName)"
     }
     
     private func configureUI() {
         contentView.addSubviews(titleLabel,
                                 fieldAddress,
                                 dateLabel,
+                                typeLabel,
                                 recruitLabel,
                                 userNameLabel)
         
@@ -90,8 +90,14 @@ final class HomeTableViewCell: UITableViewCell {
             make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
         }
         
-        recruitLabel.snp.makeConstraints { make in
+        typeLabel.snp.makeConstraints { make in
             make.top.equalTo(fieldAddress.snp.bottom).offset(10)
+            make.leading.equalTo(titleLabel)
+            make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
+        }
+        
+        recruitLabel.snp.makeConstraints { make in
+            make.top.equalTo(typeLabel.snp.bottom).offset(10)
             make.leading.equalTo(titleLabel)
         }
         
