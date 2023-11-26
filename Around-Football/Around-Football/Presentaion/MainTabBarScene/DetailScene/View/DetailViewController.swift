@@ -245,7 +245,7 @@ final class DetailViewController: UIViewController {
         sendMessageButton.snp.makeConstraints { make in
             make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
             make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
-            make.bottom.equalToSuperview().offset(SuperviewOffsets.bottomPadding)
+            make.bottom.equalToSuperview().offset(SuperviewOffsets.bottomPadding).priority(.required)
             make.height.equalTo(50)
         }
     }
