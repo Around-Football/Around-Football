@@ -5,7 +5,7 @@
 //  Created by 강창현 on 2023/04/13.
 //
 
-import Foundation
+import Firebase
 
 struct Recruit: Codable, Identifiable {
     var id: String
@@ -22,6 +22,33 @@ struct Recruit: Codable, Identifiable {
     var matchDateString: String? //날짜만, String으로 일단 수정
     var startTime: Date? //시작시간
     var endTime: Date? // 종료시간
+    
+    // MARK: - 신청자 UID 보관할 collection 관련 함수
+    
+    //신청자 서브컬렉션 추가
+    var applicantsCollectionRef: CollectionReference {
+        return Firestore.firestore().collection("recruits").document(id).collection("applicants")
+    }
+
+    //서브콜렉션에 신청자 추가
+    func apply(withUserID userID: String) {
+        applicantsCollectionRef.addDocument(data: ["userID": userID])
+    }
+
+    //서브콜렉션에서 신청자 제거
+    func removeApplicant(withUserID userID: String) {
+        let query = applicantsCollectionRef.whereField("userID", isEqualTo: userID)
+        query.getDocuments { (snapshot, error) in
+            if let error = error {
+                print("Error removing applicant: \(error)")
+            } else {
+                guard let documents = snapshot?.documents else { return }
+                for document in documents {
+                    document.reference.delete()
+                }
+            }
+        }
+    }
     
     //TODO: -신청한 용병 데이터 어떻게 보여줄건지
     
