@@ -121,13 +121,13 @@ final class DetailView: UIView {
                     contentLabel)
         
         titleLabel.snp.makeConstraints { make in
-            make.top.equalToSuperview().offset(20)
+            make.top.equalToSuperview()
             make.leading.equalToSuperview()
             make.width.equalTo(60)
         }
         
         title.snp.makeConstraints { make in
-            make.top.equalToSuperview().offset(20)
+            make.top.equalToSuperview()
             make.centerY.equalTo(titleLabel.snp.centerY)
             make.leading.equalTo(titleLabel.snp.trailing).offset(SuperviewOffsets.leadingPadding)
             make.trailing.equalToSuperview()
@@ -188,7 +188,7 @@ final class DetailView: UIView {
         contentTitleLabel.snp.makeConstraints { make in
             make.top.equalTo(gamePriceLabel.snp.bottom).offset(20)
             make.leading.equalToSuperview()
-            make.bottom.equalToSuperview().offset(SuperviewOffsets.bottomPadding)
+            make.bottom.equalToSuperview()
             make.width.equalTo(60)
         }
         
