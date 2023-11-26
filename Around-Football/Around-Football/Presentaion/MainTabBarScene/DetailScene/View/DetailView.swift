@@ -99,7 +99,7 @@ final class DetailView: UIView {
     //TODO: - 제목, 타입, price 추가하고 업데이트
     func setValues(item: Recruit) {
         title.text = item.title
-        matchDayLabel.text = item.matchDateString
+        matchDayLabel.text = "\(item.matchDateString ?? "")  \(item.startTime ?? "") - \(item.endTime ?? "")"
         typeLabel.text = item.type
         recruitingLabel.text = String(item.recruitedPeopleCount)
         gamePriceLabel.text = "10,000원" //item.gamePrice

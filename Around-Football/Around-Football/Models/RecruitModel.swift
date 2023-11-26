@@ -20,8 +20,8 @@ struct Recruit: Codable, Identifiable {
     var title: String
     var content: String //작성내용
     var matchDateString: String? //날짜만, String으로 일단 수정
-    var startTime: Date? //시작시간
-    var endTime: Date? // 종료시간
+    var startTime: String? //시작시간
+    var endTime: String? // 종료시간
     
     // MARK: - 신청자 UID 보관할 collection 관련 함수
     
@@ -75,8 +75,8 @@ struct Recruit: Codable, Identifiable {
         self.title = dictionary["title"] as? String ?? ""
         self.content = dictionary["content"] as? String ?? ""
         self.matchDateString = dictionary["matchDateString"] as? String ?? ""
-        self.startTime = dictionary["startTime"] as? Date ?? Date()
-        self.endTime = dictionary["endTime"] as? Date ?? Date()
+        self.startTime = dictionary["startTime"] as? String ?? ""
+        self.endTime = dictionary["endTime"] as? String ?? ""
     }
 }
 

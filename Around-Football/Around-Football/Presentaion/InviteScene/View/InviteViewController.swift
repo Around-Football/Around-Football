@@ -34,9 +34,8 @@ final class InviteViewController: UIViewController {
     private lazy var contentTitle = titleTextField.text
     private lazy var content = contentTextView.text
     private lazy var matchDateString = calenderViewController.selectedDateString
-    private lazy var startTime = calenderViewController.selectedDate
-    //TODO: - EndTime 추가
-    private lazy var endTime = calenderViewController.selectedDate
+    private lazy var startTime = calenderViewController.startTimeString
+    private lazy var endTime = calenderViewController.endTimeString
     
     private lazy var scrollView = UIScrollView().then {
         $0.showsVerticalScrollIndicator = false

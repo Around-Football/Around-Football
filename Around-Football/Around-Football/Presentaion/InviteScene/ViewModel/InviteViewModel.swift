@@ -26,8 +26,8 @@ final class InviteViewModel {
                                 title: String?,
                                 content: String?,
                                 matchDateString: String?,
-                                startTime: Date?,
-                                endTime: Date?) {
+                                startTime: String?,
+                                endTime: String?) {
         // MARK: - 테스트용 임시 데이터 파베에 올림
         FirebaseAPI.shared.createRecruitFieldData(user: user,
                                                   fieldID: fieldID,
