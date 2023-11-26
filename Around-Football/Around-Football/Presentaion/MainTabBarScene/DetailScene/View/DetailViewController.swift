@@ -17,7 +17,9 @@ final class DetailViewController: UIViewController {
     
     // MARK: - Properties
     
-    var viewModel: DetailViewModel
+    private var viewModel: DetailViewModel
+    private var invokedViewWillAppear = PublishSubject<Void>()
+    private var disposeBag = DisposeBag()
     private let detailUserInfoView = DetailUserInfoView()
     private let detailView = DetailView()
     private let scrollView = UIScrollView()
@@ -65,14 +67,6 @@ final class DetailViewController: UIViewController {
         $0.backgroundColor = .secondarySystemBackground
     }
     
-//    private(set) lazy var detailTableView = UITableView().then {
-//        $0.register(DetailUserInfoCell.self, forCellReuseIdentifier: DetailUserInfoCell.cellID)
-//        //        $0.delegate = self
-//        //        $0.dataSource = self
-//        $0.separatorStyle = .none
-//        $0.isScrollEnabled = false
-//    }
-    
     private lazy var sendMessageButton = UIButton().then {
         $0.setTitle("메세지 보내기", for: .normal)
         $0.setTitleColor(.white, for: .normal)
@@ -81,9 +75,6 @@ final class DetailViewController: UIViewController {
         $0.clipsToBounds = true
         $0.addTarget(self, action: #selector(clickedMessage), for: .touchUpInside)
     }
-    
-    var invokedViewWillAppear = PublishSubject<Void>()
-    var disposeBag = DisposeBag()
     
     // MARK: - Lifecycles
     
@@ -101,7 +92,6 @@ final class DetailViewController: UIViewController {
         configeUI()
         bindUI()
         invokedViewWillAppear.onNext(())
-        setButtonTitle()
     }
     
     // MARK: - Selector
@@ -115,13 +105,15 @@ final class DetailViewController: UIViewController {
     @objc
     private func clickedApplyButton() {
         //TODO: -메세지 버튼 타이틀 분기처리 (작성자 or 신청자)
-        ///글쓴이면 신청현황보기, 아니면 신청한 UID에 추가
+        ///글쓴이면 신청현황 보기, 아니면 신청한 UID에 추가
         if Auth.auth().currentUser?.uid == viewModel.recruitItem?.userID {
             viewModel.coordinator?.pushApplicationStatusViewController()
         } else {
             viewModel.recruitItem?.apply(withUserID: Auth.auth().currentUser?.uid)
         }
     }
+    
+    // MARK: - Helper
     
     private func setButtonTitle() {
         //글쓴이면 신청현황, 아니면 신청하기로
@@ -139,8 +131,6 @@ final class DetailViewController: UIViewController {
             applyButton.setAttributedTitle(title, for: .normal)
         }
     }
-    
-    // MARK: - Helper
     
     private func bindUI() {
         let input = DetailViewModel.Input(invokedViewWillAppear: invokedViewWillAppear.asObserver())
@@ -179,6 +169,8 @@ final class DetailViewController: UIViewController {
     }
     
     private func configeUI() {
+        setButtonTitle() //신청하기 버튼 세팅
+        
         view.backgroundColor = .white
         view.addSubview(scrollView)
         scrollView.addSubview(contentView)
@@ -210,13 +202,11 @@ final class DetailViewController: UIViewController {
         groundLabel.snp.makeConstraints { make in
             make.top.equalTo(mainImageView.snp.bottom).offset(SuperviewOffsets.topPadding)
             make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
-            //            make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
         }
         
         groundAddressLabel.snp.makeConstraints { make in
             make.top.equalTo(groundLabel.snp.bottom)
             make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
-            //            make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
             make.bottom.equalTo(grayLineView1.snp.top).offset(SuperviewOffsets.bottomPadding)
         }
         

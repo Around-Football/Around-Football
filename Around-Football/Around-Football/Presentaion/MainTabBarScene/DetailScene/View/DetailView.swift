@@ -96,6 +96,7 @@ final class DetailView: UIView {
     
     // MARK: - Helpers
     
+    //TODO: - 제목, 타입, price 추가하고 업데이트
     func setValues(item: Recruit) {
         title.text = "제목" /*item.title*/
         matchDayLabel.text = item.matchDateString
