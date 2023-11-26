@@ -20,7 +20,7 @@ final class DetailView: UIView {
     private var title = UILabel().then {
         $0.font = .systemFont(ofSize: 15)
         $0.text = "제목"
-        $0.textColor = .gray
+        $0.textColor = .label
     }
     
     private var matchDayTitleLabel = UILabel().then {
@@ -31,7 +31,7 @@ final class DetailView: UIView {
     
     private var matchDayLabel = UILabel().then {
         $0.font = .systemFont(ofSize: 15)
-        $0.textColor = .black
+        $0.textColor = .label
         $0.numberOfLines = 0
     }
     
@@ -43,7 +43,7 @@ final class DetailView: UIView {
     
     private var typeLabel = UILabel().then {
         $0.font = .systemFont(ofSize: 15)
-        $0.textColor = .black
+        $0.textColor = .label
         $0.numberOfLines = 0
     }
     
@@ -55,7 +55,7 @@ final class DetailView: UIView {
     
     private var recruitingLabel = UILabel().then {
         $0.font = .systemFont(ofSize: 15)
-        $0.textColor = .black
+        $0.textColor = .label
         $0.numberOfLines = 0
     }
     
@@ -67,7 +67,7 @@ final class DetailView: UIView {
     
     private var gamePriceLabel = UILabel().then {
         $0.font = .systemFont(ofSize: 15)
-        $0.textColor = .black
+        $0.textColor = .label
         $0.numberOfLines = 0
     }
     
@@ -79,7 +79,7 @@ final class DetailView: UIView {
     
     private var contentLabel = UILabel().then {
         $0.font = .systemFont(ofSize: 15)
-        $0.textColor = .black
+        $0.textColor = .label
         $0.numberOfLines = 0
     }
     
@@ -98,9 +98,9 @@ final class DetailView: UIView {
     
     //TODO: - 제목, 타입, price 추가하고 업데이트
     func setValues(item: Recruit) {
-        title.text = "제목" /*item.title*/
+        title.text = item.title
         matchDayLabel.text = item.matchDateString
-        typeLabel.text = "풋살" //item.type
+        typeLabel.text = item.type
         recruitingLabel.text = String(item.recruitedPeopleCount)
         gamePriceLabel.text = "10,000원" //item.gamePrice
         contentLabel.text = item.content

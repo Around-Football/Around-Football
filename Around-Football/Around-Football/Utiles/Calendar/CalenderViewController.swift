@@ -81,7 +81,7 @@ final class CalenderViewController: UIViewController {
         $0.datePickerMode = .time
         $0.locale = Locale(identifier: "ko_kr")
         $0.locale = Locale.autoupdatingCurrent
-        $0.minuteInterval = 10
+        $0.minuteInterval = 30
         $0.addTarget(self, action: #selector(startTimePickerSelected), for: .valueChanged)
     }
     
@@ -89,7 +89,7 @@ final class CalenderViewController: UIViewController {
         $0.datePickerMode = .time
         $0.locale = Locale(identifier: "ko_kr")
         $0.locale = Locale.autoupdatingCurrent
-        $0.minuteInterval = 10
+        $0.minuteInterval = 30
         $0.addTarget(self, action: #selector(endTimePickerSelected), for: .valueChanged)
     }
     
