@@ -16,7 +16,7 @@ import SnapKit
 final class HomeViewController: UIViewController {
     
     // MARK: - Properties
-
+    
     var viewModel: HomeViewModel
     let dateFilterView = DateFilterViewController()
     let locationFilterView = LocationFilterViewController()
@@ -106,7 +106,7 @@ final class HomeViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         navigationController?.navigationBar.isHidden = true
-//        invokedViewWillAppear.onNext(())
+        //        invokedViewWillAppear.onNext(())
         filterringRegionRecruitList.onNext(locationFilterView.selectedCity)
         print(locationFilterView.selectedCity)
     }
@@ -133,12 +133,15 @@ final class HomeViewController: UIViewController {
         
         let output = viewModel.transform(input)
         
-        //merge: 둘 중 하나만 있어도 내려보냄
-        Observable.merge(output.recruitList, output.filteredTypeRecruitList, output.filteredRegionRecruitList)
-        .bind(to: homeTableView.rx.items(cellIdentifier: HomeTableViewCell.id,
-                                         cellType: HomeTableViewCell.self)) { index, item, cell in
-            cell.bindContents(item: item)
-        }.disposed(by: disposeBag)
+        //merge: 하나만 있어도 내려보냄
+        Observable
+            .merge(output.recruitList,
+                   output.filteredTypeRecruitList,
+                   output.filteredRegionRecruitList)
+            .bind(to: homeTableView.rx.items(cellIdentifier: HomeTableViewCell.id,
+                                             cellType: HomeTableViewCell.self)) { index, item, cell in
+                cell.bindContents(item: item)
+            }.disposed(by: disposeBag)
         
         homeTableView.rx.modelSelected(Recruit.self)
             .subscribe(onNext: { [weak self] selectedRecruit in
@@ -209,6 +212,8 @@ final class HomeViewController: UIViewController {
         }
     }
     
+    //TODO: - 방식 맞추기 (모달 or alertsheet)
+    
     func matchTypeActionSheet() -> UIAlertController {
         let actionSheet = UIAlertController()
         
@@ -242,7 +247,7 @@ final class HomeViewController: UIViewController {
     
     @objc
     func filterOptionTapped(sender: UIButton) {
-        // FIXME: - Switch문 리팩토링 가능? -> 쌉가능
+        // TODO: - Coordinator로 변경
         // 필터 옵션 버튼을 탭했을 때의 동작
         // ["모든 날짜", "모든 지역", "매치 유형"]
         
@@ -257,22 +262,20 @@ final class HomeViewController: UIViewController {
             
         case "매치 유형":
             self.present(matchTypeActionSheet(), animated: true, completion: nil)
-
+            
         default:
             break
         }
     }
-
+    
     // FIXME: - View PopUp navigationBar 처리
     @objc
     func didTapFloatingButton() {
-        //TODO: -FirebaseAuth UID 확인해서 로그인 or 초대뷰
         if UserService.shared.user?.id == nil {
             viewModel.coordinator?.presentLoginViewController()
         } else {
             viewModel.coordinator?.pushInviteView()
         }
-        print("DEBUG: didTapFloatingButton")
     }
     
     required init?(coder: NSCoder) {

@@ -124,6 +124,8 @@ class InputInfoView: UIView {
         $0.font = .boldSystemFont(ofSize: 16)
     }
     
+    //TODO: - 지역 설정 선택지 있게 바꾸기
+    
     let userAreaTextField = UITextField().then{
         $0.layer.cornerRadius = LayoutOptions.cornerRadious
         $0.placeholder = "지역을 입력해주세요"
