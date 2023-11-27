@@ -136,19 +136,33 @@ final class UserService: NSObject {
                 }
                 print("로그인 성공: \(String(describing: result?.user))")
                 
-                let uid = result?.user.uid
+                guard let uid = result?.user.uid else { return }
                 
-                if Auth.auth().currentUser?.uid != nil {
-                    REF_USER.document(uid ?? UUID().uuidString)
-                        .setData(["id" : uid ?? UUID().uuidString])
+                REF_USER.document(uid).getDocument { snapshot, error in
+                    if let snapshot = snapshot, snapshot.exists {
+                        self.isLoginObservable.onNext(())
+                        
+                        // TODO: - Coordinator Refactoring
+                        NotificationCenter.default.post(name: NSNotification.Name("LoginNotification"),
+                                                        object: nil,
+                                                        userInfo: nil)
+
+                    } else {
+                        REF_USER.document(uid)
+                            .setData(["id": uid]) { error in
+                                if let _ = error {
+                                    return
+                                }
+                                self.isLoginObservable.onNext(())
+                                
+                                // TODO: - Coordinator Refactoring
+                                NotificationCenter.default.post(name: NSNotification.Name("LoginNotification"),
+                                                                object: nil,
+                                                                userInfo: nil)
+
+                            }
+                    }
                 }
-                
-                self.isLoginObservable.onNext(())
-                
-                // TODO: - Coordinator Refactoring
-                NotificationCenter.default.post(name: NSNotification.Name("LoginNotification"),
-                                                object: nil,
-                                                userInfo: nil)
             }
         }
     }
@@ -214,11 +228,7 @@ final class UserService: NSObject {
             self.email = user?.kakaoAccount?.email
             print("userProfile: \(String(describing: self.userProfile)), email: \(String(describing: self.email))")
             self.createGoogleUser(email: self.email!, password: "\(self.email!)")
-            Auth.auth().signIn(withEmail: self.email!, password: self.email!) { _, error in
-                guard let error = error else { return }
-                self.isLoginObservable.onNext(())
-            }
-            
+            self.googleSignIn(email: self.email!, password: self.email!)
 
             // TODO: - Coordinator Refactoring
             NotificationCenter.default.post(name: NSNotification.Name("LoginNotification"),
