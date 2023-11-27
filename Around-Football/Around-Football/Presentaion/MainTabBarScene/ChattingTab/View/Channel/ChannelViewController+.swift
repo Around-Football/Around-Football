@@ -26,11 +26,11 @@ extension ChannelViewController {
     func bindChannels() {
         viewModel.channels
             .bind(to: channelTableView.rx.items(cellIdentifier: ChannelTableViewCell.cellId, cellType: ChannelTableViewCell.self)) { row, item, cell in
-                print("refresh collectionView: \(row)")
+                print("refresh collectionView: \(item.id)")
                 cell.chatRoomLabel.text = item.withUserName
                 cell.chatPreviewLabel.text = item.previewContent
                 let alarmNumber = item.alarmNumber
-                alarmNumber == 0 ? self.hideChatAlarmNumber(cell: cell) : self.showChatAlarmNumber(cell: cell, alarmNumber: "\(alarmNumber)")
+                alarmNumber == 0 ? self.hideChatAlarmNumber(cell: cell) : self.showChatAlarmNumber(cell: cell, alarmNumber: alarmNumber)
                 let date = item.recentDate
                 cell.recentDateLabel.text = self.formatDate(date)
             }
@@ -72,8 +72,10 @@ extension ChannelViewController {
         cell.chatAlarmNumberLabel.isHidden = true
     }
     
-    private func showChatAlarmNumber(cell: ChannelTableViewCell, alarmNumber: String) {
-        cell.chatAlarmNumberLabel.text = alarmNumber
+    private func showChatAlarmNumber(cell: ChannelTableViewCell, alarmNumber: Int) {
+        var alarmString = ""
+        alarmNumber > 999 ? (alarmString = "999+") : (alarmString = "\(alarmNumber)")
+        cell.chatAlarmNumberLabel.text = alarmString
         cell.chatAlarmNumberLabel.isHidden = false
         cell.updateAlarmLabelUI()
     }

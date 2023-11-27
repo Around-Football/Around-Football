@@ -26,23 +26,9 @@ final class ChatViewController: MessagesViewController {
     let pickedImage = PublishSubject<UIImage>()
     private let invokedViewWillAppear = PublishSubject<Void>()
     
-    
-    //    var isSendingPhoto = false {
-    //        didSet {
-    //            messageInputBar.leftStackViewItems.forEach {
-    //                guard let item = $0 as? InputBarButtonItem else { return }
-    //                DispatchQueue.main.async {
-    //                    item.isEnabled = !self.isSendingPhoto
-    //                }
-    //            }
-    //        }
-    //    }
-    
     lazy var cameraBarButtonItem = InputBarButtonItem(type: .system).then {
         $0.tintColor = .black
         $0.image = UIImage(systemName: "camera")
-        // TODO: - RxCocoa Binding
-        //        $0.addTarget(self, action: #selector(didTapCameraButton), for: .touchUpInside)
     }
     
     // MARK: - Lifecycles
@@ -126,8 +112,10 @@ final class ChatViewController: MessagesViewController {
     
     private func bind() {
         let didTapSendButton = sendWithText(buttonEvent: messageInputBar.sendButton.rx.tap)
-        let input = ChatViewModel.Input(invokedViewWillAppear: invokedViewWillAppear, didTapSendButton: didTapSendButton, pickedImage: pickedImage)
-        let output = viewModel.transform(input)
+        let input = ChatViewModel.Input(invokedViewWillAppear: invokedViewWillAppear, 
+                                        didTapSendButton: didTapSendButton,
+                                        pickedImage: pickedImage)
+        _ = viewModel.transform(input)
         bindCameraBarButtonEvent()
         bindMessages()
         bindEnabledCameraBarButton()
