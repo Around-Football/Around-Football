@@ -27,7 +27,7 @@ final class FieldDetailViewModel {
     
     func fetchRecruitFieldData(date: Date, completion: @escaping(([Recruit]) -> Void)) {
         firebaseAPI.fetchRecruitFieldData(fieldID: field.id, date: date) { recruits in
-            self.recruits = recruits.sorted(by: { $0.matchDate ?? "0" < $1.matchDate ?? "1" })
+            self.recruits = recruits.sorted(by: { $0.matchDateString ?? "0" < $1.matchDateString ?? "1" })
             
             completion(recruits)
         }

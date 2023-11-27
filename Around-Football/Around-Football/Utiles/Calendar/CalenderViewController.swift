@@ -18,7 +18,8 @@ final class CalenderViewController: UIViewController {
     private var days: [String] = []
     private var selectedIndexPath: IndexPath? //캘린더 선택cell
     var selectedDateString: String? //캘린더에서 선택한 날짜 String
-    var selectedDate: Date? //캘린더에서 선택한 날짜 + picker에서 선택한 시간 Date
+    lazy var startTimeString: String = setSelectedTime(input: startTimePicker.date)
+    lazy var endTimeString: String = setSelectedTime(input: endTimePicker.date)
 
     private lazy var previousButton = UIButton().then {
         $0.setImage(UIImage(systemName: "chevron.left"), for: .normal)
@@ -80,17 +81,17 @@ final class CalenderViewController: UIViewController {
     private lazy var startTimePicker = UIDatePicker().then {
         $0.datePickerMode = .time
         $0.locale = Locale(identifier: "ko_kr")
-        $0.locale = Locale.autoupdatingCurrent
-        $0.minuteInterval = 10
-        $0.addTarget(self, action: #selector(timePickerSelected), for: .valueChanged)
+        $0.minuteInterval = 30
+        $0.date = Date()
+        $0.addTarget(self, action: #selector(startTimePickerSelected), for: .valueChanged)
     }
     
     private lazy var endTimePicker = UIDatePicker().then {
         $0.datePickerMode = .time
         $0.locale = Locale(identifier: "ko_kr")
-        $0.locale = Locale.autoupdatingCurrent
-        $0.minuteInterval = 10
-        $0.addTarget(self, action: #selector(timePickerSelected), for: .valueChanged)
+        $0.minuteInterval = 30
+        $0.date = Date()
+        $0.addTarget(self, action: #selector(endTimePickerSelected), for: .valueChanged)
     }
     
     // MARK: - Lifecycles
@@ -116,11 +117,24 @@ final class CalenderViewController: UIViewController {
     }
     
     @objc
-    private func timePickerSelected() {
-        stringToDate(dateString: selectedDateString)
+    private func startTimePickerSelected() {
+        startTimeString = setSelectedTime(input: startTimePicker.date)
+    }
+    
+    @objc
+    private func endTimePickerSelected() {
+        endTimeString = setSelectedTime(input: endTimePicker.date)
     }
     
     // MARK: - Helpers
+    
+    private func setSelectedTime(input: Date) -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "HH:mm" // 24시간 형식의 시간과 분만 표시
+        let result = dateFormatter.string(from: input)
+        print(result)
+        return result
+    }
     
     private func configureUI() {
         view.backgroundColor = .white
@@ -230,35 +244,36 @@ extension CalenderViewController {
         monthLabel.text = calenderMonth
     }
     
-    //선택한 날짜와 시간 selectedDate에 반영
-    private func stringToDate(dateString: String?) { //예시 날짜 문자열 "2023년 10월 24일"
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy년 MM월 dd일" //캘린더에서 선택한 날짜
-        
-        guard
-            let dateString = dateString,
-            let date = dateFormatter.date(from: dateString)
-        else {
-            return
-        }
-        
-        //picker에서 선택한 시간 반영
-        let selectedTime = startTimePicker.date
-        let calendar = Calendar.current
-        let dateComponents = calendar.dateComponents([.year, .month, .day], from: date)
-        let timeComponents = calendar.dateComponents([.hour, .minute], from: selectedTime)
-
-        var combinedComponents = DateComponents()
-        combinedComponents.year = dateComponents.year
-        combinedComponents.month = dateComponents.month
-        combinedComponents.day = dateComponents.day
-        combinedComponents.hour = timeComponents.hour
-        combinedComponents.minute = timeComponents.minute
-
-        guard let resultDate = calendar.date(from: combinedComponents) else { return }
-        print("선택된 날짜와 시간은 \(resultDate)입니다")
-        selectedDate = resultDate
-    }
+//    //선택한 날짜와 시간 selectedDate에 반영
+//    private func stringToDate(dateString: String?, timePicker: UIDatePicker?) { //예시 날짜 문자열 "2023년 10월 24일"
+//        let dateFormatter = DateFormatter()
+//        dateFormatter.dateFormat = "yyyy년 MM월 dd일" //캘린더에서 선택한 날짜
+//        
+//        guard
+//            let dateString = dateString,
+//            let date = dateFormatter.date(from: dateString),
+//            let timePicker = timePicker
+//        else {
+//            return
+//        }
+//        
+//        //picker에서 선택한 시간 반영
+//        let selectedTime = timePicker.date
+//        let calendar = Calendar.current
+//        let dateComponents = calendar.dateComponents([.year, .month, .day], from: date)
+//        let timeComponents = calendar.dateComponents([.hour, .minute], from: selectedTime)
+//
+//        var combinedComponents = DateComponents()
+//        combinedComponents.year = dateComponents.year
+//        combinedComponents.month = dateComponents.month
+//        combinedComponents.day = dateComponents.day
+//        combinedComponents.hour = timeComponents.hour
+//        combinedComponents.minute = timeComponents.minute
+//
+//        guard let resultDate = calendar.date(from: combinedComponents) else { return }
+//        print("선택된 날짜와 시간은 \(resultDate)입니다")
+//        selectedStartDate = resultDate
+//    }
     
     private func updateDays() {
         days.removeAll()
@@ -327,9 +342,9 @@ extension CalenderViewController: UICollectionViewDelegateFlowLayout, UICollecti
         
         if let date = Int(selectedCell.dateLabel.text ?? "") { //선택한 Date 저장
             selectedDateString = "\(yearAndMonth) \(date)일"
-            stringToDate(dateString: selectedDateString)
+//            stringToDate(dateString: selectedDateString, timePicker: nil)
             print(selectedDateString as Any)
-            print(selectedDate as Any)
+//            print(selectedStartDate as Any)
         }
         
         // 선택한 셀의 indexPath를 저장

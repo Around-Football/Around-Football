@@ -12,17 +12,6 @@ import FirebaseFirestore
 import RxAlamofire
 import RxSwift
 
-/*
- var id: String
- var userName: String
- var age: Int
- var contact: Int?
- var detailSex: String
- var area: String
- var mainUsedFeet: String
- var position: String
- */
-
 final class FirebaseAPI {
     static let shared = FirebaseAPI()
     
@@ -59,7 +48,7 @@ final class FirebaseAPI {
             switch result {
             case .success(let user):
                 print("readUser성공: \(user)")
-                // MARK: - UserService user 업데이트
+                // MARK: - UserService user 업데이
                 UserService.shared.user = user
                 completion(user)
             case .failure(let error):
@@ -176,6 +165,69 @@ final class FirebaseAPI {
         }
         .subscribe(on: ConcurrentDispatchQueueScheduler(qos: .background))
     }
+    
+    //date
+    func fetchRecruitFieldDataType(type: String?) -> Observable<[Recruit]> {
+        return Observable.create { observer in
+            var collectionRef: Query = Firestore.firestore().collection("Recruit")
+
+            //type있을때만 type으로 이동
+            if let type = type {
+                collectionRef = collectionRef
+                    .whereField("type", isEqualTo: type)
+            }
+            
+            collectionRef.getDocuments { snapshot, error in
+                if let error {
+                    observer.onError(error)
+                }
+                
+                guard let snapshot else { return }
+                
+                let recruits = snapshot.documents.compactMap { document -> Recruit? in
+                    
+                    return Recruit(dictionary: document.data())
+                }
+            
+                observer.onNext(recruits)
+                observer.onCompleted()
+            }
+            
+            return Disposables.create()
+        }
+        .subscribe(on: ConcurrentDispatchQueueScheduler(qos: .background))
+    }
+    
+    func fetchRecruitFieldRegionType(region: String?) -> Observable<[Recruit]> {
+        return Observable.create { observer in
+            var collectionRef: Query = Firestore.firestore().collection("Recruit")
+
+            //region 있을때만 이동
+            if let region = region {
+                collectionRef = collectionRef
+                    .whereField("fieldAddress", isGreaterThan: region)
+            }
+            
+            collectionRef.getDocuments { snapshot, error in
+                if let error {
+                    observer.onError(error)
+                }
+                
+                guard let snapshot else { return }
+                
+                let recruits = snapshot.documents.compactMap { document -> Recruit? in
+                    
+                    return Recruit(dictionary: document.data())
+                }
+            
+                observer.onNext(recruits)
+                observer.onCompleted()
+            }
+            
+            return Disposables.create()
+        }
+        .subscribe(on: ConcurrentDispatchQueueScheduler(qos: .background))
+    }
 }
 
 // MARK: - Recruit create 함수
@@ -185,29 +237,40 @@ extension FirebaseAPI {
     func createRecruitFieldData(
         user: User?,
         fieldID: String,
+        fieldName: String,
+        fieldAddress: String,
+        type: String?,
         recruitedPeopleCount: Int,
+        title: String?,
         content: String?,
-        matchDate: String?,
-        startTime: Date?,
-        endTime: Date?,
+        matchDateString: String?,
+        startTime: String?,
+        endTime: String?,
         completion: @escaping (Error?) -> Void
     ) {
-        let data = ["id": user?.id,
-                    "userName": user?.userName,
+        guard let user else { return }
+        
+        let data = ["id": UUID().uuidString,
+                    "userID": user.id,
+                    "userName": user.userName,
                     "fieldID": fieldID,
+                    "fieldName": fieldName,
+                    "fieldAddress": fieldAddress,
+                    "type": type,
                     "recruitedPeopleCount": recruitedPeopleCount,
+                    "title": title,
                     "content": content,
-                    "matchDate": matchDate,
+                    "matchDateString": matchDateString,
                     "startTime": startTime,
                     "endTime": endTime
         ] as [String : Any]
-        
         
         REF_RECRUIT
             .document(fieldID)
             .setData(data, completion: completion)
     }
     
+    //date
     func fetchRecruitFieldData(
         fieldID: String,
         date: Date,
@@ -215,7 +278,7 @@ extension FirebaseAPI {
     ) {
         REF_RECRUIT
             .whereField("fieldID", isEqualTo: fieldID)
-            .whereField("matchDate", isEqualTo: date)
+            .whereField("matchDateString", isEqualTo: date)
             .getDocuments { snapshot, error in
                 guard let snapshot = snapshot else {
                     let errorMessage = error?.localizedDescription ?? "None ERROR"
@@ -227,6 +290,8 @@ extension FirebaseAPI {
                 
             }
     }
+    
+
 }
 
 func saveFieldJsonData<T: Encodable>(data:T) {

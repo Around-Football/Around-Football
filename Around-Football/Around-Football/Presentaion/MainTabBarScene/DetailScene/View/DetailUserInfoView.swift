@@ -22,42 +22,50 @@ final class DetailUserInfoView: UIView {
     }
     
     private let userNameLabel = UILabel().then {
-        $0.text = "최승현"
+        $0.text = "유저 이름"
         $0.font = .systemFont(ofSize: 20, weight: .bold)
     }
     
-    private let userDetailSex = UILabel().then {
-        $0.text = "남"
+    private let userGenderLabel = UILabel().then {
+        $0.text = "성별"
         $0.textColor = .gray
-        $0.font = .systemFont(ofSize: 10)
+        $0.font = .systemFont(ofSize: 12)
     }
     
-    private let userDetailReviewGrade = UILabel().then {
-        $0.text = "리뷰"
+    private let userAgeLabel = UILabel().then {
+        $0.text = "나이"
         $0.textColor = .gray
-        $0.font = .systemFont(ofSize: 10)
+        $0.font = .systemFont(ofSize: 12)
     }
     
-    private let userDetailCareer = UILabel().then {
-        $0.text = "경력2년"
+    private let userArea = UILabel().then {
+        $0.text = "지역"
         $0.textColor = .gray
-        $0.font = .systemFont(ofSize: 10)
+        $0.font = .systemFont(ofSize: 12)
     }
     
-    private let userDetailManner = UILabel().then {
-        $0.text = "매너 0"
+    private let mainUsedFeet = UILabel().then {
+        $0.text = "주발"
         $0.textColor = .gray
-        $0.font = .systemFont(ofSize: 10)
+        $0.font = .systemFont(ofSize: 12)
+    }
+    
+    private let userPosition = UILabel().then {
+        $0.text = "포지션"
+        $0.textColor = .gray
+        $0.font = .systemFont(ofSize: 12)
     }
     
     private lazy var userDetailInfoStackView = UIStackView().then { view in
-        let subViews = [userDetailSex,
+        let subViews = [userGenderLabel,
                         createDotView(),
-                        userDetailReviewGrade,
+                        userAgeLabel,
                         createDotView(),
-                        userDetailCareer,
+                        userArea,
                         createDotView(),
-                        userDetailManner]
+                        mainUsedFeet,
+                        createDotView(),
+                        userPosition]
         
         view.axis = .horizontal
         view.spacing = 5
@@ -80,6 +88,17 @@ final class DetailUserInfoView: UIView {
     }
     
     // MARK: - Helpers
+    
+    //TODO: - 표시할 유저정보 정하고 바인딩하기
+    
+    func setValues(user: User) {
+        userNameLabel.text = user.userName
+        userGenderLabel.text = user.gender
+        userAgeLabel.text = String(user.age ?? 0) + "세"
+        userArea.text = user.area
+        mainUsedFeet.text = user.mainUsedFeet
+        userPosition.text = user.position.map { $0 ?? "" }.joined(separator: ", ")
+    }
     
     private func configureUI() {
         addSubviews(profileImageView,
