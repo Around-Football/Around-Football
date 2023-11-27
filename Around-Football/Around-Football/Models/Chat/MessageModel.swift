@@ -17,6 +17,7 @@ struct Message: MessageType {
     var image: UIImage?
     var downloadURL: URL?
     let sentDate: Date
+    var showTimeLabel: Bool = false
     var kind: MessageKit.MessageKind {
         if let image = image {
             let mediaItem = ImageMediaItem(image: image)
