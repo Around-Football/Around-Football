@@ -13,10 +13,14 @@ final class HomeViewModel {
     
     struct Input {
         let invokedViewWillAppear: Observable<Void>
+        let filteringType: Observable<String?>
+        let filteringRegion: Observable<String?>
     }
     
     struct Output {
         let recruitList: Observable<[Recruit]>
+        let filteredTypeRecruitList: Observable<[Recruit]>
+        let filteredRegionRecruitList: Observable<[Recruit]>
     }
     
     // MARK: - Properties
@@ -34,7 +38,11 @@ final class HomeViewModel {
     
     func transform(_ input: Input) -> Output {
         let recruitList = loadRecruitList(by: input.invokedViewWillAppear)
-        let output = Output(recruitList: recruitList)
+        let filteredTypeRecruitList = loadRecruitTypeList(by: input.filteringType)
+        let filteringRegion = loadRecruitRegionList(by: input.filteringRegion)
+        let output = Output(recruitList: recruitList,
+                            filteredTypeRecruitList: filteredTypeRecruitList,
+                            filteredRegionRecruitList: filteringRegion)
         return output
     }
     
@@ -42,6 +50,22 @@ final class HomeViewModel {
         inputObserver
             .flatMap { () -> Observable<[Recruit]> in
                 let recruitObservable = FirebaseAPI.shared.readRecruitRx()
+                return recruitObservable
+            }
+    }
+    
+    private func loadRecruitTypeList(by inputObserver: Observable<String?>) -> Observable<[Recruit]> {
+        inputObserver
+            .flatMap { type -> Observable<[Recruit]> in
+                let recruitObservable = FirebaseAPI.shared.fetchRecruitFieldDataType(type: type)
+                return recruitObservable
+            }
+    }
+    
+    private func loadRecruitRegionList(by inputObserver: Observable<String?>) -> Observable<[Recruit]> {
+        inputObserver
+            .flatMap { region -> Observable<[Recruit]> in
+                let recruitObservable = FirebaseAPI.shared.fetchRecruitFieldRegionType(region: region)
                 return recruitObservable
             }
     }

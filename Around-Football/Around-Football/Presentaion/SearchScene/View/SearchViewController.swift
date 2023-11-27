@@ -129,6 +129,6 @@ extension SearchViewController: UISearchBarDelegate, UISearchResultsUpdating {
     }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        searchViewModel.searchField(searchText)
+        KakaoService.shared.searchField(searchText, searchViewModel.searchResults, disposeBag)
     }
 }

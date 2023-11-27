@@ -12,6 +12,9 @@ import InputBarAccessoryView
 import PhotosUI
 import FirebaseFirestore
 import FirebaseAuth
+import RxSwift
+import RxCocoa
+
 
 final class ChatViewController: MessagesViewController {
     
@@ -19,27 +22,15 @@ final class ChatViewController: MessagesViewController {
     
     var viewModel: ChatViewModel
     
-    // ImageTransition 인스턴스 생성
     let imageTransition = ImageTransition()
-    
-    var isSendingPhoto = false {
-        didSet {
-            messageInputBar.leftStackViewItems.forEach {
-                guard let item = $0 as? InputBarButtonItem else { return }
-                DispatchQueue.main.async {
-                    item.isEnabled = !self.isSendingPhoto
-                }
-            }
-        }
-    }
+    let disposeBag = DisposeBag()
+    let pickedImage = PublishSubject<UIImage>()
     
     lazy var cameraBarButtonItem = InputBarButtonItem(type: .system).then {
         $0.tintColor = .black
         $0.image = UIImage(systemName: "camera")
-        // TODO: - RxCocoa Binding
-//        $0.addTarget(self, action: #selector(didTapCameraButton), for: .touchUpInside)
     }
-
+    
     // MARK: - Lifecycles
     
     init(viewModel: ChatViewModel) {
@@ -51,19 +42,26 @@ final class ChatViewController: MessagesViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
+    deinit {
+        viewModel.removeListener()
+    }
+    
     override func viewDidLoad() {
+        super.viewDidLoad()
+        
         configure()
         configureDelegate()
         setupMessageInputBar()
         removeOutgoingMessageAvatars()
         addCameraBarButtonToMessageInputBar()
+        bind()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         // TODO: - NotiManager.shared.currentChatRoomId = channel.id
         //                 self?.channelAPI.resetAlarmNumber(uid: self!.user.uid, channelId: id)
-
+        
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -75,6 +73,7 @@ final class ChatViewController: MessagesViewController {
     private func configure() {
         view.backgroundColor = .systemBackground
         navigationController?.navigationBar.prefersLargeTitles = false
+        title = viewModel.channelInfo.withUserName
     }
     
     private func configureDelegate() {
@@ -83,15 +82,15 @@ final class ChatViewController: MessagesViewController {
         messagesCollectionView.messagesDisplayDelegate = self
         messagesCollectionView.messageCellDelegate = self
         
-//        messageInputBar.delegate = self
+        messageInputBar.delegate = self
     }
-
+    
     private func setupMessageInputBar() {
         messageInputBar.inputTextView.tintColor = .black
         messageInputBar.sendButton.setTitleColor(.blue, for: .normal)
         messageInputBar.inputTextView.placeholder = "Input Message"
     }
-
+    
     private func removeOutgoingMessageAvatars() {
         guard let layout = messagesCollectionView.collectionViewLayout
                 as? MessagesCollectionViewFlowLayout else { return }
@@ -103,12 +102,20 @@ final class ChatViewController: MessagesViewController {
         )
         layout.setMessageOutgoingMessageTopLabelAlignment(outgoingLabelAlignment)
     }
-
+    
     private func addCameraBarButtonToMessageInputBar() {
         messageInputBar.leftStackView.alignment = .center
         messageInputBar.setLeftStackViewWidthConstant(to: 50, animated: false)
         messageInputBar.setStackViewItems([cameraBarButtonItem], forStack: .left, animated: false)
     }
-
     
+    private func bind() {
+        let didTapSendButton = sendWithText(buttonEvent: messageInputBar.sendButton.rx.tap)
+        let input = ChatViewModel.Input(didTapSendButton: didTapSendButton,
+                                        pickedImage: pickedImage)
+        _ = viewModel.transform(input)
+        bindCameraBarButtonEvent()
+        bindMessages()
+        bindEnabledCameraBarButton()
+    }
 }

@@ -7,6 +7,8 @@
 
 import UIKit
 
+import RxSwift
+import RxCocoa
 import SnapKit
 import Then
 
@@ -14,7 +16,10 @@ final class LocationFilterViewController: UIViewController {
     
     // MARK: - Properties
     
-    private let cities: [String]  = ["서울", "경기", "인천", "세종", "강원도", "충청도", "경상도", "전라도", "제주"]
+    private let cities: [String]  = ["서울", "경기", "인천", "세종", "강원", "충청", "경상", "전라", "제주"]
+    
+    var selectedCity: String?
+    var selectedIndexPath: IndexPath?
     
     private let titleLabel = UILabel().then {
         $0.text = "찾고 싶은 지역을 선택해주세요"
@@ -29,8 +34,7 @@ final class LocationFilterViewController: UIViewController {
         $0.layer.cornerRadius = LayoutOptions.cornerRadious
         $0.layer.borderWidth = 1.0
         $0.layer.borderColor = UIColor.blue.cgColor
-        
-        $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.addTarget(self, action: #selector(didTapConfirmButton), for: .touchUpInside)
     }
     
     private lazy var dismissButton = UIButton().then {
@@ -45,32 +49,24 @@ final class LocationFilterViewController: UIViewController {
         $0.translatesAutoresizingMaskIntoConstraints = false
     }
     
-    private let leftCityStackView = UIStackView().then {
-        $0.axis = .vertical
-        $0.distribution = .fillEqually
-        $0.alignment = .fill
-        $0.spacing = 10
-    }
-    
-    private let rightCityStackView = UIStackView().then {
-        $0.axis = .vertical
-        $0.distribution = .fillEqually
-        $0.alignment = .fill
-        $0.spacing = 10
-    }
-    
-    private let totalCityStackView = UIStackView().then {
-        $0.axis = .horizontal
-        $0.distribution = .fillEqually
-        $0.alignment = .top
-        $0.spacing = 10
-    }
+    private lazy var cityCollectionView: UICollectionView = {
+        let layout = UICollectionViewFlowLayout()
+        layout.minimumLineSpacing = 10
+        
+        let cv = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        cv.backgroundColor = .clear
+        cv.showsVerticalScrollIndicator = false
+        cv.delegate = self
+        cv.dataSource = self
+        cv.register(LocationFillterCell.self, forCellWithReuseIdentifier: LocationFillterCell.cellID)
+        return cv
+    }()
     
     private let buttonStackView = UIStackView().then {
         $0.axis = .horizontal
         $0.distribution = .fillEqually
         $0.alignment = .center
-        $0.spacing = 10
+        $0.spacing = 20
     }
     
     // MARK: - Lifecycles
@@ -80,43 +76,31 @@ final class LocationFilterViewController: UIViewController {
         configureUI()
     }
     
+    // MARK: - Seletors
+    
+    @objc
+    func didTapConfirmButton() {
+        if let indexPath = cityCollectionView.indexPathsForSelectedItems?.first,
+           let cell = cityCollectionView.cellForItem(at: indexPath) as? LocationFillterCell {
+            self.selectedCity = cell.selectedCity
+        }
+        dismiss(animated: true)
+    }
+    
+    @objc
+    func didTapDismissButton() {
+        dismiss(animated: true)
+    }
     
     // MARK: - Helpers
-    
+
     private func configureUI() {
         view.backgroundColor = .white
-        
-        for city in cities {
-            let cityButton : UIButton = {
-                let button = UIButton()
-                button.setTitle(city, for: .normal)
-                
-                // 버튼 스타일 설정
-                button.setTitleColor(.systemGray, for: .normal)
-                button.layer.cornerRadius = LayoutOptions.cornerRadious
-                button.layer.borderWidth = 1.0
-                button.layer.borderColor = UIColor.systemGray.cgColor
-                
-                button.translatesAutoresizingMaskIntoConstraints = false
-                return button
-            }()
-            
-            // FIXME: - if 조건문이 과연 최선일까...
-            
-            if leftCityStackView.subviews.count < 5 {
-                leftCityStackView.addArrangedSubview(cityButton)
-            } else {
-                rightCityStackView.addArrangedSubview(cityButton)
-            }
-        }
-        
-        totalCityStackView.addArrangedSubviews(leftCityStackView,
-                                               rightCityStackView)
         
         buttonStackView.addArrangedSubviews(dismissButton,
                                             confirmButton)
         view.addSubviews(titleLabel,
-                         totalCityStackView,
+                         cityCollectionView,
                          buttonStackView)
         
         titleLabel.snp.makeConstraints { make in
@@ -125,26 +109,61 @@ final class LocationFilterViewController: UIViewController {
             make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
         }
         
-        totalCityStackView.snp.makeConstraints { make in
+        cityCollectionView.snp.makeConstraints { make in
             make.top.equalTo(titleLabel.snp.bottom).offset(20)
             make.leading.trailing.equalTo(titleLabel)
+            make.height.equalTo(215)
         }
         
         buttonStackView.snp.makeConstraints { make in
-            make.top.equalTo(totalCityStackView.snp.bottom).offset(20)
+            make.top.equalTo(cityCollectionView.snp.bottom).offset(20)
             make.leading.trailing.equalTo(titleLabel)
         }
     }
-    
-    // MARK: - Seletors
-    
-    @objc
-    func didTapConfirmButton() {
-        
+}
+
+extension LocationFilterViewController: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        cities.count
     }
     
-    @objc
-    func didTapDismissButton() {
-        self.dismiss(animated: true)
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: LocationFillterCell.cellID, for: indexPath) as! LocationFillterCell
+        cell.setValues(title: cities[indexPath.item])
+        
+        //select된 cell 초기화
+        if selectedIndexPath == nil {
+            cell.isSelected = false
+            cell.cityLabel.layer.borderColor = UIColor.gray.cgColor
+            cell.cityLabel.textColor = .gray
+        }
+
+        return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+            return CGSize(width: (view.frame.width / 2) - 30, height: 35)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        
+        if let previousSelectedIndexPath = selectedIndexPath,
+           let previousSelectedCell = collectionView.cellForItem(at: previousSelectedIndexPath) as? LocationFillterCell {
+            previousSelectedCell.isSelected = false
+            previousSelectedCell.cityLabel.layer.borderColor = UIColor.gray.cgColor
+            previousSelectedCell.cityLabel.textColor = .gray
+        }
+        
+        guard
+            let selectedCell = collectionView.cellForItem(at: indexPath) as? LocationFillterCell
+        else { return }
+        
+        selectedCell.isSelected = true
+        selectedCell.cityLabel.layer.borderColor = UIColor.black.cgColor
+        selectedCell.cityLabel.textColor = .label
+        
+        // 선택한 셀의 indexPath를 저장
+        self.selectedCity = cities[indexPath.item]
+        selectedIndexPath = indexPath
     }
 }

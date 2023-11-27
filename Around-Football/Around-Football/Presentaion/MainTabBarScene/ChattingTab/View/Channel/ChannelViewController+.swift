@@ -8,6 +8,8 @@
 import UIKit
 
 import RxSwift
+import RxCocoa
+import RxDataSources
 import MessageKit
 
 extension ChannelViewController {
@@ -25,17 +27,16 @@ extension ChannelViewController {
     
     func bindChannels() {
         viewModel.channels
-            .bind(to: channelTableView.rx.items(cellIdentifier: ChannelTableViewCell.cellId, cellType: ChannelTableViewCell.self)) { row, item, cell in
-                cell.chatRoomLabel.text = item.withUserName
-                cell.chatPreviewLabel.text = item.previewContent
-                let alarmNumber = item.alarmNumber
-                alarmNumber == 0 ? self.hideChatAlarmNumber(cell: cell) : self.showChatAlarmNumber(cell: cell, alarmNumber: "\(alarmNumber)")
-                let date = item.recentDate
-                cell.recentDateLabel.text = self.formatDate(date)
-            }
+            .map { [ChannelSectionModel(model: "", items: $0)] }
+            .bind(to: channelTableView.rx.items(dataSource: channelTableViewDataSource))
             .disposed(by: disposeBag)
         
-        
+        channelTableView.rx.itemDeleted
+            .subscribe(with: self, onNext: { owner, indexPath in
+                // TODO: - Remove Channel from firestore
+                print("remove row: \(owner.viewModel.channels.value[indexPath.row])")
+            })
+            .disposed(by: disposeBag)
     }
     
     func bindLoginModalView(with outputObservable: Observable<Bool>) {
@@ -44,38 +45,35 @@ extension ChannelViewController {
             .subscribe(onNext: { (owner, isShowing) in
                 if isShowing {
                     print("currentUser nil")
-                    owner.viewModel.coordinator?.presentLoginViewController()
-                    // TODO: - AuthService 나오면 제거
-                    DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 5) {
-                        owner.viewModel.currentUser.accept(User(dictionary: [
-                            "age": 312321311,
-                            "area": "Efefe",
-                            "gender": "남성",
-                            "id": "nTUShiSwx2UXVZudPiWSnGE6XNf1",
-                            "mainUserFeet": "왼발",
-                            "position": ["MF"],
-                            "userName": "1312312"
-                        ]))
-                    }
-                    
+                    owner.viewModel.showLoginView()
                 }
             })
             .disposed(by: disposeBag)
-        
     }
     
-    private func hideChatAlarmNumber(cell: ChannelTableViewCell) {
+    func bindNavigateChannelView(with outputObservable: Observable<ChannelInfo>) {
+        outputObservable
+            .withUnretained(self)
+            .subscribe { (owner, channelInfo) in
+                owner.viewModel.showChatView(channelInfo: channelInfo)
+            }
+            .disposed(by: disposeBag)
+    }
+    
+    func hideChatAlarmNumber(cell: ChannelTableViewCell) {
         cell.chatAlarmNumberLabel.text = ""
         cell.chatAlarmNumberLabel.isHidden = true
     }
     
-    private func showChatAlarmNumber(cell: ChannelTableViewCell, alarmNumber: String) {
-        cell.chatAlarmNumberLabel.text = alarmNumber
+    func showChatAlarmNumber(cell: ChannelTableViewCell, alarmNumber: Int) {
+        var alarmString = ""
+        alarmNumber > 999 ? (alarmString = "999+") : (alarmString = "\(alarmNumber)")
+        cell.chatAlarmNumberLabel.text = alarmString
         cell.chatAlarmNumberLabel.isHidden = false
         cell.updateAlarmLabelUI()
     }
     
-    private func formatDate(_ date: Date) -> String {
+    func formatDate(_ date: Date) -> String {
         let calendar = Calendar.current
         let formatter = DateFormatter()
         formatter.locale = Locale(identifier: "ko_KR")

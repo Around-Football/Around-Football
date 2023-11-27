@@ -10,11 +10,14 @@ import UIKit
 import SnapKit
 
 class ImageMessageViewController: UIViewController {
-
+    
     // MARK: - Properties
     
     var image: UIImage?
-    lazy var panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(handleDismissGesture(_:)))
+    lazy var panGestureRecognizer = UIPanGestureRecognizer(
+        target: self,
+        action: #selector(handleDismissGesture(_:))
+    )
     
     lazy var imageView: UIImageView = {
         let imageView = UIImageView(frame: view.bounds)

@@ -33,12 +33,24 @@ extension InviteViewController {
 
 // MARK: - TextViewDelegate
 
+extension InviteViewController: UITextFieldDelegate {
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        titlePlaceHolderLabel.isHidden = true
+    }
+    
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        if textField.text == "" {
+            titlePlaceHolderLabel.isHidden = false
+        }
+    }
+}
+
 extension InviteViewController: UITextViewDelegate {
     func textViewDidChange(_ textView: UITextView) {
         if textView.text.isEmpty {
-            placeHolderLabel.isHidden = false
+            contentPlaceHolderLabel.isHidden = false
         } else {
-            placeHolderLabel.isHidden = true
+            contentPlaceHolderLabel.isHidden = true
         }
     }
 }

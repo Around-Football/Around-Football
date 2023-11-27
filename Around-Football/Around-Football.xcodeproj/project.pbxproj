@@ -76,7 +76,10 @@
 		6696748F2AC3E9CE0067FD48 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6696748E2AC3E9CE0067FD48 /* HomeViewController.swift */; };
 		669674912AC3E9D40067FD48 /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 669674902AC3E9D40067FD48 /* MapViewController.swift */; };
 		669674932AC3E9DF0067FD48 /* InfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 669674922AC3E9DF0067FD48 /* InfoViewController.swift */; };
+		66AE74FF2B1476A900D08B5C /* RxDataSources in Frameworks */ = {isa = PBXBuildFile; productRef = 66AE74FE2B1476A900D08B5C /* RxDataSources */; };
+		66AE75032B14907C00D08B5C /* Differentiator in Frameworks */ = {isa = PBXBuildFile; productRef = 66AE75022B14907C00D08B5C /* Differentiator */; };
 		66BD86E52AE646CB00B1B256 /* FieldDetailViewController+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66BD86E42AE646CB00B1B256 /* FieldDetailViewController+.swift */; };
+		66C374362B0B010800DB2C2A /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = 66C374352B0B010800DB2C2A /* FirebaseMessaging */; };
 		7929A30F2ADE4B45006ED4FA /* InputInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7929A30E2ADE4B45006ED4FA /* InputInfoViewController.swift */; };
 		7929A3112ADEAD35006ED4FA /* InputInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7929A3102ADEAD35006ED4FA /* InputInfoView.swift */; };
 		7929A3132ADEB319006ED4FA /* InputInfoViewController+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7929A3122ADEB319006ED4FA /* InputInfoViewController+.swift */; };
@@ -105,6 +108,7 @@
 		7C2B1B002AF4D2B40052EC64 /* MapTabCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C2B1AFF2AF4D2B40052EC64 /* MapTabCoordinator.swift */; };
 		7C2B1B022AF4D2E30052EC64 /* ChatTabCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C2B1B012AF4D2E30052EC64 /* ChatTabCoordinator.swift */; };
 		7C2B1B042AF4D30D0052EC64 /* InfoTabCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C2B1B032AF4D30D0052EC64 /* InfoTabCoordinator.swift */; };
+		7C33060F2B109E780042A815 /* DetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C33060E2B109E780042A815 /* DetailView.swift */; };
 		7C5F77582AC96A7E004CE48F /* DetailUserInfoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C5F77572AC96A7E004CE48F /* DetailUserInfoCell.swift */; };
 		7C5F775C2AC9C698004CE48F /* InviteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C5F775B2AC9C698004CE48F /* InviteViewController.swift */; };
 		7C5F775E2AC9CE8A004CE48F /* DateCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C5F775D2AC9CE8A004CE48F /* DateCell.swift */; };
@@ -112,6 +116,7 @@
 		7C5F77622AC9DB7B004CE48F /* PeopleCountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C5F77612AC9DB7B004CE48F /* PeopleCountView.swift */; };
 		7C5F77642AC9E180004CE48F /* UIView+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C5F77632AC9E180004CE48F /* UIView+.swift */; };
 		7C94EBD52B01BF0600A7E42A /* InfoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C94EBD42B01BF0600A7E42A /* InfoViewModel.swift */; };
+		7CAC06072B14740F00EBFDA0 /* LocationFillterCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CAC06062B14740F00EBFDA0 /* LocationFillterCell.swift */; };
 		7CB21BA32AC94D36001D0058 /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CB21BA22AC94D36001D0058 /* DetailViewController.swift */; };
 		7CB21BA52AC94EE4001D0058 /* DetailUserInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CB21BA42AC94EE4001D0058 /* DetailUserInfoView.swift */; };
 		7CBFED6C2AE6477700915D65 /* CalenderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CBFED6B2AE6477700915D65 /* CalenderViewController.swift */; };
@@ -211,6 +216,7 @@
 		7C2B1AFF2AF4D2B40052EC64 /* MapTabCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapTabCoordinator.swift; sourceTree = "<group>"; };
 		7C2B1B012AF4D2E30052EC64 /* ChatTabCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatTabCoordinator.swift; sourceTree = "<group>"; };
 		7C2B1B032AF4D30D0052EC64 /* InfoTabCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoTabCoordinator.swift; sourceTree = "<group>"; };
+		7C33060E2B109E780042A815 /* DetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailView.swift; sourceTree = "<group>"; };
 		7C5F77572AC96A7E004CE48F /* DetailUserInfoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailUserInfoCell.swift; sourceTree = "<group>"; };
 		7C5F775B2AC9C698004CE48F /* InviteViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InviteViewController.swift; sourceTree = "<group>"; };
 		7C5F775D2AC9CE8A004CE48F /* DateCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateCell.swift; sourceTree = "<group>"; };
@@ -219,6 +225,7 @@
 		7C5F77632AC9E180004CE48F /* UIView+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+.swift"; sourceTree = "<group>"; };
 		7C78830C2ADE54970028D555 /* Around-Football.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Around-Football.entitlements"; sourceTree = "<group>"; };
 		7C94EBD42B01BF0600A7E42A /* InfoViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoViewModel.swift; sourceTree = "<group>"; };
+		7CAC06062B14740F00EBFDA0 /* LocationFillterCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationFillterCell.swift; sourceTree = "<group>"; };
 		7CB21BA22AC94D36001D0058 /* DetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
 		7CB21BA42AC94EE4001D0058 /* DetailUserInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailUserInfoView.swift; sourceTree = "<group>"; };
 		7CBFED6B2AE6477700915D65 /* CalenderViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalenderViewController.swift; sourceTree = "<group>"; };
@@ -243,6 +250,7 @@
 			files = (
 				7C141C6D2ADA6008002CF180 /* KakaoSDKFriendCore in Frameworks */,
 				273674622AC306D6003ADE3F /* SnapKit in Frameworks */,
+				66AE75032B14907C00D08B5C /* Differentiator in Frameworks */,
 				7C141C652ADA6008002CF180 /* KakaoSDK in Frameworks */,
 				6650C7372AC9ED6F00055571 /* KakaoMapsSDK_SPM in Frameworks */,
 				7C141C6B2ADA6008002CF180 /* KakaoSDKFriend in Frameworks */,
@@ -253,11 +261,13 @@
 				7C141C672ADA6008002CF180 /* KakaoSDKAuth in Frameworks */,
 				668EE4A12AFCAC2C007A8844 /* MessageKit in Frameworks */,
 				668EE4BD2B04E3A6007A8844 /* FirebaseStorage in Frameworks */,
+				66C374362B0B010800DB2C2A /* FirebaseMessaging in Frameworks */,
 				272B448B2ADD375700ACEC41 /* GoogleSignIn in Frameworks */,
 				2736746A2AC3071A003ADE3F /* RxCocoa in Frameworks */,
 				273674742AC307D6003ADE3F /* FirebaseFirestore in Frameworks */,
 				273674722AC307D6003ADE3F /* FirebaseAuth in Frameworks */,
 				273674762AC307D6003ADE3F /* FirebaseFirestoreSwift in Frameworks */,
+				66AE74FF2B1476A900D08B5C /* RxDataSources in Frameworks */,
 				668EE4CA2B0504CB007A8844 /* Kingfisher in Frameworks */,
 				272B448D2ADD375700ACEC41 /* GoogleSignInSwift in Frameworks */,
 			);
@@ -363,8 +373,9 @@
 		278DAD5C2AE295B90085718C /* FilterView */ = {
 			isa = PBXGroup;
 			children = (
-				278DAD5A2AE27A660085718C /* LocationFilterViewController.swift */,
 				278DAD5D2AE295C70085718C /* DateFilterViewController.swift */,
+				278DAD5A2AE27A660085718C /* LocationFilterViewController.swift */,
+				7CAC06062B14740F00EBFDA0 /* LocationFillterCell.swift */,
 			);
 			path = FilterView;
 			sourceTree = "<group>";
@@ -679,6 +690,7 @@
 			isa = PBXGroup;
 			children = (
 				7CB21BA22AC94D36001D0058 /* DetailViewController.swift */,
+				7C33060E2B109E780042A815 /* DetailView.swift */,
 				7CE563AB2AD1425F005DE2DF /* DetailViewController+.swift */,
 				7CB21BA42AC94EE4001D0058 /* DetailUserInfoView.swift */,
 				7C5F77572AC96A7E004CE48F /* DetailUserInfoCell.swift */,
@@ -836,6 +848,9 @@
 				668EE4A02AFCAC2C007A8844 /* MessageKit */,
 				668EE4BC2B04E3A6007A8844 /* FirebaseStorage */,
 				668EE4C92B0504CB007A8844 /* Kingfisher */,
+				66C374352B0B010800DB2C2A /* FirebaseMessaging */,
+				66AE74FE2B1476A900D08B5C /* RxDataSources */,
+				66AE75022B14907C00D08B5C /* Differentiator */,
 			);
 			productName = "Around-Football";
 			productReference = 273674492AC3061C003ADE3F /* Around-Football.app */;
@@ -876,6 +891,7 @@
 				272B44892ADD375700ACEC41 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
 				668EE49F2AFCAC2C007A8844 /* XCRemoteSwiftPackageReference "MessageKit" */,
 				668EE4C82B0504CB007A8844 /* XCRemoteSwiftPackageReference "Kingfisher" */,
+				66AE74FD2B1476A900D08B5C /* XCRemoteSwiftPackageReference "RxDataSources" */,
 			);
 			productRefGroup = 2736744A2AC3061C003ADE3F /* Products */;
 			projectDirPath = "";
@@ -965,6 +981,7 @@
 				66656F9F2AD921D700AE1AFA /* FieldDetailViewModel.swift in Sources */,
 				7C2B1AF72AF4BE160052EC64 /* ApplicationStatusViewModel.swift in Sources */,
 				668EE4A72AFCB120007A8844 /* MessageModel.swift in Sources */,
+				7CAC06072B14740F00EBFDA0 /* LocationFillterCell.swift in Sources */,
 				668EE4AC2AFCB919007A8844 /* StreamErrorModel.swift in Sources */,
 				7C2B1ACB2AF4B1530052EC64 /* MainTabBarCoordinator.swift in Sources */,
 				278E556A2AD930F900C328D3 /* Response.swift in Sources */,
@@ -992,6 +1009,7 @@
 				7929A3132ADEB319006ED4FA /* InputInfoViewController+.swift in Sources */,
 				274C21C72ACFF902005469E6 /* TextFieldDelegateHandler.swift in Sources */,
 				7CE0143E2AF8C5B700ED77D2 /* EditViewController.swift in Sources */,
+				7C33060F2B109E780042A815 /* DetailView.swift in Sources */,
 				668EE4BF2B0500D5007A8844 /* ChatViewController+.swift in Sources */,
 				2736744F2AC3061C003ADE3F /* SceneDelegate.swift in Sources */,
 				2729185B2B022E84009C9042 /* SearchViewController.swift in Sources */,
@@ -1295,6 +1313,14 @@
 				minimumVersion = 7.10.0;
 			};
 		};
+		66AE74FD2B1476A900D08B5C /* XCRemoteSwiftPackageReference "RxDataSources" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/RxSwiftCommunity/RxDataSources.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.0.2;
+			};
+		};
 		7C141C632ADA6008002CF180 /* XCRemoteSwiftPackageReference "kakao-ios-sdk" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/kakao/kakao-ios-sdk";
@@ -1375,6 +1401,21 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 668EE4C82B0504CB007A8844 /* XCRemoteSwiftPackageReference "Kingfisher" */;
 			productName = Kingfisher;
+		};
+		66AE74FE2B1476A900D08B5C /* RxDataSources */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 66AE74FD2B1476A900D08B5C /* XCRemoteSwiftPackageReference "RxDataSources" */;
+			productName = RxDataSources;
+		};
+		66AE75022B14907C00D08B5C /* Differentiator */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 66AE74FD2B1476A900D08B5C /* XCRemoteSwiftPackageReference "RxDataSources" */;
+			productName = Differentiator;
+		};
+		66C374352B0B010800DB2C2A /* FirebaseMessaging */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 273674702AC307D6003ADE3F /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseMessaging;
 		};
 		7C141C642ADA6008002CF180 /* KakaoSDK */ = {
 			isa = XCSwiftPackageProductDependency;

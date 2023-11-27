@@ -11,12 +11,27 @@ import Alamofire
 import RxAlamofire
 import RxSwift
 
+// TODO: - APIService 타입명 변경
 final class KakaoService {
     static let shared = KakaoService()
     
     private init() { }
     
-    func fetchKakaoSearch(_ keyword: String) -> Observable<[Place]> {
+    // MARK: - Helpers
+    
+    func searchField(_ keyword: String, 
+                     _ observable: BehaviorSubject<[Place]>,
+                     _ disposeBag: DisposeBag) {
+        fetchKakaoSearch(keyword)
+            .subscribe(onNext: { places in
+                observable.onNext(places)
+            }, onError: { error in
+                print("Error! : \(error.localizedDescription)")
+            })
+            .disposed(by: disposeBag)
+    }
+    
+    private func fetchKakaoSearch(_ keyword: String) -> Observable<[Place]> {
         
         guard 
             let apiUrl = URL(string: "https://dapi.kakao.com/v2/local/search/keyword.json?query=\(keyword.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "")")
