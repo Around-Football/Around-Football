@@ -18,8 +18,11 @@ final class HomeViewController: UIViewController {
     // MARK: - Properties
 
     var viewModel: HomeViewModel
+    let dateFilterView = DateFilterViewController()
+    let locationFilterView = LocationFilterViewController()
     private var invokedViewWillAppear = PublishSubject<Void>()
     private var filteringTypeRecruitList = PublishSubject<String?>()
+    private var filterringRegionRecruitList = PublishSubject<String?>()
     private var disposeBag = DisposeBag()
     
     init(viewModel: HomeViewModel) {
@@ -98,11 +101,14 @@ final class HomeViewController: UIViewController {
         super.viewDidLoad()
         configureUI()
         bindUI()
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
         navigationController?.navigationBar.isHidden = true
-        invokedViewWillAppear.onNext(())
+//        invokedViewWillAppear.onNext(())
+        filterringRegionRecruitList.onNext(locationFilterView.selectedCity)
+        print(locationFilterView.selectedCity)
     }
     
     override func viewDidLayoutSubviews() {
@@ -121,12 +127,14 @@ final class HomeViewController: UIViewController {
     // MARK: - Helpers
     
     func bindUI() {
-        let input = HomeViewModel.Input(invokedViewWillAppear: invokedViewWillAppear.asObservable(), filteringType: filteringTypeRecruitList.asObservable())
+        let input = HomeViewModel.Input(invokedViewWillAppear: invokedViewWillAppear.asObservable(),
+                                        filteringType: filteringTypeRecruitList.asObservable(),
+                                        filteringRegion: filterringRegionRecruitList.asObserver())
         
         let output = viewModel.transform(input)
         
         //merge: 둘 중 하나만 있어도 내려보냄
-        Observable.merge(output.recruitList, output.filteredTypeRecruitList)
+        Observable.merge(output.recruitList, output.filteredTypeRecruitList, output.filteredRegionRecruitList)
         .bind(to: homeTableView.rx.items(cellIdentifier: HomeTableViewCell.id,
                                          cellType: HomeTableViewCell.self)) { index, item, cell in
             cell.bindContents(item: item)
@@ -240,12 +248,12 @@ final class HomeViewController: UIViewController {
         
         switch sender.title(for: .normal) {
         case "모든 날짜":
-            let filterView = DateFilterViewController()
-            present(filterView, animated: true)
+            present(dateFilterView, animated: true)
             
         case "모든 지역":
-            let filterView = LocationFilterViewController()
-            present(filterView, animated: true)
+            locationFilterView.modalPresentationStyle = .fullScreen
+            locationFilterView.modalTransitionStyle = .coverVertical
+            present(locationFilterView, animated: true)
             
         case "매치 유형":
             self.present(matchTypeActionSheet(), animated: true, completion: nil)

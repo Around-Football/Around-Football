@@ -135,23 +135,30 @@ final class InviteViewController: UIViewController {
             })
             .disposed(by: disposeBag)
         
+        addButton.setTitle("항목을 모두 입력해주세요", for: .normal)
+        addButton.setTitleColor(.gray, for: .normal)
         
         addButton.buttonActionHandler = { [weak self] in
             guard let self else { return }
-            inviteViewModel.createRecruitFieldData(user: UserService.shared.user ?? User(dictionary: [:]),
-                                                   fieldID: fieldID,
-                                                   fieldName: fieldName,
-                                                   fieldAddress: fieldAddress,
-                                                   type: type,
-                                                   recruitedPeopleCount: recruitedPeopleCount,
-                                                   title: contentTitle,
-                                                   content: content,
-                                                   matchDateString: matchDateString,
-                                                   startTime: startTime,
-                                                   endTime: endTime)
-            
-            
-            inviteViewModel.coordinator.popInviteViewController()
+            if let type = type,
+               let contentTitle = contentTitle,
+               let content = content,
+               let matchDateString = matchDateString {
+                inviteViewModel.createRecruitFieldData(user: UserService.shared.user ?? User(dictionary: [:]),
+                                                       fieldID: fieldID,
+                                                       fieldName: fieldName,
+                                                       fieldAddress: fieldAddress,
+                                                       type: type,
+                                                       recruitedPeopleCount: recruitedPeopleCount,
+                                                       title: contentTitle,
+                                                       content: content,
+                                                       matchDateString: matchDateString,
+                                                       startTime: startTime,
+                                                       endTime: endTime)
+                
+                addButton.setTitle("등록하기", for: .normal)
+                inviteViewModel.coordinator.popInviteViewController()
+            }
         }
         
         // MARK: - 창현이가 만든 서치 버튼
