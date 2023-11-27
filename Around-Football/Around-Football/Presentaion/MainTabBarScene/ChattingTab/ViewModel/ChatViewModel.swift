@@ -116,11 +116,30 @@ class ChatViewModel {
     }
     
     private func insertNewMessage(_ message: Message) {
-        var newMessages = messages.value
-        newMessages.append(message)
-        newMessages.sort()
-        messages.accept(newMessages)
+//        var newMessages = messages.value
+//        newMessages.append(message)
+        updateShowTimeLabel(updateMessage: message)
+//        newMessages.sort()
+//        messages.accept(newMessages)
     }
+    
+    func updateShowTimeLabel(updateMessage: Message) {
+        var messages: [Message] = self.messages.value
+        messages.append(updateMessage)
+        for i in 0..<messages.count {
+            let previousMessage: Message? = i > 0 ? messages[i - 1] : nil
+            if let previousMessage = previousMessage,
+                Calendar.current.isDate(messages[i].sentDate, equalTo: previousMessage.sentDate, toGranularity: .minute)
+                && messages[i].sender.senderId == previousMessage.sender.senderId {
+                messages[i - 1].showTimeLabel = false
+            } else {
+                messages[i].showTimeLabel = true
+            }
+        }
+        messages.sort()
+        self.messages.accept(messages)
+    }
+
     
     private func sendMessage(by inputObserver: Observable<String>) {
         inputObserver

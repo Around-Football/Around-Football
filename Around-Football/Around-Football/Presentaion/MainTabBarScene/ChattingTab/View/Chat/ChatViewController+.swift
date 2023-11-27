@@ -68,6 +68,22 @@ extension ChatViewController {
             })
             .asObservable()
     }
+    
+//    func updateShowTimeLabel() {
+//        var messages: [Message] = viewModel.messages.value
+//        for i in 0..<messages.count {
+//            var message = messages[i]
+//            let previousMessage: Message? = i > 0 ? messages[i - 1] : nil
+//            if let previousMessage = previousMessage,
+//                Calendar.current.isDate(message.sentDate, equalTo: previousMessage.sentDate, toGranularity: .minute)
+//                && message.sender.senderId == previousMessage.sender.senderId {
+//                message.showTimeLabel = false
+//            } else {
+//                message.showTimeLabel = true
+//            }
+//        }
+//        viewModel.messages.accept(messages)
+//    }
 }
 
 extension ChatViewController: MessagesDataSource {
@@ -143,7 +159,10 @@ extension ChatViewController: MessagesDisplayDelegate {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "HH:mm"
         let dateString = dateFormatter.string(from: message.sentDate)
-        return NSAttributedString(string: dateString, attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 10)])
+        
+        let isShowingTimeLabel = viewModel.messages.value[indexPath.row].showTimeLabel
+        return isShowingTimeLabel ? NSAttributedString(string: dateString, attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 10)]) : nil
+//        return isConfigureTimeLabel(at: indexPath) ? NSAttributedString(string: dateString, attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 10)]) : nil
     }
     
     // 말풍선 측면 발송 시각 레이블 Height
@@ -152,6 +171,20 @@ extension ChatViewController: MessagesDisplayDelegate {
                                   in messagesCollectionView: MessagesCollectionView) -> CGFloat {
         return 16
     }
+    
+//    func isConfigureTimeLabel(at indexPath: IndexPath) -> Bool {
+//        let message = viewModel.messages.value[indexPath.section]
+//        let previousMessage: Message? = indexPath.section > 0 ? viewModel.messages.value[indexPath.section - 1] : nil
+//
+//        if let previousMessage = previousMessage,
+//            Calendar.current.isDate(message.sentDate, equalTo: previousMessage.sentDate, toGranularity: .minute),
+//           message.sender.senderId == previousMessage.sender.senderId {
+//            return false
+//        } else {
+//            return true
+//        }
+//    }
+
 }
 
 extension ChatViewController: PHPickerViewControllerDelegate {
