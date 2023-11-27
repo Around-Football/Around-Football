@@ -30,6 +30,7 @@ final class ChannelTableViewCell: UITableViewCell {
         $0.font = .systemFont(ofSize: 14)
         $0.numberOfLines = 1
         $0.text = "00월 00일"
+        $0.setContentCompressionResistancePriority(.required, for: .horizontal)
     }
     
     let chatPreviewLabel = UILabel().then {
@@ -49,18 +50,18 @@ final class ChannelTableViewCell: UITableViewCell {
         $0.layer.masksToBounds = true
     }
     
-    let contentStackView = UIStackView().then {
-        $0.axis = .vertical
-        $0.alignment = .leading
-        $0.spacing = 5
-        $0.distribution = .fill
+    let upperStackView = UIStackView().then {
+        $0.axis = .horizontal
+        $0.alignment = .center
+        $0.distribution = .equalSpacing
     }
     
-    let infoStackView = UIStackView().then {
-        $0.axis = .vertical
-        $0.alignment = .trailing
-        $0.spacing = 8
+    let underStackView = UIStackView().then {
+        $0.axis = .horizontal
+        $0.alignment = .top
+        $0.spacing = 5
         $0.distribution = .fill
+//        $0.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
     }
     
     // MARK: - Lifecycles
@@ -79,34 +80,39 @@ final class ChannelTableViewCell: UITableViewCell {
     
     private func configureUI() {
         addSubviews(
-            contentStackView,
-            infoStackView
+            upperStackView,
+            underStackView
         )
         
         updateAlarmLabelUI()
         
-        contentStackView.addArrangedSubviews(
+        upperStackView.addArrangedSubviews(
             chatRoomLabel,
-            chatPreviewLabel
+            recentDateLabel
         )
         
-        infoStackView.addArrangedSubviews(
-            recentDateLabel,
+        recentDateLabel.snp.makeConstraints {
+            $0.trailing.equalToSuperview()
+        }
+        
+        underStackView.addArrangedSubviews(
+            chatPreviewLabel,
             chatAlarmNumberLabel
         )
         
-        contentStackView.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
-        contentStackView.snp.makeConstraints {
+        upperStackView.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+        upperStackView.snp.makeConstraints {
             $0.top.leading.equalToSuperview().offset(20)
-            $0.trailing.equalTo(infoStackView).offset(5)
-        }
-        
-        infoStackView.snp.makeConstraints {
-            $0.top.equalToSuperview().offset(20)
             $0.trailing.equalToSuperview().offset(-20)
         }
         
-        
+        underStackView.snp.makeConstraints {
+            $0.top.equalTo(upperStackView.snp.bottom).offset(8)
+            $0.leading.equalToSuperview().offset(20)
+            $0.trailing.equalToSuperview().offset(-20)
+//            $0.top.equalToSuperview().offset(20)
+//            $0.trailing.equalToSuperview().offset(-20)
+        }
     }
     
     func updateAlarmLabelUI() {

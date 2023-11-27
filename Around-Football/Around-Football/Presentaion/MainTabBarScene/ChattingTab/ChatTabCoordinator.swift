@@ -37,8 +37,12 @@ final class ChatTabCoordinator: BaseCoordinator {
         delegate?.presentLoginViewController()
     }
     
-    func pushChatView() {
-        let controller = ChatViewController(viewModel: ChatViewModel(coordinator: self))
+    func presentPHPickerView(picker: UIViewController) {
+        navigationController?.present(picker, animated: true)
+    }
+    
+    func pushChatView(channelInfo: ChannelInfo) {
+        let controller = ChatViewController(viewModel: ChatViewModel(coordinator: self, channelInfo: channelInfo))
         navigationController?.pushViewController(controller, animated: true)
     }
     

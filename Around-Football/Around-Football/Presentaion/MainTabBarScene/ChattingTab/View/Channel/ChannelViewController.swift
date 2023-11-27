@@ -11,10 +11,12 @@ import FirebaseAuth
 import SnapKit
 import Then
 import RxSwift
+import RxDataSources
 
 final class ChannelViewController: UIViewController {
-    
+        
     // MARK: - Properties
+    typealias ChannelSectionModel = SectionModel<String, ChannelInfo>
     
     let viewModel: ChannelViewModel
     let disposeBag = DisposeBag()
@@ -25,6 +27,8 @@ final class ChannelViewController: UIViewController {
         $0.register(ChannelTableViewCell.self, forCellReuseIdentifier: ChannelTableViewCell.cellId)
         $0.delegate = self
     }
+    
+    var channelTableViewDataSource: RxTableViewSectionedReloadDataSource<ChannelSectionModel>!
     
     let loginLabel = UILabel().then {
         $0.text = """
@@ -38,15 +42,14 @@ final class ChannelViewController: UIViewController {
     // MARK: - Lifecycles
     
     init(viewModel: ChannelViewModel) {
-        print("init")
         self.viewModel = viewModel
         
         super.init(nibName: nil, bundle: nil)
         navigationController?.navigationBar.backgroundColor = .systemBackground
         title = "채팅"
-
         
-        print("\(Auth.auth().currentUser?.uid)")
+        
+        print("\(String(describing: Auth.auth().currentUser?.uid))")
         
     }
     
@@ -61,10 +64,10 @@ final class ChannelViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        configure()
         configureUI()
         bind()
-
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -74,6 +77,25 @@ final class ChannelViewController: UIViewController {
     
     
     // MARK: - Helpers
+    
+    func configure() {
+        channelTableViewDataSource = RxTableViewSectionedReloadDataSource(configureCell: { data, tableView, indexPath, item in
+            let cell = tableView.dequeueReusableCell(withIdentifier: ChannelTableViewCell.cellId, for: indexPath) as! ChannelTableViewCell
+            print("refresh collectionView: \(item.id)")
+            cell.chatRoomLabel.text = item.withUserName
+            cell.chatPreviewLabel.text = item.previewContent
+            let alarmNumber = item.alarmNumber
+            alarmNumber == 0 ? self.hideChatAlarmNumber(cell: cell) : self.showChatAlarmNumber(cell: cell, alarmNumber: alarmNumber)
+            let date = item.recentDate
+            cell.recentDateLabel.text = self.formatDate(date)
+            return cell
+
+        })
+        
+        channelTableViewDataSource?.canMoveRowAtIndexPath = { _, _ in return false }
+        
+        channelTableViewDataSource?.canEditRowAtIndexPath = { dataSource, index in return true }
+    }
     
     func configureUI() {
         view.backgroundColor = .systemBackground
@@ -92,12 +114,16 @@ final class ChannelViewController: UIViewController {
     }
     
     func bind() {
-        let input = ChannelViewModel.Input(invokedViewWillAppear: invokedViewWillAppear)
+        let input = ChannelViewModel.Input(
+            invokedViewWillAppear: invokedViewWillAppear,
+            selectedChannel: channelTableView.rx.itemSelected.asObservable()
+        )
         
         let output = viewModel.transform(input)
         
         bindContentView()
         bindChannels()
         bindLoginModalView(with: output.isShowing)
+        bindNavigateChannelView(with: output.navigateTo)
     }
 }

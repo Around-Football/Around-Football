@@ -9,12 +9,15 @@ import Foundation
 import CryptoKit
 
 import FirebaseAuth
+import FirebaseMessaging
 import KakaoSDKAuth
 import KakaoSDKCommon
 import KakaoSDKUser
 import FirebaseCore
 import GoogleSignIn
 import AuthenticationServices
+import RxSwift
+import RxRelay
 
 final class UserService: NSObject {
     
@@ -27,19 +30,76 @@ final class UserService: NSObject {
     private var email: String?
     var currentNonce: String?
     
+    // MARK: - Rx Properties
+    var currentUser_Rx: BehaviorRelay<User?> = BehaviorRelay(value: nil)
+    private let disposeBag = DisposeBag()
+    var isLoginObservable: PublishSubject<Void> = PublishSubject()
+    var isLogoutObservable: PublishSubject<Void> = PublishSubject()
+    
+    
     // MARK: - Lifecycles
     
     private override init() {
         super.init()
         readUser()
+        configureCurrentUser()
+        configureLogOutObserver()
     }
     
     func readUser() {
         FirebaseAPI.shared.readUser { [weak self] user in
             guard let self else { return }
             self.user = user
+            print("DEBUG - LOGIN: \(String(describing: user))")
         }
     }
+    
+    private func configureCurrentUser() {
+        
+        isLoginObservable
+            .withUnretained(self)
+            .flatMap { (owner, _) -> Observable<User?> in
+                guard let uid = Auth.auth().currentUser?.uid else { return .empty() }
+                print("setfcmToken")
+                return FirebaseAPI.shared.updateFCMTokenAndFetchUser(uid: uid, fcmToken: "fcmToken")
+                    .asObservable()
+                    .catchAndReturn(nil)
+            }
+            .subscribe { user in
+                self.currentUser_Rx.accept(user)
+                NotificationCenter.default.post(name: NSNotification.Name("LoginNotification"),
+                                                object: nil,
+                                                userInfo: nil)
+            }
+            .disposed(by: disposeBag)
+    }
+    
+    private func configureLogOutObserver() {
+        isLogoutObservable
+            .withUnretained(self)
+            .subscribe { (owner, _) in
+                guard let user = owner.user else { return }
+                FirebaseAPI.shared.updateFCMToken(uid: user.id, fcmToken: "") { error in
+                    print("DEBUG - Logout FCM update error", error?.localizedDescription as Any)
+                }
+                
+                Messaging.messaging().deleteToken { error in
+                    if let error = error {
+                        print("DEBUG - deleteToken Error: \(error.localizedDescription)")
+                    } else {
+                        Messaging.messaging().token { token, _ in
+                            if let token = token {
+                                print("FCM 토큰", #function, token)
+                                UserDefaults.standard.set(token, forKey: "FCMToken")
+                            }
+                        }
+                    }
+                }
+
+            }
+            .disposed(by: disposeBag)
+    }
+
     
     // MARK: - Helpers - Google
     
@@ -78,10 +138,12 @@ final class UserService: NSObject {
                 
                 let uid = result?.user.uid
                 
-                if Auth.auth().currentUser?.uid == nil {
+                if Auth.auth().currentUser?.uid != nil {
                     REF_USER.document(uid ?? UUID().uuidString)
                         .setData(["id" : uid ?? UUID().uuidString])
                 }
+                
+                self.isLoginObservable.onNext(())
                 
                 // TODO: - Coordinator Refactoring
                 NotificationCenter.default.post(name: NSNotification.Name("LoginNotification"),
@@ -152,9 +214,14 @@ final class UserService: NSObject {
             self.email = user?.kakaoAccount?.email
             print("userProfile: \(String(describing: self.userProfile)), email: \(String(describing: self.email))")
             self.createGoogleUser(email: self.email!, password: "\(self.email!)")
+            Auth.auth().signIn(withEmail: self.email!, password: self.email!) { _, error in
+                guard let error = error else { return }
+                self.isLoginObservable.onNext(())
+            }
             
+
             // TODO: - Coordinator Refactoring
-            NotificationCenter.default.post(name: NSNotification.Name("TestNotification"),
+            NotificationCenter.default.post(name: NSNotification.Name("LoginNotification"),
                                             object: nil,
                                             userInfo: nil)
         }
@@ -231,7 +298,9 @@ final class UserService: NSObject {
         let firebaseAuth = Auth.auth()
         do {
             try firebaseAuth.signOut()
+            isLogoutObservable.onNext(())
             self.user = nil
+            self.currentUser_Rx.accept(nil)
             print("userLogout")
         } catch let signOutError as NSError {
             print("Error signing out: %@", signOutError)
@@ -282,11 +351,14 @@ extension UserService {
             }
             
             print("로그인 성공")
+            self.isLoginObservable.onNext(())
+
         }
     }
     
     func googleLogOut() {
         try? Auth.auth().signOut()
+        isLogoutObservable.onNext(())
         print("로그아웃 성공")
     }
 }
@@ -322,6 +394,8 @@ extension UserService: ASAuthorizationControllerDelegate {
                 REF_USER.document(uid ?? UUID().uuidString)
                     .setData(["id" : uid ?? UUID().uuidString])
                 
+                self.isLoginObservable.onNext(())
+
                 // TODO: - Coordinator Refactoring
                 NotificationCenter.default.post(name: NSNotification.Name("TestNotification"),
                                                 object: nil,
