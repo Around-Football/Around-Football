@@ -103,7 +103,7 @@ final class LoginViewController: UIViewController {
             guard let self else { return }
             // TODO: - 추가정보 입력 여부에따라 추가정보입력뷰 또는 메인뷰로 이동
             print("DEBUG: 로그인 완료")
-            if UserService.shared.user?.userName == "" {
+            if UserService.shared.user?.userName == nil {
                 print("유저 네임 없음. 상세정보입력으로")
                 viewModel?.coordinator?.pushInputInfoViewController()
             } else {

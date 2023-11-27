@@ -18,33 +18,35 @@ final class ChannelViewModel {
     
     var channels: BehaviorRelay<[ChannelInfo]> = BehaviorRelay(value: [])
     let channelAPI: ChannelAPI = ChannelAPI.shared
-    var currentUser: BehaviorRelay<User?> = BehaviorRelay(value: nil)
+    var currentUser = UserService.shared.currentUser_Rx
     
     weak var coordinator: ChatTabCoordinator?
     private let disposeBag = DisposeBag()
     
     struct Input {
         let invokedViewWillAppear: Observable<Void>
+        let selectedChannel: Observable<IndexPath>
     }
     
     struct Output {
-//        let currentUser: Observable<User?>
         let isShowing: Observable<Bool>
+        let navigateTo: Observable<ChannelInfo>
     }
     
     // MARK: - Lifecycles
     
-        init(coordinator: ChatTabCoordinator) {
-            self.coordinator = coordinator
-        }
+    init(coordinator: ChatTabCoordinator) {
+        self.coordinator = coordinator
+    }
     
     // MARK: - API
     
-    func setupListener(currentUser: Observable<User?>) {
+    private func setupListener(currentUser: Observable<User?>) {
         currentUser
             .withUnretained(self)
+            .filter({ (owner, user) in user != nil })
             .subscribe(onNext: { (owner, user) in
-                print(#function, "user:", user)
+                print(#function, "user:", user as Any)
                 if let _ = user {
                     owner.channelAPI.subscribe()
                         .asObservable()
@@ -52,15 +54,14 @@ final class ChannelViewModel {
                             print("channels")
                             print(result)
                             owner.updateCell(to: result)
-
                         }, onError: { error in
                             print("DEBUG - setupListener Error: \(error.localizedDescription)")
-
+                            
                         })
                         .disposed(by: owner.disposeBag)
                 } else {
                     print("nochannels")
-                    owner.channels.accept([])
+                    
                 }
             })
             .disposed(by: disposeBag)
@@ -82,6 +83,8 @@ final class ChannelViewModel {
                 print("Modified")
                 guard let index = currentChannels.firstIndex(of: channel) else { return }
                 currentChannels[index] = channel
+                print(currentChannels[index].previewContent)
+                
             case .removed:
                 print("removed")
                 guard let index = currentChannels.firstIndex(of: channel) else { return }
@@ -90,33 +93,13 @@ final class ChannelViewModel {
         }
         channels.accept(currentChannels)
     }
-        
+    
     func transform(_ input: Input) -> Output {
-//        let currentUser = configureCurrentUser()
         setupListener(currentUser: self.currentUser.asObservable())
         let isShowing = configureShowingLoginView(by: input.invokedViewWillAppear)
+        let navigateTo = emitSelectedChannelInfo(by: input.selectedChannel)
         
-        return Output(isShowing: isShowing)
-    }
-    
-    // TODO: - AuthService 나오면 제거
-    private func configureCurrentUser() {
-        guard let uid = Auth.auth().currentUser?.uid else { return }
-        
-        
-        currentUser
-            .withUnretained(self)
-            .filter { (_, user) in user != nil }
-            .flatMap { (owner, _) -> Observable<User?> in
-                print("inputobserver")
-                return FirebaseAPI.shared.updateFCMTokenAndFetchUser(uid: uid, fcmToken: "fcmToken")
-                    .asObservable()
-                    .catchAndReturn(nil)
-            }
-            .do { [weak self] user in
-                self?.currentUser.accept(user)
-            }
-//            .share()
+        return Output(isShowing: isShowing, navigateTo: navigateTo)
     }
     
     private func configureShowingLoginView(by inputObserver: Observable<Void>) -> Observable<Bool> {
@@ -127,12 +110,19 @@ final class ChannelViewModel {
                 if owner.currentUser.value != nil { return .just(false) }
                 return .just(true)
             })
-            
+    }
+    
+    private func emitSelectedChannelInfo(by inputObserver: Observable<IndexPath>)
+    -> Observable<ChannelInfo> {
+        inputObserver
+            .withLatestFrom(channels) { (indexPath, channels) -> ChannelInfo in
+                return channels[indexPath.row]
+            }
     }
     
     
-    func showChatView() {
-        coordinator?.pushChatView()
+    func showChatView(channelInfo: ChannelInfo) {
+        coordinator?.pushChatView(channelInfo: channelInfo)
     }
     
     func showLoginView() {

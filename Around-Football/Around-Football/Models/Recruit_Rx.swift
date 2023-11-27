@@ -8,6 +8,8 @@
 //import Foundation
 //
 //// MARK: - RX Test
+///
+//TODO: - 파일 삭제
 //
 //struct Recruit_Rx: Codable {
 //    let id: Int

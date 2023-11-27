@@ -36,10 +36,10 @@ final class HomeTabCoordinator: BaseCoordinator {
         delegate?.presentLoginViewController()
     }
     
-    func pushToDetailView() {
+    func pushToDetailView(recruitItem: Recruit) {
         let coordinator = DetailCoordinator(navigationController: navigationController)
         navigationController?.navigationBar.isHidden = false
-        coordinator.start()
+        coordinator.start(recruitItem: recruitItem)
     }
 
     func pushMapView() {

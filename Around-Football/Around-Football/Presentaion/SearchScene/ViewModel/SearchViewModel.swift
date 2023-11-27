@@ -25,17 +25,4 @@ final class SearchViewModel {
     init(coordinator: SearchCoordinator?) {
         self.coordinator = coordinator
     }
-    
-    // MARK: - Helpers
-    
-    func searchField(_ keyword: String) {
-        KakaoService.shared.fetchKakaoSearch(keyword)
-            .subscribe(onNext: { [weak self] places in
-                self?.searchResults.onNext(places)
-            }, onError: { error in
-                print("Error! : \(error.localizedDescription)")
-            })
-            .disposed(by: disposeBag)
-    }
-    
 }
