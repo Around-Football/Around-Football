@@ -15,7 +15,7 @@ class PeopleCountView: UIView {
     // MARK: - Properties
     
     //선택된 사람 수
-    var count = 0 {
+    var count = 1 {
         didSet {
             peopleCountLabel.text = "\(count) 명"
         }
@@ -59,7 +59,7 @@ class PeopleCountView: UIView {
     
     @objc
     private func minusCount() {
-        count = count > 0 ? count - 1 : count
+        count = count > 1 ? count - 1 : count
     }
     
     @objc
