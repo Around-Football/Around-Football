@@ -12,10 +12,12 @@ import RxCocoa
 import SnapKit
 import Then
 
+//TODO: - 게임비 항목 추가, Recruit 모델 수정
+
 final class InviteViewController: UIViewController {
     
     // MARK: - Properties
-
+    
     var inviteViewModel: InviteViewModel
     var searchViewModel: SearchViewModel
     let disposeBag = DisposeBag()
@@ -108,7 +110,7 @@ final class InviteViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         configureUI()
         keyboardController()
         setAddButton()
@@ -120,8 +122,14 @@ final class InviteViewController: UIViewController {
     
     // MARK: - Selectors
     
-    @objc func segmentedControlValueChanged(_ sender: UISegmentedControl) {
+    @objc
+    func segmentedControlValueChanged(_ sender: UISegmentedControl) {
         type = sender.titleForSegment(at: sender.selectedSegmentIndex)
+    }
+
+    @objc
+    func searchFieldButtonTapped() {
+        inviteViewModel.coordinator.presentSearchViewController()
     }
     
     // MARK: - Helpers
@@ -144,17 +152,19 @@ final class InviteViewController: UIViewController {
                let contentTitle = contentTitle,
                let content = content,
                let matchDateString = matchDateString {
-                inviteViewModel.createRecruitFieldData(user: UserService.shared.user ?? User(dictionary: [:]),
-                                                       fieldID: fieldID,
-                                                       fieldName: fieldName,
-                                                       fieldAddress: fieldAddress,
-                                                       type: type,
-                                                       recruitedPeopleCount: recruitedPeopleCount,
-                                                       title: contentTitle,
-                                                       content: content,
-                                                       matchDateString: matchDateString,
-                                                       startTime: startTime,
-                                                       endTime: endTime)
+                inviteViewModel.createRecruitFieldData(
+                    user: UserService.shared.user ?? User(dictionary: [:]),
+                    fieldID: fieldID,
+                    fieldName: fieldName,
+                    fieldAddress: fieldAddress,
+                    type: type,
+                    recruitedPeopleCount: recruitedPeopleCount,
+                    title: contentTitle,
+                    content: content,
+                    matchDateString: matchDateString,
+                    startTime: startTime,
+                    endTime: endTime
+                )
                 
                 addButton.setTitle("등록하기", for: .normal)
                 inviteViewModel.coordinator.popInviteViewController()
@@ -285,12 +295,5 @@ final class InviteViewController: UIViewController {
             make.trailing.bottom.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
             make.height.equalTo(40)
         }
-    }
-    
-    // MARK: - Selectors
-    
-    @objc
-    func searchFieldButtonTapped() {
-        inviteViewModel.coordinator.presentSearchViewController()
     }
 }

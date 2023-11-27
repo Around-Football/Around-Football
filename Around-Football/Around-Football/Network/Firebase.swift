@@ -171,6 +171,7 @@ final class FirebaseAPI {
         return Observable.create { observer in
             var collectionRef: Query = Firestore.firestore().collection("Recruit")
 
+            //type있을때만 type으로 이동
             if let type = type {
                 collectionRef = collectionRef
                     .whereField("type", isEqualTo: type)
@@ -201,6 +202,7 @@ final class FirebaseAPI {
         return Observable.create { observer in
             var collectionRef: Query = Firestore.firestore().collection("Recruit")
 
+            //region 있을때만 이동
             if let region = region {
                 collectionRef = collectionRef
                     .whereField("fieldAddress", isGreaterThan: region)
