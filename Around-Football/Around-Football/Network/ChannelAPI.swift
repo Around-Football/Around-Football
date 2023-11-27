@@ -94,15 +94,15 @@ final class ChannelAPI {
             }
         }
         
-        let updateChannelInfo = [
+        let updateData = [
             "recentDate": message.sentDate,
             "previewContent": contentMessage
         ] as [String: Any]
         
         let ownerRef = REF_USER.document(owner.id).collection("channels").document(channelId)
         let withUserRef = REF_USER.document(withUser.id).collection("channels").document(channelId)
-        updateRefData(ref: ownerRef, data: updateChannelInfo)
-        updateRefData(ref: withUserRef, data: updateChannelInfo)
+        updateRefData(ref: ownerRef, data: updateData)
+        updateRefData(ref: withUserRef, data: updateData)
         
     }
     
@@ -120,7 +120,7 @@ final class ChannelAPI {
                 print("DEBUG - ", #function, error.localizedDescription)
                 return
             }
-            print("DEBUG - Document successfully updated", ref.description)
+            print("DEBUG - Document successfully updated", ref.path)
         }
     }
     

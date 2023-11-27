@@ -110,11 +110,12 @@ final class ChannelViewModel {
             })
     }
     
-    private func emitSelectedChannelInfo(by inputObserver: Observable<IndexPath>) -> Observable<ChannelInfo> {
+    private func emitSelectedChannelInfo(by inputObserver: Observable<IndexPath>)
+    -> Observable<ChannelInfo> {
         inputObserver
             .withLatestFrom(channels) { (indexPath, channels) -> ChannelInfo in
-            return channels[indexPath.row]
-        }
+                return channels[indexPath.row]
+            }
     }
     
     

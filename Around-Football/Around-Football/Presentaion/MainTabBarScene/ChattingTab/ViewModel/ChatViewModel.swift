@@ -116,14 +116,17 @@ class ChatViewModel {
         var newMessages = messages.value
         newMessages.append(message)
         newMessages.sort()
-        }
+        messages.accept(newMessages)
+    }
     
     private func sendMessage(by inputObserver: Observable<String>) {
         inputObserver
             .withUnretained(self)
             .subscribe { (owner, text) in
                 print(#function)
-                guard let currentUser = owner.currentUser, let channel = owner.channel.value, let withUser = owner.withUser else { return }
+                guard let currentUser = owner.currentUser,
+                        let channel = owner.channel.value,
+                      let withUser = owner.withUser else { return }
                 let message = Message(user: currentUser, content: text)
                 if owner.isNewChat {
                     print("isNewChat = \(owner.isNewChat)")
@@ -144,7 +147,9 @@ class ChatViewModel {
         inputObserver
             .withUnretained(self)
             .subscribe { (owner, image) in
-                guard let channel = owner.channel.value, let currentUser = owner.currentUser, let withUser = owner.withUser else { return }
+                guard let channel = owner.channel.value,
+                        let currentUser = owner.currentUser,
+                      let withUser = owner.withUser else { return }
                 owner.isSendingPhoto.accept(true)
                 StorageAPI.uploadImage(image: image, channel: channel) { url in
                     owner.isSendingPhoto.accept(false)
@@ -152,7 +157,10 @@ class ChatViewModel {
                     var message = Message(user: currentUser, image: image)
                     message.downloadURL = url
                     owner.chatAPI.save(message)
-                    owner.channelAPI.updateChannelInfo(owner: currentUser, withUser: withUser, channelId: channel.id, message: message)
+                    owner.channelAPI.updateChannelInfo(owner: currentUser,
+                                                       withUser: withUser,
+                                                       channelId: channel.id,
+                                                       message: message)
                     // TODO: - NotiManager 적용
                     //            NotiManager.shared.pushNotification(channel: channel, content: ("사진"), fcmToken: toUser!.fcmToken, from: user)
                 }
@@ -161,25 +169,23 @@ class ChatViewModel {
         
     }
     
-//    private func enabledCameraButton(by inputObserver: Observable<Bool>) -> Observable<Bool> {
-//        return inputObserver
-//            .withUnretained(self)
-//            .flatMap { (owner, isSendingPhoto) -> Observable<Bool> in
-//                return .just(!isSendingPhoto)
-//            }
-//    }
-    
     private func saveMessage(message: Message, completion: (() -> Void)? = nil) {
         chatAPI.save(message) { [weak self] error in
             if let error = error {
                 print("DEBUG - inputBar Error: \(error.localizedDescription)")
                 return
             }
-            guard let self = self, let channel = channel.value, let currentUser = currentUser, let withUser = withUser else { return }
-            channelAPI.updateChannelInfo(owner: currentUser, withUser: withUser, channelId: channel.id, message: message)
+            guard let self = self,
+                    let channel = channel.value,
+                  let currentUser = currentUser,
+                  let withUser = withUser else { return }
+            channelAPI.updateChannelInfo(owner: currentUser,
+                                         withUser: withUser,
+                                         channelId: channel.id,
+                                         message: message)
             // TODO: - NotiManagaer
             //                NotiManager.shared.pushNotification(channel: channel, content: text, fcmToken: toUser!.fcmToken, from: user)
-
+            
             completion?()
         }
     }
