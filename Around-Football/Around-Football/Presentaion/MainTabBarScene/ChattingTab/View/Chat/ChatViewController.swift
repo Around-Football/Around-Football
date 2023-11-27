@@ -15,6 +15,7 @@ import FirebaseAuth
 import RxSwift
 import RxCocoa
 
+
 final class ChatViewController: MessagesViewController {
     
     // MARK: - Properties
@@ -24,7 +25,6 @@ final class ChatViewController: MessagesViewController {
     let imageTransition = ImageTransition()
     let disposeBag = DisposeBag()
     let pickedImage = PublishSubject<UIImage>()
-    private let invokedViewWillAppear = PublishSubject<Void>()
     
     lazy var cameraBarButtonItem = InputBarButtonItem(type: .system).then {
         $0.tintColor = .black
@@ -59,7 +59,6 @@ final class ChatViewController: MessagesViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        invokedViewWillAppear.onNext(())
         // TODO: - NotiManager.shared.currentChatRoomId = channel.id
         //                 self?.channelAPI.resetAlarmNumber(uid: self!.user.uid, channelId: id)
         
@@ -112,8 +111,7 @@ final class ChatViewController: MessagesViewController {
     
     private func bind() {
         let didTapSendButton = sendWithText(buttonEvent: messageInputBar.sendButton.rx.tap)
-        let input = ChatViewModel.Input(invokedViewWillAppear: invokedViewWillAppear, 
-                                        didTapSendButton: didTapSendButton,
+        let input = ChatViewModel.Input(didTapSendButton: didTapSendButton,
                                         pickedImage: pickedImage)
         _ = viewModel.transform(input)
         bindCameraBarButtonEvent()

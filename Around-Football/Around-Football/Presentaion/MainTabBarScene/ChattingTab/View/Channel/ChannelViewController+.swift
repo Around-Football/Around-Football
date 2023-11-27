@@ -8,6 +8,8 @@
 import UIKit
 
 import RxSwift
+import RxCocoa
+import RxDataSources
 import MessageKit
 
 extension ChannelViewController {
@@ -25,24 +27,15 @@ extension ChannelViewController {
     
     func bindChannels() {
         viewModel.channels
-            .bind(to: channelTableView.rx.items(cellIdentifier: ChannelTableViewCell.cellId, cellType: ChannelTableViewCell.self)) { row, item, cell in
-                print("refresh collectionView: \(item.id)")
-                cell.chatRoomLabel.text = item.withUserName
-                cell.chatPreviewLabel.text = item.previewContent
-                let alarmNumber = item.alarmNumber
-                alarmNumber == 0 ? self.hideChatAlarmNumber(cell: cell) : self.showChatAlarmNumber(cell: cell, alarmNumber: alarmNumber)
-                let date = item.recentDate
-                cell.recentDateLabel.text = self.formatDate(date)
-            }
+            .map { [ChannelSectionModel(model: "", items: $0)] }
+            .bind(to: channelTableView.rx.items(dataSource: channelTableViewDataSource))
             .disposed(by: disposeBag)
         
-        viewModel.channels
-            .asObservable()
-            .subscribe { [weak self] channels in
-                DispatchQueue.main.async {
-                    self?.channelTableView.reloadData()
-                }
-            }
+        channelTableView.rx.itemDeleted
+            .subscribe(with: self, onNext: { owner, indexPath in
+                // TODO: - Remove Channel from firestore
+                print("remove row: \(owner.viewModel.channels.value[indexPath.row])")
+            })
             .disposed(by: disposeBag)
     }
     
@@ -67,12 +60,12 @@ extension ChannelViewController {
             .disposed(by: disposeBag)
     }
     
-    private func hideChatAlarmNumber(cell: ChannelTableViewCell) {
+    func hideChatAlarmNumber(cell: ChannelTableViewCell) {
         cell.chatAlarmNumberLabel.text = ""
         cell.chatAlarmNumberLabel.isHidden = true
     }
     
-    private func showChatAlarmNumber(cell: ChannelTableViewCell, alarmNumber: Int) {
+    func showChatAlarmNumber(cell: ChannelTableViewCell, alarmNumber: Int) {
         var alarmString = ""
         alarmNumber > 999 ? (alarmString = "999+") : (alarmString = "\(alarmNumber)")
         cell.chatAlarmNumberLabel.text = alarmString
@@ -80,7 +73,7 @@ extension ChannelViewController {
         cell.updateAlarmLabelUI()
     }
     
-    private func formatDate(_ date: Date) -> String {
+    func formatDate(_ date: Date) -> String {
         let calendar = Calendar.current
         let formatter = DateFormatter()
         formatter.locale = Locale(identifier: "ko_KR")
