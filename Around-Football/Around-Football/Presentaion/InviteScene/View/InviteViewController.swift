@@ -45,8 +45,13 @@ final class InviteViewController: UIViewController {
         $0.text = "유형"
     }
     
-    private lazy var typeSegmentedControl = UISegmentedControl(items: ["풋살", "축구"]).then {
-        $0.addTarget(self, action: #selector(segmentedControlValueChanged), for: .valueChanged)
+    private lazy var typeSegmentedControl = UISegmentedControl(
+        items: ["풋살", "축구"]
+    ).then {
+        $0.selectedSegmentIndex = 0 //기본 선택 풋살로
+        $0.addTarget(self,
+                     action: #selector(segmentedControlValueChanged),
+                     for: .valueChanged)
     }
     
     private let contentLabel = UILabel().then {
