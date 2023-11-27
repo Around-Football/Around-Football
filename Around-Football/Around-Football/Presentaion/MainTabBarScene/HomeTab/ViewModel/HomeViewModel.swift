@@ -13,10 +13,12 @@ final class HomeViewModel {
     
     struct Input {
         let invokedViewWillAppear: Observable<Void>
+        let filteringType: Observable<String?>
     }
     
     struct Output {
         let recruitList: Observable<[Recruit]>
+        let filteredTypeRecruitList: Observable<[Recruit]>
     }
     
     // MARK: - Properties
@@ -34,7 +36,8 @@ final class HomeViewModel {
     
     func transform(_ input: Input) -> Output {
         let recruitList = loadRecruitList(by: input.invokedViewWillAppear)
-        let output = Output(recruitList: recruitList)
+        let filteredTypeRecruitList = loadRecruitTypeList(by: input.filteringType)
+        let output = Output(recruitList: recruitList, filteredTypeRecruitList: filteredTypeRecruitList)
         return output
     }
     
@@ -42,6 +45,14 @@ final class HomeViewModel {
         inputObserver
             .flatMap { () -> Observable<[Recruit]> in
                 let recruitObservable = FirebaseAPI.shared.readRecruitRx()
+                return recruitObservable
+            }
+    }
+    
+    private func loadRecruitTypeList(by inputObserver: Observable<String?>) -> Observable<[Recruit]> {
+        inputObserver
+            .flatMap { type -> Observable<[Recruit]> in
+                let recruitObservable = FirebaseAPI.shared.fetchRecruitFieldDataType(type: type)
                 return recruitObservable
             }
     }

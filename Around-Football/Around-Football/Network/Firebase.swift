@@ -165,6 +165,37 @@ final class FirebaseAPI {
         }
         .subscribe(on: ConcurrentDispatchQueueScheduler(qos: .background))
     }
+    
+    //date
+    func fetchRecruitFieldDataType(type: String?) -> Observable<[Recruit]> {
+        return Observable.create { observer in
+            var collectionRef: Query = Firestore.firestore().collection("Recruit")
+
+            // type이 nil이 아닐 때만 whereField를 추가
+            if let type = type {
+                collectionRef = collectionRef.whereField("type", isEqualTo: type)
+            }
+            
+            collectionRef.getDocuments { snapshot, error in
+                if let error {
+                    observer.onError(error)
+                }
+                
+                guard let snapshot else { return }
+                
+                let recruits = snapshot.documents.compactMap { document -> Recruit? in
+                    
+                    return Recruit(dictionary: document.data())
+                }
+            
+                observer.onNext(recruits)
+                observer.onCompleted()
+            }
+            
+            return Disposables.create()
+        }
+        .subscribe(on: ConcurrentDispatchQueueScheduler(qos: .background))
+    }
 }
 
 // MARK: - Recruit create 함수
@@ -207,6 +238,7 @@ extension FirebaseAPI {
             .setData(data, completion: completion)
     }
     
+    //date
     func fetchRecruitFieldData(
         fieldID: String,
         date: Date,
@@ -226,6 +258,8 @@ extension FirebaseAPI {
                 
             }
     }
+    
+
 }
 
 func saveFieldJsonData<T: Encodable>(data:T) {

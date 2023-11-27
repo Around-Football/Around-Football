@@ -19,6 +19,7 @@ final class HomeViewController: UIViewController {
 
     var viewModel: HomeViewModel
     private var invokedViewWillAppear = PublishSubject<Void>()
+    private var filteringTypeRecruitList = PublishSubject<String?>()
     private var disposeBag = DisposeBag()
     
     init(viewModel: HomeViewModel) {
@@ -120,16 +121,16 @@ final class HomeViewController: UIViewController {
     // MARK: - Helpers
     
     func bindUI() {
-        let input = HomeViewModel.Input(invokedViewWillAppear: invokedViewWillAppear.asObservable())
+        let input = HomeViewModel.Input(invokedViewWillAppear: invokedViewWillAppear.asObservable(), filteringType: filteringTypeRecruitList.asObservable())
         
         let output = viewModel.transform(input)
         
-        output
-            .recruitList
-            .bind(to: homeTableView.rx.items(cellIdentifier: HomeTableViewCell.id,
-                                             cellType: HomeTableViewCell.self)) { index, item, cell in
-                cell.bindContents(item: item)
-            }.disposed(by: disposeBag)
+        //merge: 둘 중 하나만 있어도 내려보냄
+        Observable.merge(output.recruitList, output.filteredTypeRecruitList)
+        .bind(to: homeTableView.rx.items(cellIdentifier: HomeTableViewCell.id,
+                                         cellType: HomeTableViewCell.self)) { index, item, cell in
+            cell.bindContents(item: item)
+        }.disposed(by: disposeBag)
         
         homeTableView.rx.modelSelected(Recruit.self)
             .subscribe(onNext: { [weak self] selectedRecruit in
@@ -206,18 +207,21 @@ final class HomeViewController: UIViewController {
         actionSheet.title = "매치 유형을 선택해주세요"
         
         //전체 버튼 - 스타일(default)
-        actionSheet.addAction(UIAlertAction(title: "전체", style: .default, handler: {(ACTION:UIAlertAction) in
+        actionSheet.addAction(UIAlertAction(title: "전체", style: .default, handler: {[weak self] (ACTION:UIAlertAction) in
             print("전체")
+            self?.filteringTypeRecruitList.onNext(nil)
         }))
         
         // 축구
-        actionSheet.addAction(UIAlertAction(title: "축구", style: .default, handler: {(ACTION:UIAlertAction) in
+        actionSheet.addAction(UIAlertAction(title: "축구", style: .default, handler: { [weak self] _ in
             print("축구")
+            self?.filteringTypeRecruitList.onNext("축구")
         }))
         
         // 풋살
-        actionSheet.addAction(UIAlertAction(title: "풋살", style: .default, handler: {(ACTION:UIAlertAction) in
+        actionSheet.addAction(UIAlertAction(title: "풋살", style: .default, handler: { [weak self] _ in
             print("풋살")
+            self?.filteringTypeRecruitList.onNext("풋살")
         }))
         
         //취소 버튼 - 스타일(cancel)

@@ -85,24 +85,24 @@ final class HomeTableViewCell: UITableViewCell {
         }
         
         fieldAddress.snp.makeConstraints { make in
-            make.top.equalTo(dateLabel.snp.bottom).offset(10)
+            make.top.equalTo(dateLabel.snp.bottom).offset(5)
             make.leading.equalTo(titleLabel)
             make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
         }
         
         typeLabel.snp.makeConstraints { make in
-            make.top.equalTo(fieldAddress.snp.bottom).offset(10)
+            make.top.equalTo(fieldAddress.snp.bottom).offset(5)
             make.leading.equalTo(titleLabel)
             make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
         }
         
         recruitLabel.snp.makeConstraints { make in
-            make.top.equalTo(typeLabel.snp.bottom).offset(10)
+            make.top.equalTo(typeLabel.snp.bottom).offset(5)
             make.leading.equalTo(titleLabel)
         }
         
         userNameLabel.snp.makeConstraints { make in
-            make.top.equalTo(recruitLabel.snp.bottom).offset(10)
+            make.top.equalTo(recruitLabel.snp.bottom).offset(5)
             make.leading.equalTo(titleLabel)
             make.bottom.equalToSuperview().offset(-10)
         }
