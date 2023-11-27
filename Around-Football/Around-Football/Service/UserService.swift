@@ -154,7 +154,7 @@ final class UserService: NSObject {
             self.createGoogleUser(email: self.email!, password: "\(self.email!)")
             
             // TODO: - Coordinator Refactoring
-            NotificationCenter.default.post(name: NSNotification.Name("TestNotification"),
+            NotificationCenter.default.post(name: NSNotification.Name("LoginNotification"),
                                             object: nil,
                                             userInfo: nil)
         }
@@ -182,8 +182,9 @@ final class UserService: NSObject {
         request.requestedScopes = [.fullName, .email]
         request.nonce = sha256(nonce)
         let authorizationController = ASAuthorizationController(authorizationRequests: [request])
-        //        authorizationController.delegate = self
+        authorizationController.delegate = self
         authorizationController.performRequests()
+        print("애플로그인 진행")
     }
     
     private func sha256(_ input: String) -> String {
@@ -316,14 +317,14 @@ extension UserService: ASAuthorizationControllerDelegate {
                 }
                 // User is signed in to Firebase with Apple.
                 // ...
-                
+                print("로그인 성공")
                 let uid = authResult?.user.uid
                 
                 REF_USER.document(uid ?? UUID().uuidString)
                     .setData(["id" : uid ?? UUID().uuidString])
                 
                 // TODO: - Coordinator Refactoring
-                NotificationCenter.default.post(name: NSNotification.Name("TestNotification"),
+                NotificationCenter.default.post(name: NSNotification.Name("LoginNotification"),
                                                 object: nil,
                                                 userInfo: nil)
             }
