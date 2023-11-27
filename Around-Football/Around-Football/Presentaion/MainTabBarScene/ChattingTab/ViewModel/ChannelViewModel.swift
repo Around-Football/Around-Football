@@ -44,6 +44,7 @@ final class ChannelViewModel {
     private func setupListener(currentUser: Observable<User?>) {
         currentUser
             .withUnretained(self)
+            .filter({ (owner, user) in user != nil })
             .subscribe(onNext: { (owner, user) in
                 print(#function, "user:", user as Any)
                 if let _ = user {
