@@ -108,6 +108,7 @@
 		7C2B1B002AF4D2B40052EC64 /* MapTabCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C2B1AFF2AF4D2B40052EC64 /* MapTabCoordinator.swift */; };
 		7C2B1B022AF4D2E30052EC64 /* ChatTabCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C2B1B012AF4D2E30052EC64 /* ChatTabCoordinator.swift */; };
 		7C2B1B042AF4D30D0052EC64 /* InfoTabCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C2B1B032AF4D30D0052EC64 /* InfoTabCoordinator.swift */; };
+		7C33060F2B109E780042A815 /* DetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C33060E2B109E780042A815 /* DetailView.swift */; };
 		7C5F77582AC96A7E004CE48F /* DetailUserInfoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C5F77572AC96A7E004CE48F /* DetailUserInfoCell.swift */; };
 		7C5F775C2AC9C698004CE48F /* InviteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C5F775B2AC9C698004CE48F /* InviteViewController.swift */; };
 		7C5F775E2AC9CE8A004CE48F /* DateCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C5F775D2AC9CE8A004CE48F /* DateCell.swift */; };
@@ -115,6 +116,7 @@
 		7C5F77622AC9DB7B004CE48F /* PeopleCountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C5F77612AC9DB7B004CE48F /* PeopleCountView.swift */; };
 		7C5F77642AC9E180004CE48F /* UIView+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C5F77632AC9E180004CE48F /* UIView+.swift */; };
 		7C94EBD52B01BF0600A7E42A /* InfoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C94EBD42B01BF0600A7E42A /* InfoViewModel.swift */; };
+		7CAC06072B14740F00EBFDA0 /* LocationFillterCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CAC06062B14740F00EBFDA0 /* LocationFillterCell.swift */; };
 		7CB21BA32AC94D36001D0058 /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CB21BA22AC94D36001D0058 /* DetailViewController.swift */; };
 		7CB21BA52AC94EE4001D0058 /* DetailUserInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CB21BA42AC94EE4001D0058 /* DetailUserInfoView.swift */; };
 		7CBFED6C2AE6477700915D65 /* CalenderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CBFED6B2AE6477700915D65 /* CalenderViewController.swift */; };
@@ -214,6 +216,7 @@
 		7C2B1AFF2AF4D2B40052EC64 /* MapTabCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapTabCoordinator.swift; sourceTree = "<group>"; };
 		7C2B1B012AF4D2E30052EC64 /* ChatTabCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatTabCoordinator.swift; sourceTree = "<group>"; };
 		7C2B1B032AF4D30D0052EC64 /* InfoTabCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoTabCoordinator.swift; sourceTree = "<group>"; };
+		7C33060E2B109E780042A815 /* DetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailView.swift; sourceTree = "<group>"; };
 		7C5F77572AC96A7E004CE48F /* DetailUserInfoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailUserInfoCell.swift; sourceTree = "<group>"; };
 		7C5F775B2AC9C698004CE48F /* InviteViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InviteViewController.swift; sourceTree = "<group>"; };
 		7C5F775D2AC9CE8A004CE48F /* DateCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateCell.swift; sourceTree = "<group>"; };
@@ -222,6 +225,7 @@
 		7C5F77632AC9E180004CE48F /* UIView+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+.swift"; sourceTree = "<group>"; };
 		7C78830C2ADE54970028D555 /* Around-Football.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Around-Football.entitlements"; sourceTree = "<group>"; };
 		7C94EBD42B01BF0600A7E42A /* InfoViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoViewModel.swift; sourceTree = "<group>"; };
+		7CAC06062B14740F00EBFDA0 /* LocationFillterCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationFillterCell.swift; sourceTree = "<group>"; };
 		7CB21BA22AC94D36001D0058 /* DetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
 		7CB21BA42AC94EE4001D0058 /* DetailUserInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailUserInfoView.swift; sourceTree = "<group>"; };
 		7CBFED6B2AE6477700915D65 /* CalenderViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalenderViewController.swift; sourceTree = "<group>"; };
@@ -369,8 +373,9 @@
 		278DAD5C2AE295B90085718C /* FilterView */ = {
 			isa = PBXGroup;
 			children = (
-				278DAD5A2AE27A660085718C /* LocationFilterViewController.swift */,
 				278DAD5D2AE295C70085718C /* DateFilterViewController.swift */,
+				278DAD5A2AE27A660085718C /* LocationFilterViewController.swift */,
+				7CAC06062B14740F00EBFDA0 /* LocationFillterCell.swift */,
 			);
 			path = FilterView;
 			sourceTree = "<group>";
@@ -685,6 +690,7 @@
 			isa = PBXGroup;
 			children = (
 				7CB21BA22AC94D36001D0058 /* DetailViewController.swift */,
+				7C33060E2B109E780042A815 /* DetailView.swift */,
 				7CE563AB2AD1425F005DE2DF /* DetailViewController+.swift */,
 				7CB21BA42AC94EE4001D0058 /* DetailUserInfoView.swift */,
 				7C5F77572AC96A7E004CE48F /* DetailUserInfoCell.swift */,
@@ -975,6 +981,7 @@
 				66656F9F2AD921D700AE1AFA /* FieldDetailViewModel.swift in Sources */,
 				7C2B1AF72AF4BE160052EC64 /* ApplicationStatusViewModel.swift in Sources */,
 				668EE4A72AFCB120007A8844 /* MessageModel.swift in Sources */,
+				7CAC06072B14740F00EBFDA0 /* LocationFillterCell.swift in Sources */,
 				668EE4AC2AFCB919007A8844 /* StreamErrorModel.swift in Sources */,
 				7C2B1ACB2AF4B1530052EC64 /* MainTabBarCoordinator.swift in Sources */,
 				278E556A2AD930F900C328D3 /* Response.swift in Sources */,
@@ -1002,6 +1009,7 @@
 				7929A3132ADEB319006ED4FA /* InputInfoViewController+.swift in Sources */,
 				274C21C72ACFF902005469E6 /* TextFieldDelegateHandler.swift in Sources */,
 				7CE0143E2AF8C5B700ED77D2 /* EditViewController.swift in Sources */,
+				7C33060F2B109E780042A815 /* DetailView.swift in Sources */,
 				668EE4BF2B0500D5007A8844 /* ChatViewController+.swift in Sources */,
 				2736744F2AC3061C003ADE3F /* SceneDelegate.swift in Sources */,
 				2729185B2B022E84009C9042 /* SearchViewController.swift in Sources */,

@@ -16,9 +16,13 @@ import SnapKit
 final class HomeViewController: UIViewController {
     
     // MARK: - Properties
-
+    
     var viewModel: HomeViewModel
-    private var invokedViewDidLoad = PublishSubject<Void>()
+    let dateFilterView = DateFilterViewController()
+    let locationFilterView = LocationFilterViewController()
+    private var invokedViewWillAppear = PublishSubject<Void>()
+    private var filteringTypeRecruitList = PublishSubject<String?>()
+    private var filterringRegionRecruitList = PublishSubject<String?>()
     private var disposeBag = DisposeBag()
     
     init(viewModel: HomeViewModel) {
@@ -28,7 +32,6 @@ final class HomeViewController: UIViewController {
     
     lazy var homeTableView = UITableView().then {
         $0.register(HomeTableViewCell.self, forCellReuseIdentifier: HomeTableViewCell.id)
-        $0.delegate = self
     }
     
     private let filterOptions: [String] = ["모든 날짜", "모든 지역", "매치 유형"] // 필터 옵션
@@ -97,13 +100,15 @@ final class HomeViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         configureUI()
-        // MARK: - bind함수가 위에 있어야 됨... 이걸로 하루 날림 (연결하고 데이터 날리기)
-        bind()
-        invokedViewDidLoad.onNext(())
+        bindUI()
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
         navigationController?.navigationBar.isHidden = true
+        //        invokedViewWillAppear.onNext(())
+        filterringRegionRecruitList.onNext(locationFilterView.selectedCity)
+        print(locationFilterView.selectedCity)
     }
     
     override func viewDidLayoutSubviews() {
@@ -121,18 +126,33 @@ final class HomeViewController: UIViewController {
     
     // MARK: - Helpers
     
-    func bind() {
-        let input = HomeViewModel.Input(invokedViewDidLoad: invokedViewDidLoad.asObservable())
+    func bindUI() {
+        let input = HomeViewModel.Input(invokedViewWillAppear: invokedViewWillAppear.asObservable(),
+                                        filteringType: filteringTypeRecruitList.asObservable(),
+                                        filteringRegion: filterringRegionRecruitList.asObserver())
         
         let output = viewModel.transform(input)
         
-        output
-            .recruitList
+        //merge: 하나만 있어도 내려보냄
+        Observable
+            .merge(output.recruitList,
+                   output.filteredTypeRecruitList,
+                   output.filteredRegionRecruitList)
             .bind(to: homeTableView.rx.items(cellIdentifier: HomeTableViewCell.id,
                                              cellType: HomeTableViewCell.self)) { index, item, cell in
-                
                 cell.bindContents(item: item)
             }.disposed(by: disposeBag)
+        
+        homeTableView.rx.modelSelected(Recruit.self)
+            .subscribe(onNext: { [weak self] selectedRecruit in
+                guard let self = self else { return }
+                self.handleItemSelected(selectedRecruit)
+            })
+            .disposed(by: disposeBag)
+    }
+    
+    func handleItemSelected(_ item: Recruit) {
+        viewModel.coordinator?.pushToDetailView(recruitItem: item)
     }
     
     func configureUI() {
@@ -192,24 +212,29 @@ final class HomeViewController: UIViewController {
         }
     }
     
+    //TODO: - 방식 맞추기 (모달 or alertsheet)
+    
     func matchTypeActionSheet() -> UIAlertController {
         let actionSheet = UIAlertController()
         
         actionSheet.title = "매치 유형을 선택해주세요"
         
         //전체 버튼 - 스타일(default)
-        actionSheet.addAction(UIAlertAction(title: "전체", style: .default, handler: {(ACTION:UIAlertAction) in
+        actionSheet.addAction(UIAlertAction(title: "전체", style: .default, handler: {[weak self] (ACTION:UIAlertAction) in
             print("전체")
+            self?.filteringTypeRecruitList.onNext(nil)
         }))
         
         // 축구
-        actionSheet.addAction(UIAlertAction(title: "축구", style: .default, handler: {(ACTION:UIAlertAction) in
+        actionSheet.addAction(UIAlertAction(title: "축구", style: .default, handler: { [weak self] _ in
             print("축구")
+            self?.filteringTypeRecruitList.onNext("축구")
         }))
         
         // 풋살
-        actionSheet.addAction(UIAlertAction(title: "풋살", style: .default, handler: {(ACTION:UIAlertAction) in
+        actionSheet.addAction(UIAlertAction(title: "풋살", style: .default, handler: { [weak self] _ in
             print("풋살")
+            self?.filteringTypeRecruitList.onNext("풋살")
         }))
         
         //취소 버튼 - 스타일(cancel)
@@ -222,47 +247,38 @@ final class HomeViewController: UIViewController {
     
     @objc
     func filterOptionTapped(sender: UIButton) {
-        // FIXME: - Switch문 리팩토링 가능? -> 쌉가능
+        // TODO: - Coordinator로 변경
         // 필터 옵션 버튼을 탭했을 때의 동작
         // ["모든 날짜", "모든 지역", "매치 유형"]
         
         switch sender.title(for: .normal) {
         case "모든 날짜":
-            let filterView = DateFilterViewController()
-            present(filterView, animated: true)
+            present(dateFilterView, animated: true)
             
         case "모든 지역":
-            let filterView = LocationFilterViewController()
-            present(filterView, animated: true)
+            locationFilterView.modalPresentationStyle = .fullScreen
+            locationFilterView.modalTransitionStyle = .coverVertical
+            present(locationFilterView, animated: true)
             
         case "매치 유형":
             self.present(matchTypeActionSheet(), animated: true, completion: nil)
-
+            
         default:
             break
         }
     }
-
+    
     // FIXME: - View PopUp navigationBar 처리
     @objc
     func didTapFloatingButton() {
-        //TODO: -FirebaseAuth UID 확인해서 로그인 or 초대뷰
         if UserService.shared.user?.id == nil {
             viewModel.coordinator?.presentLoginViewController()
         } else {
             viewModel.coordinator?.pushInviteView()
         }
-        print("DEBUG: didTapFloatingButton")
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-}
-
-extension HomeViewController: UITableViewDelegate {
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        viewModel.coordinator?.pushToDetailView()
     }
 }
