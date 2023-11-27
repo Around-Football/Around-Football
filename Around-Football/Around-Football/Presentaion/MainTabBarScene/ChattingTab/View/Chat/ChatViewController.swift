@@ -61,6 +61,8 @@ final class ChatViewController: MessagesViewController {
     }
     
     override func viewDidLoad() {
+        super.viewDidLoad()
+        
         configure()
         configureDelegate()
         setupMessageInputBar()

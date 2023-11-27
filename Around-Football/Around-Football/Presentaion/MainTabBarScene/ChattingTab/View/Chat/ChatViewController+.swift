@@ -59,7 +59,7 @@ extension ChatViewController {
             .disposed(by: disposeBag)
     }
     
-    
+    // TODO: - SendButton Event가 수신 안됨
     func sendWithText(buttonEvent: ControlEvent<Void>) -> Observable<String> {
         return buttonEvent
             .withLatestFrom(messageInputBar.inputTextView.rx.text.orEmpty)

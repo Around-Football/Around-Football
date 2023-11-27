@@ -38,7 +38,6 @@ final class ChannelViewController: UIViewController {
     // MARK: - Lifecycles
     
     init(viewModel: ChannelViewModel) {
-        print("init")
         self.viewModel = viewModel
         
         super.init(nibName: nil, bundle: nil)

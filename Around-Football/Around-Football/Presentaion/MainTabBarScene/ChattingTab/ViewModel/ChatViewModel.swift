@@ -50,6 +50,7 @@ class ChatViewModel {
     init(coordinator: ChatTabCoordinator, channelInfo: ChannelInfo) {
         self.coordinator = coordinator
         self.channelInfo = channelInfo
+        self.channel.accept(Channel(id: channelInfo.id, members: 2))
     }
     
     // MARK: - API
@@ -80,6 +81,7 @@ class ChatViewModel {
         FirebaseAPI.shared.fetchUser(uid: channelInfo.withUserId) { [weak self] user in
             guard let self = self else { return }
             self.withUser = user
+            print("withUser: \(String(describing: withUser))")
         }
     }
     
@@ -117,10 +119,11 @@ class ChatViewModel {
         }
     
     private func sendMessage(by inputObserver: Observable<String>) {
-        guard let currentUser = currentUser, let channel = channel.value, let withUser = withUser else { return }
         inputObserver
             .withUnretained(self)
             .subscribe { (owner, text) in
+                print(#function)
+                guard let currentUser = owner.currentUser, let channel = owner.channel.value, let withUser = owner.withUser else { return }
                 let message = Message(user: currentUser, content: text)
                 if owner.isNewChat {
                     print("isNewChat = \(owner.isNewChat)")

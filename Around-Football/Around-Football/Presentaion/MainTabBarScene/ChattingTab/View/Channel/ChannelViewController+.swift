@@ -26,12 +26,22 @@ extension ChannelViewController {
     func bindChannels() {
         viewModel.channels
             .bind(to: channelTableView.rx.items(cellIdentifier: ChannelTableViewCell.cellId, cellType: ChannelTableViewCell.self)) { row, item, cell in
+                print("refresh collectionView: \(row)")
                 cell.chatRoomLabel.text = item.withUserName
                 cell.chatPreviewLabel.text = item.previewContent
                 let alarmNumber = item.alarmNumber
                 alarmNumber == 0 ? self.hideChatAlarmNumber(cell: cell) : self.showChatAlarmNumber(cell: cell, alarmNumber: "\(alarmNumber)")
                 let date = item.recentDate
                 cell.recentDateLabel.text = self.formatDate(date)
+            }
+            .disposed(by: disposeBag)
+        
+        viewModel.channels
+            .asObservable()
+            .subscribe { [weak self] channels in
+                DispatchQueue.main.async {
+                    self?.channelTableView.reloadData()
+                }
             }
             .disposed(by: disposeBag)
     }
