@@ -67,9 +67,6 @@ final class UserService: NSObject {
             }
             .subscribe { user in
                 self.currentUser_Rx.accept(user)
-                NotificationCenter.default.post(name: NSNotification.Name("LoginNotification"),
-                                                object: nil,
-                                                userInfo: nil)
             }
             .disposed(by: disposeBag)
     }
