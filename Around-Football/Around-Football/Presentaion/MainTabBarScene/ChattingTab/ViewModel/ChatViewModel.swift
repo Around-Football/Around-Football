@@ -37,7 +37,6 @@ class ChatViewModel {
     }
     
     struct Input {
-        let invokedViewWillAppear: Observable<Void>
         let didTapSendButton: Observable<String>
         let pickedImage: Observable<UIImage>
     }
@@ -55,8 +54,8 @@ class ChatViewModel {
     
     // MARK: - API
     
-    private func setupListener(by inputObserver: Observable<Void>) {
-        inputObserver
+    private func setupListener() {
+        channel
             .withUnretained(self)
             .subscribe(onNext: { (owner, _) in
                 print(#function, "channel: ", owner.channelInfo.id)
@@ -77,19 +76,23 @@ class ChatViewModel {
         chatAPI.removeListenr()
     }
     
-    private func fetchWithUser(by inputObserver: Observable<Void>) {
-        FirebaseAPI.shared.fetchUser(uid: channelInfo.withUserId) { [weak self] user in
-            guard let self = self else { return }
-            self.withUser = user
-            print("withUser: \(String(describing: withUser))")
-        }
+    private func fetchWithUser() {
+        channel
+            .withUnretained(self)
+            .subscribe { (owner, _) in
+                FirebaseAPI.shared.fetchUser(uid: owner.channelInfo.withUserId) { user in
+                    owner.withUser = user
+                    print("withUser: \(String(describing: owner.withUser))")
+                }
+            }
+            .disposed(by: disposeBag)
     }
     
     // MARK: - Helpers
     
     func transform(_ input: Input) -> Output {
-        setupListener(by: input.invokedViewWillAppear)
-        fetchWithUser(by: input.invokedViewWillAppear)
+        setupListener()
+        fetchWithUser()
         sendMessage(by: input.didTapSendButton)
         sendPhoto(by: input.pickedImage)
         return Output()

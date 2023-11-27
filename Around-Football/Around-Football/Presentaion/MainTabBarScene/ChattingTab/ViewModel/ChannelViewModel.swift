@@ -61,7 +61,7 @@ final class ChannelViewModel {
                         .disposed(by: owner.disposeBag)
                 } else {
                     print("nochannels")
-                    owner.channels.accept([])
+                    
                 }
             })
             .disposed(by: disposeBag)
@@ -83,6 +83,8 @@ final class ChannelViewModel {
                 print("Modified")
                 guard let index = currentChannels.firstIndex(of: channel) else { return }
                 currentChannels[index] = channel
+                print(currentChannels[index].previewContent)
+                
             case .removed:
                 print("removed")
                 guard let index = currentChannels.firstIndex(of: channel) else { return }

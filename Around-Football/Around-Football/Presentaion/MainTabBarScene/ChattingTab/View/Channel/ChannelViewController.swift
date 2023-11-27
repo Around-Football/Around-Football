@@ -11,10 +11,12 @@ import FirebaseAuth
 import SnapKit
 import Then
 import RxSwift
+import RxDataSources
 
 final class ChannelViewController: UIViewController {
-    
+        
     // MARK: - Properties
+    typealias ChannelSectionModel = SectionModel<String, ChannelInfo>
     
     let viewModel: ChannelViewModel
     let disposeBag = DisposeBag()
@@ -25,6 +27,8 @@ final class ChannelViewController: UIViewController {
         $0.register(ChannelTableViewCell.self, forCellReuseIdentifier: ChannelTableViewCell.cellId)
         $0.delegate = self
     }
+    
+    var channelTableViewDataSource: RxTableViewSectionedReloadDataSource<ChannelSectionModel>!
     
     let loginLabel = UILabel().then {
         $0.text = """
@@ -60,7 +64,7 @@ final class ChannelViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        configure()
         configureUI()
         bind()
         
@@ -73,6 +77,25 @@ final class ChannelViewController: UIViewController {
     
     
     // MARK: - Helpers
+    
+    func configure() {
+        channelTableViewDataSource = RxTableViewSectionedReloadDataSource(configureCell: { data, tableView, indexPath, item in
+            let cell = tableView.dequeueReusableCell(withIdentifier: ChannelTableViewCell.cellId, for: indexPath) as! ChannelTableViewCell
+            print("refresh collectionView: \(item.id)")
+            cell.chatRoomLabel.text = item.withUserName
+            cell.chatPreviewLabel.text = item.previewContent
+            let alarmNumber = item.alarmNumber
+            alarmNumber == 0 ? self.hideChatAlarmNumber(cell: cell) : self.showChatAlarmNumber(cell: cell, alarmNumber: alarmNumber)
+            let date = item.recentDate
+            cell.recentDateLabel.text = self.formatDate(date)
+            return cell
+
+        })
+        
+        channelTableViewDataSource?.canMoveRowAtIndexPath = { _, _ in return false }
+        
+        channelTableViewDataSource?.canEditRowAtIndexPath = { dataSource, index in return true }
+    }
     
     func configureUI() {
         view.backgroundColor = .systemBackground
