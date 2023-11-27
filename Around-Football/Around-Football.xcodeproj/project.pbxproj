@@ -76,7 +76,10 @@
 		6696748F2AC3E9CE0067FD48 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6696748E2AC3E9CE0067FD48 /* HomeViewController.swift */; };
 		669674912AC3E9D40067FD48 /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 669674902AC3E9D40067FD48 /* MapViewController.swift */; };
 		669674932AC3E9DF0067FD48 /* InfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 669674922AC3E9DF0067FD48 /* InfoViewController.swift */; };
+		66AE74FF2B1476A900D08B5C /* RxDataSources in Frameworks */ = {isa = PBXBuildFile; productRef = 66AE74FE2B1476A900D08B5C /* RxDataSources */; };
+		66AE75032B14907C00D08B5C /* Differentiator in Frameworks */ = {isa = PBXBuildFile; productRef = 66AE75022B14907C00D08B5C /* Differentiator */; };
 		66BD86E52AE646CB00B1B256 /* FieldDetailViewController+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66BD86E42AE646CB00B1B256 /* FieldDetailViewController+.swift */; };
+		66C374362B0B010800DB2C2A /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = 66C374352B0B010800DB2C2A /* FirebaseMessaging */; };
 		7929A30F2ADE4B45006ED4FA /* InputInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7929A30E2ADE4B45006ED4FA /* InputInfoViewController.swift */; };
 		7929A3112ADEAD35006ED4FA /* InputInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7929A3102ADEAD35006ED4FA /* InputInfoView.swift */; };
 		7929A3132ADEB319006ED4FA /* InputInfoViewController+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7929A3122ADEB319006ED4FA /* InputInfoViewController+.swift */; };
@@ -247,6 +250,7 @@
 			files = (
 				7C141C6D2ADA6008002CF180 /* KakaoSDKFriendCore in Frameworks */,
 				273674622AC306D6003ADE3F /* SnapKit in Frameworks */,
+				66AE75032B14907C00D08B5C /* Differentiator in Frameworks */,
 				7C141C652ADA6008002CF180 /* KakaoSDK in Frameworks */,
 				6650C7372AC9ED6F00055571 /* KakaoMapsSDK_SPM in Frameworks */,
 				7C141C6B2ADA6008002CF180 /* KakaoSDKFriend in Frameworks */,
@@ -257,11 +261,13 @@
 				7C141C672ADA6008002CF180 /* KakaoSDKAuth in Frameworks */,
 				668EE4A12AFCAC2C007A8844 /* MessageKit in Frameworks */,
 				668EE4BD2B04E3A6007A8844 /* FirebaseStorage in Frameworks */,
+				66C374362B0B010800DB2C2A /* FirebaseMessaging in Frameworks */,
 				272B448B2ADD375700ACEC41 /* GoogleSignIn in Frameworks */,
 				2736746A2AC3071A003ADE3F /* RxCocoa in Frameworks */,
 				273674742AC307D6003ADE3F /* FirebaseFirestore in Frameworks */,
 				273674722AC307D6003ADE3F /* FirebaseAuth in Frameworks */,
 				273674762AC307D6003ADE3F /* FirebaseFirestoreSwift in Frameworks */,
+				66AE74FF2B1476A900D08B5C /* RxDataSources in Frameworks */,
 				668EE4CA2B0504CB007A8844 /* Kingfisher in Frameworks */,
 				272B448D2ADD375700ACEC41 /* GoogleSignInSwift in Frameworks */,
 			);
@@ -842,6 +848,9 @@
 				668EE4A02AFCAC2C007A8844 /* MessageKit */,
 				668EE4BC2B04E3A6007A8844 /* FirebaseStorage */,
 				668EE4C92B0504CB007A8844 /* Kingfisher */,
+				66C374352B0B010800DB2C2A /* FirebaseMessaging */,
+				66AE74FE2B1476A900D08B5C /* RxDataSources */,
+				66AE75022B14907C00D08B5C /* Differentiator */,
 			);
 			productName = "Around-Football";
 			productReference = 273674492AC3061C003ADE3F /* Around-Football.app */;
@@ -882,6 +891,7 @@
 				272B44892ADD375700ACEC41 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
 				668EE49F2AFCAC2C007A8844 /* XCRemoteSwiftPackageReference "MessageKit" */,
 				668EE4C82B0504CB007A8844 /* XCRemoteSwiftPackageReference "Kingfisher" */,
+				66AE74FD2B1476A900D08B5C /* XCRemoteSwiftPackageReference "RxDataSources" */,
 			);
 			productRefGroup = 2736744A2AC3061C003ADE3F /* Products */;
 			projectDirPath = "";
@@ -1303,6 +1313,14 @@
 				minimumVersion = 7.10.0;
 			};
 		};
+		66AE74FD2B1476A900D08B5C /* XCRemoteSwiftPackageReference "RxDataSources" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/RxSwiftCommunity/RxDataSources.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.0.2;
+			};
+		};
 		7C141C632ADA6008002CF180 /* XCRemoteSwiftPackageReference "kakao-ios-sdk" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/kakao/kakao-ios-sdk";
@@ -1383,6 +1401,21 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 668EE4C82B0504CB007A8844 /* XCRemoteSwiftPackageReference "Kingfisher" */;
 			productName = Kingfisher;
+		};
+		66AE74FE2B1476A900D08B5C /* RxDataSources */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 66AE74FD2B1476A900D08B5C /* XCRemoteSwiftPackageReference "RxDataSources" */;
+			productName = RxDataSources;
+		};
+		66AE75022B14907C00D08B5C /* Differentiator */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 66AE74FD2B1476A900D08B5C /* XCRemoteSwiftPackageReference "RxDataSources" */;
+			productName = Differentiator;
+		};
+		66C374352B0B010800DB2C2A /* FirebaseMessaging */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 273674702AC307D6003ADE3F /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseMessaging;
 		};
 		7C141C642ADA6008002CF180 /* KakaoSDK */ = {
 			isa = XCSwiftPackageProductDependency;
