@@ -37,6 +37,19 @@ final class MapViewController: UIViewController {
     var locationManager = CLLocationManager()
     var modalViewController: FieldDetailViewController?
     
+    private lazy var searchController: UISearchController = {
+        let searchController = UISearchController(searchResultsController: searchResultsController)
+        searchController.searchResultsUpdater = self
+        searchController.searchBar.placeholder = "장소를 입력하세요."
+        return searchController
+    }()
+    
+    private lazy var searchResultsController: UITableViewController = {
+        let controller = UITableViewController(style: .plain)
+        controller.tableView.dataSource = nil
+        return controller
+    }()
+    
     private let searchTextField = UISearchTextField().then {
         $0.placeholder = "장소를 입력하세요."
         $0.subviews[0].alpha = 0
@@ -81,6 +94,10 @@ final class MapViewController: UIViewController {
         configureMap()
         configureUI()
         setLocationManager()
+        
+        configureSearchController() // 검색 컨트롤러 설정
+        setupSearchBar() // 검색 바 설정
+        setTableView()
         if let locationCoordinate = locationManager.location?.coordinate {
             self.viewModel = MapViewModel(
                 latitude: locationCoordinate.latitude,
@@ -92,14 +109,6 @@ final class MapViewController: UIViewController {
             viewModel.fetchFields()
             viewModel.selectedDate = self.datePicker.date
         }
-        
-        searchTextField.rx.controlEvent(.editingDidEndOnExit)
-            .asObservable()
-            .subscribe(onNext: { [weak self] in
-                // Trigger the search when the 'Search' button is pressed
-                self?.searchButtonPressed()
-            })
-            .disposed(by: disposeBag)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -163,13 +172,59 @@ final class MapViewController: UIViewController {
     
     // MARK: - Helpers
     
+    private func setTableView() {
+        searchResultsController.tableView.register(SearchTableViewCell.self,
+                           forCellReuseIdentifier: SearchTableViewCell.cellID)
+        searchResultsController.tableView.dataSource = nil
+        
+        let selectedItem = searchResultsController.tableView.rx.modelSelected(Place.self)
+        
+        guard let viewModel = viewModel else { return }
+        
+        selectedItem
+            .subscribe(onNext: { [weak self] place in
+                viewModel.dataSubject
+                    .onNext(place)
+                self?.searchResultsController.dismiss(animated: true)
+                self?.moveCamera(latitude: Double(place.y) ?? 127, longitude: Double(place.x) ?? 38)
+                self?.searchController.searchBar.text = place.name
+                //searchViewModel.coordinator?.dismissSearchViewController()
+                //print("\(String(describing: searchViewModel.coordinator))")
+            })
+            .disposed(by: disposeBag)
+        
+        _ = viewModel.searchResults
+            .debug()
+            .bind(to: searchResultsController.tableView.rx.items(
+                cellIdentifier: SearchTableViewCell.cellID,
+                cellType: SearchTableViewCell.self)) { index, place, cell in
+                    cell.fieldNameLabel.text = place.name
+                    cell.fieldAddressLabel.text = place.address
+                }
+                .disposed(by: disposeBag)
+    }
+    
+    private func configureSearchController() {
+        navigationItem.searchController = searchController
+        definesPresentationContext = true
+        //searchController.searchResultsController = searchResultsController
+    }
+    
+    private func setupSearchBar() {
+        searchController.searchBar.delegate = self
+        searchController.searchBar.sizeToFit()
+        searchController.searchBar.searchTextField.backgroundColor = .white
+    }
+    
+    
+    
     private func configureUI() {
         view.backgroundColor = .systemBackground
         
         view.addSubviews(
             mapContainer,
-            searchTextField,
-            datePicker,
+            //searchTextField,
+            //datePicker,
             trackingButton
         )
         
@@ -178,17 +233,17 @@ final class MapViewController: UIViewController {
             $0.bottom.equalTo(self.view.safeAreaLayoutGuide)
         }
         
-        searchTextField.snp.makeConstraints {
-            $0.top.equalTo(self.view.safeAreaLayoutGuide).offset(5)
-            $0.leading.equalTo(self.view).offset(16)
-            $0.trailing.equalTo(self.view).offset(-16)
-            $0.height.equalTo(40)
-        }
+//        searchTextField.snp.makeConstraints {
+//            $0.top.equalTo(self.view.safeAreaLayoutGuide).offset(5)
+//            $0.leading.equalTo(self.view).offset(16)
+//            $0.trailing.equalTo(self.view).offset(-16)
+//            $0.height.equalTo(40)
+//        }
         
-        datePicker.snp.makeConstraints {
-            $0.top.equalTo(searchTextField.snp.bottom).offset(10)
-            $0.centerX.equalToSuperview()
-        }
+//        datePicker.snp.makeConstraints {
+//            $0.top.equalTo(searchController.searchBar.snp.bottom).offset(10)
+//            $0.centerX.equalToSuperview()
+//        }
         
         trackingButton.snp.makeConstraints {
             $0.leading.equalTo(mapContainer).offset(20)
@@ -196,15 +251,18 @@ final class MapViewController: UIViewController {
             $0.height.width.equalTo(56)
         }
     }
-    
-    private func searchButtonPressed() {
-        guard 
-            let keyword = searchTextField.text,
-                !keyword.isEmpty
-        else {
-            return
-        }
-        //viewModel?.setSearchLocation(keyword)
-//        moveCamera(latitude: viewModel?.searchLocation?.latitude ?? 0.0, longitude: viewModel?.searchLocation?.longitude ?? 0.0)
+}
+
+extension MapViewController: UISearchResultsUpdating, UISearchBarDelegate {
+    func updateSearchResults(for searchController: UISearchController) {
+        setTableView()
     }
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        
+        guard let viewModel = viewModel else { return}
+        
+        KakaoService.shared.searchField(searchText, viewModel.searchResults, disposeBag)
+    }
+    
 }
