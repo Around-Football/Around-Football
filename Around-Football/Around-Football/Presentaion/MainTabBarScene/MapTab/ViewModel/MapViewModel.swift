@@ -18,6 +18,9 @@ final class MapViewModel {
     
     weak var coordinator: MapTabCoordinator?
     
+    let searchResults = BehaviorSubject<[Place]>(value: [])
+    var dataSubject: PublishSubject = PublishSubject<Place>()
+    
     var currentLocation: GeoPoint
     var searchLocation: GeoPoint?
     var isSearchCurrentLocation: Bool = true
