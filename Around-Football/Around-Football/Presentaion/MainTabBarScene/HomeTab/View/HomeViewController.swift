@@ -67,7 +67,6 @@ final class HomeViewController: UIViewController {
         $0.layer.cornerRadius = LayoutOptions.cornerRadious // 버튼의 모서리를 둥글게 만듭니다.
         $0.layer.borderWidth = 1.0
         $0.layer.borderColor = UIColor.systemGray.cgColor
-        $0.addTarget(self, action: #selector(resetFilterButtonTapped), for: .touchUpInside)
     }
     
     private lazy var dateFilterButton = UIButton(configuration: buttonConfig).then {
@@ -79,7 +78,6 @@ final class HomeViewController: UIViewController {
         $0.layer.cornerRadius = LayoutOptions.cornerRadious
         $0.layer.borderWidth = 1.0
         $0.layer.borderColor = UIColor.systemGray.cgColor
-        $0.addTarget(self, action: #selector(dateFilterButtonTapped), for: .touchUpInside)
     }
     
     private lazy var areaFilterButton = UIButton(configuration: buttonConfig).then {
@@ -91,7 +89,18 @@ final class HomeViewController: UIViewController {
         $0.layer.cornerRadius = LayoutOptions.cornerRadious
         $0.layer.borderWidth = 1.0
         $0.layer.borderColor = UIColor.systemGray.cgColor
-        $0.addTarget(self, action: #selector(areaFilterButtonTapped), for: .touchUpInside)
+        $0.showsMenuAsPrimaryAction = true
+        $0.menu = UIMenu(children: [
+            UIAction(title: "전체") { [weak self] _ in
+                self?.filteringTypeRecruitList.onNext(nil)
+            },
+            UIAction(title: "풋살") { [weak self] _ in
+                self?.filteringTypeRecruitList.onNext("풋살")
+            },
+            UIAction(title: "축구") { [weak self] _ in
+                self?.filteringTypeRecruitList.onNext("축구")
+            },
+        ])
     }
     
     private lazy var typeFilterButton = UIButton(configuration: buttonConfig).then {
@@ -103,27 +112,18 @@ final class HomeViewController: UIViewController {
         $0.layer.cornerRadius = LayoutOptions.cornerRadious
         $0.layer.borderWidth = 1.0
         $0.layer.borderColor = UIColor.systemGray.cgColor
-        $0.addTarget(self, action: #selector(typeFilterButtonTapped), for: .touchUpInside)
-    }
-    
-    @objc
-    func resetFilterButtonTapped() {
-        
-    }
-    
-    @objc
-    func dateFilterButtonTapped() {
-        
-    }
-    
-    @objc
-    func areaFilterButtonTapped() {
-        
-    }
-    
-    @objc
-    func typeFilterButtonTapped() {
-        
+        $0.showsMenuAsPrimaryAction = true
+        $0.menu = UIMenu(children: [
+            UIAction(title: "전체") { [weak self] _ in
+                self?.filteringTypeRecruitList.onNext(nil)
+            },
+            UIAction(title: "풋살") { [weak self] _ in
+                self?.filteringTypeRecruitList.onNext("풋살")
+            },
+            UIAction(title: "축구") { [weak self] _ in
+                self?.filteringTypeRecruitList.onNext("축구")
+            },
+        ])
     }
     
     private lazy var floatingButton: UIButton = {
@@ -147,14 +147,12 @@ final class HomeViewController: UIViewController {
         super.viewDidLoad()
         configureUI()
         bindUI()
-        
     }
     
     override func viewWillAppear(_ animated: Bool) {
         navigationController?.navigationBar.isHidden = true
         //        invokedViewWillAppear.onNext(())
         filterringRegionRecruitList.onNext(locationFilterView.selectedCity)
-//        print(locationFilterView.selectedCity)
     }
     
     override func viewDidLayoutSubviews() {
@@ -230,78 +228,6 @@ final class HomeViewController: UIViewController {
         }
     }
     
-//    //TODO: - 방식 맞추기 (모달 or alertsheet)
-//    
-//    func matchTypeActionSheet() -> UIAlertController {
-//        let actionSheet = UIAlertController()
-//        
-//        actionSheet.title = "매치 유형을 선택해주세요"
-//        
-//        //전체 버튼 - 스타일(default)
-//        actionSheet.addAction(UIAlertAction(title: "전체", style: .default, handler: {[weak self] (ACTION:UIAlertAction) in
-//            print("전체")
-//            self?.filteringTypeRecruitList.onNext(nil)
-//        }))
-//        
-//        // 축구
-//        actionSheet.addAction(UIAlertAction(title: "축구", style: .default, handler: { [weak self] _ in
-//            print("축구")
-//            self?.filteringTypeRecruitList.onNext("축구")
-//        }))
-//        
-//        // 풋살
-//        actionSheet.addAction(UIAlertAction(title: "풋살", style: .default, handler: { [weak self] _ in
-//            print("풋살")
-//            self?.filteringTypeRecruitList.onNext("풋살")
-//        }))
-//        
-//        //취소 버튼 - 스타일(cancel)
-//        actionSheet.addAction(UIAlertAction(title: "취소", style: .destructive, handler: nil))
-//        
-//        return actionSheet
-//    }
-
-    
-//    let typeItems = ["전체, 축구, 풋살"]
-//    
-//    private lazy var pickerView: UIPickerView = {
-//        
-//        let pickerView = UIPickerView()
-//        
-//        pickerView.delegate = self
-//        pickerView.dataSource = self
-//        return pickerView
-//    }()
-//    
-//    private lazy var textField: UITextField = {
-//        let textfield = UITextField()
-//        textfield.inputView = pickerView
-//        return textfield
-//    }()
-
-//    
-//    private let typePickerView = UIPickerView()
-    
-//    private func setupTypePicker() {
-//        typePickerView.delegate = self
-//        
-//        Observable
-//            .combineLatest(typePickerView.rx.itemSelected, typePickerView.rx.modelSelected(String.self))
-//            .map { _, item in
-//                return item.first ?? ""
-//            }
-////            .bind(to: textField.rx.text)
-//            .disposed(by: disposeBag)
-//        
-//        // RxSwift와 RxCocoa를 사용하여 피커 뷰의 데이터 소스를 설정
-//        Observable
-//            .just(typeItems)
-//            .bind(to: typePickerView.rx.itemTitles) { _, item in
-//                return item
-//            }
-//            .disposed(by: disposeBag)
-//    }
-    
 //    // MARK: - Selectors
 //    
 //    @objc
@@ -342,22 +268,3 @@ final class HomeViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
 }
-
-//extension HomeViewController: UIPickerViewDataSource, UIPickerViewDelegate {
-//    func numberOfComponents(in pickerView: UIPickerView) -> Int {
-//          return 1
-//      }
-//      
-//      func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-//          return typeItems.count
-//      }
-//      
-//      // UIPickerViewDelegate 메서드
-//      func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-//          return typeItems[row]
-//      }
-//      
-//      func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-//          textField.text = typeItems[row]
-//      }
-//}
