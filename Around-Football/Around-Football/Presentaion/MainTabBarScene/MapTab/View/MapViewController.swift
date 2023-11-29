@@ -41,6 +41,7 @@ final class MapViewController: UIViewController {
         let searchController = UISearchController(searchResultsController: searchResultsController)
         searchController.searchResultsUpdater = self
         searchController.searchBar.placeholder = "장소를 입력하세요."
+        searchController.searchBar.setValue("취소", forKey: "cancelButtonText")
         return searchController
     }()
     
