@@ -91,7 +91,6 @@ class SearchViewController: UIViewController {
                 searchViewModel.dataSubject
                     .onNext(place)
                 searchViewModel.coordinator?.dismissSearchViewController()
-                print("\(String(describing: searchViewModel.coordinator))")
             })
             .disposed(by: disposeBag)
         
