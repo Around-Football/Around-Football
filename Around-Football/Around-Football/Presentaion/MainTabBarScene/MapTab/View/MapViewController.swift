@@ -50,14 +50,6 @@ final class MapViewController: UIViewController {
         return controller
     }()
     
-    private let searchTextField = UISearchTextField().then {
-        $0.placeholder = "장소를 입력하세요."
-        $0.subviews[0].alpha = 0
-        $0.layer.backgroundColor = UIColor.white.cgColor
-        $0.layer.cornerRadius = LayoutOptions.cornerRadious
-        $0.setShadowLayer()
-    }
-    
     private lazy var datePicker = UIDatePicker().then {
         $0.preferredDatePickerStyle = .compact
         $0.datePickerMode = .date
@@ -186,10 +178,9 @@ final class MapViewController: UIViewController {
                 viewModel.dataSubject
                     .onNext(place)
                 self?.searchResultsController.dismiss(animated: true)
-                self?.moveCamera(latitude: Double(place.y) ?? 127, longitude: Double(place.x) ?? 38)
+                self?.moveCamera(latitude: Double(place.y) ?? 127, 
+                                 longitude: Double(place.x) ?? 38)
                 self?.searchController.searchBar.text = place.name
-                //searchViewModel.coordinator?.dismissSearchViewController()
-                //print("\(String(describing: searchViewModel.coordinator))")
             })
             .disposed(by: disposeBag)
         
@@ -207,7 +198,6 @@ final class MapViewController: UIViewController {
     private func configureSearchController() {
         navigationItem.searchController = searchController
         definesPresentationContext = true
-        //searchController.searchResultsController = searchResultsController
     }
     
     private func setupSearchBar() {
@@ -223,7 +213,6 @@ final class MapViewController: UIViewController {
         
         view.addSubviews(
             mapContainer,
-            //searchTextField,
             //datePicker,
             trackingButton
         )
@@ -232,13 +221,6 @@ final class MapViewController: UIViewController {
             $0.top.leading.trailing.equalTo(self.view)
             $0.bottom.equalTo(self.view.safeAreaLayoutGuide)
         }
-        
-//        searchTextField.snp.makeConstraints {
-//            $0.top.equalTo(self.view.safeAreaLayoutGuide).offset(5)
-//            $0.leading.equalTo(self.view).offset(16)
-//            $0.trailing.equalTo(self.view).offset(-16)
-//            $0.height.equalTo(40)
-//        }
         
 //        datePicker.snp.makeConstraints {
 //            $0.top.equalTo(searchController.searchBar.snp.bottom).offset(10)
@@ -262,7 +244,9 @@ extension MapViewController: UISearchResultsUpdating, UISearchBarDelegate {
         
         guard let viewModel = viewModel else { return}
         
-        KakaoService.shared.searchField(searchText, viewModel.searchResults, disposeBag)
+        KakaoService.shared.searchField(searchText, 
+                                        viewModel.searchResults,
+                                        disposeBag)
     }
     
 }
