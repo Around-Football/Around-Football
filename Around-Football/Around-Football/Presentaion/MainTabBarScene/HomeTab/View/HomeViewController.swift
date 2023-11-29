@@ -90,17 +90,18 @@ final class HomeViewController: UIViewController {
         $0.layer.borderWidth = 1.0
         $0.layer.borderColor = UIColor.systemGray.cgColor
         $0.showsMenuAsPrimaryAction = true
+        
+        let cities: [String]  = ["서울", "인천", "부산", "대구", "울산", "대전", "광주", "세종", "경기", "강원", "충북", "충남", "경북", "경남", "전북", "전남", "제주"]
+        
         $0.menu = UIMenu(children: [
             UIAction(title: "전체") { [weak self] _ in
                 self?.filteringTypeRecruitList.onNext(nil)
             },
-            UIAction(title: "풋살") { [weak self] _ in
-                self?.filteringTypeRecruitList.onNext("풋살")
-            },
-            UIAction(title: "축구") { [weak self] _ in
-                self?.filteringTypeRecruitList.onNext("축구")
-            },
-        ])
+        ] + cities.map { city in
+            UIAction(title: city) { [weak self] _ in
+                self?.filterringRegionRecruitList.onNext(city)
+            }
+        })
     }
     
     private lazy var typeFilterButton = UIButton(configuration: buttonConfig).then {
@@ -151,8 +152,8 @@ final class HomeViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         navigationController?.navigationBar.isHidden = true
-        //        invokedViewWillAppear.onNext(())
-        filterringRegionRecruitList.onNext(locationFilterView.selectedCity)
+                invokedViewWillAppear.onNext(())
+//        filterringRegionRecruitList.onNext(locationFilterView.selectedCity)
     }
     
     override func viewDidLayoutSubviews() {
