@@ -26,7 +26,6 @@ final class MapViewModel {
     var isSearchCurrentLocation: Bool = true
     private let disposeBag = DisposeBag()
     private let firebaseAPI = FirebaseAPI.shared
-    var searchPlaces: [Place] = []
     var fields: [Field] = []
     var selectedDate: Date = Date() {
         didSet {
