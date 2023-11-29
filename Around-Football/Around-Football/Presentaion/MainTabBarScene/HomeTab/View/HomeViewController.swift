@@ -80,7 +80,6 @@ final class HomeViewController: UIViewController {
         $0.layer.cornerRadius = LayoutOptions.cornerRadious
         $0.layer.borderWidth = 1.0
         $0.layer.borderColor = UIColor.systemGray.cgColor
-        $0.addTarget(self, action: #selector(dateFilterButtonTapped), for: .touchUpInside)
     }
     
     private lazy var datePicker = UIDatePicker().then {
@@ -203,18 +202,22 @@ final class HomeViewController: UIViewController {
     @objc
     private func resetButtonTapped() {
         loadRecruitList.onNext(())
+        dateFilterButton.setTitle("날짜 선택", for: .normal)
+        areaFilterButton.setTitle("지역 선택", for: .normal)
+        typeFilterButton.setTitle("유형 선택", for: .normal)
     }
     
     @objc
     func changeDate(_ sender: UIDatePicker) {
         selectedDate = sender.date
-        print(selectedDate)
-        view.willRemoveSubview(datePicker)
-    }
-    
-    @objc
-    private func dateFilterButtonTapped() {
-        datePicker.isHidden.toggle()
+
+        let dateformatter = DateFormatter()
+        dateformatter.locale = Locale(identifier: "ko_KR")
+        dateformatter.dateFormat = "MM월 dd일"
+        let formattedDate = dateformatter.string(from: sender.date)
+        dateFilterButton.setTitle(formattedDate, for: .normal)
+        
+        //onnext로 날짜에 matchDateString쿼리 날리기
     }
     
     @objc
