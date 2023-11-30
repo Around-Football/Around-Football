@@ -33,7 +33,6 @@ final class HomeViewController: UIViewController {
     
     lazy var homeTableView = UITableView().then {
         $0.register(HomeTableViewCell.self, forCellReuseIdentifier: HomeTableViewCell.id)
-        $0.register(HomeTableViewCell2.self, forCellReuseIdentifier: HomeTableViewCell2.id)
     }
     
     private lazy var filterScrollView = UIScrollView().then {
@@ -240,25 +239,13 @@ final class HomeViewController: UIViewController {
         
         let output = viewModel.transform(input)
         
-//        output.recruitList
-//            .bind(to: homeTableView.rx.items(cellIdentifier: HomeTableViewCell.id,
-//                                             cellType: HomeTableViewCell.self)) { index, item, cell in
-//                cell.bindContents(item: item)
-//            }.disposed(by: disposeBag)
-//        
-//        
-//        //merge: 하나만 있어도 내려보냄
+        //merge: 하나만 있어도 내려보냄
         Observable
             .merge(output.filteredDateRecruitList,
                    output.filteredTypeRecruitList,
                    output.filteredRegionRecruitList)
-//            .map { filteredDateRecruitList, filteredTypeRecruitList, filteredRegionRecruitList in
-//                // 중복된 값만 남기기 위해 Set으로 변환 후 배열로 다시 변환
-//                let uniqueItems = Array(Set([filteredDateRecruitList, filteredTypeRecruitList, filteredRegionRecruitList].flatMap { $0 }))
-//                return uniqueItems
-//            }
-            .bind(to: homeTableView.rx.items(cellIdentifier: HomeTableViewCell2.id,
-                                             cellType: HomeTableViewCell2.self)) { index, item, cell in
+            .bind(to: homeTableView.rx.items(cellIdentifier: HomeTableViewCell.id,
+                                             cellType: HomeTableViewCell.self)) { index, item, cell in
                 cell.bindContents(item: item)
             }.disposed(by: disposeBag)
         
