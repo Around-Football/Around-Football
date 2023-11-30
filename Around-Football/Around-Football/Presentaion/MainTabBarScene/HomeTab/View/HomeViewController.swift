@@ -44,7 +44,10 @@ final class HomeViewController: UIViewController {
         $0.alignment = .fill
         $0.distribution = .fillEqually
         $0.spacing = 5
-        $0.addArrangedSubviews(resetButton, datePicker, areaFilterButton, typeFilterButton)
+        $0.addArrangedSubviews(resetButton,
+                               datePicker,
+                               areaFilterButton,
+                               typeFilterButton)
     }
     
     private var buttonConfig: UIButton.Configuration {
@@ -93,7 +96,7 @@ final class HomeViewController: UIViewController {
         dateFilterButton.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
-        $0.addTarget(self, action: #selector(changeDate(_:)), for: .valueChanged)
+        $0.addTarget(self, action: #selector(changeDate), for: .valueChanged)
     }
     
     private lazy var areaFilterButton: UIButton = {
@@ -108,17 +111,12 @@ final class HomeViewController: UIViewController {
             $0.layer.borderColor = UIColor.systemGray.cgColor
             $0.showsMenuAsPrimaryAction = true
         }
-        let cities: [String]  = ["서울", "인천", "부산", "대구", "울산", "대전", "광주", "세종", "경기",
+        let menus: [String]  = ["전체", "서울", "인천", "부산", "대구", "울산", "대전", "광주", "세종", "경기",
                                  "강원", "충북", "충남", "경북", "경남", "전북", "전남", "제주"]
         
-        button.menu = UIMenu(children: [
-            UIAction(title: "전체") { [weak self, button] _ in
-                self?.filteringTypeRecruitList.onNext(nil)
-                button.setTitle("전체", for: .normal)
-            },
-        ] + cities.map { city in
-            UIAction(title: city) { [weak self, button] _ in
-                self?.filterringRegionRecruitList.onNext(city)
+        button.menu = UIMenu(children: menus.map { city in
+            UIAction(title: city) { [weak self] _ in
+                self?.filterringRegionRecruitList.onNext(city == "전체" ? nil : city)
                 button.setTitle(city, for: .normal)
             }
         })
@@ -138,20 +136,15 @@ final class HomeViewController: UIViewController {
             $0.layer.borderColor = UIColor.systemGray.cgColor
             $0.showsMenuAsPrimaryAction = true
         }
-        button.menu = UIMenu(children: [
-            UIAction(title: "전체") { [weak self, button] _ in
-                self?.filteringTypeRecruitList.onNext(nil)
-                button.setTitle("전체", for: .normal)
-            },
-            UIAction(title: "풋살") { [weak self, button] _ in
-                self?.filteringTypeRecruitList.onNext("풋살")
-                button.setTitle("풋살", for: .normal)
-            },
-            UIAction(title: "축구") { [weak self, button] _ in
-                self?.filteringTypeRecruitList.onNext("축구")
-                button.setTitle("축구", for: .normal)
+        
+        let menus: [String] = ["전체", "풋살", "축구"]
+        
+        button.menu = UIMenu(children: menus.map { type in
+            UIAction(title: type) { [weak self] _ in
+                self?.filteringTypeRecruitList.onNext(type == "전체" ? nil : type)
+                button.setTitle(type, for: .normal)
             }
-        ])
+        })
         
         return button
     }()
@@ -213,7 +206,7 @@ final class HomeViewController: UIViewController {
 
         let dateformatter = DateFormatter()
         dateformatter.locale = Locale(identifier: "ko_KR")
-        dateformatter.dateFormat = "MM월 dd일"
+        dateformatter.dateFormat = "MM월 d일"
         let formattedDate = dateformatter.string(from: sender.date)
         dateFilterButton.setTitle(formattedDate, for: .normal)
         
