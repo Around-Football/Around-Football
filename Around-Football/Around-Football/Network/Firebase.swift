@@ -141,102 +141,25 @@ final class FirebaseAPI {
     
     // MARK: - RxAlamofire
     
-    func readRecruitRx() -> Observable<[Recruit]> {
-        return Observable.create { observer in
-            let collectionRef = Firestore.firestore().collection("Recruit")
-            
-            collectionRef.getDocuments { snapshot, error in
-                if let error {
-                    observer.onError(error)
-                }
-                
-                guard let snapshot else { return }
-                
-                let recruits = snapshot.documents.compactMap { document -> Recruit? in
-                    
-                    return Recruit(dictionary: document.data())
-                }
-                
-                observer.onNext(recruits)
-                observer.onCompleted()
-            }
-            
-            return Disposables.create()
-        }
-        .subscribe(on: ConcurrentDispatchQueueScheduler(qos: .background))
-    }
-
-    //date
-    func fetchRecruitDate(date: String?) -> Observable<[Recruit]> {
+    func readRecruitRx(input: (
+        date: String?,
+        region: String?,
+        type: String?)
+    ) -> Observable<[Recruit]> {
         return Observable.create { observer in
             var collectionRef: Query = Firestore.firestore().collection("Recruit")
-
-            //type있을때만 type으로 이동
-            if let date = date {
+            
+            if let date = input.date {
                 collectionRef = collectionRef
                     .whereField("matchDateString", isEqualTo: date)
             }
             
-            collectionRef.getDocuments { snapshot, error in
-                if let error {
-                    observer.onError(error)
-                }
-                
-                guard let snapshot else { return }
-                
-                let recruits = snapshot.documents.compactMap { document -> Recruit? in
-                    
-                    return Recruit(dictionary: document.data())
-                }
-            
-                observer.onNext(recruits)
-                observer.onCompleted()
-            }
-            
-            return Disposables.create()
-        }
-        .subscribe(on: ConcurrentDispatchQueueScheduler(qos: .background))
-    }
-    
-    //region
-    func fetchRecruitRegion(region: String?) -> Observable<[Recruit]> {
-        return Observable.create { observer in
-            var collectionRef: Query = Firestore.firestore().collection("Recruit")
-
-            //region 있을때만 이동
-            if let region = region {
+            if let region = input.region {
                 collectionRef = collectionRef
-                    .whereField("fieldAddress", isGreaterThan: region)
+                    .whereField("region", isEqualTo: region)
             }
             
-            collectionRef.getDocuments { snapshot, error in
-                if let error {
-                    observer.onError(error)
-                }
-                
-                guard let snapshot else { return }
-                
-                let recruits = snapshot.documents.compactMap { document -> Recruit? in
-                    
-                    return Recruit(dictionary: document.data())
-                }
-            
-                observer.onNext(recruits)
-                observer.onCompleted()
-            }
-            
-            return Disposables.create()
-        }
-        .subscribe(on: ConcurrentDispatchQueueScheduler(qos: .background))
-    }
-    
-    //type
-    func fetchRecruitType(type: String?) -> Observable<[Recruit]> {
-        return Observable.create { observer in
-            var collectionRef: Query = Firestore.firestore().collection("Recruit")
-
-            //type있을때만 type으로 이동
-            if let type = type {
+            if let type = input.type {
                 collectionRef = collectionRef
                     .whereField("type", isEqualTo: type)
             }
@@ -249,10 +172,9 @@ final class FirebaseAPI {
                 guard let snapshot else { return }
                 
                 let recruits = snapshot.documents.compactMap { document -> Recruit? in
-                    
-                    return Recruit(dictionary: document.data())
+                    Recruit(dictionary: document.data())
                 }
-            
+                
                 observer.onNext(recruits)
                 observer.onCompleted()
             }
@@ -272,6 +194,7 @@ extension FirebaseAPI {
         fieldID: String,
         fieldName: String,
         fieldAddress: String,
+        region: String,
         type: String?,
         recruitedPeopleCount: Int,
         title: String?,
@@ -289,6 +212,7 @@ extension FirebaseAPI {
                     "fieldID": fieldID,
                     "fieldName": fieldName,
                     "fieldAddress": fieldAddress,
+                    "region": region,
                     "type": type,
                     "recruitedPeopleCount": recruitedPeopleCount,
                     "title": title,
