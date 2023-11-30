@@ -48,7 +48,7 @@ final class InviteViewModel {
                 print("필드 올리기 성공")
                 //TODO: - 성공 알림창 띄워주기?
             } else {
-                print("createRecruitFieldData Error: \(error?.localizedDescription)")
+                print("createRecruitFieldData Error: \(String(describing: error?.localizedDescription))")
                 //TODO: - 실패 알림창 띄워주기?
             }
         }

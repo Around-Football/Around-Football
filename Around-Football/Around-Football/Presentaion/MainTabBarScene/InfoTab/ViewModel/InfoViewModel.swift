@@ -7,7 +7,7 @@
 
 import Foundation
 
-class InfoViewModel {
+final class InfoViewModel {
     
     var user: User?
     

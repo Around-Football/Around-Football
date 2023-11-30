@@ -16,15 +16,6 @@ final class InfoViewController: UIViewController {
     var viewModel: InfoViewModel
     private let profileAndEditView = ProfileAndEditView()
     
-    init(viewModel: InfoViewModel) {
-        self.viewModel = viewModel
-        super.init(nibName: nil, bundle: nil)
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
     private let iconAndImage: [(icon: String, title: String)] = [
         (icon: "heart", title: "관심 글"),
         (icon: "doc.text", title: "작성 글"),
@@ -63,6 +54,15 @@ final class InfoViewController: UIViewController {
     }
     
     // MARK: - Lifecycles
+    
+    init(viewModel: InfoViewModel) {
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -97,7 +97,6 @@ final class InfoViewController: UIViewController {
     func logoutButtonTapped() {
         UserService.shared.logout()
         
-//
 //        print("로그아웃 완료, 현재 uid: \(UserService.shared.user?.id)")
         viewModel.coordinator?.presentLoginViewController()
         tabBarController?.selectedIndex = 0 //로그아웃하면 메인탭으로 이동
@@ -186,16 +185,20 @@ final class InfoViewController: UIViewController {
 
 extension InfoViewController: UICollectionViewDelegateFlowLayout, UICollectionViewDataSource {
     
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+    func collectionView(_ collectionView: UICollectionView,
+                        layout collectionViewLayout: UICollectionViewLayout,
+                        sizeForItemAt indexPath: IndexPath) -> CGSize {
         let width = (UIScreen.main.bounds.width / 3) - 20
         return CGSize(width: width, height: width)
     }
     
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    func collectionView(_ collectionView: UICollectionView,
+                        numberOfItemsInSection section: Int) -> Int {
         iconAndImage.count
     }
     
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+    func collectionView(_ collectionView: UICollectionView,
+                        cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(
             withReuseIdentifier: InfoCell.cellID,
             for: indexPath
