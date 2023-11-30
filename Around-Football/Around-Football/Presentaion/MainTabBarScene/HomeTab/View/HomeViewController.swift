@@ -18,10 +18,15 @@ final class HomeViewController: UIViewController {
     // MARK: - Properties
     
     var viewModel: HomeViewModel
-    private var loadRecruitList = PublishSubject<Void>()
-    private var filteringDateRecruitList = PublishSubject<String?>()
-    private var filteringTypeRecruitList = PublishSubject<String?>()
-    private var filterringRegionRecruitList = PublishSubject<String?>()
+    private var loadRecruitList = PublishSubject<(String?, String?, String?)>()
+    //    private var filteringDateRecruitList = PublishSubject<String?>()
+    //    private var filterringRegionRecruitList = PublishSubject<String?>()
+    //    private var filteringTypeRecruitList = PublishSubject<String?>()
+    private var filterRequest: (date: String?, region: String?, type: String?) = (nil, nil, nil)
+    //    private var dateList: String?
+    //    private var regionList: String?
+    //    private var typeList: String?
+    
     private var disposeBag = DisposeBag()
     
     var selectedDate: Date?
@@ -47,7 +52,7 @@ final class HomeViewController: UIViewController {
         $0.spacing = 5
         $0.addArrangedSubviews(resetButton,
                                datePicker,
-                               areaFilterButton,
+                               regionFilterButton,
                                typeFilterButton)
     }
     
@@ -66,7 +71,7 @@ final class HomeViewController: UIViewController {
         let image = UIImage(systemName: "arrow.triangle.2.circlepath")
         $0.setTitle("초기화", for: .normal)
         $0.setImage(image?.withTintColor(UIColor.systemGray, renderingMode: .alwaysOriginal),
-                        for: .normal)
+                    for: .normal)
         $0.setTitleColor(.systemGray, for: .normal)
         $0.layer.cornerRadius = LayoutOptions.cornerRadious // 버튼의 모서리를 둥글게 만듭니다.
         $0.layer.borderWidth = 1.0
@@ -78,7 +83,7 @@ final class HomeViewController: UIViewController {
         let image = UIImage(systemName: "chevron.down")
         $0.setTitle("날짜 선택", for: .normal)
         $0.setImage(image?.withTintColor(UIColor.systemGray, renderingMode: .alwaysOriginal),
-                        for: .normal)
+                    for: .normal)
         $0.setTitleColor(.systemGray, for: .normal)
         $0.backgroundColor = .white
         $0.layer.cornerRadius = LayoutOptions.cornerRadious
@@ -100,7 +105,7 @@ final class HomeViewController: UIViewController {
         $0.addTarget(self, action: #selector(changeDate), for: .valueChanged)
     }
     
-    private lazy var areaFilterButton: UIButton = {
+    private lazy var regionFilterButton: UIButton = {
         let button = UIButton(configuration: buttonConfig).then {
             let image = UIImage(systemName: "chevron.down")
             $0.setTitle("지역 선택", for: .normal)
@@ -113,11 +118,15 @@ final class HomeViewController: UIViewController {
             $0.showsMenuAsPrimaryAction = true
         }
         let menus: [String]  = ["전체", "서울", "인천", "부산", "대구", "울산", "대전", "광주", "세종", "경기",
-                                 "강원", "충북", "충남", "경북", "경남", "전북", "전남", "제주"]
+                                "강원", "충북", "충남", "경북", "경남", "전북", "전남", "제주"]
         
         button.menu = UIMenu(children: menus.map { city in
             UIAction(title: city) { [weak self] _ in
-                self?.filterringRegionRecruitList.onNext(city == "전체" ? nil : city)
+                guard let self else { return }
+                filterRequest.region = (city == "전체" ? nil : city)
+                print(filterRequest)
+                loadRecruitList.onNext(filterRequest)
+                //                self?.filterringRegionRecruitList.onNext(city == "전체" ? nil : city)
                 button.setTitle(city, for: .normal)
             }
         })
@@ -142,7 +151,11 @@ final class HomeViewController: UIViewController {
         
         button.menu = UIMenu(children: menus.map { type in
             UIAction(title: type) { [weak self] _ in
-                self?.filteringTypeRecruitList.onNext(type == "전체" ? nil : type)
+                guard let self else { return }
+                filterRequest.type = (type == "전체" ? nil : type)
+                print(filterRequest)
+                loadRecruitList.onNext(filterRequest)
+                //                self?.filteringTypeRecruitList.onNext(type == "전체" ? nil : type)
                 button.setTitle(type, for: .normal)
             }
         })
@@ -172,8 +185,11 @@ final class HomeViewController: UIViewController {
         super.viewDidLoad()
         configureUI()
         bindUI()
-//        loadRecruitList.onNext(())
-        filteringDateRecruitList.onNext(nil)
+        //        loadRecruitList.onNext(())
+        //        filteringDateRecruitList.onNext(nil)
+        filterRequest = (nil, nil, nil)
+        print(filterRequest)
+        loadRecruitList.onNext(filterRequest)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -196,28 +212,36 @@ final class HomeViewController: UIViewController {
     // MARK: - Selectors
     @objc
     private func resetButtonTapped() {
-        filteringDateRecruitList.onNext(nil)
+        filterRequest = (nil, nil, nil)
+        print(filterRequest)
+        loadRecruitList.onNext(filterRequest)
+        //        filteringDateRecruitList.onNext(nil)
         dateFilterButton.setTitle("날짜 선택", for: .normal)
-        areaFilterButton.setTitle("지역 선택", for: .normal)
+        regionFilterButton.setTitle("지역 선택", for: .normal)
         typeFilterButton.setTitle("유형 선택", for: .normal)
     }
     
     @objc
     func changeDate(_ sender: UIDatePicker) {
         selectedDate = sender.date
-
+        
         let dateformatter = DateFormatter()
-        let titleDateformatter = DateFormatter()
         dateformatter.locale = Locale(identifier: "ko_KR")
-        titleDateformatter.locale = Locale(identifier: "ko_KR")
         dateformatter.dateFormat = "YYYY년 MM월 d일"
-        titleDateformatter.dateFormat = "MM월 d일"
         let formattedDate = dateformatter.string(from: sender.date)
+        
+        let titleDateformatter = DateFormatter()
+        titleDateformatter.locale = Locale(identifier: "ko_KR")
+        titleDateformatter.dateFormat = "MM월 d일"
         let buttonTitleDate = titleDateformatter.string(from: sender.date)
+        
         dateFilterButton.setTitle(buttonTitleDate, for: .normal)
         
         //onnext로 날짜에 matchDateString쿼리 날리기
-        filteringDateRecruitList.onNext(formattedDate)
+        //        filteringDateRecruitList.onNext(formattedDate)
+        filterRequest.date = formattedDate
+        print(filterRequest)
+        loadRecruitList.onNext(filterRequest)
     }
     
     @objc
@@ -232,18 +256,12 @@ final class HomeViewController: UIViewController {
     // MARK: - Helpers
     
     func bindUI() {
-        let input = HomeViewModel.Input(invokedViewWillAppear: loadRecruitList.asObservable(),
-                                        filteringDate: filteringDateRecruitList.asObservable(),
-                                        filteringType: filteringTypeRecruitList.asObservable(),
-                                        filteringRegion: filterringRegionRecruitList.asObserver())
+        let input = HomeViewModel.Input(loadRecruitList: loadRecruitList.asObservable())
         
         let output = viewModel.transform(input)
         
-        //merge: 하나만 있어도 내려보냄
-        Observable
-            .merge(output.filteredDateRecruitList,
-                   output.filteredTypeRecruitList,
-                   output.filteredRegionRecruitList)
+        output
+            .recruitList
             .bind(to: homeTableView.rx.items(cellIdentifier: HomeTableViewCell.id,
                                              cellType: HomeTableViewCell.self)) { index, item, cell in
                 cell.bindContents(item: item)
@@ -251,8 +269,8 @@ final class HomeViewController: UIViewController {
         
         homeTableView.rx.modelSelected(Recruit.self)
             .subscribe(onNext: { [weak self] selectedRecruit in
-                guard let self = self else { return }
-                self.handleItemSelected(selectedRecruit)
+                guard let self else { return }
+                handleItemSelected(selectedRecruit)
             })
             .disposed(by: disposeBag)
     }
