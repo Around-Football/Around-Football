@@ -34,6 +34,7 @@ final class InviteViewController: UIViewController {
     private lazy var region: String = ""
     private var type: String?
     private lazy var recruitedPeopleCount = peopleView.count
+    private lazy var gamePrice = "무료"
     private lazy var contentTitle = titleTextField.text
     private lazy var content = contentTextView.text
     private lazy var matchDateString = calenderViewController.selectedDateString
@@ -60,6 +61,36 @@ final class InviteViewController: UIViewController {
     private let contentLabel = UILabel().then {
         $0.text = "내용"
     }
+    
+    private let gamePriceLabel = UILabel().then {
+        $0.text = "게임비"
+    }
+    
+    private lazy var gamePriceButton: UIButton = {
+        let button = UIButton().then {
+            $0.setTitle("선택하기", for: .normal)
+            $0.titleLabel?.font = UIFont.systemFont(ofSize: 14)
+            $0.setTitleColor(.label, for: .normal)
+            $0.configuration?.contentInsets = NSDirectionalEdgeInsets(top: 10,
+                                                                      leading: 10,
+                                                                      bottom: 10,
+                                                                      trailing: 10)
+            $0.backgroundColor = .lightGray.withAlphaComponent(0.2)
+            $0.layer.cornerRadius = LayoutOptions.cornerRadious
+            $0.showsMenuAsPrimaryAction = true
+        }
+        let prices: [String]  = ["무료", "5,000원", "10,000원", "15,000원", "20,000원", "30,000원", "기타"]
+        
+        button.menu = UIMenu(children: prices.map { price in
+            UIAction(title: price) { [weak self] _ in
+                guard let self else { return }
+                gamePrice = price
+                button.setTitle(price, for: .normal)
+            }
+        })
+        
+        return button
+    }()
     
     lazy var titleTextField = UITextField().then {
         $0.delegate = self
@@ -146,8 +177,8 @@ final class InviteViewController: UIViewController {
             })
             .disposed(by: disposeBag)
         
-        addButton.setTitle("항목을 모두 입력해주세요", for: .normal)
-        addButton.setTitleColor(.gray, for: .normal)
+//        addButton.setTitle("항목을 모두 입력해주세요", for: .normal)
+//        addButton.setTitleColor(.gray, for: .normal)
         
         addButton.buttonActionHandler = { [weak self] in
             guard let self else { return }
@@ -163,6 +194,7 @@ final class InviteViewController: UIViewController {
                     region: region,
                     type: type,
                     recruitedPeopleCount: recruitedPeopleCount,
+                    gamePrice: gamePrice,
                     title: contentTitle,
                     content: content,
                     matchDateString: matchDateString,
@@ -227,6 +259,8 @@ final class InviteViewController: UIViewController {
                                 calenderViewController.view,
                                 typeLabel,
                                 typeSegmentedControl,
+                                gamePriceLabel,
+                                gamePriceButton,
                                 contentLabel,
                                 titleTextField,
                                 contentTextView,
@@ -274,8 +308,20 @@ final class InviteViewController: UIViewController {
             make.width.equalTo(120)
         }
         
-        contentLabel.snp.makeConstraints { make in
+        gamePriceLabel.snp.makeConstraints { make in
             make.top.equalTo(typeLabel.snp.bottom).offset(SuperviewOffsets.topPadding)
+            make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
+        }
+        
+        gamePriceButton.snp.makeConstraints { make in
+            make.centerY.equalTo(gamePriceLabel)
+            make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
+            make.height.equalTo(30)
+            make.width.equalTo(120)
+        }
+        
+        contentLabel.snp.makeConstraints { make in
+            make.top.equalTo(gamePriceLabel.snp.bottom).offset(SuperviewOffsets.topPadding)
             make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
         }
         
