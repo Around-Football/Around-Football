@@ -40,7 +40,7 @@ final class HomeTableViewCell: UITableViewCell {
     }
     
     private var userNameLabel = UILabel().then {
-        $0.text = "Recurit 0명"
+        $0.text = "닉네임"
         $0.font = UIFont.systemFont(ofSize: 15, weight: .semibold)
     }
     

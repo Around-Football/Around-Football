@@ -197,6 +197,7 @@ extension FirebaseAPI {
         region: String,
         type: String?,
         recruitedPeopleCount: Int,
+        gamePrice: String,
         title: String?,
         content: String?,
         matchDateString: String?,
@@ -215,6 +216,7 @@ extension FirebaseAPI {
                     "region": region,
                     "type": type,
                     "recruitedPeopleCount": recruitedPeopleCount,
+                    "gamePrice": gamePrice,
                     "title": title,
                     "content": content,
                     "matchDateString": matchDateString,
@@ -248,7 +250,7 @@ extension FirebaseAPI {
             }
     }
     
-
+    
 }
 
 func saveFieldJsonData<T: Encodable>(data:T) {

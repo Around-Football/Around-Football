@@ -160,7 +160,6 @@ final class DetailViewController: UIViewController {
             .do(onNext: { [weak self] item in
                 guard let self else { return }
                 groundLabel.text = item.fieldName
-                
                 groundAddressLabel.text = item.fieldAddress
                 detailView.setValues(item: item)
             })

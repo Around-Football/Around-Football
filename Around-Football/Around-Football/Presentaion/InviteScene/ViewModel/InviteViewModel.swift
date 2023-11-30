@@ -24,6 +24,7 @@ final class InviteViewModel {
                                 region: String,
                                 type: String?,
                                 recruitedPeopleCount: Int,
+                                gamePrice: String,
                                 title: String?,
                                 content: String?,
                                 matchDateString: String?,
@@ -37,6 +38,7 @@ final class InviteViewModel {
                                                   region: region,
                                                   type: type,
                                                   recruitedPeopleCount: recruitedPeopleCount,
+                                                  gamePrice: gamePrice,
                                                   title: title,
                                                   content: content,
                                                   matchDateString: matchDateString,
@@ -44,10 +46,10 @@ final class InviteViewModel {
                                                   endTime: endTime) { error in
             if error == nil {
                 print("필드 올리기 성공")
-                //TODO: - coordinator로 변경
-                //                coordinator
+                //TODO: - 성공 알림창 띄워주기?
             } else {
                 print("createRecruitFieldData Error: \(error?.localizedDescription)")
+                //TODO: - 실패 알림창 띄워주기?
             }
         }
     }
