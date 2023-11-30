@@ -31,6 +31,7 @@ final class InviteViewController: UIViewController {
     private var fieldID = UUID().uuidString
     private lazy var fieldName: String = ""
     private lazy var fieldAddress: String = ""
+    private lazy var region: String = ""
     private var type: String?
     private lazy var recruitedPeopleCount = peopleView.count
     private lazy var contentTitle = titleTextField.text
@@ -138,8 +139,10 @@ final class InviteViewController: UIViewController {
         
         searchViewModel.dataSubject
             .subscribe(onNext: { [weak self] place in
-                self?.fieldName = place.name
-                self?.fieldAddress = place.address
+                guard let self else { return }
+                fieldName = place.name
+                fieldAddress = place.address
+                region = String(fieldAddress.split(separator: " ").first ?? "")
             })
             .disposed(by: disposeBag)
         
@@ -157,6 +160,7 @@ final class InviteViewController: UIViewController {
                     fieldID: fieldID,
                     fieldName: fieldName,
                     fieldAddress: fieldAddress,
+                    region: region,
                     type: type,
                     recruitedPeopleCount: recruitedPeopleCount,
                     title: contentTitle,
