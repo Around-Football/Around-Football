@@ -17,26 +17,13 @@ final class HomeViewController: UIViewController {
     
     // MARK: - Properties
     
-    var viewModel: HomeViewModel
+    private var viewModel: HomeViewModel
     private var loadRecruitList = PublishSubject<(String?, String?, String?)>()
-    //    private var filteringDateRecruitList = PublishSubject<String?>()
-    //    private var filterringRegionRecruitList = PublishSubject<String?>()
-    //    private var filteringTypeRecruitList = PublishSubject<String?>()
-    private var filterRequest: (date: String?, region: String?, type: String?) = (nil, nil, nil)
-    //    private var dateList: String?
-    //    private var regionList: String?
-    //    private var typeList: String?
-    
+    private var filterRequest: (date: String?, region: String?, type: String?)
     private var disposeBag = DisposeBag()
+    private var selectedDate: Date?
     
-    var selectedDate: Date?
-    
-    init(viewModel: HomeViewModel) {
-        self.viewModel = viewModel
-        super.init(nibName: nil, bundle: nil)
-    }
-    
-    lazy var homeTableView = UITableView().then {
+    private lazy var homeTableView = UITableView().then {
         $0.register(HomeTableViewCell.self, forCellReuseIdentifier: HomeTableViewCell.id)
     }
     
@@ -176,6 +163,15 @@ final class HomeViewController: UIViewController {
     
     // MARK: - Lifecycles
     
+    init(viewModel: HomeViewModel) {
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         configureUI()
@@ -207,7 +203,6 @@ final class HomeViewController: UIViewController {
     @objc
     private func resetButtonTapped() {
         filterRequest = (nil, nil, nil)
-        print(filterRequest)
         loadRecruitList.onNext(filterRequest)
         dateFilterButton.setTitle("날짜 선택", for: .normal)
         regionFilterButton.setTitle("지역 선택", for: .normal)
@@ -295,9 +290,5 @@ final class HomeViewController: UIViewController {
             make.trailing.equalToSuperview()
             make.bottom.equalToSuperview()
         }
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
     }
 }

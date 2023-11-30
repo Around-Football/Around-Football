@@ -15,11 +15,6 @@ final class InviteCoordinator: BaseCoordinator {
 
     var type: CoordinatorType = .home
     var searchViewModel = SearchViewModel(coordinator: nil)
-
-//    init(navigationController: UINavigationController?) {
-//        
-//        super.init(navigationController: navigationController)
-//    }
     
     override func start() {
         let inviteViewModel = InviteViewModel(coordinator: self)

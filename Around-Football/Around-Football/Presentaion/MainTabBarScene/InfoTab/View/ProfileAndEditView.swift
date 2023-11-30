@@ -89,9 +89,9 @@ final class ProfileAndEditView: UIView {
         
         profileImageView.snp.makeConstraints { make in
             make.width.height.equalTo(50)
-            make.top.equalTo(20)
+            make.top.equalTo(10)
             make.leading.equalToSuperview()
-            make.bottom.equalTo(-20)
+            make.bottom.equalTo(-10)
         }
         
         userName.snp.makeConstraints { make in

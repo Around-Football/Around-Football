@@ -18,23 +18,22 @@ final class InviteViewController: UIViewController {
     
     // MARK: - Properties
     
-    var inviteViewModel: InviteViewModel
-    var searchViewModel: SearchViewModel
-    let disposeBag = DisposeBag()
-    let placeView = GroundTitleView()
+    let contentView = UIView()
+    private var inviteViewModel: InviteViewModel
+    private var searchViewModel: SearchViewModel
+    private let disposeBag = DisposeBag()
+    private let placeView = GroundTitleView()
     private let peopleView = PeopleCountView()
     private let calenderViewController = CalenderViewController()
-    let contentView = UIView()
-    
     private var id = UserService.shared.user?.id
     private var userName = UserService.shared.user?.userName
     private var fieldID = UUID().uuidString
-    private lazy var fieldName: String = ""
-    private lazy var fieldAddress: String = ""
-    private lazy var region: String = ""
+    private var fieldName: String = ""
+    private var fieldAddress: String = ""
+    private var region: String = ""
     private var type: String?
     private lazy var recruitedPeopleCount = peopleView.count
-    private lazy var gamePrice = "무료"
+    private lazy var gamePrice = gamePriceButton.titleLabel?.text ?? "무료"
     private lazy var contentTitle = titleTextField.text
     private lazy var content = contentTextView.text
     private lazy var matchDateString = calenderViewController.selectedDateString
@@ -79,7 +78,9 @@ final class InviteViewController: UIViewController {
             $0.layer.cornerRadius = LayoutOptions.cornerRadious
             $0.showsMenuAsPrimaryAction = true
         }
-        let prices: [String]  = ["무료", "5,000원", "10,000원", "15,000원", "20,000원", "30,000원", "기타"]
+        
+        let prices: [String]  = ["무료", "5,000원", "10,000원",
+                                 "15,000원", "20,000원", "30,000원", "기타"]
         
         button.menu = UIMenu(children: prices.map { price in
             UIAction(title: price) { [weak self] _ in
@@ -177,6 +178,7 @@ final class InviteViewController: UIViewController {
             })
             .disposed(by: disposeBag)
         
+        //TODO: - 다 입력했을때 버튼 활성화되도록 수정
 //        addButton.setTitle("항목을 모두 입력해주세요", for: .normal)
 //        addButton.setTitleColor(.gray, for: .normal)
         
