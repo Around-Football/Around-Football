@@ -13,12 +13,14 @@ final class HomeViewModel {
     
     struct Input {
         let invokedViewWillAppear: Observable<Void>
+        let filteringDate: Observable<String?>
         let filteringType: Observable<String?>
         let filteringRegion: Observable<String?>
     }
     
     struct Output {
         let recruitList: Observable<[Recruit]>
+        let filteredDateRecruitList: Observable<[Recruit]>
         let filteredTypeRecruitList: Observable<[Recruit]>
         let filteredRegionRecruitList: Observable<[Recruit]>
     }
@@ -38,11 +40,13 @@ final class HomeViewModel {
     
     func transform(_ input: Input) -> Output {
         let recruitList = loadRecruitList(by: input.invokedViewWillAppear)
-        let filteredTypeRecruitList = loadRecruitTypeList(by: input.filteringType)
-        let filteringRegion = loadRecruitRegionList(by: input.filteringRegion)
+        let filteredDate = loadRecruitDateList(by: input.filteringDate)
+        let filteredType = loadRecruitTypeList(by: input.filteringType)
+        let filteredRegion = loadRecruitRegionList(by: input.filteringRegion)
         let output = Output(recruitList: recruitList,
-                            filteredTypeRecruitList: filteredTypeRecruitList,
-                            filteredRegionRecruitList: filteringRegion)
+                            filteredDateRecruitList: filteredDate,
+                            filteredTypeRecruitList: filteredType,
+                            filteredRegionRecruitList: filteredRegion)
         return output
     }
     
@@ -54,10 +58,10 @@ final class HomeViewModel {
             }
     }
     
-    private func loadRecruitTypeList(by inputObserver: Observable<String?>) -> Observable<[Recruit]> {
+    private func loadRecruitDateList(by inputObserver: Observable<String?>) -> Observable<[Recruit]> {
         inputObserver
-            .flatMap { type -> Observable<[Recruit]> in
-                let recruitObservable = FirebaseAPI.shared.fetchRecruitFieldDataType(type: type)
+            .flatMap { date -> Observable<[Recruit]> in
+                let recruitObservable = FirebaseAPI.shared.fetchRecruitDate(date: date)
                 return recruitObservable
             }
     }
@@ -65,7 +69,15 @@ final class HomeViewModel {
     private func loadRecruitRegionList(by inputObserver: Observable<String?>) -> Observable<[Recruit]> {
         inputObserver
             .flatMap { region -> Observable<[Recruit]> in
-                let recruitObservable = FirebaseAPI.shared.fetchRecruitFieldRegionType(region: region)
+                let recruitObservable = FirebaseAPI.shared.fetchRecruitRegion(region: region)
+                return recruitObservable
+            }
+    }
+    
+    private func loadRecruitTypeList(by inputObserver: Observable<String?>) -> Observable<[Recruit]> {
+        inputObserver
+            .flatMap { type -> Observable<[Recruit]> in
+                let recruitObservable = FirebaseAPI.shared.fetchRecruitType(type: type)
                 return recruitObservable
             }
     }

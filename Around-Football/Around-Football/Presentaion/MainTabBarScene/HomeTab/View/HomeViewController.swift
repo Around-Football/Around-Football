@@ -19,6 +19,7 @@ final class HomeViewController: UIViewController {
     
     var viewModel: HomeViewModel
     private var loadRecruitList = PublishSubject<Void>()
+    private var filteringDateRecruitList = PublishSubject<String?>()
     private var filteringTypeRecruitList = PublishSubject<String?>()
     private var filterringRegionRecruitList = PublishSubject<String?>()
     private var disposeBag = DisposeBag()
@@ -32,6 +33,7 @@ final class HomeViewController: UIViewController {
     
     lazy var homeTableView = UITableView().then {
         $0.register(HomeTableViewCell.self, forCellReuseIdentifier: HomeTableViewCell.id)
+        $0.register(HomeTableViewCell2.self, forCellReuseIdentifier: HomeTableViewCell2.id)
     }
     
     private lazy var filterScrollView = UIScrollView().then {
@@ -171,11 +173,12 @@ final class HomeViewController: UIViewController {
         super.viewDidLoad()
         configureUI()
         bindUI()
+//        loadRecruitList.onNext(())
+        filteringDateRecruitList.onNext(nil)
     }
     
     override func viewWillAppear(_ animated: Bool) {
         navigationController?.navigationBar.isHidden = true
-                loadRecruitList.onNext(())
     }
     
     override func viewDidLayoutSubviews() {
@@ -194,7 +197,7 @@ final class HomeViewController: UIViewController {
     // MARK: - Selectors
     @objc
     private func resetButtonTapped() {
-        loadRecruitList.onNext(())
+        filteringDateRecruitList.onNext(nil)
         dateFilterButton.setTitle("날짜 선택", for: .normal)
         areaFilterButton.setTitle("지역 선택", for: .normal)
         typeFilterButton.setTitle("유형 선택", for: .normal)
@@ -205,12 +208,17 @@ final class HomeViewController: UIViewController {
         selectedDate = sender.date
 
         let dateformatter = DateFormatter()
+        let titleDateformatter = DateFormatter()
         dateformatter.locale = Locale(identifier: "ko_KR")
-        dateformatter.dateFormat = "MM월 d일"
+        titleDateformatter.locale = Locale(identifier: "ko_KR")
+        dateformatter.dateFormat = "YYYY년 MM월 d일"
+        titleDateformatter.dateFormat = "MM월 d일"
         let formattedDate = dateformatter.string(from: sender.date)
-        dateFilterButton.setTitle(formattedDate, for: .normal)
+        let buttonTitleDate = titleDateformatter.string(from: sender.date)
+        dateFilterButton.setTitle(buttonTitleDate, for: .normal)
         
         //onnext로 날짜에 matchDateString쿼리 날리기
+        filteringDateRecruitList.onNext(formattedDate)
     }
     
     @objc
@@ -226,18 +234,31 @@ final class HomeViewController: UIViewController {
     
     func bindUI() {
         let input = HomeViewModel.Input(invokedViewWillAppear: loadRecruitList.asObservable(),
+                                        filteringDate: filteringDateRecruitList.asObservable(),
                                         filteringType: filteringTypeRecruitList.asObservable(),
                                         filteringRegion: filterringRegionRecruitList.asObserver())
         
         let output = viewModel.transform(input)
         
-        //merge: 하나만 있어도 내려보냄
+//        output.recruitList
+//            .bind(to: homeTableView.rx.items(cellIdentifier: HomeTableViewCell.id,
+//                                             cellType: HomeTableViewCell.self)) { index, item, cell in
+//                cell.bindContents(item: item)
+//            }.disposed(by: disposeBag)
+//        
+//        
+//        //merge: 하나만 있어도 내려보냄
         Observable
-            .merge(output.recruitList,
+            .merge(output.filteredDateRecruitList,
                    output.filteredTypeRecruitList,
                    output.filteredRegionRecruitList)
-            .bind(to: homeTableView.rx.items(cellIdentifier: HomeTableViewCell.id,
-                                             cellType: HomeTableViewCell.self)) { index, item, cell in
+//            .map { filteredDateRecruitList, filteredTypeRecruitList, filteredRegionRecruitList in
+//                // 중복된 값만 남기기 위해 Set으로 변환 후 배열로 다시 변환
+//                let uniqueItems = Array(Set([filteredDateRecruitList, filteredTypeRecruitList, filteredRegionRecruitList].flatMap { $0 }))
+//                return uniqueItems
+//            }
+            .bind(to: homeTableView.rx.items(cellIdentifier: HomeTableViewCell2.id,
+                                             cellType: HomeTableViewCell2.self)) { index, item, cell in
                 cell.bindContents(item: item)
             }.disposed(by: disposeBag)
         
