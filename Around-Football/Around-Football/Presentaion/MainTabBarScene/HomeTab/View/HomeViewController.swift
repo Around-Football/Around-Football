@@ -117,16 +117,13 @@ final class HomeViewController: UIViewController {
             $0.layer.borderColor = UIColor.systemGray.cgColor
             $0.showsMenuAsPrimaryAction = true
         }
-        let menus: [String]  = ["전체", "서울", "인천", "부산", "대구", "울산", "대전", "광주", "세종", "경기",
-                                "강원", "충북", "충남", "경북", "경남", "전북", "전남", "제주"]
+        let menus: [String]  = ["전체", "서울", "인천", "부산", "대구", "울산", "대전", "광주", "세종특별자치시", "경기", "강원특별자치도", "충북", "충남", "경북", "경남", "전북", "전남", "제주특별자치도"]
         
         button.menu = UIMenu(children: menus.map { city in
             UIAction(title: city) { [weak self] _ in
                 guard let self else { return }
                 filterRequest.region = (city == "전체" ? nil : city)
-                print(filterRequest)
                 loadRecruitList.onNext(filterRequest)
-                //                self?.filterringRegionRecruitList.onNext(city == "전체" ? nil : city)
                 button.setTitle(city, for: .normal)
             }
         })
@@ -153,9 +150,7 @@ final class HomeViewController: UIViewController {
             UIAction(title: type) { [weak self] _ in
                 guard let self else { return }
                 filterRequest.type = (type == "전체" ? nil : type)
-                print(filterRequest)
                 loadRecruitList.onNext(filterRequest)
-                //                self?.filteringTypeRecruitList.onNext(type == "전체" ? nil : type)
                 button.setTitle(type, for: .normal)
             }
         })
@@ -185,15 +180,13 @@ final class HomeViewController: UIViewController {
         super.viewDidLoad()
         configureUI()
         bindUI()
-        //        loadRecruitList.onNext(())
-        //        filteringDateRecruitList.onNext(nil)
+        //처음 로딩시 전체 리스트 요청
         filterRequest = (nil, nil, nil)
-        print(filterRequest)
-        loadRecruitList.onNext(filterRequest)
     }
     
     override func viewWillAppear(_ animated: Bool) {
         navigationController?.navigationBar.isHidden = true
+        loadRecruitList.onNext(filterRequest)
     }
     
     override func viewDidLayoutSubviews() {
@@ -208,14 +201,14 @@ final class HomeViewController: UIViewController {
             height: 50
         )
     }
-    
+
     // MARK: - Selectors
+    
     @objc
     private func resetButtonTapped() {
         filterRequest = (nil, nil, nil)
         print(filterRequest)
         loadRecruitList.onNext(filterRequest)
-        //        filteringDateRecruitList.onNext(nil)
         dateFilterButton.setTitle("날짜 선택", for: .normal)
         regionFilterButton.setTitle("지역 선택", for: .normal)
         typeFilterButton.setTitle("유형 선택", for: .normal)
@@ -235,12 +228,8 @@ final class HomeViewController: UIViewController {
         titleDateformatter.dateFormat = "MM월 d일"
         let buttonTitleDate = titleDateformatter.string(from: sender.date)
         
-        dateFilterButton.setTitle(buttonTitleDate, for: .normal)
-        
-        //onnext로 날짜에 matchDateString쿼리 날리기
-        //        filteringDateRecruitList.onNext(formattedDate)
         filterRequest.date = formattedDate
-        print(filterRequest)
+        dateFilterButton.setTitle(buttonTitleDate, for: .normal)
         loadRecruitList.onNext(filterRequest)
     }
     

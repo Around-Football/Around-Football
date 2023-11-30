@@ -150,19 +150,16 @@ final class FirebaseAPI {
             var collectionRef: Query = Firestore.firestore().collection("Recruit")
             
             if let date = input.date {
-                print("언래핑됨")
                 collectionRef = collectionRef
                     .whereField("matchDateString", isEqualTo: date)
             }
             
             if let region = input.region {
-                print("언래핑됨")
                 collectionRef = collectionRef
-                    .whereField("fieldAddress", isGreaterThan: region)
+                    .whereField("region", isEqualTo: region)
             }
             
             if let type = input.type {
-                print("언래핑됨")
                 collectionRef = collectionRef
                     .whereField("type", isEqualTo: type)
             }
@@ -186,102 +183,6 @@ final class FirebaseAPI {
         }
         .subscribe(on: ConcurrentDispatchQueueScheduler(qos: .background))
     }
-//
-//    //date
-//    func fetchRecruitDate(date: String?) -> Observable<[Recruit]> {
-//        return Observable.create { observer in
-//            var collectionRef: Query = Firestore.firestore().collection("Recruit")
-//
-//            //type있을때만 type으로 이동
-//            if let date = date {
-//                collectionRef = collectionRef
-//                    .whereField("matchDateString", isEqualTo: date)
-//            }
-//            
-//            collectionRef.getDocuments { snapshot, error in
-//                if let error {
-//                    observer.onError(error)
-//                }
-//                
-//                guard let snapshot else { return }
-//                
-//                let recruits = snapshot.documents.compactMap { document -> Recruit? in
-//                    
-//                    return Recruit(dictionary: document.data())
-//                }
-//            
-//                observer.onNext(recruits)
-//                observer.onCompleted()
-//            }
-//            
-//            return Disposables.create()
-//        }
-//        .subscribe(on: ConcurrentDispatchQueueScheduler(qos: .background))
-//    }
-//    
-//    //region
-//    func fetchRecruitRegion(region: String?) -> Observable<[Recruit]> {
-//        return Observable.create { observer in
-//            var collectionRef: Query = Firestore.firestore().collection("Recruit")
-//
-//            //region 있을때만 이동
-//            if let region = region {
-//                collectionRef = collectionRef
-//                    .whereField("fieldAddress", isGreaterThan: region)
-//            }
-//            
-//            collectionRef.getDocuments { snapshot, error in
-//                if let error {
-//                    observer.onError(error)
-//                }
-//                
-//                guard let snapshot else { return }
-//                
-//                let recruits = snapshot.documents.compactMap { document -> Recruit? in
-//                    
-//                    return Recruit(dictionary: document.data())
-//                }
-//            
-//                observer.onNext(recruits)
-//                observer.onCompleted()
-//            }
-//            
-//            return Disposables.create()
-//        }
-//        .subscribe(on: ConcurrentDispatchQueueScheduler(qos: .background))
-//    }
-//    
-//    //type
-//    func fetchRecruitType(type: String?) -> Observable<[Recruit]> {
-//        return Observable.create { observer in
-//            var collectionRef: Query = Firestore.firestore().collection("Recruit")
-//
-//            //type있을때만 type으로 이동
-//            if let type = type {
-//                collectionRef = collectionRef
-//                    .whereField("type", isEqualTo: type)
-//            }
-//            
-//            collectionRef.getDocuments { snapshot, error in
-//                if let error {
-//                    observer.onError(error)
-//                }
-//                
-//                guard let snapshot else { return }
-//                
-//                let recruits = snapshot.documents.compactMap { document -> Recruit? in
-//                    
-//                    return Recruit(dictionary: document.data())
-//                }
-//            
-//                observer.onNext(recruits)
-//                observer.onCompleted()
-//            }
-//            
-//            return Disposables.create()
-//        }
-//        .subscribe(on: ConcurrentDispatchQueueScheduler(qos: .background))
-//    }
 }
 
 // MARK: - Recruit create 함수
@@ -293,6 +194,7 @@ extension FirebaseAPI {
         fieldID: String,
         fieldName: String,
         fieldAddress: String,
+        region: String,
         type: String?,
         recruitedPeopleCount: Int,
         title: String?,
@@ -310,6 +212,7 @@ extension FirebaseAPI {
                     "fieldID": fieldID,
                     "fieldName": fieldName,
                     "fieldAddress": fieldAddress,
+                    "region": region,
                     "type": type,
                     "recruitedPeopleCount": recruitedPeopleCount,
                     "title": title,
