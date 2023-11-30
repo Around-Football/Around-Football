@@ -41,6 +41,7 @@ final class HomeTableViewCell: UITableViewCell {
     
     private var userNameLabel = UILabel().then {
         $0.text = "Recurit 0명"
+        $0.font = UIFont.systemFont(ofSize: 15, weight: .semibold)
     }
     
     // MARK: - Lifecycles
@@ -62,7 +63,7 @@ final class HomeTableViewCell: UITableViewCell {
         typeLabel.text = "유형: \(item.type)"
         dateLabel.text = "일정: \(item.matchDateString ?? "") \(item.startTime ?? "") - \(item.endTime ?? "")"
         recruitLabel.text = "모집 용병: \(item.recruitedPeopleCount) 명"
-        userNameLabel.text = "by. \(item.userName)"
+        userNameLabel.text = "\(item.userName)"
     }
     
     private func configureUI() {
@@ -103,7 +104,7 @@ final class HomeTableViewCell: UITableViewCell {
         
         userNameLabel.snp.makeConstraints { make in
             make.top.equalTo(recruitLabel.snp.bottom).offset(5)
-            make.leading.equalTo(titleLabel)
+            make.trailing.equalTo(snp.trailing).offset(SuperviewOffsets.trailingPadding)
             make.bottom.equalToSuperview().offset(-10)
         }
     }
