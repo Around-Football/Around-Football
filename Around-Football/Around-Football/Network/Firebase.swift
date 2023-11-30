@@ -165,16 +165,16 @@ final class FirebaseAPI {
         }
         .subscribe(on: ConcurrentDispatchQueueScheduler(qos: .background))
     }
-    
+
     //date
-    func fetchRecruitFieldDataType(type: String?) -> Observable<[Recruit]> {
+    func fetchRecruitDate(date: String?) -> Observable<[Recruit]> {
         return Observable.create { observer in
             var collectionRef: Query = Firestore.firestore().collection("Recruit")
 
             //type있을때만 type으로 이동
-            if let type = type {
+            if let date = date {
                 collectionRef = collectionRef
-                    .whereField("type", isEqualTo: type)
+                    .whereField("matchDateString", isEqualTo: date)
             }
             
             collectionRef.getDocuments { snapshot, error in
@@ -198,7 +198,8 @@ final class FirebaseAPI {
         .subscribe(on: ConcurrentDispatchQueueScheduler(qos: .background))
     }
     
-    func fetchRecruitFieldRegionType(region: String?) -> Observable<[Recruit]> {
+    //region
+    func fetchRecruitRegion(region: String?) -> Observable<[Recruit]> {
         return Observable.create { observer in
             var collectionRef: Query = Firestore.firestore().collection("Recruit")
 
@@ -206,6 +207,38 @@ final class FirebaseAPI {
             if let region = region {
                 collectionRef = collectionRef
                     .whereField("fieldAddress", isGreaterThan: region)
+            }
+            
+            collectionRef.getDocuments { snapshot, error in
+                if let error {
+                    observer.onError(error)
+                }
+                
+                guard let snapshot else { return }
+                
+                let recruits = snapshot.documents.compactMap { document -> Recruit? in
+                    
+                    return Recruit(dictionary: document.data())
+                }
+            
+                observer.onNext(recruits)
+                observer.onCompleted()
+            }
+            
+            return Disposables.create()
+        }
+        .subscribe(on: ConcurrentDispatchQueueScheduler(qos: .background))
+    }
+    
+    //type
+    func fetchRecruitType(type: String?) -> Observable<[Recruit]> {
+        return Observable.create { observer in
+            var collectionRef: Query = Firestore.firestore().collection("Recruit")
+
+            //type있을때만 type으로 이동
+            if let type = type {
+                collectionRef = collectionRef
+                    .whereField("type", isEqualTo: type)
             }
             
             collectionRef.getDocuments { snapshot, error in
