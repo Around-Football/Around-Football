@@ -8,12 +8,15 @@
 import UIKit
 
 import FirebaseAuth
+import RxSwift
+import RxCocoa
 
 final class InfoViewController: UIViewController {
     
     // MARK: - Properties
     
     var viewModel: InfoViewModel
+    private var disposeBag = DisposeBag()
     private let profileAndEditView = ProfileAndEditView()
     
     private let iconAndImage: [(icon: String, title: String)] = [
@@ -63,40 +66,21 @@ final class InfoViewController: UIViewController {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         configureUI()
         configureStackView()
         setButtonDelegate()
         setUserInfo()
-        // TODO: - Coordinator Refactoring
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(didRecieveLoginNotification(_:)),
-                                               name: NSNotification.Name("LoginNotification"),
-                                               object: nil)
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        setUserInfo()
         setLogoutButton()
-    }
-    
-    deinit {
-        NotificationCenter.default.removeObserver(self)
     }
     
     // MARK: - Selectors
     
     @objc
-    func didRecieveLoginNotification(_ notification: Notification) {
-        setUserInfo()
-    }
-    
-    @objc
     func logoutButtonTapped() {
         UserService.shared.logout()
-        UserService.shared.isLogoutObservable.onNext(())
         viewModel.coordinator?.presentLoginViewController()
         tabBarController?.selectedIndex = 0 //로그아웃하면 메인탭으로 이동
     }
@@ -104,35 +88,25 @@ final class InfoViewController: UIViewController {
     // MARK: - Helpers
     
     private func setLogoutButton() {
-        UserService.shared.currentUser_Rx
-            .subscribe(onNext: { [weak self] user in
-                guard let self else { return }
-                if user?.id != nil {
-                    logoutButton.setTitle("로그아웃", for: .normal)
-                } else {
-                    logoutButton.setTitle("로그인", for: .normal)
-                }
-            }).dispose()
-        
-//        if UserService.shared.user?.id != nil {
-//            logoutButton.setTitle("로그아웃", for: .normal)
-//        } else {
-//            logoutButton.setTitle("로그인", for: .normal)
-//        }
+        UserService.shared.currentUser_Rx.bind { [weak self] user in
+            guard let self else { return }
+            if user?.id == nil {
+                logoutButton.setTitle("로그인", for: .normal)
+            } else {
+                logoutButton.setTitle("로그아웃", for: .normal)
+            }
+        }.disposed(by: disposeBag)
     }
     
     private func setUserInfo() {
         UserService.shared.currentUser_Rx.bind { [weak self] user in
-            guard
-                let self,
-                let user
-            else {
-                self?.profileAndEditView.userName.text = "로그인 해주세요"
-                return
+            guard let self else { return }
+            if user == nil {
+                profileAndEditView.userName.text = "로그인 해주세요"
+            } else {
+                profileAndEditView.userName.text = user?.userName
             }
-            
-            profileAndEditView.userName.text = user.userName
-        }.dispose()
+        }.disposed(by: disposeBag)
     }
     
     private func configureStackView() {
@@ -143,7 +117,7 @@ final class InfoViewController: UIViewController {
             views[3].setValues(name: "구력", content: "1년")
         }
     }
-
+    
     private func configureUI() {
         view.backgroundColor = .white
         navigationItem.title = "프로필"
@@ -194,12 +168,6 @@ final class InfoViewController: UIViewController {
                         viewModel.coordinator?.pushEditView()
                     }
                 }).dispose()
-            
-//            if UserService.shared.user?.id == nil {
-//                viewModel.coordinator?.presentLoginViewController()
-//            } else {
-//                viewModel.coordinator?.pushEditView()
-//            }
         }
         profileAndEditView.settingButtonActionHandler = { [weak self] in
             guard let self else { return }
@@ -213,12 +181,6 @@ final class InfoViewController: UIViewController {
                         viewModel.coordinator?.pushEditView()
                     }
                 }).dispose()
-            
-//            if UserService.shared.user?.id == nil {
-//                viewModel.coordinator?.presentLoginViewController()
-//            } else {
-//                viewModel.coordinator?.pushSettingView()
-//            }
         }
     }
 }

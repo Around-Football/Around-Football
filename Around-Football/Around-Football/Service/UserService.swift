@@ -69,10 +69,11 @@ final class UserService: NSObject {
                 owner.currentUser_Rx.onNext(nil)
                 
                 //TODO: - 나중에 로그아웃시 updateFCMToken 수정하기
-                //                guard let user = owner.user else { return }
-                //                FirebaseAPI.shared.updateFCMToken(uid: user.id, fcmToken: "") { error in
-                //                    print("DEBUG - Logout FCM update error", error?.localizedDescription as Any)
-                //                }
+                guard let uid = Auth.auth().currentUser?.uid else { return }
+                
+                FirebaseAPI.shared.updateFCMToken(uid: uid, fcmToken: "") { error in
+                    print("DEBUG - Logout FCM update error", error?.localizedDescription as Any)
+                }
                 
                 Messaging.messaging().deleteToken { error in
                     if let error = error {
