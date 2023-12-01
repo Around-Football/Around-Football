@@ -101,6 +101,7 @@ final class MapViewController: UIViewController {
             
             viewModel.fetchFields()
             viewModel.selectedDate = self.datePicker.date
+            _ = getlodDatas(label: MapLabel(labelType: .fieldPosition, poi: .fieldPosition(viewModel.fields.map{$0.id})), fields: viewModel.fields)
         }
     }
     
