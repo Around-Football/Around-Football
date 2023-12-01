@@ -25,8 +25,9 @@ final class InviteViewController: UIViewController {
     private let placeView = GroundTitleView()
     private let peopleView = PeopleCountView()
     private let calenderViewController = CalenderViewController()
-    private var id = UserService.shared.user?.id
-    private var userName = UserService.shared.user?.userName
+    private var user: User?
+    private var id: String?
+    private var userName: String?
     private var fieldID = UUID().uuidString
     private var fieldName: String = ""
     private var fieldAddress: String = ""
@@ -143,7 +144,7 @@ final class InviteViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        setUser()
         configureUI()
         keyboardController()
         setAddButton()
@@ -167,6 +168,16 @@ final class InviteViewController: UIViewController {
     
     // MARK: - Helpers
     
+    private func setUser() {
+        UserService.shared.currentUser_Rx.subscribe(onNext: { [weak self] user in
+            guard let self else { return }
+            self.user = user
+            id = user?.id
+            userName = user?.userName
+        })
+        .disposed(by: disposeBag)
+    }
+    
     private func setAddButton() {
         
         searchViewModel.dataSubject
@@ -189,7 +200,7 @@ final class InviteViewController: UIViewController {
                let content = content,
                let matchDateString = matchDateString {
                 inviteViewModel.createRecruitFieldData(
-                    user: UserService.shared.user ?? User(dictionary: [:]),
+                    user: user ?? User(dictionary: [:]),
                     fieldID: fieldID,
                     fieldName: fieldName,
                     fieldAddress: fieldAddress,

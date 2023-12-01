@@ -7,13 +7,13 @@
 
 import Foundation
 
-import RxSwift
-import RxRelay
 import Firebase
 import FirebaseAuth
 import MessageKit
+import RxSwift
+import RxRelay
 
-class ChatViewModel {
+final class ChatViewModel {
     
     // MARK: - Properties
     
