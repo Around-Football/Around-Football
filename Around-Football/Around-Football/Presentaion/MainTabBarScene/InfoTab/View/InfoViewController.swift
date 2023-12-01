@@ -93,11 +93,10 @@ final class InfoViewController: UIViewController {
         setUserInfo()
     }
     
-    @objc 
+    @objc
     func logoutButtonTapped() {
         UserService.shared.logout()
-        
-//        print("로그아웃 완료, 현재 uid: \(UserService.shared.user?.id)")
+        UserService.shared.isLogoutObservable.onNext(())
         viewModel.coordinator?.presentLoginViewController()
         tabBarController?.selectedIndex = 0 //로그아웃하면 메인탭으로 이동
     }
@@ -105,16 +104,35 @@ final class InfoViewController: UIViewController {
     // MARK: - Helpers
     
     private func setLogoutButton() {
-        if UserService.shared.user?.id != nil {
-            logoutButton.setTitle("로그아웃", for: .normal)
-        } else {
-            logoutButton.setTitle("로그인", for: .normal)
-        }
+        UserService.shared.currentUser_Rx
+            .subscribe(onNext: { [weak self] user in
+                guard let self else { return }
+                if user?.id != nil {
+                    logoutButton.setTitle("로그아웃", for: .normal)
+                } else {
+                    logoutButton.setTitle("로그인", for: .normal)
+                }
+            }).dispose()
+        
+//        if UserService.shared.user?.id != nil {
+//            logoutButton.setTitle("로그아웃", for: .normal)
+//        } else {
+//            logoutButton.setTitle("로그인", for: .normal)
+//        }
     }
     
     private func setUserInfo() {
-        profileAndEditView.userName.text = UserService.shared.user?.userName ?? "로그인 해주세요"
-        /*nfoStackView.view*/
+        UserService.shared.currentUser_Rx.bind { [weak self] user in
+            guard
+                let self,
+                let user
+            else {
+                self?.profileAndEditView.userName.text = "로그인 해주세요"
+                return
+            }
+            
+            profileAndEditView.userName.text = user.userName
+        }.dispose()
     }
     
     private func configureStackView() {
@@ -166,19 +184,41 @@ final class InfoViewController: UIViewController {
     private func setButtonDelegate() {
         profileAndEditView.editButtonActionHandler = { [weak self] in
             guard let self else { return }
-            if UserService.shared.user?.id == nil {
-                viewModel.coordinator?.presentLoginViewController()
-            } else {
-                viewModel.coordinator?.pushEditView()
-            }
+            
+            UserService.shared.currentUser_Rx
+                .subscribe(onNext: { [weak self] user in
+                    guard let self else { return }
+                    if user?.id == nil {
+                        viewModel.coordinator?.presentLoginViewController()
+                    } else {
+                        viewModel.coordinator?.pushEditView()
+                    }
+                }).dispose()
+            
+//            if UserService.shared.user?.id == nil {
+//                viewModel.coordinator?.presentLoginViewController()
+//            } else {
+//                viewModel.coordinator?.pushEditView()
+//            }
         }
         profileAndEditView.settingButtonActionHandler = { [weak self] in
             guard let self else { return }
-            if UserService.shared.user?.id == nil {
-                viewModel.coordinator?.presentLoginViewController()
-            } else {
-                viewModel.coordinator?.pushSettingView()
-            }
+            
+            UserService.shared.currentUser_Rx
+                .subscribe(onNext: { [weak self] user in
+                    guard let self else { return }
+                    if user?.id == nil {
+                        viewModel.coordinator?.presentLoginViewController()
+                    } else {
+                        viewModel.coordinator?.pushEditView()
+                    }
+                }).dispose()
+            
+//            if UserService.shared.user?.id == nil {
+//                viewModel.coordinator?.presentLoginViewController()
+//            } else {
+//                viewModel.coordinator?.pushSettingView()
+//            }
         }
     }
 }

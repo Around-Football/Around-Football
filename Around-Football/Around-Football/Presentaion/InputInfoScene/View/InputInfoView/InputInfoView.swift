@@ -10,7 +10,7 @@ import UIKit
 import Then
 import SnapKit
 
-class InputInfoView: UIView {
+final class InputInfoView: UIView {
     
     // MARK: - Properties
     
@@ -294,7 +294,6 @@ class InputInfoView: UIView {
         }
         
         contentView.snp.makeConstraints { make in
-//            make.edges.equalTo(mainScrollView.contentLayoutGuide)
             make.width.equalTo(mainScrollView.snp.width)
             make.height.equalTo(mainScrollView.snp.height)
         }
