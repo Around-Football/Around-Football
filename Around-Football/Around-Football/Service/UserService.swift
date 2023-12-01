@@ -22,38 +22,24 @@ import RxRelay
 final class UserService: NSObject {
     
     // MARK: - Properties
+    
     static let shared = UserService()
-    
-    //현재 접속한 유저
-    //    var user: User?
-    
-    private var email: String?
     var currentNonce: String?
     
     // MARK: - Rx Properties
-    //    var currentUser_Rx: BehaviorRelay<User?> = BehaviorRelay(value: nil)
+    
     var currentUser_Rx: BehaviorSubject<User?> = BehaviorSubject(value: nil)
-    private let disposeBag = DisposeBag()
     var isLoginObservable: PublishSubject<Void> = PublishSubject()
     var isLogoutObservable: PublishSubject<Void> = PublishSubject()
-    
+    private let disposeBag = DisposeBag()
     
     // MARK: - Lifecycles
     
     private override init() {
         super.init()
-        //        readUser()
         configureCurrentUser()
         configureLogOutObserver()
     }
-    
-    //    private func readUser() {
-    //        FirebaseAPI.shared.readCurrentUser { [weak self] user in
-    //            guard let self else { return }
-    //            self.user = user
-    //            print("DEBUG - LOGIN: \(String(describing: user))")
-    //        }
-    //    }
     
     private func configureCurrentUser() {
         isLoginObservable
@@ -66,7 +52,6 @@ final class UserService: NSObject {
                     .catchAndReturn(nil)
             }
             .subscribe { user in
-                //                self.currentUser_Rx.accept(user)
                 self.currentUser_Rx.onNext(user)
                 // MARK: - 처음 로그인 옵저버블을 받아오는 시점에 currentUser_Rx의 초기값이 nil이라 무조건 inputInfo로 가는 이슈가 있었음. 여기서 currentUser_Rx의 값이 변경될때 user를 보낸뒤에 NotificationCenter 보내는걸로 수정
                 NotificationCenter.default.post(name: NSNotification.Name("LoginNotification"),
@@ -151,7 +136,7 @@ final class UserService: NSObject {
                         REF_USER.document(uid)
                             .setData(["id": uid]) { [weak self] error in
                                 guard let self else { return }
-                                if let error {
+                                if error != nil {
                                     return
                                 }
                                 
@@ -220,9 +205,11 @@ final class UserService: NSObject {
             //do something
             _ = user
             
-            email = user?.kakaoAccount?.email
-            createGoogleUser(email: self.email!, password: "\(self.email!)") //uid없을때만 만들도록 수정 완료
-            googleSignIn(email: self.email!, password: self.email!)
+            // TODO: - 비번 보안이슈로 UUID로 수정했는데 테스트하기
+            let email = user?.kakaoAccount?.email
+            let password = UUID().uuidString
+            createGoogleUser(email: email!, password: password)
+            googleSignIn(email: email!, password: password)
             
             // MARK: - 옵저버블 로그인 추가
             self.isLoginObservable.onNext(())
@@ -294,6 +281,7 @@ final class UserService: NSObject {
                 }
             }
         }
+        
         return result
     }
     
