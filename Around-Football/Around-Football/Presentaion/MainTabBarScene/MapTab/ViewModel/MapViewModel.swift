@@ -46,8 +46,9 @@ final class MapViewModel {
     // MARK: - API
     
     func fetchFields() {
-        firebaseAPI.fetchMockFieldsData { fields in
+        firebaseAPI.fetchFields { fields in
             self.fields = fields
+            
         }
     }
     
