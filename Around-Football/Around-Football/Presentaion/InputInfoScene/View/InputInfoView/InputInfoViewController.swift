@@ -46,10 +46,11 @@ final class InputInfoViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        navigationItem.title = "추가정보 입력"
+        invokedViewWillAppear.onNext(())
         bindUI()
         isInfoCompleted()
-        navigationItem.title = "추가정보 입력"
+
         keyboardController()
 
         inputInfoView.userNameTextField.delegate = self
@@ -71,13 +72,13 @@ final class InputInfoViewController: UIViewController {
         inputInfoView.gkButton.addTarget(self, action: #selector(gkButtonTapped), for: .touchUpInside)
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        invokedViewWillAppear.onNext(())
-    }
+//    override func viewWillAppear(_ animated: Bool) {
+////        invokedViewWillAppear.onNext(())
+//    }
     
-    override func viewWillDisappear(_ animated: Bool) {
-        viewModel?.coordinator?.removeThisChildCoordinators()
-    }
+//    override func viewWillDisappear(_ animated: Bool) {
+//        viewModel?.coordinator?.removeThisChildCoordinators()
+//    }
     
     deinit {
         NotificationCenter.default.removeObserver(self)
@@ -205,19 +206,23 @@ final class InputInfoViewController: UIViewController {
     func nextButtonTapped(_ sender: UIButton) {
         print("DEBUG: InputInfoViewController - nextButtonTapped")
         isInfoCompleted()
-        FirebaseAPI.shared.updateUser(User(dictionary: ["userName" : userName,
-                                                        "age" : age,
-                                                        "gender" : gender,
-                                                        "area" : area,
-                                                        "mainUsedFeet" : mainUsedFeet,
-                                                        "position" : Array(position)
-                                                       ]))
-        
-        UserService.shared.isLoginObservable.onNext(())
+        let user = User(dictionary: ["userName" : userName,
+                                     "age" : age,
+                                     "gender" : gender,
+                                     "area" : area,
+                                     "mainUsedFeet" : mainUsedFeet,
+                                     "position" : Array(position)
+                                    ])
+        FirebaseAPI.shared.updateUser(user)
         
         //TODO: - 모달, push에 따라 분기처리
         viewModel?.coordinator?.dismissView()
         viewModel?.coordinator?.popInputInfoViewController()
+        
+        UserService.shared.currentUser_Rx.onNext(user)
+//        UserService.shared.isLoginObservable.onNext(())
+        
+
         
 //        // MARK: - UserService의 User 업데이트 해주기
 //        
@@ -228,10 +233,6 @@ final class InputInfoViewController: UIViewController {
 //            //TODO: - 모달, push에 따라 분기처리
 //            viewModel?.coordinator?.dismissView()
 //            viewModel?.coordinator?.popInputInfoViewController()
-//        }
-        
-//        UserService.shared.currentUser_Rx.subscribe { user in
-//            <#code#>
 //        }
     }
     

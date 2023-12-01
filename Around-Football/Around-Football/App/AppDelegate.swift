@@ -39,12 +39,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         // MARK: - 앱이 켜질때 유저정보 가져옴. 기존 UID가 있는지 없는지
         if Auth.auth().currentUser != nil {
-//            UserService.shared.currentUser_Rx.accept(<#T##event: User?##User?#>)
             UserService.shared.isLoginObservable.onNext(())
         }
-//        FirebaseAPI.shared.readCurrentUser { user in
-//            print("현재 유저 UID: \(user?.id)")
-//        }
         
         return true
     }

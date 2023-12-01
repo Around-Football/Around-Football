@@ -15,7 +15,7 @@ final class InfoViewController: UIViewController {
     
     // MARK: - Properties
     
-    var viewModel: InfoViewModel
+    private var viewModel: InfoViewModel
     private var disposeBag = DisposeBag()
     private let profileAndEditView = ProfileAndEditView()
     
@@ -71,9 +71,9 @@ final class InfoViewController: UIViewController {
         super.viewDidLoad()
         configureUI()
         configureStackView()
-        setButtonDelegate()
-        setUserInfo()
-        setLogoutButton()
+        bindButtonActionHandler()
+        bindUserInfo()
+        bindLogoutButton()
     }
     
     // MARK: - Selectors
@@ -87,7 +87,7 @@ final class InfoViewController: UIViewController {
     
     // MARK: - Helpers
     
-    private func setLogoutButton() {
+    private func bindLogoutButton() {
         UserService.shared.currentUser_Rx.bind { [weak self] user in
             guard let self else { return }
             if user?.id == nil {
@@ -98,7 +98,7 @@ final class InfoViewController: UIViewController {
         }.disposed(by: disposeBag)
     }
     
-    private func setUserInfo() {
+    private func bindUserInfo() {
         UserService.shared.currentUser_Rx.bind { [weak self] user in
             guard let self else { return }
             if user == nil {
@@ -110,12 +110,21 @@ final class InfoViewController: UIViewController {
     }
     
     private func configureStackView() {
-        if let views = infoStackView.arrangedSubviews as? [InfoArrangedView] {
-            views[0].setValues(name: "리뷰", content: "(1.0 - 1.0)")
-            views[1].setValues(name: "매너", content: "0")
-            views[2].setValues(name: "성별", content: "남자")
-            views[3].setValues(name: "구력", content: "1년")
-        }
+        UserService.shared.currentUser_Rx
+            .bind { [weak self] user in
+                guard
+                    let self,
+                    let user,
+                    let views = infoStackView.arrangedSubviews as? [InfoArrangedView],
+                    let contents = [String(user.age), user.area, user.mainUsedFeet, user.position.joined(separator: ", ")] as? [String]
+                else { return }
+                
+            var titles = ["성별", "지역", "주발", "포지션"]
+            
+            (0..<titles.count).forEach {
+                views[$0].setValues(name: titles[$0], content: contents[$0])
+            }
+        }.disposed(by: disposeBag)
     }
     
     private func configureUI() {
@@ -155,11 +164,12 @@ final class InfoViewController: UIViewController {
         }
     }
     
-    private func setButtonDelegate() {
+    private func bindButtonActionHandler() {
         profileAndEditView.editButtonActionHandler = { [weak self] in
             guard let self else { return }
             
             UserService.shared.currentUser_Rx
+                .take(1) //버튼 누를때만 요청하도록 1번만! 아니면 연동되서 값 바뀔때마다 실행됨
                 .subscribe(onNext: { [weak self] user in
                     guard let self else { return }
                     if user?.id == nil {
@@ -167,12 +177,14 @@ final class InfoViewController: UIViewController {
                     } else {
                         viewModel.coordinator?.pushEditView()
                     }
-                }).dispose()
+                }).disposed(by: disposeBag)
         }
+        
         profileAndEditView.settingButtonActionHandler = { [weak self] in
             guard let self else { return }
             
             UserService.shared.currentUser_Rx
+                .take(1)
                 .subscribe(onNext: { [weak self] user in
                     guard let self else { return }
                     if user?.id == nil {
@@ -180,7 +192,8 @@ final class InfoViewController: UIViewController {
                     } else {
                         viewModel.coordinator?.pushEditView()
                     }
-                }).dispose()
+                })
+                .disposed(by: disposeBag)
         }
     }
 }
