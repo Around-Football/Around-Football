@@ -13,6 +13,7 @@ import RxAlamofire
 import RxSwift
 
 final class FirebaseAPI {
+    
     static let shared = FirebaseAPI()
     
     private init() { }
@@ -38,25 +39,37 @@ final class FirebaseAPI {
                 ])
     }
     
-    func readUser(completion: @escaping (User?) -> Void) {
-        guard let currentUserID = Auth.auth().currentUser?.uid else {
-            completion(nil)
-            return
-        }
-        
-        REF_USER.document(currentUserID).getDocument(as: User.self) { result in
-            switch result {
-            case .success(let user):
-                print("readUser성공: \(user)")
-                // MARK: - UserService user 업데이
-                UserService.shared.user = user
-                completion(user)
-            case .failure(let error):
-                print("Error decoding user: \(error)")
-                completion(nil)
-            }
+    //현재 유저 불러오기
+//    func readCurrentUser(completion: @escaping (User?) -> Void) {
+//        guard let currentUserID = Auth.auth().currentUser?.uid else {
+//            completion(nil)
+//            return
+//        }
+//        
+//        REF_USER.document(currentUserID).getDocument(as: User.self) { result in
+//            switch result {
+//            case .success(let user):
+//                print("readUser성공: \(user)")
+//                // MARK: - UserService user 업데이
+//                UserService.shared.user = user
+//                completion(user)
+//            case .failure(let error):
+//                print("Error decoding user: \(error)")
+//                completion(nil)
+//            }
+//        }
+//    }
+    
+    //uid로 유저 불러오기
+    func fetchUser(uid: String, completion: @escaping (User) -> Void) {
+        REF_USER.document(uid).getDocument { snapshot, error in
+            guard let dictionary = snapshot?.data() else { return }
+            
+            let user = User(dictionary: dictionary)
+            completion(user)
         }
     }
+    
     
     func fetchFields(completion: @escaping(([Field]) -> Void)) {
         REF_FIELD.getDocuments { snapshot, error in
@@ -96,6 +109,7 @@ final class FirebaseAPI {
     }
     
     // MARK: - AuthService
+    
     func updateFCMTokenAndFetchUser(uid: String, fcmToken: String) -> Single<User?> {
         return Single.create { single in
             self.updateFCMToken(uid: uid, fcmToken: fcmToken) { error in
@@ -117,17 +131,8 @@ final class FirebaseAPI {
         updateRefData(ref: ref, data: data, completion: completion)
     }
     
-    // TODO: - 창현이와 readUser 함수 맞추기
-    func fetchUser(uid: String, completion: @escaping (User) -> Void) {
-        REF_USER.document(uid).getDocument { snapshot, error in
-            guard let dictionary = snapshot?.data() else { return }
-            
-            let user = User(dictionary: dictionary)
-            completion(user)
-        }
-    }
-    
     // TODO: - ChannelAPI와 통합하기
+    
     func updateRefData(ref: DocumentReference, data: [String: Any], completion: @escaping ((Error?) -> Void)) {
         ref.updateData(data) { error in
             if let error = error {
@@ -141,6 +146,7 @@ final class FirebaseAPI {
     
     // MARK: - RxAlamofire
     
+    //HomeList
     func readRecruitRx(input: (
         date: String?,
         region: String?,
@@ -246,11 +252,8 @@ extension FirebaseAPI {
                 }
                 
                 let documentsData = snapshot.documents.map { $0.data() }
-                
             }
     }
-    
-    
 }
 
 func saveFieldJsonData<T: Encodable>(data:T) {

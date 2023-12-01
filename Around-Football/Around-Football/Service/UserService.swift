@@ -5,8 +5,9 @@
 //  Created by 강창현 on 10/6/23.
 //
 
-import Foundation
+import AuthenticationServices
 import CryptoKit
+import Foundation
 
 import FirebaseAuth
 import FirebaseMessaging
@@ -15,7 +16,6 @@ import KakaoSDKCommon
 import KakaoSDKUser
 import FirebaseCore
 import GoogleSignIn
-import AuthenticationServices
 import RxSwift
 import RxRelay
 
@@ -24,14 +24,15 @@ final class UserService: NSObject {
     // MARK: - Properties
     static let shared = UserService()
     
+    //현재 접속한 유저
     var user: User?
     
-    private var userProfile: String?
     private var email: String?
     var currentNonce: String?
     
     // MARK: - Rx Properties
-    var currentUser_Rx: BehaviorRelay<User?> = BehaviorRelay(value: nil)
+//    var currentUser_Rx: BehaviorRelay<User?> = BehaviorRelay(value: nil)
+    var currentUser_Rx: BehaviorSubject<User?> = BehaviorSubject(value: nil)
     private let disposeBag = DisposeBag()
     var isLoginObservable: PublishSubject<Void> = PublishSubject()
     var isLogoutObservable: PublishSubject<Void> = PublishSubject()
@@ -41,18 +42,18 @@ final class UserService: NSObject {
     
     private override init() {
         super.init()
-        readUser()
+//        readUser()
         configureCurrentUser()
         configureLogOutObserver()
     }
     
-    func readUser() {
-        FirebaseAPI.shared.readUser { [weak self] user in
-            guard let self else { return }
-            self.user = user
-            print("DEBUG - LOGIN: \(String(describing: user))")
-        }
-    }
+//    private func readUser() {
+//        FirebaseAPI.shared.readCurrentUser { [weak self] user in
+//            guard let self else { return }
+//            self.user = user
+//            print("DEBUG - LOGIN: \(String(describing: user))")
+//        }
+//    }
     
     private func configureCurrentUser() {
         
@@ -66,7 +67,8 @@ final class UserService: NSObject {
                     .catchAndReturn(nil)
             }
             .subscribe { user in
-                self.currentUser_Rx.accept(user)
+//                self.currentUser_Rx.accept(user)
+                self.currentUser_Rx.onNext(user)
             }
             .disposed(by: disposeBag)
     }
@@ -156,7 +158,6 @@ final class UserService: NSObject {
                                 NotificationCenter.default.post(name: NSNotification.Name("LoginNotification"),
                                                                 object: nil,
                                                                 userInfo: nil)
-
                             }
                     }
                 }
@@ -189,7 +190,6 @@ final class UserService: NSObject {
             _ = oauthToken
             
             self.getKakaoUserInfo()
-            
         }
     }
     
@@ -221,12 +221,13 @@ final class UserService: NSObject {
             //do something
             _ = user
             
-            self.userProfile = user?.kakaoAccount?.profile?.nickname
             self.email = user?.kakaoAccount?.email
-            print("userProfile: \(String(describing: self.userProfile)), email: \(String(describing: self.email))")
             self.createGoogleUser(email: self.email!, password: "\(self.email!)")
             self.googleSignIn(email: self.email!, password: self.email!)
 
+            // MARK: - 옵저버블 로그인 추가
+            self.isLoginObservable.onNext(())
+            
             // TODO: - Coordinator Refactoring
             NotificationCenter.default.post(name: NSNotification.Name("LoginNotification"),
                                             object: nil,
@@ -241,8 +242,9 @@ final class UserService: NSObject {
                 return
             }
             self.googleLogOut()
+            self.isLogoutObservable.onNext(())
+            self.currentUser_Rx.onNext(nil)
             print("logout() success.")
-            
         }
     }
     
@@ -308,7 +310,8 @@ final class UserService: NSObject {
             try firebaseAuth.signOut()
             isLogoutObservable.onNext(())
             self.user = nil
-            self.currentUser_Rx.accept(nil)
+//            self.currentUser_Rx.accept(nil)
+            currentUser_Rx.onNext(nil)
             print("userLogout")
         } catch let signOutError as NSError {
             print("Error signing out: %@", signOutError)

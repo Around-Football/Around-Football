@@ -23,7 +23,7 @@ class ChatViewModel {
     var channel: BehaviorRelay<Channel?> = BehaviorRelay(value: nil)
     var messages: BehaviorRelay<[Message]> = BehaviorRelay(value: [])
     let channelInfo: ChannelInfo
-    let currentUser: User? = UserService.shared.currentUser_Rx.value
+    var currentUser: User?
     var withUser: User? = nil
     var isSendingPhoto: BehaviorRelay<Bool> = BehaviorRelay(value: false)
     var isNewChat: Bool = false
@@ -50,6 +50,13 @@ class ChatViewModel {
         self.coordinator = coordinator
         self.channelInfo = channelInfo
         self.channel.accept(Channel(id: channelInfo.id, members: 2))
+        
+        // MARK: - value 옵저버블로 변경
+        UserService.shared.currentUser_Rx
+            .subscribe { [weak self] user in
+                guard let self else { return }
+                currentUser = user
+        }.dispose()
     }
     
     // MARK: - API

@@ -9,7 +9,9 @@ import Foundation
 
 import RxSwift
 
-class InputInfoViewModel {
+final class InputInfoViewModel {
+    
+    private var currentUserRx = UserService.shared.currentUser_Rx
     
     struct Input {
         let invokedViewWillAppear: Observable<Void>
@@ -33,13 +35,8 @@ class InputInfoViewModel {
     }
     
     private func loadFirebaseUserInfo(by inputObserver: Observable<Void>) -> Observable<User?> {
-        let userObserver = Observable.create { observer in
-            let user = UserService.shared.user
-            observer.onNext(user)
-            observer.onCompleted()
-            return Disposables.create()
-        }
-        
-        return userObserver
+        currentUserRx
+            .filter { $0 != nil }
+            .asObservable()
     }
 }

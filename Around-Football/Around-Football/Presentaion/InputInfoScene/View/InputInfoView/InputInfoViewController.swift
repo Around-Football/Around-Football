@@ -213,16 +213,26 @@ final class InputInfoViewController: UIViewController {
                                                         "position" : Array(position)
                                                        ]))
         
-        // MARK: - UserService의 User 업데이트 해주기
+        UserService.shared.isLoginObservable.onNext(())
         
-        FirebaseAPI.shared.readUser { [weak self] user in
-            guard let self else { return }
-            print("User로그인 완료: \(user)")
-            
-            //TODO: - 모달, push에 따라 분기처리
-            viewModel?.coordinator?.dismissView()
-            viewModel?.coordinator?.popInputInfoViewController()
-        }
+        //TODO: - 모달, push에 따라 분기처리
+        viewModel?.coordinator?.dismissView()
+        viewModel?.coordinator?.popInputInfoViewController()
+        
+//        // MARK: - UserService의 User 업데이트 해주기
+//        
+//        FirebaseAPI.shared.readCurrentUser { [weak self] user in
+//            guard let self else { return }
+//            print("User로그인 완료: \(user)")
+//            
+//            //TODO: - 모달, push에 따라 분기처리
+//            viewModel?.coordinator?.dismissView()
+//            viewModel?.coordinator?.popInputInfoViewController()
+//        }
+        
+//        UserService.shared.currentUser_Rx.subscribe { user in
+//            <#code#>
+//        }
     }
     
     @objc

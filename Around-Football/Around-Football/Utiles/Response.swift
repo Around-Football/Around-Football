@@ -6,6 +6,8 @@
 ////
 //
 //import Foundation
+
+//TODO: - 파일 삭제
 //
 //struct Response: Codable {
 //    let recruits: [Recruit_Rx]
