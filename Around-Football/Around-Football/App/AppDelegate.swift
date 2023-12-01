@@ -38,10 +38,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         UINavigationBar.appearance().tintColor = .label
 
         // MARK: - 앱이 켜질때 유저정보 가져옴. 기존 UID가 있는지 없는지
-        
         if Auth.auth().currentUser != nil {
-            
-            
 //            UserService.shared.currentUser_Rx.accept(<#T##event: User?##User?#>)
             UserService.shared.isLoginObservable.onNext(())
         }

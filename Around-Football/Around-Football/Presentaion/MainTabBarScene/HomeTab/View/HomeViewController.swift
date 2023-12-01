@@ -230,11 +230,20 @@ final class HomeViewController: UIViewController {
     
     @objc
     private func didTapFloatingButton() {
-        if UserService.shared.user?.id == nil {
-            viewModel.coordinator?.presentLoginViewController()
-        } else {
-            viewModel.coordinator?.pushInviteView()
-        }
+        UserService.shared.currentUser_Rx.subscribe(onNext: { [weak self] user in
+            guard let self else { return }
+            if user?.id == nil {
+                viewModel.coordinator?.presentLoginViewController()
+            } else {
+                viewModel.coordinator?.pushInviteView()
+            }
+        }).disposed(by: disposeBag)
+        
+//        if UserService.shared.user?.id == nil {
+//            viewModel.coordinator?.presentLoginViewController()
+//        } else {
+//            viewModel.coordinator?.pushInviteView()
+//        }
     }
     
     // MARK: - Helpers

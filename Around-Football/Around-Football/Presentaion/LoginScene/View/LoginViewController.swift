@@ -14,12 +14,14 @@ import Then
 import KakaoSDKCommon
 import KakaoSDKAuth
 import KakaoSDKUser
+import RxSwift
 
 final class LoginViewController: UIViewController {
     
     // MARK: - Properties
     
     var viewModel: LoginViewModel?
+    var disposeBag = DisposeBag()
     
     init(viewModel: LoginViewModel?) {
         self.viewModel = viewModel
@@ -100,21 +102,30 @@ final class LoginViewController: UIViewController {
     @objc
     func didRecieveLoginNotification(_ notification: Notification) {
         UserService.shared.currentUser_Rx
-            .do { [weak self] user in
+            .subscribe(onNext: { [weak self] user in
                 guard let self else { return }
-                if user?.userName == nil {
+                
+                if user?.userName == "" {
                     viewModel?.coordinator?.pushInputInfoViewController()
                 } else {
                     print("유저 네임 있음. 로그인 완료")
                     viewModel?.coordinator?.loginDone()
                 }
-            }
-            .subscribe()
-            .dispose()
-            
-        }
-
+            })
+            .disposed(by: disposeBag)
         
+        //            .do { [weak self] user in
+        //                guard let self else { return }
+        //                if user?.userName == nil {
+        //                    viewModel?.coordinator?.pushInputInfoViewController()
+        //                } else {
+        //                    print("유저 네임 있음. 로그인 완료")
+        //                    viewModel?.coordinator?.loginDone()
+        //                }
+//            }
+//            .subscribe()
+//            .dispose()
+        }
         
 //        FirebaseAPI.shared.readCurrentUser { [weak self] _ in
 //            guard let self else { return }
