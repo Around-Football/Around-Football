@@ -29,14 +29,15 @@ final class InputInfoViewController: UIViewController {
     lazy var area: String? = inputInfoView.userAreaTextField.text
     private var mainUsedFeet: String?
     private var position: Set<String?> = []
-    lazy var inputData = ["userName" : userName,
-                                  "age" : age,
-                                  "gender" : gender,
-                                  "area" : area,
-                                  "mainUsedFeet" : mainUsedFeet,
+    lazy var inputData = ["userName" : userName ?? "",
+                                  "age" : age ?? 0,
+                                  "gender" : gender ?? "",
+                                  "area" : area ?? "",
+                                  "mainUsedFeet" : mainUsedFeet ?? "",
                                   "position" : Array(position)] as [String : Any] {
         didSet { //값 변경할때마다 inputDataObserver로 데이터 보냄
             inputDataObserver.accept(inputData)
+            print("inputData: \(inputData)")
         }
     }
         
@@ -66,9 +67,7 @@ final class InputInfoViewController: UIViewController {
             inputInfoView.userNameTextField.delegate = self
             inputInfoView.userAgeTextField.delegate = self
             inputInfoView.userAreaTextField.delegate = self
-            
-            inputInfoView.nextButton.addTarget(self, action: #selector(nextButtonTapped), for: .touchUpInside)
-            
+
             inputInfoView.maleButton.addTarget(self, action: #selector(maleButtonTapped), for: .touchUpInside)
             inputInfoView.femaleButton.addTarget(self, action: #selector(femaleButtonTapped), for: .touchUpInside)
             
@@ -80,43 +79,27 @@ final class InputInfoViewController: UIViewController {
             inputInfoView.mfButton.addTarget(self, action: #selector(mfButtonTapped), for: .touchUpInside)
             inputInfoView.dfButton.addTarget(self, action: #selector(dfButtonTapped), for: .touchUpInside)
             inputInfoView.gkButton.addTarget(self, action: #selector(gkButtonTapped), for: .touchUpInside)
+            
+            inputInfoView.nextButton.addTarget(self, action: #selector(nextButtonTapped), for: .touchUpInside)
         }
         
         // MARK: - Helpers
         
-        /*
-         private lazy var inputData = ["userName" : userName,
-         "age" : age,
-         "gender" : gender,
-         "area" : area,
-         "mainUsedFeet" : mainUsedFeet,
-         "position" : Array(position)] as [String : Any]
-         */
-        
         private func bindButtons() {
             inputDataObserver
                 .map({ dic in
-                    if dic["userName"] as? String ?? "" != "" {
-                        return false
-                    }
-                    if (dic["age"] as? Int ?? 0) != 0 {
-                        return false
-                    }
-                    if dic["gender"] as? String ?? "" != "" {
-                        return false
-                    } 
-                    if dic["area"] as? String ?? "" != "" {
-                        return false
-                    }
-                    if dic["mainUsedFeet"] as? String ?? "" != "" {
-                        return false
-                    }
-                    if (dic["position"] as? [String] ?? []).isEmpty {
-                        return false
-                    }
+                    guard let _ = dic["userName"] as? String,
+                          let _ = dic["age"] as? Int,
+                          let _ = dic["gender"] as? String,
+                          let _ = dic["area"] as? String,
+                          let _ = dic["mainUsedFeet"] as? String,
+                          let position = dic["position"] as? [String],
+                          !position.isEmpty
                     else {
                         return true
                     }
+                    
+                    return false
                 })
                 .bind(onNext: { [weak self] bool in
                     guard let self else { return }
@@ -226,37 +209,8 @@ final class InputInfoViewController: UIViewController {
                 .disposed(by: disposeBag)
         }
         
-        //    private func isInfoCompleted() {
-        //        guard
-        //            inputInfoView.userNameTextField.text?.isEmpty == false,
-        //            inputInfoView.userAgeTextField.text?.isEmpty == false,
-        //            inputInfoView.userAreaTextField.text?.isEmpty == false,
-        //            inputInfoView.maleButton.isSelected || inputInfoView.femaleButton.isSelected,
-        //            inputInfoView.leftFootButton.isSelected || inputInfoView.rightFootButton.isSelected || inputInfoView.bothFeetButton.isSelected,
-        //            inputInfoView.fwButton.isSelected || inputInfoView.mfButton.isSelected ||
-        //                inputInfoView.dfButton.isSelected || inputInfoView.gkButton.isSelected
-        //        else {
-        //            inputInfoView.nextButton.setTitle("모든 항목을 작성해주세요", for: .normal)
-        //            inputInfoView.nextButton.setTitleColor(.gray, for: .normal)
-        //            return inputInfoView.nextButton.isEnabled = false
-        //        }
-        //        inputInfoView.nextButton.setTitle("작성 완료", for: .normal)
-        //        inputInfoView.nextButton.setTitleColor(.white, for: .normal)
-        //        return inputInfoView.nextButton.isEnabled = true
-        //    }
-        
         // MARK: - Selectors
         
-        /*
-         private lazy var inputData = ["userName" : userName,
-         "age" : age,
-         "gender" : gender,
-         "area" : area,
-         "mainUsedFeet" : mainUsedFeet,
-         "position" : Array(position)] as [String : Any]
-         */
-        
-        // FIXME: - 버튼 다 옵저버블로 만들어서 뷰모델에서 관리하기..?
         @objc
         func nextButtonTapped(_ sender: UIButton) {
             print("DEBUG: InputInfoViewController - nextButtonTapped")
@@ -280,6 +234,7 @@ final class InputInfoViewController: UIViewController {
                 inputData["gender"] = gender
             } else {
                 gender = nil
+                inputData["gender"] = nil
             }
         }
         
@@ -294,6 +249,7 @@ final class InputInfoViewController: UIViewController {
                 inputData["gender"] = gender
             } else {
                 gender = nil
+                inputData["gender"] = nil
             }
         }
         
@@ -312,6 +268,7 @@ final class InputInfoViewController: UIViewController {
                 inputData["mainUsedFeet"] = mainUsedFeet
             } else {
                 mainUsedFeet = nil
+                inputData["mainUsedFeet"] = nil
             }
         }
         
@@ -330,6 +287,7 @@ final class InputInfoViewController: UIViewController {
                 inputData["mainUsedFeet"] = mainUsedFeet
             } else {
                 mainUsedFeet = nil
+                inputData["mainUsedFeet"] = nil
             }
         }
         
@@ -348,6 +306,7 @@ final class InputInfoViewController: UIViewController {
                 inputData["mainUsedFeet"] = mainUsedFeet
             } else {
                 mainUsedFeet = nil
+                inputData["mainUsedFeet"] = nil
             }
         }
         
@@ -398,16 +357,15 @@ final class InputInfoViewController: UIViewController {
                 inputData["position"] = Array(position)
             }
         }
-        
-        
-        //TODO: - Keyboard 함수 Utiles로 정리
-        private func keyboardController() {
-            //화면 탭해서 키보드 내리기
-            let tapGesture = UITapGestureRecognizer(
-                target: self,
-                action: #selector(dismissKeyboard)
-            )
-            tapGesture.cancelsTouchesInView = false
-            view.addGestureRecognizer(tapGesture)
-        }
+    
+    //TODO: - Keyboard 함수 Utiles로 정리
+    private func keyboardController() {
+        //화면 탭해서 키보드 내리기
+        let tapGesture = UITapGestureRecognizer(
+            target: self,
+            action: #selector(dismissKeyboard)
+        )
+        tapGesture.cancelsTouchesInView = false
+        view.addGestureRecognizer(tapGesture)
+    }
     }
