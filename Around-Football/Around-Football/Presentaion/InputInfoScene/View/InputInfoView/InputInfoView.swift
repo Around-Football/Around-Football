@@ -63,6 +63,7 @@ final class InputInfoView: UIView {
         $0.placeholder = "나이를 입력해주세요"
         $0.borderStyle = .roundedRect
         $0.font = .systemFont(ofSize: 15)
+        $0.keyboardType = .numberPad
     }
     
     // 성별
