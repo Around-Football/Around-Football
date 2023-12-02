@@ -26,7 +26,6 @@ final class InputInfoViewController: UIViewController {
     lazy var userName: String? = inputInfoView.userNameTextField.text
     lazy var age: Int? = Int(inputInfoView.userAgeTextField.text ?? "")
     private var gender: String?
-    //    lazy var area: String? = inputInfoView.userAreaTextField.text
     lazy var area: String? = inputInfoView.regionFilterButton.title(for: .normal)
     private var mainUsedFeet: String?
     private var position: Set<String?> = []
@@ -229,7 +228,7 @@ final class InputInfoViewController: UIViewController {
         FirebaseAPI.shared.updateUser(user)
         UserService.shared.currentUser_Rx.onNext(user)
         
-        // MARK: - 로그인 or 설정뷰에 따라 다르게 이동
+        //로그인 or 설정뷰에 따라 다르게 이동
         viewModel?.coordinator?.dismissView()
         viewModel?.coordinator?.popInputInfoViewController()
     }
