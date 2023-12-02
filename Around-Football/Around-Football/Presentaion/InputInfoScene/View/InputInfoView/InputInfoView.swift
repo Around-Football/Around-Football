@@ -119,25 +119,12 @@ final class InputInfoView: UIView {
         $0.spacing = 100
         $0.addArrangedSubviews(userAreaLabel,
                                regionFilterButton)
-//                               userAreaTextField)
-//        userAreaTextField.makeSideAutoLayout()
     }
-    
-    //TODO: -Picker로 선택할 수 있도록 구현
     
     private let userAreaLabel = UILabel().then{
         $0.text = "지역"
         $0.font = .boldSystemFont(ofSize: 16)
     }
-    
-    //TODO: - 지역 설정 선택지 있게 바꾸기
-    
-//    let userAreaTextField = UITextField().then{
-//        $0.layer.cornerRadius = LayoutOptions.cornerRadious
-//        $0.placeholder = "지역을 입력해주세요"
-//        $0.borderStyle = .roundedRect
-//        $0.font = .systemFont(ofSize: 15)
-//    }
     
     lazy var regionFilterButton: UIButton = {
         var config = UIButton.Configuration.plain()
