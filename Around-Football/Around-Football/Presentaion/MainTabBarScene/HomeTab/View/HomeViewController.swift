@@ -238,12 +238,6 @@ final class HomeViewController: UIViewController {
                 viewModel.coordinator?.pushInviteView()
             }
         }).disposed(by: disposeBag)
-        
-//        if UserService.shared.user?.id == nil {
-//            viewModel.coordinator?.presentLoginViewController()
-//        } else {
-//            viewModel.coordinator?.pushInviteView()
-//        }
     }
     
     // MARK: - Helpers
