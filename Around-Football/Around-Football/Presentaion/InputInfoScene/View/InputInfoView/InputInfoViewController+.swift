@@ -8,6 +8,25 @@
 import UIKit
 
 extension InputInfoViewController: UITextFieldDelegate {
+    //텍스트필드 변경할때마다 변수로 수정하고 갱신
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        switch textField {
+        case inputInfoView.userNameTextField:
+            userName = (textField.text as NSString?)?.replacingCharacters(in: range, with: string)
+            inputData["userName"] = userName
+        case inputInfoView.userAgeTextField:
+            age = Int((textField.text as NSString?)?.replacingCharacters(in: range, with: string) ?? "")
+            inputData["age"] = age
+        case inputInfoView.userAreaTextField:
+            area = (textField.text as NSString?)?.replacingCharacters(in: range, with: string)
+            inputData["area"] = area
+        default:
+            return true
+        }
+
+        return true
+    }
+    
     
     // 엔터 누르면 다음 텍스트필드로 넘어감
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
