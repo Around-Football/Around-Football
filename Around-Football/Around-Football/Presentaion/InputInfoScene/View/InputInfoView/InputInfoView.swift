@@ -9,10 +9,14 @@ import UIKit
 
 import Then
 import SnapKit
+import RxSwift
 
 final class InputInfoView: UIView {
-    
+
     // MARK: - Properties
+    
+    //버튼으로 지역 누르면 보내줌
+    let regionSubject = PublishSubject<String?>()
     
     private lazy var mainScrollView = UIScrollView().then {
         $0.backgroundColor = .systemBackground
@@ -109,30 +113,60 @@ final class InputInfoView: UIView {
     
     // 지역
     private lazy var userAreaStackView = UIStackView().then{
-        $0.axis = .vertical
-        $0.distribution = .fill
-        $0.alignment = .leading
-        $0.spacing = 10
+        $0.axis = .horizontal
+        $0.distribution = .fillEqually
+        $0.alignment = .center
+        $0.spacing = 100
         $0.addArrangedSubviews(userAreaLabel,
-                               userAreaTextField)
-        userAreaTextField.makeSideAutoLayout()
+                               regionFilterButton)
+//                               userAreaTextField)
+//        userAreaTextField.makeSideAutoLayout()
     }
     
     //TODO: -Picker로 선택할 수 있도록 구현
     
     private let userAreaLabel = UILabel().then{
-        $0.text = "지역(시/군/구)"
+        $0.text = "지역"
         $0.font = .boldSystemFont(ofSize: 16)
     }
     
     //TODO: - 지역 설정 선택지 있게 바꾸기
     
-    let userAreaTextField = UITextField().then{
-        $0.layer.cornerRadius = LayoutOptions.cornerRadious
-        $0.placeholder = "지역을 입력해주세요"
-        $0.borderStyle = .roundedRect
-        $0.font = .systemFont(ofSize: 15)
-    }
+//    let userAreaTextField = UITextField().then{
+//        $0.layer.cornerRadius = LayoutOptions.cornerRadious
+//        $0.placeholder = "지역을 입력해주세요"
+//        $0.borderStyle = .roundedRect
+//        $0.font = .systemFont(ofSize: 15)
+//    }
+    
+    lazy var regionFilterButton: UIButton = {
+        var config = UIButton.Configuration.plain()
+        config.imagePadding = 10
+        
+        let button = UIButton(configuration: config).then {
+            let image = UIImage(systemName: "chevron.down")
+            $0.setTitle("지역 선택", for: .normal)
+            $0.setTitleColor(.label, for: .normal)
+            $0.setImage(image?.withTintColor(UIColor.systemGray, renderingMode: .alwaysOriginal),
+                        for: .normal)
+            $0.layer.cornerRadius = LayoutOptions.cornerRadious
+            $0.layer.borderWidth = 1.0
+            $0.layer.borderColor = UIColor.systemGray.cgColor
+            $0.showsMenuAsPrimaryAction = true
+        }
+        
+        let menus: [String]  = ["전체", "서울", "인천", "부산", "대구", "울산", "대전", "광주", "세종특별자치시", "경기", "강원특별자치도", "충북", "충남", "경북", "경남", "전북", "전남", "제주특별자치도"]
+        
+        button.menu = UIMenu(children: menus.map { city in
+            UIAction(title: city) { [weak self] _ in
+                guard let self else { return }
+                regionSubject.onNext(city)
+                button.setTitle(city, for: .normal)
+            }
+        })
+        
+        return button
+    }()
     
     // 주발
     private lazy var userMainUsedFeetStackView = UIStackView().then {
@@ -283,6 +317,7 @@ final class InputInfoView: UIView {
                                 userAgeStackView,
                                 userGenderStackView,
                                 userAreaStackView,
+//                                regionFilterButton,
                                 userMainUsedFeetStackView,
                                 userPositionStackView,
                                 nextButton)
