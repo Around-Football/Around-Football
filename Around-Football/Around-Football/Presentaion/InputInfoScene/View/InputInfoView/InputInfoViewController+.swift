@@ -17,9 +17,9 @@ extension InputInfoViewController: UITextFieldDelegate {
         case inputInfoView.userAgeTextField:
             age = Int((textField.text as NSString?)?.replacingCharacters(in: range, with: string) ?? "")
             inputData["age"] = age
-        case inputInfoView.userAreaTextField:
-            area = (textField.text as NSString?)?.replacingCharacters(in: range, with: string)
-            inputData["area"] = area
+//        case inputInfoView.userAreaTextField:
+//            area = (textField.text as NSString?)?.replacingCharacters(in: range, with: string)
+//            inputData["area"] = area
         default:
             return true
         }
