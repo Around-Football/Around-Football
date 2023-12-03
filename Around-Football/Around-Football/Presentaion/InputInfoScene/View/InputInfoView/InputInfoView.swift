@@ -304,7 +304,6 @@ final class InputInfoView: UIView {
                                 userAgeStackView,
                                 userGenderStackView,
                                 userAreaStackView,
-//                                regionFilterButton,
                                 userMainUsedFeetStackView,
                                 userPositionStackView,
                                 nextButton)
