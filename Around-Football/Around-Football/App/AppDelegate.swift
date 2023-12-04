@@ -39,8 +39,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         UINavigationBar.appearance().tintColor = .label
         
         // MARK: - 앱이 켜질때 유저정보 가져옴
-        
-        UserService.shared.isLoginObservable.onNext(())
+        if Auth.auth().currentUser?.uid != nil {
+            UserService.shared.isLoginObservable.onNext(())
+        }
         
         return true
     }
