@@ -85,37 +85,10 @@ final class LoginViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         configureUI()
-        
-        // TODO: - Coordinator Refactoring
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(didRecieveLoginNotification(_:)),
-                                               name: NSNotification.Name("LoginNotification"),
-                                               object: nil)
-    }
-    
-    deinit {
-        NotificationCenter.default.removeObserver(self)
+        bindLogin()
     }
     
     // MARK: - Selectors
-    
-    @objc
-    func didRecieveLoginNotification(_ notification: Notification) {
-        UserService.shared.currentUser_Rx
-            .subscribe(onNext: { [weak self] user in
-                guard let self else { return }
-                
-                if user?.userName == "" {
-                    viewModel?.coordinator?.pushInputInfoViewController()
-                } else {
-                    print("유저 네임 있음. 로그인 완료")
-                    viewModel?.coordinator?.loginDone()
-                }
-            })
-            .disposed(by: disposeBag)
-    }
-    
-    // MARK: - 로그인로직 뷰모델에서 UserService로 바꿈
     
     @objc
     func kakaoLoginButtonTapped() {
@@ -133,6 +106,27 @@ final class LoginViewController: UIViewController {
     }
     
     // MARK: - Helpers
+    
+    private func bindLogin() {
+        UserService.shared.isLoginObservable
+            .do(onNext: { [weak self]_ in
+                guard let self else { return }
+                do {
+                    let name = try UserService.shared.currentUser_Rx.value()?.userName
+                    if name == "" {
+                        print("유저 네임 없음. input뷰로 이동")
+                        viewModel?.coordinator?.pushInputInfoViewController()
+                    } else {
+                        print("유저 네임 있음. 로그인 완료")
+                        viewModel?.coordinator?.loginDone()
+                    }
+                } catch {
+                    print("로그인 오류")
+                }
+            })
+            .subscribe()
+            .disposed(by: disposeBag)
+    }
     
     private func configureUI() {
         
