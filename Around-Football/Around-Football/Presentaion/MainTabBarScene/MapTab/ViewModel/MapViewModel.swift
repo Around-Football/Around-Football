@@ -18,12 +18,14 @@ final class MapViewModel {
     
     weak var coordinator: MapTabCoordinator?
     
+    let searchResults = BehaviorSubject<[Place]>(value: [])
+    var dataSubject: PublishSubject = PublishSubject<Place>()
+    
     var currentLocation: GeoPoint
     var searchLocation: GeoPoint?
     var isSearchCurrentLocation: Bool = true
     private let disposeBag = DisposeBag()
     private let firebaseAPI = FirebaseAPI.shared
-    var searchPlaces: [Place] = []
     var fields: [Field] = []
     var selectedDate: Date = Date() {
         didSet {
@@ -44,8 +46,9 @@ final class MapViewModel {
     // MARK: - API
     
     func fetchFields() {
-        firebaseAPI.fetchMockFieldsData { fields in
+        firebaseAPI.fetchFields { fields in
             self.fields = fields
+            
         }
     }
     
