@@ -33,18 +33,10 @@ class SearchViewController: UIViewController {
         return searchBar
     }()
     
-    
-    var searchPlaces: [Place] = [] {
-        didSet {
-            tableView.reloadData()
-        }
-    }
-    
     // MARK: - Lifecycles
     
     init(searchViewModel: SearchViewModel) {
         self.searchViewModel = searchViewModel
-        //        self.searchCoordinator = searchCoordinator
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -99,7 +91,6 @@ class SearchViewController: UIViewController {
                 searchViewModel.dataSubject
                     .onNext(place)
                 searchViewModel.coordinator?.dismissSearchViewController()
-                print("\(String(describing: searchViewModel.coordinator))")
             })
             .disposed(by: disposeBag)
         
