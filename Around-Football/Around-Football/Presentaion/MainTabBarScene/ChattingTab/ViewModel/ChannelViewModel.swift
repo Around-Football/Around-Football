@@ -105,17 +105,17 @@ final class ChannelViewModel {
     private func configureShowingLoginView(by inputObserver: Observable<Void>) -> Observable<Bool> {
         
         return inputObserver
-            .withUnretained(self)
-            .flatMap { owner, _ in
-                owner.currentUser
-                    .map { user in
-                        user != nil
+            .flatMap { [weak self] _ -> Observable<Bool> in
+                guard let self else { return .just(true) }
+                do {
+                    if let user = try currentUser.value() {
+                        return .just(false)
                     }
+                    return .just(true)
+                } catch {
+                    return .just(true)
+                }
             }
-//            .flatMap({ (owner, _) -> Observable<Bool> in
-//                if owner.currentUser.value != nil { return .just(false) }
-//                return .just(true)
-//            })
     }
     
     private func emitSelectedChannelInfo(by inputObserver: Observable<IndexPath>)
