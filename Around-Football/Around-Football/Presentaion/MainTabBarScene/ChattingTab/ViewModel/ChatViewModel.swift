@@ -39,6 +39,7 @@ class ChatViewModel {
     struct Input {
         let didTapSendButton: Observable<String>
         let pickedImage: Observable<UIImage>
+        let invokedViewWillAppear: Observable<Void>
     }
     
     struct Output {
@@ -96,6 +97,7 @@ class ChatViewModel {
         fetchWithUser()
         sendMessage(by: input.didTapSendButton)
         sendPhoto(by: input.pickedImage)
+        resetAlarmNumber(by: input.invokedViewWillAppear)
         return Output()
     }
     
@@ -243,6 +245,17 @@ class ChatViewModel {
             
             completion?()
         }
+    }
+    
+    func resetAlarmNumber(by inputObserver: Observable<Void>) {
+        inputObserver
+            .withUnretained(self)
+            .subscribe { (owner, _) in
+                if let currentUser = owner.currentUser {
+                    owner.channelAPI.resetAlarmNumber(uid: currentUser.id, channelId: owner.channelInfo.id)
+                }
+            }
+            .disposed(by: disposeBag)
     }
     
     func showPHPickerView(picker: UIViewController) {
