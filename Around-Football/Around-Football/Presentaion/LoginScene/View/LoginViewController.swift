@@ -113,7 +113,7 @@ final class LoginViewController: UIViewController {
                 guard let self else { return }
                 do {
                     let name = try UserService.shared.currentUser_Rx.value()?.userName
-                    if name == "" {
+                    if name == nil {
                         print("유저 네임 없음. input뷰로 이동")
                         viewModel?.coordinator?.pushInputInfoViewController()
                     } else {
