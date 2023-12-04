@@ -204,14 +204,12 @@ final class UserService: NSObject {
             print("me() success.")
             
             //do something
-            _ = user
+            guard let user = user else {
+                print("유저없음")
+                return }
             
-            let email = user?.kakaoAccount?.email
-            createGoogleUser(email: email!, password: email!)
+            let email = user.kakaoAccount?.email
             googleSignIn(email: email!, password: email!)
-            
-            // MARK: - 옵저버블 로그인 추가
-            self.isLoginObservable.onNext(())
         }
     }
     
@@ -315,34 +313,41 @@ final class UserService: NSObject {
 // MARK: - LoginViewModel+Kakao
 
 extension UserService {
-    //파베 유저 생성
+    //카카오 로그인 파베 유저 생성
     func createGoogleUser(email: String, password: String) {
-        if Auth.auth().currentUser?.uid == nil {
-            Auth.auth().createUser(withEmail: email, password: password) { result, error in
-                guard error == nil else {
-                    print(error?.localizedDescription as Any)
-                    return
-                }
-                
-                let uid = result?.user.uid
-                
-                REF_USER.document(uid ?? UUID().uuidString)
-                    .setData(["id" : uid ?? UUID().uuidString])
-            }
-        }
-    }
-    
-    //구글 로그인
-    func googleSignIn(email: String, password: String) {
-        Auth.auth().signIn(withEmail: email, password: password) { [weak self] result, error in
+        Auth.auth().createUser(withEmail: email, password: password) { [weak self] result, error in
             guard let self else { return }
             guard error == nil else {
                 print(error?.localizedDescription as Any)
                 return
             }
             
-            print("로그인 성공")
+            let uid = result?.user.uid
+            
+            REF_USER.document(uid ?? UUID().uuidString)
+                .setData(["id" : uid ?? UUID().uuidString])
+            
             isLoginObservable.onNext(())
+        }
+    }
+    
+    //카카오 구글 로그인
+    func googleSignIn(email: String, password: String) {
+        Auth.auth().signIn(withEmail: email, password: password) { [weak self] result, error in
+            guard let self else { return }
+            guard error == nil else {
+                print(error?.localizedDescription as Any)
+                createGoogleUser(email: email, password: password)
+                return
+            }
+            
+            if result == nil {
+                createGoogleUser(email: email, password: password)
+                print("유저 만들고 로그인 성공")
+            } else {
+                print("로그인 성공")
+                isLoginObservable.onNext(())
+            }
         }
     }
     
