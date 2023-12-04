@@ -19,7 +19,7 @@ import RxSwift
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
-
+    
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         
         //Firebase 구성
@@ -28,6 +28,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         KakaoSDK.initSDK(appKey: "d120f29f71b1903d6e9191768dbdfdb2")
         
         // MARK: - TabBar Background Color Issue
+        
         let appearance = UITabBarAppearance()
         let tabBar = UITabBar()
         appearance.configureWithOpaqueBackground()
@@ -36,11 +37,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         UITabBar.appearance().scrollEdgeAppearance = appearance
         //네비게이션 탭바 색상 검정색으로
         UINavigationBar.appearance().tintColor = .label
-
-        // MARK: - 앱이 켜질때 유저정보 가져옴. 기존 UID가 있는지 없는지
-        if Auth.auth().currentUser != nil {
-            UserService.shared.isLoginObservable.onNext(())
-        }
+        
+        // MARK: - 앱이 켜질때 유저정보 가져옴
+        
+        UserService.shared.isLoginObservable.onNext(())
         
         return true
     }
@@ -50,17 +50,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ app: UIApplication,
                      open url: URL,
                      options: [UIApplication.OpenURLOptionsKey: Any] = [:]) -> Bool {
-      return GIDSignIn.sharedInstance.handle(url)
+        return GIDSignIn.sharedInstance.handle(url)
     }
     
     // MARK: UISceneSession Lifecycle
-
+    
     func application(_ application: UIApplication, configurationForConnecting connectingSceneSession: UISceneSession, options: UIScene.ConnectionOptions) -> UISceneConfiguration {
         // Called when a new scene session is being created.
         // Use this method to select a configuration to create the new scene with.
         return UISceneConfiguration(name: "Default Configuration", sessionRole: connectingSceneSession.role)
     }
-
+    
     func application(_ application: UIApplication, didDiscardSceneSessions sceneSessions: Set<UISceneSession>) {
         // Called when the user discards a scene session.
         // If any sessions were discarded while the application was not running, this will be called shortly after application:didFinishLaunchingWithOptions.
