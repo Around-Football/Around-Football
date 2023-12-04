@@ -5,7 +5,7 @@
 //  Created by Deokhun KIM on 11/3/23.
 //
 
-import Foundation
+import UIKit
 
 import Firebase
 import FirebaseAuth
@@ -125,22 +125,14 @@ final class ChatViewModel {
     }
     
     private func insertNewMessage(_ message: Message) {
-        //        var newMessages = messages.value
-        //        newMessages.append(message)
-        updateShowTimeLabel(updateMessage: message)
-        //        newMessages.sort()
-        //        messages.accept(newMessages)
-    }
-    
-    func updateShowTimeLabel(updateMessage: Message) {
         var messages: [Message] = self.messages.value
         guard let firstMessage = self.messages.value.first else {
-            messages.append(updateMessage)
+            messages.append(message)
             self.messages.accept(messages)
             return
         }
         var standardMessage = firstMessage
-        messages.append(updateMessage)
+        messages.append(message)
         messages.sort()
         
         for i in 1..<messages.count {
@@ -154,9 +146,8 @@ final class ChatViewModel {
         
         messages[messages.count - 1].showTimeLabel = true
         self.messages.accept(messages)
-//        print(self.messages.value.map { $0.showTimeLabel })
+        print(self.messages.value.map { $0.showTimeLabel })
     }
-    
     
     private func sendMessage(by inputObserver: Observable<String>) {
         inputObserver
