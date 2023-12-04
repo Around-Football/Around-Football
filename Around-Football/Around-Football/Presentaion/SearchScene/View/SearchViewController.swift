@@ -21,9 +21,8 @@ class SearchViewController: UIViewController {
     
     var searchViewModel: SearchViewModel
     var searchCoordinator: SearchCoordinator?
-    var searchResultsController = SearchResultViewController()
     
-    private lazy var searchController = UISearchController(searchResultsController: searchResultsController)
+    private lazy var searchController = UISearchController(searchResultsController: nil)
     
     private lazy var searchBar: UISearchBar = {
         let searchBar = UISearchBar().then {
