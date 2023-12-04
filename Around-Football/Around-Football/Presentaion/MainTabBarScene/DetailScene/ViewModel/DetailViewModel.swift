@@ -68,7 +68,7 @@ final class DetailViewModel {
             }
     }
     func checkChannel() {
-        guard let currentUser = currentUser.value,
+        guard let currentUser = try? currentUser.value(),
         let recruitUser = recruitUser else { return }
         channelAPI.checkExistAvailableChannel(owner: currentUser,
                                      withUser: recruitUser) { [weak self] isAvailable, channelId in
