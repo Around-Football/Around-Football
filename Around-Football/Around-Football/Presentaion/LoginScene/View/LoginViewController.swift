@@ -85,7 +85,7 @@ final class LoginViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         configureUI()
-        bindLogin()
+        bindInputUserData()
     }
     
     // MARK: - Selectors
@@ -107,13 +107,13 @@ final class LoginViewController: UIViewController {
     
     // MARK: - Helpers
     
-    private func bindLogin() {
-        UserService.shared.isLoginObservable
-            .do(onNext: { [weak self]_ in
-                guard let self else { return }
+    private func bindInputUserData() {
+        UserService.shared.checkUserInfoExist.subscribe(onNext: { [weak self] bool in
+            guard let self else { return }
+            if bool == true {
                 do {
                     let name = try UserService.shared.currentUser_Rx.value()?.userName
-                    if name == nil {
+                    if name == nil || name == "" {
                         print("유저 네임 없음. input뷰로 이동")
                         viewModel?.coordinator?.pushInputInfoViewController()
                     } else {
@@ -123,9 +123,9 @@ final class LoginViewController: UIViewController {
                 } catch {
                     print("로그인 오류")
                 }
-            })
-            .subscribe()
-            .disposed(by: disposeBag)
+            }
+        })
+        .disposed(by: disposeBag)
     }
     
     private func configureUI() {

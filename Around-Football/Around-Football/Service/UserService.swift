@@ -29,8 +29,9 @@ final class UserService: NSObject {
     // MARK: - Rx Properties
     
     var currentUser_Rx: BehaviorSubject<User?> = BehaviorSubject(value: nil)
-    var isLoginObservable: PublishSubject<Void> = PublishSubject()
-    var isLogoutObservable: PublishSubject<Void> = PublishSubject()
+    var isLoginObservable: BehaviorSubject<Void> = BehaviorSubject(value: ())
+    var isLogoutObservable: BehaviorSubject<Void> = BehaviorSubject(value: ())
+    var checkUserInfoExist:  PublishSubject<Bool> = PublishSubject()
     private let disposeBag = DisposeBag()
     
     // MARK: - Lifecycles
@@ -51,8 +52,10 @@ final class UserService: NSObject {
                     .asObservable()
                     .catchAndReturn(nil)
             }
-            .subscribe { user in
-                self.currentUser_Rx.onNext(user)
+            .subscribe { [weak self] user in
+                guard let self else { return }
+                currentUser_Rx.onNext(user)
+                checkUserInfoExist.onNext(true)
             }
             .disposed(by: disposeBag)
     }
@@ -202,9 +205,7 @@ final class UserService: NSObject {
             //do something
             _ = user
             
-            // TODO: - 비번 보안이슈로 UUID로 수정했는데 테스트하기
             let email = user?.kakaoAccount?.email
-//            let password = UUID().uuidString
             createGoogleUser(email: email!, password: email!)
             googleSignIn(email: email!, password: email!)
             

@@ -39,27 +39,6 @@ final class FirebaseAPI {
                 ])
     }
     
-    //현재 유저 불러오기
-//    func readCurrentUser(completion: @escaping (User?) -> Void) {
-//        guard let currentUserID = Auth.auth().currentUser?.uid else {
-//            completion(nil)
-//            return
-//        }
-//        
-//        REF_USER.document(currentUserID).getDocument(as: User.self) { result in
-//            switch result {
-//            case .success(let user):
-//                print("readUser성공: \(user)")
-//                // MARK: - UserService user 업데이
-//                UserService.shared.user = user
-//                completion(user)
-//            case .failure(let error):
-//                print("Error decoding user: \(error)")
-//                completion(nil)
-//            }
-//        }
-//    }
-    
     //uid로 유저 불러오기
     func fetchUser(uid: String, completion: @escaping (User) -> Void) {
         REF_USER.document(uid).getDocument { snapshot, error in

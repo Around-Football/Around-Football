@@ -145,7 +145,7 @@ final class InputInfoViewController: UIViewController {
                 case "여성":
                     inputInfoView.femaleButton.isSelected = true
                 default:
-                    print("userFeet 비워져있음")
+                    print("gender 비워져있음")
                 }
             })
             .subscribe()
