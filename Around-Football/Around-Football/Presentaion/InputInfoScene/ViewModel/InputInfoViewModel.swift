@@ -12,6 +12,15 @@ import RxSwift
 
 final class InputInfoViewModel {
     
+    struct Input {
+        let invokedViewWillAppear: Observable<Void>
+    }
+    
+    struct Output {
+        let userInfo: Observable<User?>
+    }
+    
+    weak var coordinator: InputInfoCoordinator?
     private var currentUserRx = UserService.shared.currentUser_Rx
     var inputUserInfo: BehaviorRelay<User> = BehaviorRelay(value: User(dictionary: [:]))
     var userName: BehaviorRelay<String?> = BehaviorRelay(value: "")
@@ -22,41 +31,16 @@ final class InputInfoViewModel {
     var position: BehaviorRelay<[String?]> = BehaviorRelay(value: [])
     private var disposeBag = DisposeBag()
     
-    struct Input {
-        let invokedViewWillAppear: Observable<Void>
-    }
-    
-    struct Output {
-        let userInfo: Observable<User?>
-    }
-    
-    weak var coordinator: InputInfoCoordinator?
-    
     init(coordinator: InputInfoCoordinator) {
         self.coordinator = coordinator
     }
     
+    // MARK: - Helpers
+    
     func trensform(_ input: Input) -> Output {
         let userInfo = loadFirebaseUserInfo(by: input.invokedViewWillAppear)
         
-        //처음 값 세팅
-        userInfo
-            .subscribe(onNext: { [weak self] user in
-                guard let self = self else { return }
-                
-                if let user = user {
-                    self.inputUserInfo.accept(user)
-                    self.userName.accept(user.userName)
-                    self.age.accept(user.age)
-                    self.gender.accept(user.gender)
-                    self.area.accept(user.area)
-                    self.mainUsedFeet.accept(user.mainUsedFeet)
-                    self.position.accept(user.position)
-                } else {
-                    // Handle the case when user is nil, if needed
-                }
-            }).disposed(by: disposeBag)
-        
+        setFirebaseUserInfo(input: userInfo)
         let output = Output(userInfo: userInfo)
         return output
     }
@@ -65,6 +49,24 @@ final class InputInfoViewModel {
         currentUserRx
             .filter { $0 != nil }
             .asObservable()
+    }
+    
+    private func setFirebaseUserInfo(input userInfo: Observable<User?>) {
+        userInfo
+            .subscribe(onNext: { [weak self] user in
+                guard
+                    let self,
+                    let user
+                else { return }
+                
+                inputUserInfo.accept(user)
+                userName.accept(user.userName)
+                age.accept(user.age)
+                gender.accept(user.gender)
+                area.accept(user.area)
+                mainUsedFeet.accept(user.mainUsedFeet)
+                position.accept(user.position)
+            }).disposed(by: disposeBag)
     }
     
     func updateData() {
