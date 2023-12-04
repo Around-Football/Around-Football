@@ -247,7 +247,7 @@ class ChatViewModel {
         }
     }
     
-    func resetAlarmNumber(by inputObserver: Observable<Void>) {
+    private func resetAlarmNumber(by inputObserver: Observable<Void>) {
         inputObserver
             .withUnretained(self)
             .subscribe { (owner, _) in
