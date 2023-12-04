@@ -82,7 +82,6 @@ final class HomeViewController: UIViewController {
         $0.preferredDatePickerStyle = .compact
         $0.datePickerMode = .date
         $0.locale = Locale(identifier: "ko_KR")
-        $0.subviews[0].subviews[0].subviews[0].alpha = 0
         $0.layer.backgroundColor = UIColor.white.cgColor
         $0.layer.cornerRadius = LayoutOptions.cornerRadious
         $0.addSubview(dateFilterButton)
@@ -99,6 +98,7 @@ final class HomeViewController: UIViewController {
             $0.setImage(image?.withTintColor(UIColor.systemGray, renderingMode: .alwaysOriginal),
                         for: .normal)
             $0.setTitleColor(.systemGray, for: .normal)
+            $0.setTitleColor(.systemGray, for: .highlighted)
             $0.layer.cornerRadius = LayoutOptions.cornerRadious
             $0.layer.borderWidth = 1.0
             $0.layer.borderColor = UIColor.systemGray.cgColor
@@ -125,6 +125,7 @@ final class HomeViewController: UIViewController {
             $0.setImage(image?.withTintColor(UIColor.systemGray, renderingMode: .alwaysOriginal),
                         for: .normal)
             $0.setTitleColor(.systemGray, for: .normal)
+            $0.setTitleColor(.systemGray, for: .highlighted)
             $0.layer.cornerRadius = LayoutOptions.cornerRadious
             $0.layer.borderWidth = 1.0
             $0.layer.borderColor = UIColor.systemGray.cgColor
