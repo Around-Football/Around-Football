@@ -19,9 +19,6 @@ extension InputInfoViewController: UITextFieldDelegate {
             let age = Int((textField.text as NSString?)?.replacingCharacters(in: range, with: string) ?? "")
             viewModel?.age.accept(age)
             viewModel?.updateData()
-//        case inputInfoView.userAreaTextField:
-//            area = (textField.text as NSString?)?.replacingCharacters(in: range, with: string)
-//            inputData["area"] = area
         default:
             return true
         }
@@ -39,30 +36,18 @@ extension InputInfoViewController: UITextFieldDelegate {
         return true
     }
     
-    //화면 누르면 키보드 내려감
+    func keyboardController() {
+        let tapGesture = UITapGestureRecognizer(
+            target: self,
+            action: #selector(dismissKeyboard)
+        )
+        tapGesture.cancelsTouchesInView = false
+        view.addGestureRecognizer(tapGesture)
+    }
+    
     @objc
     func dismissKeyboard() {
         view.endEditing(true)
     }
-    
-//    // 지역 입력 텍스트필드 선택 시 뷰 이동 (위로 올림)
-//    func textFieldDidBeginEditing(_ textField: UITextField) {
-//        if textField == inputInfoView.userAreaTextField {
-//            UIView.animate(withDuration: 0.3) {
-//                let transform = CGAffineTransform(translationX: 0, y: -200)
-//                self.view.transform = transform
-//            }
-//        }
-//    }
-    
-//    // 뷰 다시 원위치
-//    func textFieldDidEndEditing(_ textField: UITextField) {
-//        if textField == inputInfoView.userAreaTextField {
-//            UIView.animate(withDuration: 0.3) {
-//                let transform = CGAffineTransform(translationX: 0, y: 0)
-//                self.view.transform = transform
-//            }
-//        }
-//    }
 }
 
