@@ -9,17 +9,19 @@ import AuthenticationServices
 import UIKit
 
 import FirebaseAuth
-import SnapKit
-import Then
 import KakaoSDKCommon
 import KakaoSDKAuth
 import KakaoSDKUser
+import RxSwift
+import SnapKit
+import Then
 
 final class LoginViewController: UIViewController {
     
     // MARK: - Properties
     
-    var viewModel: LoginViewModel?
+    private var viewModel: LoginViewModel?
+    private var disposeBag = DisposeBag()
     
     init(viewModel: LoginViewModel?) {
         self.viewModel = viewModel
@@ -83,37 +85,10 @@ final class LoginViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         configureUI()
-        
-        // TODO: - Coordinator Refactoring
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(didRecieveLoginNotification(_:)),
-                                               name: NSNotification.Name("LoginNotification"),
-                                               object: nil)
-    }
-    
-    deinit {
-        NotificationCenter.default.removeObserver(self)
+        bindInputUserData()
     }
     
     // MARK: - Selectors
-    
-    @objc
-    func didRecieveLoginNotification(_ notification: Notification) {
-        FirebaseAPI.shared.readUser { [weak self] _ in
-            guard let self else { return }
-            // TODO: - 추가정보 입력 여부에따라 추가정보입력뷰 또는 메인뷰로 이동
-            print("DEBUG: 로그인 완료")
-            if UserService.shared.user?.userName == nil {
-                print("유저 네임 없음. 상세정보입력으로")
-                viewModel?.coordinator?.pushInputInfoViewController()
-            } else {
-                print("유저 네임 있음. 로그인 완료")
-                viewModel?.coordinator?.loginDone()
-            }
-        }
-    }
-    
-    // MARK: - 로그인로직 뷰모델에서 UserService로 바꿈
     
     @objc
     func kakaoLoginButtonTapped() {
@@ -131,6 +106,27 @@ final class LoginViewController: UIViewController {
     }
     
     // MARK: - Helpers
+    
+    private func bindInputUserData() {
+        UserService.shared.checkUserInfoExist.subscribe(onNext: { [weak self] bool in
+            guard let self else { return }
+            if bool == true {
+                do {
+                    let name = try UserService.shared.currentUser_Rx.value()?.userName
+                    if name == nil || name == "" {
+                        print("유저 네임 없음. input뷰로 이동")
+                        viewModel?.coordinator?.pushInputInfoViewController()
+                    } else {
+                        print("유저 네임 있음. 로그인 완료")
+                        viewModel?.coordinator?.loginDone()
+                    }
+                } catch {
+                    print("로그인 오류")
+                }
+            }
+        })
+        .disposed(by: disposeBag)
+    }
     
     private func configureUI() {
         

@@ -5,8 +5,9 @@
 //  Created by 강창현 on 10/6/23.
 //
 
-import Foundation
+import AuthenticationServices
 import CryptoKit
+import Foundation
 
 import FirebaseAuth
 import KakaoSDKAuth
@@ -14,19 +15,17 @@ import KakaoSDKCommon
 import KakaoSDKUser
 import FirebaseCore
 import GoogleSignIn
-import AuthenticationServices
 
-class LoginViewModel {
+final class LoginViewModel {
     
     // MARK: - Properties
-    
-    private var userProfile: String?
+
     private var email: String?
     var coordinator: LoginCoordinator?
+    
+    // MARK: - Lifecycles
     
     init(coordinator: LoginCoordinator) {
         self.coordinator = coordinator
     }
-    
-    
 }

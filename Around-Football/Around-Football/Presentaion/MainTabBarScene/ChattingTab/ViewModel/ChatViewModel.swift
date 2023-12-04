@@ -7,13 +7,13 @@
 
 import Foundation
 
-import RxSwift
-import RxRelay
 import Firebase
 import FirebaseAuth
 import MessageKit
+import RxSwift
+import RxRelay
 
-class ChatViewModel {
+final class ChatViewModel {
     
     // MARK: - Properties
     
@@ -23,7 +23,7 @@ class ChatViewModel {
     var channel: BehaviorRelay<Channel?> = BehaviorRelay(value: nil)
     var messages: BehaviorRelay<[Message]> = BehaviorRelay(value: [])
     let channelInfo: ChannelInfo
-    let currentUser: User? = UserService.shared.currentUser_Rx.value
+    var currentUser: User?
     var withUser: User? = nil
     var isSendingPhoto: BehaviorRelay<Bool> = BehaviorRelay(value: false)
     var isNewChat: Bool
@@ -52,6 +52,12 @@ class ChatViewModel {
         self.channelInfo = channelInfo
         self.isNewChat = isNewChat
         self.channel.accept(Channel(id: channelInfo.id, isAvailable: channelInfo.isAvailable))
+      
+        UserService.shared.currentUser_Rx
+            .subscribe { [weak self] user in
+                guard let self else { return }
+                currentUser = user
+        }.dispose()
     }
     
     // MARK: - API

@@ -8,7 +8,7 @@
 
 import UIKit
 
-class EditViewController: UIViewController {
+final class EditViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
