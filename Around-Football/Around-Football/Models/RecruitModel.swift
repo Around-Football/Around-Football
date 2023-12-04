@@ -6,6 +6,7 @@
 //
 
 import Firebase
+import FirebaseFirestore
 
 struct Recruit: Codable, Identifiable {
     var id: String
@@ -28,7 +29,7 @@ struct Recruit: Codable, Identifiable {
     
     //신청자 서브컬렉션 추가
     var applicantsCollectionRef: CollectionReference {
-        return Firestore.firestore().collection("recruits").document(id).collection("applicants")
+        return Firestore.firestore().collection("Recruit").document(fieldID).collection("applicants")
     }
 
     //서브콜렉션에 신청자 추가
