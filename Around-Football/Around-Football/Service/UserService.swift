@@ -5,8 +5,9 @@
 //  Created by 강창현 on 10/6/23.
 //
 
-import Foundation
+import AuthenticationServices
 import CryptoKit
+import Foundation
 
 import FirebaseAuth
 import FirebaseMessaging
@@ -15,47 +16,33 @@ import KakaoSDKCommon
 import KakaoSDKUser
 import FirebaseCore
 import GoogleSignIn
-import AuthenticationServices
 import RxSwift
 import RxRelay
 
 final class UserService: NSObject {
     
     // MARK: - Properties
+    
     static let shared = UserService()
-    
-    var user: User?
-    
-    private var userProfile: String?
-    private var email: String?
     var currentNonce: String?
     
     // MARK: - Rx Properties
-    var currentUser_Rx: BehaviorRelay<User?> = BehaviorRelay(value: nil)
-    private let disposeBag = DisposeBag()
-    var isLoginObservable: PublishSubject<Void> = PublishSubject()
-    var isLogoutObservable: PublishSubject<Void> = PublishSubject()
     
+    var currentUser_Rx: BehaviorSubject<User?> = BehaviorSubject(value: nil)
+    var isLoginObservable: BehaviorSubject<Void> = BehaviorSubject(value: ())
+    var isLogoutObservable: PublishSubject<Void> = PublishSubject()
+    var checkUserInfoExist:  PublishSubject<Bool> = PublishSubject()
+    private let disposeBag = DisposeBag()
     
     // MARK: - Lifecycles
     
     private override init() {
         super.init()
-        readUser()
         configureCurrentUser()
         configureLogOutObserver()
     }
     
-    func readUser() {
-        FirebaseAPI.shared.readUser { [weak self] user in
-            guard let self else { return }
-            self.user = user
-            print("DEBUG - LOGIN: \(String(describing: user))")
-        }
-    }
-    
     private func configureCurrentUser() {
-        
         isLoginObservable
             .withUnretained(self)
             .flatMap { (owner, _) -> Observable<User?> in
@@ -65,8 +52,10 @@ final class UserService: NSObject {
                     .asObservable()
                     .catchAndReturn(nil)
             }
-            .subscribe { user in
-                self.currentUser_Rx.accept(user)
+            .subscribe { [weak self] user in
+                guard let self else { return }
+                currentUser_Rx.onNext(user)
+                checkUserInfoExist.onNext(true)
             }
             .disposed(by: disposeBag)
     }
@@ -75,8 +64,13 @@ final class UserService: NSObject {
         isLogoutObservable
             .withUnretained(self)
             .subscribe { (owner, _) in
-                guard let user = owner.user else { return }
-                FirebaseAPI.shared.updateFCMToken(uid: user.id, fcmToken: "") { error in
+                // MARK: - 로그아웃시 nil보냄
+                owner.currentUser_Rx.onNext(nil)
+                
+                //TODO: - 나중에 로그아웃시 updateFCMToken 수정하기
+                guard let uid = Auth.auth().currentUser?.uid else { return }
+                
+                FirebaseAPI.shared.updateFCMToken(uid: uid, fcmToken: "") { error in
                     print("DEBUG - Logout FCM update error", error?.localizedDescription as Any)
                 }
                 
@@ -92,11 +86,10 @@ final class UserService: NSObject {
                         }
                     }
                 }
-
             }
             .disposed(by: disposeBag)
     }
-
+    
     
     // MARK: - Helpers - Google
     
@@ -135,31 +128,23 @@ final class UserService: NSObject {
                 
                 guard let uid = result?.user.uid else { return }
                 
-                REF_USER.document(uid).getDocument { snapshot, error in
+                REF_USER.document(uid).getDocument { [weak self] snapshot, error in
+                    guard let self else { return }
                     if let snapshot = snapshot, snapshot.exists {
-                        self.isLoginObservable.onNext(())
-                        
-                        // TODO: - Coordinator Refactoring
-                        NotificationCenter.default.post(name: NSNotification.Name("LoginNotification"),
-                                                        object: nil,
-                                                        userInfo: nil)
-
+                        isLoginObservable.onNext(())
                     } else {
                         REF_USER.document(uid)
-                            .setData(["id": uid]) { error in
-                                if let _ = error {
+                            .setData(["id": uid]) { [weak self] error in
+                                guard let self else { return }
+                                if error != nil {
                                     return
                                 }
-                                self.isLoginObservable.onNext(())
                                 
-                                // TODO: - Coordinator Refactoring
-                                NotificationCenter.default.post(name: NSNotification.Name("LoginNotification"),
-                                                                object: nil,
-                                                                userInfo: nil)
-
+                                isLoginObservable.onNext(())
                             }
                     }
                 }
+                
             }
         }
     }
@@ -189,7 +174,6 @@ final class UserService: NSObject {
             _ = oauthToken
             
             self.getKakaoUserInfo()
-            
         }
     }
     
@@ -210,7 +194,8 @@ final class UserService: NSObject {
     }
     
     func getKakaoUserInfo() {
-        UserApi.shared.me() {(user, error) in
+        UserApi.shared.me() { [weak self] user, error in
+            guard let self else { return }
             guard error == nil else {
                 print("\(String(describing: error))")
                 return
@@ -219,18 +204,12 @@ final class UserService: NSObject {
             print("me() success.")
             
             //do something
-            _ = user
+            guard let user = user else {
+                print("유저없음")
+                return }
             
-            self.userProfile = user?.kakaoAccount?.profile?.nickname
-            self.email = user?.kakaoAccount?.email
-            print("userProfile: \(String(describing: self.userProfile)), email: \(String(describing: self.email))")
-            self.createGoogleUser(email: self.email!, password: "\(self.email!)")
-            self.googleSignIn(email: self.email!, password: self.email!)
-
-            // TODO: - Coordinator Refactoring
-            NotificationCenter.default.post(name: NSNotification.Name("LoginNotification"),
-                                            object: nil,
-                                            userInfo: nil)
+            let email = user.kakaoAccount?.email
+            googleSignIn(email: email!, password: email!)
         }
     }
     
@@ -241,8 +220,8 @@ final class UserService: NSObject {
                 return
             }
             self.googleLogOut()
+            self.isLogoutObservable.onNext(())
             print("logout() success.")
-            
         }
     }
     
@@ -299,6 +278,7 @@ final class UserService: NSObject {
                 }
             }
         }
+        
         return result
     }
     
@@ -307,8 +287,6 @@ final class UserService: NSObject {
         do {
             try firebaseAuth.signOut()
             isLogoutObservable.onNext(())
-            self.user = nil
-            self.currentUser_Rx.accept(nil)
             print("userLogout")
         } catch let signOutError as NSError {
             print("Error signing out: %@", signOutError)
@@ -335,9 +313,10 @@ final class UserService: NSObject {
 // MARK: - LoginViewModel+Kakao
 
 extension UserService {
-    //파베 유저 생성
+    //카카오 로그인 파베 유저 생성
     func createGoogleUser(email: String, password: String) {
-        Auth.auth().createUser(withEmail: email, password: password) { result, error in
+        Auth.auth().createUser(withEmail: email, password: password) { [weak self] result, error in
+            guard let self else { return }
             guard error == nil else {
                 print(error?.localizedDescription as Any)
                 return
@@ -347,20 +326,28 @@ extension UserService {
             
             REF_USER.document(uid ?? UUID().uuidString)
                 .setData(["id" : uid ?? UUID().uuidString])
+            
+            isLoginObservable.onNext(())
         }
     }
     
-    //구글 로그인
+    //카카오 구글 로그인
     func googleSignIn(email: String, password: String) {
-        Auth.auth().signIn(withEmail: email, password: password) { result, error in
+        Auth.auth().signIn(withEmail: email, password: password) { [weak self] result, error in
+            guard let self else { return }
             guard error == nil else {
                 print(error?.localizedDescription as Any)
+                createGoogleUser(email: email, password: password)
                 return
             }
             
-            print("로그인 성공")
-            self.isLoginObservable.onNext(())
-
+            if result == nil {
+                createGoogleUser(email: email, password: password)
+                print("유저 만들고 로그인 성공")
+            } else {
+                print("로그인 성공")
+                isLoginObservable.onNext(())
+            }
         }
     }
     
@@ -397,17 +384,25 @@ extension UserService: ASAuthorizationControllerDelegate {
                 // User is signed in to Firebase with Apple.
                 // ...
                 print("로그인 성공")
-                let uid = authResult?.user.uid
                 
-                REF_USER.document(uid ?? UUID().uuidString)
-                    .setData(["id" : uid ?? UUID().uuidString])
+                guard let uid = authResult?.user.uid else { return }
                 
-                self.isLoginObservable.onNext(())
-
-                // TODO: - Coordinator Refactoring
-                NotificationCenter.default.post(name: NSNotification.Name("LoginNotification"),
-                                                object: nil,
-                                                userInfo: nil)
+                REF_USER.document(uid).getDocument { [weak self] snapshot, error in
+                    guard let self else { return }
+                    if let snapshot = snapshot, snapshot.exists {
+                        isLoginObservable.onNext(())
+                    } else {
+                        REF_USER.document(uid)
+                            .setData(["id": uid]) { [weak self] error in
+                                guard let self else { return }
+                                if error != nil {
+                                    return
+                                }
+                                
+                                isLoginObservable.onNext(())
+                            }
+                    }
+                }
             }
         }
     }

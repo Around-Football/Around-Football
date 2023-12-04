@@ -13,6 +13,7 @@ import RxAlamofire
 import RxSwift
 
 final class FirebaseAPI {
+    
     static let shared = FirebaseAPI()
     
     private init() { }
@@ -38,25 +39,16 @@ final class FirebaseAPI {
                 ])
     }
     
-    func readUser(completion: @escaping (User?) -> Void) {
-        guard let currentUserID = Auth.auth().currentUser?.uid else {
-            completion(nil)
-            return
-        }
-        
-        REF_USER.document(currentUserID).getDocument(as: User.self) { result in
-            switch result {
-            case .success(let user):
-                print("readUser성공: \(user)")
-                // MARK: - UserService user 업데이
-                UserService.shared.user = user
-                completion(user)
-            case .failure(let error):
-                print("Error decoding user: \(error)")
-                completion(nil)
-            }
+    //uid로 유저 불러오기
+    func fetchUser(uid: String, completion: @escaping (User) -> Void) {
+        REF_USER.document(uid).getDocument { snapshot, error in
+            guard let dictionary = snapshot?.data() else { return }
+            
+            let user = User(dictionary: dictionary)
+            completion(user)
         }
     }
+    
     
     func fetchFields(completion: @escaping(([Field]) -> Void)) {
         REF_FIELD.getDocuments { snapshot, error in
@@ -96,6 +88,7 @@ final class FirebaseAPI {
     }
     
     // MARK: - AuthService
+    
     func updateFCMTokenAndFetchUser(uid: String, fcmToken: String) -> Single<User?> {
         return Single.create { single in
             self.updateFCMToken(uid: uid, fcmToken: fcmToken) { error in
@@ -117,17 +110,8 @@ final class FirebaseAPI {
         updateRefData(ref: ref, data: data, completion: completion)
     }
     
-    // TODO: - 창현이와 readUser 함수 맞추기
-    func fetchUser(uid: String, completion: @escaping (User) -> Void) {
-        REF_USER.document(uid).getDocument { snapshot, error in
-            guard let dictionary = snapshot?.data() else { return }
-            
-            let user = User(dictionary: dictionary)
-            completion(user)
-        }
-    }
-    
     // TODO: - ChannelAPI와 통합하기
+    
     func updateRefData(ref: DocumentReference, data: [String: Any], completion: @escaping ((Error?) -> Void)) {
         ref.updateData(data) { error in
             if let error = error {
@@ -141,38 +125,26 @@ final class FirebaseAPI {
     
     // MARK: - RxAlamofire
     
-    func readRecruitRx() -> Observable<[Recruit]> {
-        return Observable.create { observer in
-            let collectionRef = Firestore.firestore().collection("Recruit")
-            
-            collectionRef.getDocuments { snapshot, error in
-                if let error {
-                    observer.onError(error)
-                }
-                
-                guard let snapshot else { return }
-                
-                let recruits = snapshot.documents.compactMap { document -> Recruit? in
-                    
-                    return Recruit(dictionary: document.data())
-                }
-                
-                observer.onNext(recruits)
-                observer.onCompleted()
-            }
-            
-            return Disposables.create()
-        }
-        .subscribe(on: ConcurrentDispatchQueueScheduler(qos: .background))
-    }
-    
-    //date
-    func fetchRecruitFieldDataType(type: String?) -> Observable<[Recruit]> {
+    //HomeList
+    func readRecruitRx(input: (
+        date: String?,
+        region: String?,
+        type: String?)
+    ) -> Observable<[Recruit]> {
         return Observable.create { observer in
             var collectionRef: Query = Firestore.firestore().collection("Recruit")
-
-            //type있을때만 type으로 이동
-            if let type = type {
+            
+            if let date = input.date {
+                collectionRef = collectionRef
+                    .whereField("matchDateString", isEqualTo: date)
+            }
+            
+            if let region = input.region {
+                collectionRef = collectionRef
+                    .whereField("region", isEqualTo: region)
+            }
+            
+            if let type = input.type {
                 collectionRef = collectionRef
                     .whereField("type", isEqualTo: type)
             }
@@ -185,41 +157,9 @@ final class FirebaseAPI {
                 guard let snapshot else { return }
                 
                 let recruits = snapshot.documents.compactMap { document -> Recruit? in
-                    
-                    return Recruit(dictionary: document.data())
-                }
-            
-                observer.onNext(recruits)
-                observer.onCompleted()
-            }
-            
-            return Disposables.create()
-        }
-        .subscribe(on: ConcurrentDispatchQueueScheduler(qos: .background))
-    }
-    
-    func fetchRecruitFieldRegionType(region: String?) -> Observable<[Recruit]> {
-        return Observable.create { observer in
-            var collectionRef: Query = Firestore.firestore().collection("Recruit")
-
-            //region 있을때만 이동
-            if let region = region {
-                collectionRef = collectionRef
-                    .whereField("fieldAddress", isGreaterThan: region)
-            }
-            
-            collectionRef.getDocuments { snapshot, error in
-                if let error {
-                    observer.onError(error)
+                    Recruit(dictionary: document.data())
                 }
                 
-                guard let snapshot else { return }
-                
-                let recruits = snapshot.documents.compactMap { document -> Recruit? in
-                    
-                    return Recruit(dictionary: document.data())
-                }
-            
                 observer.onNext(recruits)
                 observer.onCompleted()
             }
@@ -239,8 +179,10 @@ extension FirebaseAPI {
         fieldID: String,
         fieldName: String,
         fieldAddress: String,
+        region: String,
         type: String?,
         recruitedPeopleCount: Int,
+        gamePrice: String,
         title: String?,
         content: String?,
         matchDateString: String?,
@@ -256,8 +198,10 @@ extension FirebaseAPI {
                     "fieldID": fieldID,
                     "fieldName": fieldName,
                     "fieldAddress": fieldAddress,
+                    "region": region,
                     "type": type,
                     "recruitedPeopleCount": recruitedPeopleCount,
+                    "gamePrice": gamePrice,
                     "title": title,
                     "content": content,
                     "matchDateString": matchDateString,
@@ -287,11 +231,8 @@ extension FirebaseAPI {
                 }
                 
                 let documentsData = snapshot.documents.map { $0.data() }
-                
             }
     }
-    
-
 }
 
 func saveFieldJsonData<T: Encodable>(data:T) {

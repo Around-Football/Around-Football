@@ -55,6 +55,4 @@ final class MainTabController: UITabBarController {
                                            image: UIImage(systemName: "info.square"),
                                            tag: 3)
     }
-    
-    
 }

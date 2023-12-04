@@ -9,6 +9,8 @@
 //import AuthenticationServices
 //import FirebaseAuth
 //
+//TODO: - 파일 삭제
+
 //extension LoginViewModel: ASAuthorizationControllerDelegate {
 //    
 //    func authorizationController(controller: ASAuthorizationController, didCompleteWithAuthorization authorization: ASAuthorization) {
