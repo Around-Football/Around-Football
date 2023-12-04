@@ -41,8 +41,9 @@ final class ChatTabCoordinator: BaseCoordinator {
         navigationController?.present(picker, animated: true)
     }
     
-    func pushChatView(channelInfo: ChannelInfo) {
-        let controller = ChatViewController(viewModel: ChatViewModel(coordinator: self, channelInfo: channelInfo))
+    func pushChatView(channelInfo: ChannelInfo, isNewChat: Bool = false) {
+        let viewModel = ChatViewModel(coordinator: self, channelInfo: channelInfo, isNewChat: isNewChat)
+        let controller = ChatViewController(viewModel: viewModel)
         navigationController?.pushViewController(controller, animated: true)
     }
     
