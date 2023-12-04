@@ -44,6 +44,7 @@ final class ChatTabCoordinator: BaseCoordinator {
     func pushChatView(channelInfo: ChannelInfo, isNewChat: Bool = false) {
         let viewModel = ChatViewModel(coordinator: self, channelInfo: channelInfo, isNewChat: isNewChat)
         let controller = ChatViewController(viewModel: viewModel)
+        controller.hidesBottomBarWhenPushed = true
         navigationController?.pushViewController(controller, animated: true)
     }
     
