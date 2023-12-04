@@ -230,14 +230,16 @@ final class HomeViewController: UIViewController {
     
     @objc
     private func didTapFloatingButton() {
-        UserService.shared.currentUser_Rx.subscribe(onNext: { [weak self] user in
-            guard let self else { return }
-            if user?.id == nil {
+        do {
+            let user = try UserService.shared.currentUser_Rx.value()
+            if user == nil {
                 viewModel.coordinator?.presentLoginViewController()
             } else {
                 viewModel.coordinator?.pushInviteView()
             }
-        }).disposed(by: disposeBag)
+        } catch {
+            print("로그인 정보 가져오기 오류")
+        }
     }
     
     // MARK: - Helpers
