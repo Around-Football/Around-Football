@@ -17,7 +17,7 @@ final class MapTabCoordinator: BaseCoordinator {
         mapViewModel.coordinator = self
         let mapViewController = MapViewController(viewModel: mapViewModel)
         navigationController = UINavigationController(rootViewController: mapViewController)
-        navigationController?.navigationBar.isHidden = true
+        navigationController?.navigationBar.isHidden = false
         
         guard let navigationController = navigationController else {
             return UINavigationController()

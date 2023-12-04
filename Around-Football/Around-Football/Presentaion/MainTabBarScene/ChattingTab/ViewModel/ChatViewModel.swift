@@ -7,13 +7,13 @@
 
 import Foundation
 
-import RxSwift
-import RxRelay
 import Firebase
 import FirebaseAuth
 import MessageKit
+import RxSwift
+import RxRelay
 
-class ChatViewModel {
+final class ChatViewModel {
     
     // MARK: - Properties
     
@@ -23,10 +23,10 @@ class ChatViewModel {
     var channel: BehaviorRelay<Channel?> = BehaviorRelay(value: nil)
     var messages: BehaviorRelay<[Message]> = BehaviorRelay(value: [])
     let channelInfo: ChannelInfo
-    let currentUser: User? = UserService.shared.currentUser_Rx.value
+    var currentUser: User?
     var withUser: User? = nil
     var isSendingPhoto: BehaviorRelay<Bool> = BehaviorRelay(value: false)
-    var isNewChat: Bool = false
+    var isNewChat: Bool
     
     private let chatAPI = ChatAPI.shared
     private let channelAPI = ChannelAPI.shared
@@ -39,6 +39,7 @@ class ChatViewModel {
     struct Input {
         let didTapSendButton: Observable<String>
         let pickedImage: Observable<UIImage>
+        let invokedViewWillAppear: Observable<Void>
     }
     
     struct Output {
@@ -46,10 +47,17 @@ class ChatViewModel {
     
     // MARK: - Lifecycles
     
-    init(coordinator: ChatTabCoordinator, channelInfo: ChannelInfo) {
+    init(coordinator: ChatTabCoordinator, channelInfo: ChannelInfo, isNewChat: Bool) {
         self.coordinator = coordinator
         self.channelInfo = channelInfo
-        self.channel.accept(Channel(id: channelInfo.id, members: 2))
+        self.isNewChat = isNewChat
+        self.channel.accept(Channel(id: channelInfo.id, isAvailable: channelInfo.isAvailable))
+      
+        UserService.shared.currentUser_Rx
+            .subscribe { [weak self] user in
+                guard let self else { return }
+                currentUser = user
+        }.dispose()
     }
     
     // MARK: - API
@@ -95,6 +103,7 @@ class ChatViewModel {
         fetchWithUser()
         sendMessage(by: input.didTapSendButton)
         sendPhoto(by: input.pickedImage)
+        resetAlarmNumber(by: input.invokedViewWillAppear)
         return Output()
     }
     
@@ -116,30 +125,38 @@ class ChatViewModel {
     }
     
     private func insertNewMessage(_ message: Message) {
-//        var newMessages = messages.value
-//        newMessages.append(message)
+        //        var newMessages = messages.value
+        //        newMessages.append(message)
         updateShowTimeLabel(updateMessage: message)
-//        newMessages.sort()
-//        messages.accept(newMessages)
+        //        newMessages.sort()
+        //        messages.accept(newMessages)
     }
     
     func updateShowTimeLabel(updateMessage: Message) {
         var messages: [Message] = self.messages.value
+        guard let firstMessage = self.messages.value.first else {
+            messages.append(updateMessage)
+            self.messages.accept(messages)
+            return
+        }
+        var standardMessage = firstMessage
         messages.append(updateMessage)
-        for i in 0..<messages.count {
-            let previousMessage: Message? = i > 0 ? messages[i - 1] : nil
-            if let previousMessage = previousMessage,
-                Calendar.current.isDate(messages[i].sentDate, equalTo: previousMessage.sentDate, toGranularity: .minute)
-                && messages[i].sender.senderId == previousMessage.sender.senderId {
+        messages.sort()
+        
+        for i in 1..<messages.count {
+            if Calendar.current.isDate(standardMessage.sentDate, equalTo: messages[i].sentDate, toGranularity: .minute) && standardMessage.sender.senderId == messages[i].sender.senderId {
                 messages[i - 1].showTimeLabel = false
             } else {
-                messages[i].showTimeLabel = true
+                messages[i - 1].showTimeLabel = true
             }
+            standardMessage = messages[i]
         }
-        messages.sort()
+        
+        messages[messages.count - 1].showTimeLabel = true
         self.messages.accept(messages)
+//        print(self.messages.value.map { $0.showTimeLabel })
     }
-
+    
     
     private func sendMessage(by inputObserver: Observable<String>) {
         inputObserver
@@ -147,7 +164,7 @@ class ChatViewModel {
             .subscribe { (owner, text) in
                 print(#function)
                 guard let currentUser = owner.currentUser,
-                        let channel = owner.channel.value,
+                      let channel = owner.channel.value,
                       let withUser = owner.withUser else { return }
                 let message = Message(user: currentUser, content: text)
                 if owner.isNewChat {
@@ -170,25 +187,49 @@ class ChatViewModel {
             .withUnretained(self)
             .subscribe { (owner, image) in
                 guard let channel = owner.channel.value,
-                        let currentUser = owner.currentUser,
+                      let currentUser = owner.currentUser,
                       let withUser = owner.withUser else { return }
                 owner.isSendingPhoto.accept(true)
-                StorageAPI.uploadImage(image: image, channel: channel) { url in
-                    owner.isSendingPhoto.accept(false)
-                    guard let url = url else { return }
-                    var message = Message(user: currentUser, image: image)
-                    message.downloadURL = url
-                    owner.chatAPI.save(message)
-                    owner.channelAPI.updateChannelInfo(owner: currentUser,
-                                                       withUser: withUser,
-                                                       channelId: channel.id,
-                                                       message: message)
+                if owner.isNewChat {
+                    print("isNewChat = \(owner.isNewChat)")
+                    owner.channelAPI.createChannel(channel: channel, owner: currentUser, withUser: withUser) {
+                        owner.uploadImage(image: image, channel: channel)
+                        owner.isNewChat = false
+                    }
+                } else {
+                    owner.uploadImage(image: image, channel: channel)
+                    
                     // TODO: - NotiManager 적용
                     //            NotiManager.shared.pushNotification(channel: channel, content: ("사진"), fcmToken: toUser!.fcmToken, from: user)
                 }
             }
             .disposed(by: disposeBag)
         
+    }
+    
+    private func uploadImage(image: UIImage, channel: Channel) {
+        StorageAPI.uploadImage(image: image, channel: channel) { [weak self] url in
+            guard let self = self,
+                  let channel = self.channel.value,
+                  let currentUser = currentUser,
+                  let withUser = withUser,
+                  let url = url else { return }
+            
+            self.isSendingPhoto.accept(false)
+            var message = Message(user: currentUser, image: image)
+            message.downloadURL = url
+            self.chatAPI.save(message) { error in
+                if let error = error {
+                    print("DEBUG - inputBar Error: \(error.localizedDescription)")
+                    return
+                }
+            }
+            self.channelAPI.updateChannelInfo(owner: currentUser,
+                                               withUser: withUser,
+                                               channelId: channel.id,
+                                               message: message)
+            
+        }
     }
     
     private func saveMessage(message: Message, completion: (() -> Void)? = nil) {
@@ -198,7 +239,7 @@ class ChatViewModel {
                 return
             }
             guard let self = self,
-                    let channel = channel.value,
+                  let channel = channel.value,
                   let currentUser = currentUser,
                   let withUser = withUser else { return }
             channelAPI.updateChannelInfo(owner: currentUser,
@@ -210,6 +251,17 @@ class ChatViewModel {
             
             completion?()
         }
+    }
+    
+    private func resetAlarmNumber(by inputObserver: Observable<Void>) {
+        inputObserver
+            .withUnretained(self)
+            .subscribe { (owner, _) in
+                if let currentUser = owner.currentUser {
+                    owner.channelAPI.resetAlarmNumber(uid: currentUser.id, channelId: owner.channelInfo.id)
+                }
+            }
+            .disposed(by: disposeBag)
     }
     
     func showPHPickerView(picker: UIViewController) {

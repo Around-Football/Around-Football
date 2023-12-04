@@ -6,6 +6,7 @@
 //
 
 import Firebase
+import FirebaseFirestore
 
 struct Recruit: Codable, Identifiable {
     var id: String
@@ -14,6 +15,7 @@ struct Recruit: Codable, Identifiable {
     var fieldID: String //운동장 ID
     var fieldName: String // 운동장 이름
     var fieldAddress: String // 운동장 주소
+    var region: String
     var type: String //유형: 풋살, 축구
     var recruitedPeopleCount: Int //모집 인원
     var gamePrice: String // 무료도 있을 수 있으니
@@ -27,7 +29,7 @@ struct Recruit: Codable, Identifiable {
     
     //신청자 서브컬렉션 추가
     var applicantsCollectionRef: CollectionReference {
-        return Firestore.firestore().collection("recruits").document(id).collection("applicants")
+        return Firestore.firestore().collection("Recruit").document(fieldID).collection("applicants")
     }
 
     //서브콜렉션에 신청자 추가
@@ -69,6 +71,7 @@ struct Recruit: Codable, Identifiable {
         self.fieldID = dictionary["fieldID"] as? String ?? ""
         self.fieldName = dictionary["fieldName"] as? String ?? ""
         self.fieldAddress = dictionary["fieldAddress"] as? String ?? ""
+        self.region = dictionary["region"] as? String ?? ""
         self.type = dictionary["type"] as? String ?? ""
         self.recruitedPeopleCount = dictionary["recruitedPeopleCount"] as? Int ?? Int()
         self.gamePrice = dictionary["gamePrice"] as? String ?? ""

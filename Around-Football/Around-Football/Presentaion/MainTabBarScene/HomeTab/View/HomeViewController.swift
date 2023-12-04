@@ -17,37 +17,133 @@ final class HomeViewController: UIViewController {
     
     // MARK: - Properties
     
-    var viewModel: HomeViewModel
-    let dateFilterView = DateFilterViewController()
-    let locationFilterView = LocationFilterViewController()
-    private var invokedViewWillAppear = PublishSubject<Void>()
-    private var filteringTypeRecruitList = PublishSubject<String?>()
-    private var filterringRegionRecruitList = PublishSubject<String?>()
+    private var viewModel: HomeViewModel
+    private var loadRecruitList = PublishSubject<(String?, String?, String?)>()
+    private var filterRequest: (date: String?, region: String?, type: String?)
     private var disposeBag = DisposeBag()
+    private var selectedDate: Date?
     
-    init(viewModel: HomeViewModel) {
-        self.viewModel = viewModel
-        super.init(nibName: nil, bundle: nil)
-    }
-    
-    lazy var homeTableView = UITableView().then {
+    private lazy var homeTableView = UITableView().then {
         $0.register(HomeTableViewCell.self, forCellReuseIdentifier: HomeTableViewCell.id)
     }
-    
-    private let filterOptions: [String] = ["모든 날짜", "모든 지역", "매치 유형"] // 필터 옵션
     
     private lazy var filterScrollView = UIScrollView().then {
         $0.contentSize = CGSize(width: view.frame.size.width, height: 30)
         $0.showsHorizontalScrollIndicator = false
-    } // 가로 스크롤뷰
+    }
     
-    private var optionStackView = UIStackView().then {
+    private lazy var optionStackView = UIStackView().then {
         $0.axis = .horizontal
         $0.alignment = .fill
         $0.distribution = .fillEqually
         $0.spacing = 5
-        $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.addArrangedSubviews(resetButton,
+                               datePicker,
+                               regionFilterButton,
+                               typeFilterButton)
     }
+    
+    private var buttonConfig: UIButton.Configuration {
+        var config = UIButton.Configuration.plain()
+        config.imagePadding = 8
+        config.contentInsets = NSDirectionalEdgeInsets(top: 10,
+                                                       leading: 10,
+                                                       bottom: 10,
+                                                       trailing: 10)
+        
+        return config
+    }
+    
+    private lazy var resetButton = UIButton(configuration: buttonConfig).then {
+        let image = UIImage(systemName: "arrow.triangle.2.circlepath")
+        $0.setTitle("초기화", for: .normal)
+        $0.setImage(image?.withTintColor(UIColor.systemGray, renderingMode: .alwaysOriginal),
+                    for: .normal)
+        $0.setTitleColor(.systemGray, for: .normal)
+        $0.layer.cornerRadius = LayoutOptions.cornerRadious // 버튼의 모서리를 둥글게 만듭니다.
+        $0.layer.borderWidth = 1.0
+        $0.layer.borderColor = UIColor.systemGray.cgColor
+        $0.addTarget(self, action: #selector(resetButtonTapped), for: .touchUpInside)
+    }
+    
+    private lazy var dateFilterButton = UIButton(configuration: buttonConfig).then {
+        let image = UIImage(systemName: "chevron.down")
+        $0.setTitle("날짜 선택", for: .normal)
+        $0.setImage(image?.withTintColor(UIColor.systemGray, renderingMode: .alwaysOriginal),
+                    for: .normal)
+        $0.setTitleColor(.systemGray, for: .normal)
+        $0.backgroundColor = .white
+        $0.layer.cornerRadius = LayoutOptions.cornerRadious
+        $0.layer.borderWidth = 1.0
+        $0.layer.borderColor = UIColor.systemGray.cgColor
+    }
+    
+    private lazy var datePicker = UIDatePicker().then {
+        $0.preferredDatePickerStyle = .compact
+        $0.datePickerMode = .date
+        $0.locale = Locale(identifier: "ko_KR")
+        $0.subviews[0].subviews[0].subviews[0].alpha = 0
+        $0.layer.backgroundColor = UIColor.white.cgColor
+        $0.layer.cornerRadius = LayoutOptions.cornerRadious
+        $0.addSubview(dateFilterButton)
+        dateFilterButton.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
+        $0.addTarget(self, action: #selector(changeDate), for: .valueChanged)
+    }
+    
+    private lazy var regionFilterButton: UIButton = {
+        let button = UIButton(configuration: buttonConfig).then {
+            let image = UIImage(systemName: "chevron.down")
+            $0.setTitle("지역 선택", for: .normal)
+            $0.setImage(image?.withTintColor(UIColor.systemGray, renderingMode: .alwaysOriginal),
+                        for: .normal)
+            $0.setTitleColor(.systemGray, for: .normal)
+            $0.layer.cornerRadius = LayoutOptions.cornerRadious
+            $0.layer.borderWidth = 1.0
+            $0.layer.borderColor = UIColor.systemGray.cgColor
+            $0.showsMenuAsPrimaryAction = true
+        }
+        let menus: [String]  = ["전체", "서울", "인천", "부산", "대구", "울산", "대전", "광주", "세종특별자치시", "경기", "강원특별자치도", "충북", "충남", "경북", "경남", "전북", "전남", "제주특별자치도"]
+        
+        button.menu = UIMenu(children: menus.map { city in
+            UIAction(title: city) { [weak self] _ in
+                guard let self else { return }
+                filterRequest.region = (city == "전체" ? nil : city)
+                loadRecruitList.onNext(filterRequest)
+                button.setTitle(city, for: .normal)
+            }
+        })
+        
+        return button
+    }()
+    
+    private lazy var typeFilterButton: UIButton = {
+        let button = UIButton(configuration: buttonConfig).then {
+            let image = UIImage(systemName: "chevron.down")
+            $0.setTitle("매치 유형", for: .normal)
+            $0.setImage(image?.withTintColor(UIColor.systemGray, renderingMode: .alwaysOriginal),
+                        for: .normal)
+            $0.setTitleColor(.systemGray, for: .normal)
+            $0.layer.cornerRadius = LayoutOptions.cornerRadious
+            $0.layer.borderWidth = 1.0
+            $0.layer.borderColor = UIColor.systemGray.cgColor
+            $0.showsMenuAsPrimaryAction = true
+        }
+        
+        let menus: [String] = ["전체", "풋살", "축구"]
+        
+        button.menu = UIMenu(children: menus.map { type in
+            UIAction(title: type) { [weak self] _ in
+                guard let self else { return }
+                filterRequest.type = (type == "전체" ? nil : type)
+                loadRecruitList.onNext(filterRequest)
+                button.setTitle(type, for: .normal)
+            }
+        })
+        
+        return button
+    }()
     
     private lazy var floatingButton: UIButton = {
         let button = UIButton()
@@ -65,50 +161,28 @@ final class HomeViewController: UIViewController {
         return button
     }()
     
-    private var buttonConfig: UIButton.Configuration {
-        var config = UIButton.Configuration.plain()
-        config.contentInsets = NSDirectionalEdgeInsets(top: 10,
-                                                       leading: 10,
-                                                       bottom: 10,
-                                                       trailing: 10)
-        
-        return config
+    // MARK: - Lifecycles
+    
+    init(viewModel: HomeViewModel) {
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
     }
     
-    private lazy var resetButton: UIButton = {
-        
-        let button = UIButton(configuration: buttonConfig)
-        let image = UIImage(systemName: "arrow.triangle.2.circlepath")
-        // 버튼 타이틀과 이미지 설정
-        button.setTitle("초기화", for: .normal)
-        button.setImage(image?.withTintColor(UIColor.systemGray, renderingMode: .alwaysOriginal),
-                        for: .normal)
-        
-        // 버튼 스타일 설정
-        button.setTitleColor(.systemGray, for: .normal)
-        button.layer.cornerRadius = LayoutOptions.cornerRadious // 버튼의 모서리를 둥글게 만듭니다.
-        button.layer.borderWidth = 1.0
-        button.layer.borderColor = UIColor.systemGray.cgColor
-        
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.addTarget(self, action: #selector(filterOptionTapped), for: .touchUpInside)
-        
-        return button
-    }()
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
-    // MARK: - Lifecycles
     override func viewDidLoad() {
         super.viewDidLoad()
         configureUI()
         bindUI()
-        
+        //처음 로딩시 전체 리스트 요청
+        filterRequest = (nil, nil, nil)
     }
     
     override func viewWillAppear(_ animated: Bool) {
         navigationController?.navigationBar.isHidden = true
-        //        invokedViewWillAppear.onNext(())
-        filterringRegionRecruitList.onNext(locationFilterView.selectedCity)
-        print(locationFilterView.selectedCity)
+        loadRecruitList.onNext(filterRequest)
     }
     
     override func viewDidLayoutSubviews() {
@@ -123,21 +197,60 @@ final class HomeViewController: UIViewController {
             height: 50
         )
     }
+
+    // MARK: - Selectors
+    
+    @objc
+    private func resetButtonTapped() {
+        filterRequest = (nil, nil, nil)
+        loadRecruitList.onNext(filterRequest)
+        dateFilterButton.setTitle("날짜 선택", for: .normal)
+        regionFilterButton.setTitle("지역 선택", for: .normal)
+        typeFilterButton.setTitle("유형 선택", for: .normal)
+    }
+    
+    @objc
+    func changeDate(_ sender: UIDatePicker) {
+        selectedDate = sender.date
+        
+        let dateformatter = DateFormatter()
+        dateformatter.locale = Locale(identifier: "ko_KR")
+        dateformatter.dateFormat = "YYYY년 MM월 d일"
+        let formattedDate = dateformatter.string(from: sender.date)
+        
+        let titleDateformatter = DateFormatter()
+        titleDateformatter.locale = Locale(identifier: "ko_KR")
+        titleDateformatter.dateFormat = "MM월 d일"
+        let buttonTitleDate = titleDateformatter.string(from: sender.date)
+        
+        filterRequest.date = formattedDate
+        dateFilterButton.setTitle(buttonTitleDate, for: .normal)
+        loadRecruitList.onNext(filterRequest)
+    }
+    
+    @objc
+    private func didTapFloatingButton() {
+        do {
+            let user = try UserService.shared.currentUser_Rx.value()
+            if user == nil {
+                viewModel.coordinator?.presentLoginViewController()
+            } else {
+                viewModel.coordinator?.pushInviteView()
+            }
+        } catch {
+            print("로그인 정보 가져오기 오류")
+        }
+    }
     
     // MARK: - Helpers
     
     func bindUI() {
-        let input = HomeViewModel.Input(invokedViewWillAppear: invokedViewWillAppear.asObservable(),
-                                        filteringType: filteringTypeRecruitList.asObservable(),
-                                        filteringRegion: filterringRegionRecruitList.asObserver())
+        let input = HomeViewModel.Input(loadRecruitList: loadRecruitList.asObservable())
         
         let output = viewModel.transform(input)
         
-        //merge: 하나만 있어도 내려보냄
-        Observable
-            .merge(output.recruitList,
-                   output.filteredTypeRecruitList,
-                   output.filteredRegionRecruitList)
+        output
+            .recruitList
             .bind(to: homeTableView.rx.items(cellIdentifier: HomeTableViewCell.id,
                                              cellType: HomeTableViewCell.self)) { index, item, cell in
                 cell.bindContents(item: item)
@@ -145,8 +258,8 @@ final class HomeViewController: UIViewController {
         
         homeTableView.rx.modelSelected(Recruit.self)
             .subscribe(onNext: { [weak self] selectedRecruit in
-                guard let self = self else { return }
-                self.handleItemSelected(selectedRecruit)
+                guard let self else { return }
+                handleItemSelected(selectedRecruit)
             })
             .disposed(by: disposeBag)
     }
@@ -157,39 +270,11 @@ final class HomeViewController: UIViewController {
     
     func configureUI() {
         view.backgroundColor = .white
-        
-        optionStackView.addArrangedSubview(resetButton)
-        
-        for option in filterOptions {
-            let filterButton: UIButton = {
-                let button = UIButton(configuration: buttonConfig)
-                let image = UIImage(systemName: "chevron.down")
-                // 버튼 타이틀과 이미지 설정
-                button.setTitle(option, for: .normal)
-                button.setImage(
-                    image?.withTintColor(UIColor.systemGray, renderingMode: .alwaysOriginal),
-                    for: .normal)
-                
-                // 버튼 스타일 설정
-                button.setTitleColor(.systemGray, for: .normal)
-                button.layer.cornerRadius = LayoutOptions.cornerRadious
-                button.layer.borderWidth = 1.0
-                button.layer.borderColor = UIColor.systemGray.cgColor
-                
-                button.translatesAutoresizingMaskIntoConstraints = false
-                button.addTarget(self, action: #selector(filterOptionTapped), for: .touchUpInside)
-                return button
-            }()
-            
-            optionStackView.addArrangedSubview(filterButton)
-        }
-        
-        filterScrollView.addSubview(optionStackView)
-        
         view.addSubviews(filterScrollView,
                          homeTableView,
                          floatingButton)
         
+        filterScrollView.addSubview(optionStackView)
         filterScrollView.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide).offset(SuperviewOffsets.topPadding)
             make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
@@ -210,75 +295,5 @@ final class HomeViewController: UIViewController {
             make.trailing.equalToSuperview()
             make.bottom.equalToSuperview()
         }
-    }
-    
-    //TODO: - 방식 맞추기 (모달 or alertsheet)
-    
-    func matchTypeActionSheet() -> UIAlertController {
-        let actionSheet = UIAlertController()
-        
-        actionSheet.title = "매치 유형을 선택해주세요"
-        
-        //전체 버튼 - 스타일(default)
-        actionSheet.addAction(UIAlertAction(title: "전체", style: .default, handler: {[weak self] (ACTION:UIAlertAction) in
-            print("전체")
-            self?.filteringTypeRecruitList.onNext(nil)
-        }))
-        
-        // 축구
-        actionSheet.addAction(UIAlertAction(title: "축구", style: .default, handler: { [weak self] _ in
-            print("축구")
-            self?.filteringTypeRecruitList.onNext("축구")
-        }))
-        
-        // 풋살
-        actionSheet.addAction(UIAlertAction(title: "풋살", style: .default, handler: { [weak self] _ in
-            print("풋살")
-            self?.filteringTypeRecruitList.onNext("풋살")
-        }))
-        
-        //취소 버튼 - 스타일(cancel)
-        actionSheet.addAction(UIAlertAction(title: "취소", style: .destructive, handler: nil))
-        
-        return actionSheet
-    }
-    
-    // MARK: - Selectors
-    
-    @objc
-    func filterOptionTapped(sender: UIButton) {
-        // TODO: - Coordinator로 변경
-        // 필터 옵션 버튼을 탭했을 때의 동작
-        // ["모든 날짜", "모든 지역", "매치 유형"]
-        
-        switch sender.title(for: .normal) {
-        case "모든 날짜":
-            present(dateFilterView, animated: true)
-            
-        case "모든 지역":
-            locationFilterView.modalPresentationStyle = .fullScreen
-            locationFilterView.modalTransitionStyle = .coverVertical
-            present(locationFilterView, animated: true)
-            
-        case "매치 유형":
-            self.present(matchTypeActionSheet(), animated: true, completion: nil)
-            
-        default:
-            break
-        }
-    }
-    
-    // FIXME: - View PopUp navigationBar 처리
-    @objc
-    func didTapFloatingButton() {
-        if UserService.shared.user?.id == nil {
-            viewModel.coordinator?.presentLoginViewController()
-        } else {
-            viewModel.coordinator?.pushInviteView()
-        }
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
     }
 }
