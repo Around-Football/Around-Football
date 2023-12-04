@@ -13,12 +13,24 @@ protocol ChannelProtocol {
 
 struct Channel: ChannelProtocol {
     let id: String
-    let members: Int
+    let isAvailable: Bool
     var representation: [String: Any] {
         let rep = [
             "id": id,
-            "members": members
+            "isAvailbale": isAvailable
         ] as [String: Any]
         return rep
+    }
+    
+    init(id: String, isAvailable: Bool) {
+        self.id = id
+        self.isAvailable = isAvailable
+    }
+    
+    init?(_ dictionary: [String: Any]) {
+        guard let id = dictionary["id"] as? String,
+              let isAvailbale = dictionary["isAvailbale"] as? Bool else { return nil }
+        self.id = id
+        self.isAvailable = isAvailbale
     }
 }

@@ -29,4 +29,19 @@ final class DetailCoordinator: BaseCoordinator {
         let controller = ApplicationStatusViewController()
         navigationController?.pushViewController(controller, animated: true)
     }
+    
+    func pushChatViewController(channelInfo: ChannelInfo, isNewChat: Bool = false) {
+        let coordinator = ChatTabCoordinator(navigationController: navigationController)
+        coordinator.pushChatView(channelInfo: channelInfo, isNewChat: isNewChat)
+        childCoordinators.append(coordinator)
+    }
+    
+    func removeChildCoordinator() {
+        guard let coordinator = childCoordinators.last as? ChatTabCoordinator else {
+            print("DEBUG - This Coordinator is not ChatTabCoordinator")
+            return
+        }
+    
+        removeThisChildCoordinators(coordinator: coordinator)
+    }
 }

@@ -98,8 +98,7 @@ final class DetailViewController: UIViewController {
     
     @objc
     private func clickedMessage() {
-        //TODO: - 진태 메세지 화면으로 전환
-        //메세지 보내기 화면으로 넘어가기
+        viewModel.checkChannel()
     }
     
     @objc
