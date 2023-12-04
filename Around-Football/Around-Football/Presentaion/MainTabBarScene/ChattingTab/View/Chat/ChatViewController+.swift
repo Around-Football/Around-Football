@@ -99,7 +99,7 @@ extension ChatViewController: MessagesDataSource {
     func numberOfSections(in messagesCollectionView: MessagesCollectionView) -> Int {
         viewModel.messages.value.count
     }
-    
+        
     func messageTopLabelAttributedText(for message: MessageType,
                                        at indexPath: IndexPath) -> NSAttributedString? {
         let name = message.sender.displayName
@@ -161,7 +161,9 @@ extension ChatViewController: MessagesDisplayDelegate {
         let dateString = dateFormatter.string(from: message.sentDate)
         
         let isShowingTimeLabel = viewModel.messages.value[indexPath.row].showTimeLabel
-        return isShowingTimeLabel ? NSAttributedString(string: dateString, attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 10)]) : nil
+        
+        print(indexPath.item, isShowingTimeLabel)
+        return NSAttributedString(string: dateString, attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 10)])
 //        return isConfigureTimeLabel(at: indexPath) ? NSAttributedString(string: dateString, attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 10)]) : nil
     }
     

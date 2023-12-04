@@ -22,7 +22,7 @@ final class ChannelAPI {
     
     func createChannel(channel: Channel, owner: User, withUser: User, completion: @escaping () -> Void) {
         let ownerChannel = ChannelInfo(id: channel.id, withUser: withUser)
-        let withUserChannel = ChannelInfo(withUser: owner)
+        let withUserChannel = ChannelInfo(id: channel.id, withUser: owner)
         DB_REF.collection("channels").document(channel.id)
             .setData(channel.representation) {  [weak self] error in
                 if let error {
@@ -46,20 +46,21 @@ final class ChannelAPI {
             .setData(channelInfo.representation)
     }
     
-    func checkExistChannel(owner: User, withUser: User, completion: @escaping(Bool, String?) -> Void) {
+    func checkExistAvailableChannel(owner: User, withUser: User, completion: @escaping(Bool, String?) -> Void) {
         REF_USER.document(owner.id).collection("channels")
             .whereField("withUserId", isEqualTo: withUser.id)
+            .whereField("isAvailable", isEqualTo: true)
             .getDocuments { snapshot, error in
                 guard let isEmpty = snapshot?.isEmpty else {
                     print("DEBUG - snapshot Error", #function, error?.localizedDescription as Any)
                     return
                 }
-                let isExist = !isEmpty
+                let isAvailable = !isEmpty
                 let documentId = snapshot?.documents.first?.documentID
-                completion(isExist, documentId)
+                completion(isAvailable, documentId)
             }
     }
-    
+        
     func subscribe() -> Observable<[(ChannelInfo, DocumentChangeType)]> {
         return Observable.create { [weak self] observer in
             let disposable = Disposables.create()
@@ -94,15 +95,21 @@ final class ChannelAPI {
             }
         }
         
-        let updateData = [
+        let updateCurrentUserData = [
             "recentDate": message.sentDate,
             "previewContent": contentMessage
         ] as [String: Any]
         
+        let updateWithUserData = [
+            "recentDate": message.sentDate,
+            "previewContent": contentMessage,
+            "alarmNumber": FieldValue.increment(Int64(1))
+        ] as [String: Any]
+        
         let ownerRef = REF_USER.document(owner.id).collection("channels").document(channelId)
         let withUserRef = REF_USER.document(withUser.id).collection("channels").document(channelId)
-        updateRefData(ref: ownerRef, data: updateData)
-        updateRefData(ref: withUserRef, data: updateData)
+        updateRefData(ref: ownerRef, data: updateCurrentUserData)
+        updateRefData(ref: withUserRef, data: updateWithUserData)
         
     }
     
