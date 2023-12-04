@@ -38,11 +38,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         //네비게이션 탭바 색상 검정색으로
         UINavigationBar.appearance().tintColor = .label
         
-        // MARK: - 앱이 켜질때 유저정보 가져옴
-        if Auth.auth().currentUser?.uid != nil {
-            UserService.shared.isLoginObservable.onNext(())
-        }
-        
         return true
     }
     

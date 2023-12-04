@@ -30,7 +30,7 @@ final class UserService: NSObject {
     
     var currentUser_Rx: BehaviorSubject<User?> = BehaviorSubject(value: nil)
     var isLoginObservable: BehaviorSubject<Void> = BehaviorSubject(value: ())
-    var isLogoutObservable: BehaviorSubject<Void> = BehaviorSubject(value: ())
+    var isLogoutObservable: PublishSubject<Void> = PublishSubject()
     var checkUserInfoExist:  PublishSubject<Bool> = PublishSubject()
     private let disposeBag = DisposeBag()
     
@@ -144,6 +144,7 @@ final class UserService: NSObject {
                             }
                     }
                 }
+                
             }
         }
     }
@@ -378,12 +379,25 @@ extension UserService: ASAuthorizationControllerDelegate {
                 // User is signed in to Firebase with Apple.
                 // ...
                 print("로그인 성공")
-                let uid = authResult?.user.uid
                 
-                REF_USER.document(uid ?? UUID().uuidString)
-                    .setData(["id" : uid ?? UUID().uuidString])
+                guard let uid = authResult?.user.uid else { return }
                 
-                self.isLoginObservable.onNext(())
+                REF_USER.document(uid).getDocument { [weak self] snapshot, error in
+                    guard let self else { return }
+                    if let snapshot = snapshot, snapshot.exists {
+                        isLoginObservable.onNext(())
+                    } else {
+                        REF_USER.document(uid)
+                            .setData(["id": uid]) { [weak self] error in
+                                guard let self else { return }
+                                if error != nil {
+                                    return
+                                }
+                                
+                                isLoginObservable.onNext(())
+                            }
+                    }
+                }
             }
         }
     }
