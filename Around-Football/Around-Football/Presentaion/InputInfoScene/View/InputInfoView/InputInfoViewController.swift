@@ -200,14 +200,9 @@ final class InputInfoViewController: UIViewController {
     func nextButtonTapped(_ sender: UIButton) {
         print("DEBUG: InputInfoViewController - nextButtonTapped")
         
-        viewModel?.inputUserInfo
-            .observe(on: MainScheduler.instance)
-            .subscribe { user in
-                FirebaseAPI.shared.updateUser(user)
-                UserService.shared.currentUser_Rx.onNext(user)
-            }
-            .disposed(by: disposeBag)
-        
+        guard let user = viewModel?.inputUserInfo.value else { return }
+        FirebaseAPI.shared.updateUser(user)
+        UserService.shared.currentUser_Rx.onNext(user)
         
         //로그인 or 설정뷰에 따라 다르게 이동
         viewModel?.coordinator?.dismissView()

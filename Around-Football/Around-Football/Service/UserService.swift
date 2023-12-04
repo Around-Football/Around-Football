@@ -53,10 +53,6 @@ final class UserService: NSObject {
             }
             .subscribe { user in
                 self.currentUser_Rx.onNext(user)
-//                // MARK: - 처음 로그인 옵저버블을 받아오는 시점에 currentUser_Rx의 초기값이 nil이라 무조건 inputInfo로 가는 이슈가 있었음. 여기서 currentUser_Rx의 값이 변경될때 user를 보낸뒤에 NotificationCenter 보내는걸로 수정
-//                NotificationCenter.default.post(name: NSNotification.Name("LoginNotification"),
-//                                                object: nil,
-//                                                userInfo: nil)
             }
             .disposed(by: disposeBag)
     }
@@ -208,9 +204,9 @@ final class UserService: NSObject {
             
             // TODO: - 비번 보안이슈로 UUID로 수정했는데 테스트하기
             let email = user?.kakaoAccount?.email
-            let password = UUID().uuidString
-            createGoogleUser(email: email!, password: password)
-            googleSignIn(email: email!, password: password)
+//            let password = UUID().uuidString
+            createGoogleUser(email: email!, password: email!)
+            googleSignIn(email: email!, password: email!)
             
             // MARK: - 옵저버블 로그인 추가
             self.isLoginObservable.onNext(())
