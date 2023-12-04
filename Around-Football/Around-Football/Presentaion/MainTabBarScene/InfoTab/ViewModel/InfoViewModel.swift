@@ -7,7 +7,7 @@
 
 import Foundation
 
-class InfoViewModel {
+final class InfoViewModel {
     
     var user: User?
     
@@ -17,12 +17,12 @@ class InfoViewModel {
         self.coordinator = coordinator
     }
     
-    func loadFirebaseUserInfo(completion: @escaping (User?) -> Void) {
-        FirebaseAPI.shared.readUser { [weak self] user in
-            guard let self else { return }
-            self.user = user
-        }
-        
-        completion(user)
-    }
+//    func loadFirebaseUserInfo(completion: @escaping (User?) -> Void) {
+//        FirebaseAPI.shared.readCurrentUser { [weak self] user in
+//            guard let self else { return }
+//            self.user = user
+//        }
+//        
+//        completion(user)
+//    }
 }

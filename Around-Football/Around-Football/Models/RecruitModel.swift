@@ -14,6 +14,7 @@ struct Recruit: Codable, Identifiable {
     var fieldID: String //운동장 ID
     var fieldName: String // 운동장 이름
     var fieldAddress: String // 운동장 주소
+    var region: String
     var type: String //유형: 풋살, 축구
     var recruitedPeopleCount: Int //모집 인원
     var gamePrice: String // 무료도 있을 수 있으니
@@ -69,6 +70,7 @@ struct Recruit: Codable, Identifiable {
         self.fieldID = dictionary["fieldID"] as? String ?? ""
         self.fieldName = dictionary["fieldName"] as? String ?? ""
         self.fieldAddress = dictionary["fieldAddress"] as? String ?? ""
+        self.region = dictionary["region"] as? String ?? ""
         self.type = dictionary["type"] as? String ?? ""
         self.recruitedPeopleCount = dictionary["recruitedPeopleCount"] as? Int ?? Int()
         self.gamePrice = dictionary["gamePrice"] as? String ?? ""

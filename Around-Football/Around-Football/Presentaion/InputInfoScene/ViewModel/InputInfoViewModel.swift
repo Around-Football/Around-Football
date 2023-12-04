@@ -7,9 +7,10 @@
 
 import Foundation
 
+import RxCocoa
 import RxSwift
 
-class InputInfoViewModel {
+final class InputInfoViewModel {
     
     struct Input {
         let invokedViewWillAppear: Observable<Void>
@@ -20,26 +21,65 @@ class InputInfoViewModel {
     }
     
     weak var coordinator: InputInfoCoordinator?
+    private var currentUserRx = UserService.shared.currentUser_Rx
+    var inputUserInfo: BehaviorRelay<User> = BehaviorRelay(value: User(dictionary: [:]))
+    var userName: BehaviorRelay<String?> = BehaviorRelay(value: "")
+    var age: BehaviorRelay<Int?> = BehaviorRelay(value: 0)
+    var gender: BehaviorRelay<String?> = BehaviorRelay(value: "")
+    var area: BehaviorRelay<String?> = BehaviorRelay(value: "")
+    var mainUsedFeet: BehaviorRelay<String?> = BehaviorRelay(value: "")
+    var position: BehaviorRelay<[String?]> = BehaviorRelay(value: [])
+    private var disposeBag = DisposeBag()
     
     init(coordinator: InputInfoCoordinator) {
         self.coordinator = coordinator
     }
     
+    // MARK: - Helpers
+    
     func trensform(_ input: Input) -> Output {
         let userInfo = loadFirebaseUserInfo(by: input.invokedViewWillAppear)
         
+        setFirebaseUserInfo(input: userInfo)
         let output = Output(userInfo: userInfo)
         return output
     }
     
     private func loadFirebaseUserInfo(by inputObserver: Observable<Void>) -> Observable<User?> {
-        let userObserver = Observable.create { observer in
-            let user = UserService.shared.user
-            observer.onNext(user)
-            observer.onCompleted()
-            return Disposables.create()
-        }
-        
-        return userObserver
+        currentUserRx
+            .filter { $0 != nil }
+            .asObservable()
     }
+    
+    private func setFirebaseUserInfo(input userInfo: Observable<User?>) {
+        userInfo
+            .subscribe(onNext: { [weak self] user in
+                guard
+                    let self,
+                    let user
+                else { return }
+                
+                inputUserInfo.accept(user)
+                userName.accept(user.userName)
+                age.accept(user.age)
+                gender.accept(user.gender)
+                area.accept(user.area)
+                mainUsedFeet.accept(user.mainUsedFeet)
+                position.accept(user.position)
+            }).disposed(by: disposeBag)
+    }
+    
+    func updateData() {
+        let inputData = ["userName": userName.value ?? "",
+                         "age": age.value ?? 0,
+                         "gender": gender.value ?? "",
+                         "area": area.value ?? "",
+                         "mainUsedFeet": mainUsedFeet.value ?? "",
+                         "position": position.value] as [String: Any]
+        
+        // 값 변경할때마다 inputDataObserver로 데이터 보냄
+        inputUserInfo.accept(User(dictionary: inputData))
+        print("inputData: \(inputData)")
+    }
+    
 }
