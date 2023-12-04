@@ -72,7 +72,7 @@ final class AppCoordinator: BaseCoordinator, LoginCoordinatorDelegate, MainTabBa
         childCoordinators.append(coordinator)
     }
     
-    //TODO: - 온보딩뷰 컨트롤러 올리기
+    //TODO: - 온보딩뷰 컨트롤러로 변경
     func presentLoginViewController() {
         let coordinator = LoginCoordinator(navigationController: navigationController)
         coordinator.delegate = self

@@ -12,15 +12,11 @@ import RxSwift
 final class HomeViewModel {
     
     struct Input {
-        let invokedViewWillAppear: Observable<Void>
-        let filteringType: Observable<String?>
-        let filteringRegion: Observable<String?>
+        let loadRecruitList: Observable<(String?, String?, String?)>
     }
     
     struct Output {
         let recruitList: Observable<[Recruit]>
-        let filteredTypeRecruitList: Observable<[Recruit]>
-        let filteredRegionRecruitList: Observable<[Recruit]>
     }
     
     // MARK: - Properties
@@ -37,35 +33,15 @@ final class HomeViewModel {
     // MARK: - Helpers
     
     func transform(_ input: Input) -> Output {
-        let recruitList = loadRecruitList(by: input.invokedViewWillAppear)
-        let filteredTypeRecruitList = loadRecruitTypeList(by: input.filteringType)
-        let filteringRegion = loadRecruitRegionList(by: input.filteringRegion)
-        let output = Output(recruitList: recruitList,
-                            filteredTypeRecruitList: filteredTypeRecruitList,
-                            filteredRegionRecruitList: filteringRegion)
+        let recruitList = loadRecruitList(by: input.loadRecruitList)
+        let output = Output(recruitList: recruitList)
         return output
     }
     
-    private func loadRecruitList(by inputObserver: Observable<Void>) -> Observable<[Recruit]> {
+    private func loadRecruitList(by inputObserver: Observable<(String?, String?, String?)>) -> Observable<[Recruit]> {
         inputObserver
-            .flatMap { () -> Observable<[Recruit]> in
-                let recruitObservable = FirebaseAPI.shared.readRecruitRx()
-                return recruitObservable
-            }
-    }
-    
-    private func loadRecruitTypeList(by inputObserver: Observable<String?>) -> Observable<[Recruit]> {
-        inputObserver
-            .flatMap { type -> Observable<[Recruit]> in
-                let recruitObservable = FirebaseAPI.shared.fetchRecruitFieldDataType(type: type)
-                return recruitObservable
-            }
-    }
-    
-    private func loadRecruitRegionList(by inputObserver: Observable<String?>) -> Observable<[Recruit]> {
-        inputObserver
-            .flatMap { region -> Observable<[Recruit]> in
-                let recruitObservable = FirebaseAPI.shared.fetchRecruitFieldRegionType(region: region)
+            .flatMap { inputTuple -> Observable<[Recruit]> in
+                let recruitObservable = FirebaseAPI.shared.readRecruitRx(input: inputTuple)
                 return recruitObservable
             }
     }

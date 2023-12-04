@@ -106,10 +106,16 @@ final class ChannelViewModel {
         
         return inputObserver
             .withUnretained(self)
-            .flatMap({ (owner, _) -> Observable<Bool> in
-                if owner.currentUser.value != nil { return .just(false) }
-                return .just(true)
-            })
+            .flatMap { owner, _ in
+                owner.currentUser
+                    .map { user in
+                        user != nil
+                    }
+            }
+//            .flatMap({ (owner, _) -> Observable<Bool> in
+//                if owner.currentUser.value != nil { return .just(false) }
+//                return .just(true)
+//            })
     }
     
     private func emitSelectedChannelInfo(by inputObserver: Observable<IndexPath>)

@@ -27,5 +27,4 @@ extension UIColor {
     static var primary = UIColor(red: 91/255, green: 156/255, blue: 203/255, alpha: 1)
     /// 연한 회색
     static var incomingMessageBackground = UIColor(red: 98/255, green: 98/255, blue: 98/255, alpha: 1)
-
 }
