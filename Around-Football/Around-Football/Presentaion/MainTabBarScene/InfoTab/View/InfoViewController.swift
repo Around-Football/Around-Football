@@ -8,22 +8,16 @@
 import UIKit
 
 import FirebaseAuth
+import RxSwift
+import RxCocoa
 
 final class InfoViewController: UIViewController {
     
     // MARK: - Properties
     
-    var viewModel: InfoViewModel
+    private var viewModel: InfoViewModel
+    private var disposeBag = DisposeBag()
     private let profileAndEditView = ProfileAndEditView()
-    
-    init(viewModel: InfoViewModel) {
-        self.viewModel = viewModel
-        super.init(nibName: nil, bundle: nil)
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
     
     private let iconAndImage: [(icon: String, title: String)] = [
         (icon: "heart", title: "관심 글"),
@@ -63,70 +57,76 @@ final class InfoViewController: UIViewController {
     }
     
     // MARK: - Lifecycles
-
+    
+    init(viewModel: InfoViewModel) {
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         configureUI()
         configureStackView()
-        setButtonDelegate()
-        setUserInfo()
-        // TODO: - Coordinator Refactoring
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(didRecieveLoginNotification(_:)),
-                                               name: NSNotification.Name("LoginNotification"),
-                                               object: nil)
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        setUserInfo()
-        setLogoutButton()
-    }
-    
-    deinit {
-        NotificationCenter.default.removeObserver(self)
+        bindButtonActionHandler()
+        bindUserInfo()
+        bindLogoutButton()
     }
     
     // MARK: - Selectors
     
     @objc
-    func didRecieveLoginNotification(_ notification: Notification) {
-        setUserInfo()
-    }
-    
-    @objc 
     func logoutButtonTapped() {
         UserService.shared.logout()
-        
-//
-//        print("로그아웃 완료, 현재 uid: \(UserService.shared.user?.id)")
         viewModel.coordinator?.presentLoginViewController()
         tabBarController?.selectedIndex = 0 //로그아웃하면 메인탭으로 이동
     }
     
     // MARK: - Helpers
     
-    private func setLogoutButton() {
-        if UserService.shared.user?.id != nil {
-            logoutButton.setTitle("로그아웃", for: .normal)
-        } else {
-            logoutButton.setTitle("로그인", for: .normal)
-        }
+    private func bindLogoutButton() {
+        UserService.shared.currentUser_Rx.bind { [weak self] user in
+            guard let self else { return }
+            if user?.id == nil {
+                logoutButton.setTitle("로그인", for: .normal)
+            } else {
+                logoutButton.setTitle("로그아웃", for: .normal)
+            }
+        }.disposed(by: disposeBag)
     }
     
-    private func setUserInfo() {
-        profileAndEditView.userName.text = UserService.shared.user?.userName ?? "로그인 해주세요"
-        /*nfoStackView.view*/
+    private func bindUserInfo() {
+        UserService.shared.currentUser_Rx.bind { [weak self] user in
+            guard let self else { return }
+            if user == nil {
+                profileAndEditView.userName.text = "로그인 해주세요"
+            } else {
+                profileAndEditView.userName.text = user?.userName
+            }
+        }.disposed(by: disposeBag)
     }
     
     private func configureStackView() {
-        if let views = infoStackView.arrangedSubviews as? [InfoArrangedView] {
-            views[0].setValues(name: "리뷰", content: "(1.0 - 1.0)")
-            views[1].setValues(name: "매너", content: "0")
-            views[2].setValues(name: "성별", content: "남자")
-            views[3].setValues(name: "구력", content: "1년")
-        }
+        UserService.shared.currentUser_Rx
+            .bind { [weak self] user in
+                guard
+                    let self,
+                    let user,
+                    let views = infoStackView.arrangedSubviews as? [InfoArrangedView],
+                    let contents = [String(user.age), user.area, user.mainUsedFeet, user.position.joined(separator: ", ")] as? [String]
+                else { return }
+                
+            var titles = ["성별", "지역", "주발", "포지션"]
+            
+            (0..<titles.count).forEach {
+                views[$0].setValues(name: titles[$0], content: contents[$0])
+            }
+        }.disposed(by: disposeBag)
     }
-
+    
     private func configureUI() {
         view.backgroundColor = .white
         navigationItem.title = "프로필"
@@ -164,38 +164,56 @@ final class InfoViewController: UIViewController {
         }
     }
     
-    private func setButtonDelegate() {
+    private func bindButtonActionHandler() {
         profileAndEditView.editButtonActionHandler = { [weak self] in
             guard let self else { return }
-            if UserService.shared.user?.id == nil {
-                viewModel.coordinator?.presentLoginViewController()
-            } else {
-                viewModel.coordinator?.pushEditView()
-            }
+            
+            UserService.shared.currentUser_Rx
+                .take(1) //버튼 누를때만 요청하도록 1번만! 아니면 연동되서 값 바뀔때마다 실행됨
+                .subscribe(onNext: { [weak self] user in
+                    guard let self else { return }
+                    if user?.id == nil {
+                        viewModel.coordinator?.presentLoginViewController()
+                    } else {
+                        viewModel.coordinator?.pushEditView()
+                    }
+                }).disposed(by: disposeBag)
         }
+        
         profileAndEditView.settingButtonActionHandler = { [weak self] in
             guard let self else { return }
-            if UserService.shared.user?.id == nil {
-                viewModel.coordinator?.presentLoginViewController()
-            } else {
-                viewModel.coordinator?.pushSettingView()
-            }
+            
+            UserService.shared.currentUser_Rx
+                .take(1)
+                .subscribe(onNext: { [weak self] user in
+                    guard let self else { return }
+                    if user?.id == nil {
+                        viewModel.coordinator?.presentLoginViewController()
+                    } else {
+                        viewModel.coordinator?.pushEditView()
+                    }
+                })
+                .disposed(by: disposeBag)
         }
     }
 }
 
 extension InfoViewController: UICollectionViewDelegateFlowLayout, UICollectionViewDataSource {
     
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+    func collectionView(_ collectionView: UICollectionView,
+                        layout collectionViewLayout: UICollectionViewLayout,
+                        sizeForItemAt indexPath: IndexPath) -> CGSize {
         let width = (UIScreen.main.bounds.width / 3) - 20
         return CGSize(width: width, height: width)
     }
     
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    func collectionView(_ collectionView: UICollectionView,
+                        numberOfItemsInSection section: Int) -> Int {
         iconAndImage.count
     }
     
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+    func collectionView(_ collectionView: UICollectionView,
+                        cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(
             withReuseIdentifier: InfoCell.cellID,
             for: indexPath

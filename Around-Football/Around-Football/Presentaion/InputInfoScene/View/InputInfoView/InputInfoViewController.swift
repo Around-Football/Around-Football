@@ -16,18 +16,11 @@ final class InputInfoViewController: UIViewController {
     
     // MARK: - Properties
     
-    private var viewModel: InputInfoViewModel?
-    let inputInfoView: InputInfoView = InputInfoView()
-    
+    var viewModel: InputInfoViewModel?
     private var invokedViewWillAppear = PublishSubject<Void>()
     private var disposeBag = DisposeBag()
     
-    private lazy var userName: String? = inputInfoView.userNameTextField.text
-    private lazy var age: Int? = Int(inputInfoView.userAgeTextField.text ?? "")
-    private var gender: String?
-    private lazy var area: String? = inputInfoView.userAreaTextField.text
-    private var mainUsedFeet: String?
-    private var position: Set<String?> = []
+    let inputInfoView: InputInfoView = InputInfoView()
     
     // MARK: - Lifecycles
     
@@ -46,17 +39,15 @@ final class InputInfoViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        bindUI()
-        isInfoCompleted()
         navigationItem.title = "추가정보 입력"
+        invokedViewWillAppear.onNext(()) //유저 데이터 요청
+        bindUI()
+        bindRegionButton()
+        bindNextButton()
         keyboardController()
-
+        
         inputInfoView.userNameTextField.delegate = self
         inputInfoView.userAgeTextField.delegate = self
-        inputInfoView.userAreaTextField.delegate = self
-        
-        inputInfoView.nextButton.addTarget(self, action: #selector(nextButtonTapped), for: .touchUpInside)
         
         inputInfoView.maleButton.addTarget(self, action: #selector(maleButtonTapped), for: .touchUpInside)
         inputInfoView.femaleButton.addTarget(self, action: #selector(femaleButtonTapped), for: .touchUpInside)
@@ -69,21 +60,54 @@ final class InputInfoViewController: UIViewController {
         inputInfoView.mfButton.addTarget(self, action: #selector(mfButtonTapped), for: .touchUpInside)
         inputInfoView.dfButton.addTarget(self, action: #selector(dfButtonTapped), for: .touchUpInside)
         inputInfoView.gkButton.addTarget(self, action: #selector(gkButtonTapped), for: .touchUpInside)
+        
+        inputInfoView.nextButton.addTarget(self, action: #selector(nextButtonTapped), for: .touchUpInside)
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        invokedViewWillAppear.onNext(())
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        viewModel?.coordinator?.removeThisChildCoordinators()
-    }
-    
-    deinit {
-        NotificationCenter.default.removeObserver(self)
-    }
+    //    override func viewWillAppear(_ animated: Bool) {
+    //        invokedViewWillAppear.onNext(()) //유저 데이터 요청
+    //    }
     
     // MARK: - Helpers
+    
+    private func bindRegionButton() {
+        inputInfoView.regionSubject.subscribe(onNext: { [weak self] region in
+            guard let self else { return }
+            let area = region
+            viewModel?.area.accept(area)
+            viewModel?.updateData()
+        })
+        .disposed(by: disposeBag)
+    }
+    
+    private func bindNextButton() {
+        viewModel?.inputUserInfo
+            .map({ user in
+                guard user.userName != "",
+                      user.age != 0,
+                      user.gender != "",
+                      user.area != "",
+                      user.mainUsedFeet != "",
+                      !user.position.isEmpty
+                else {
+                    return true
+                }
+                
+                return false
+            })
+            .bind(onNext: { [weak self] bool in
+                guard let self else { return }
+                if bool == true { //비어있는게 트루라면
+                    inputInfoView.nextButton.setTitle("모든 항목을 작성해주세요", for: .normal)
+                    inputInfoView.nextButton.setTitleColor(.gray, for: .normal)
+                    return inputInfoView.nextButton.isEnabled = false
+                } else {
+                    inputInfoView.nextButton.setTitle("작성 완료", for: .normal)
+                    inputInfoView.nextButton.setTitleColor(.white, for: .normal)
+                    return inputInfoView.nextButton.isEnabled = true
+                }
+            }).disposed(by: disposeBag)
+    }
     
     private func bindUI() {
         let input = InputInfoViewModel.Input(invokedViewWillAppear: invokedViewWillAppear)
@@ -108,7 +132,7 @@ final class InputInfoViewController: UIViewController {
             .map { user in
                 user?.area
             }
-            .bind(to: inputInfoView.userAreaTextField.rx.text)
+            .bind(to: inputInfoView.regionFilterButton.rx.title())
             .disposed(by: disposeBag)
         
         output?.userInfo
@@ -118,12 +142,10 @@ final class InputInfoViewController: UIViewController {
                 switch user?.gender {
                 case "남성":
                     inputInfoView.maleButton.isSelected = true
-                    gender = "남성"
                 case "여성":
                     inputInfoView.femaleButton.isSelected = true
-                    gender = "여성"
                 default:
-                    print("userFeet 비워져있음")
+                    print("gender 비워져있음")
                 }
             })
             .subscribe()
@@ -136,13 +158,10 @@ final class InputInfoViewController: UIViewController {
                 switch user?.mainUsedFeet {
                 case "오른발":
                     inputInfoView.rightFootButton.isSelected = true
-                    mainUsedFeet = "오른발"
                 case "왼발":
                     inputInfoView.leftFootButton.isSelected = true
-                    mainUsedFeet = "왼발"
                 case "양발":
                     inputInfoView.bothFeetButton.isSelected = true
-                    mainUsedFeet = "양발"
                 default:
                     print("userFeet 비워져있음")
                 }
@@ -159,16 +178,12 @@ final class InputInfoViewController: UIViewController {
                         switch position {
                         case "FW":
                             inputInfoView.fwButton.isSelected = true
-                            self.position.insert("FW")
                         case "MF":
                             inputInfoView.mfButton.isSelected = true
-                            self.position.insert("MF")
                         case "DF":
                             inputInfoView.dfButton.isSelected = true
-                            self.position.insert("DF")
                         case "GK":
                             inputInfoView.gkButton.isSelected = true
-                            self.position.insert("GK")
                         default:
                             print("userPosition 비워져있음")
                         }
@@ -179,50 +194,19 @@ final class InputInfoViewController: UIViewController {
             .disposed(by: disposeBag)
     }
     
-    private func isInfoCompleted() {
-        guard
-            inputInfoView.userNameTextField.text?.isEmpty == false,
-            inputInfoView.userAgeTextField.text?.isEmpty == false,
-            inputInfoView.userAreaTextField.text?.isEmpty == false,
-            inputInfoView.maleButton.isSelected || inputInfoView.femaleButton.isSelected,
-            inputInfoView.leftFootButton.isSelected || inputInfoView.rightFootButton.isSelected || inputInfoView.bothFeetButton.isSelected,
-            inputInfoView.fwButton.isSelected || inputInfoView.mfButton.isSelected ||
-                inputInfoView.dfButton.isSelected || inputInfoView.gkButton.isSelected
-        else {
-            inputInfoView.nextButton.setTitle("모든 항목을 작성해주세요", for: .normal)
-            inputInfoView.nextButton.setTitleColor(.gray, for: .normal)
-            return inputInfoView.nextButton.isEnabled = false
-        }
-        inputInfoView.nextButton.setTitle("작성 완료", for: .normal)
-        inputInfoView.nextButton.setTitleColor(.white, for: .normal)
-        return inputInfoView.nextButton.isEnabled = true
-    }
-    
     // MARK: - Selectors
-
-    // FIXME: - 버튼 다 옵저버블로 만들어서 뷰모델에서 관리하기..?
+    
     @objc
     func nextButtonTapped(_ sender: UIButton) {
         print("DEBUG: InputInfoViewController - nextButtonTapped")
-        isInfoCompleted()
-        FirebaseAPI.shared.updateUser(User(dictionary: ["userName" : userName,
-                                                        "age" : age,
-                                                        "gender" : gender,
-                                                        "area" : area,
-                                                        "mainUsedFeet" : mainUsedFeet,
-                                                        "position" : Array(position)
-                                                       ]))
         
-        // MARK: - UserService의 User 업데이트 해주기
+        guard let user = viewModel?.inputUserInfo.value else { return }
+        FirebaseAPI.shared.updateUser(user)
+        UserService.shared.currentUser_Rx.onNext(user)
         
-        FirebaseAPI.shared.readUser { [weak self] user in
-            guard let self else { return }
-            print("User로그인 완료: \(user)")
-            
-            //TODO: - 모달, push에 따라 분기처리
-            viewModel?.coordinator?.dismissView()
-            viewModel?.coordinator?.popInputInfoViewController()
-        }
+        //로그인 or 설정뷰에 따라 다르게 이동
+        viewModel?.coordinator?.dismissView()
+        viewModel?.coordinator?.popInputInfoViewController()
     }
     
     @objc
@@ -232,11 +216,13 @@ final class InputInfoViewController: UIViewController {
             inputInfoView.femaleButton.isSelected.toggle()
         }
         if sender.isSelected {
-            gender = sender.titleLabel?.text
+            let gender = sender.titleLabel?.text
+            viewModel?.gender.accept(gender)
+            viewModel?.updateData()
         } else {
-            gender = nil
+            viewModel?.gender.accept(nil)
+            viewModel?.updateData()
         }
-        isInfoCompleted()
     }
     
     @objc
@@ -246,11 +232,13 @@ final class InputInfoViewController: UIViewController {
             inputInfoView.maleButton.isSelected.toggle()
         }
         if sender.isSelected {
-            gender = sender.titleLabel?.text
+            let gender = sender.titleLabel?.text
+            viewModel?.gender.accept(gender)
+            viewModel?.updateData()
         } else {
-            gender = nil
+            viewModel?.gender.accept(nil)
+            viewModel?.updateData()
         }
-        isInfoCompleted()
     }
     
     @objc
@@ -264,11 +252,13 @@ final class InputInfoViewController: UIViewController {
         
         sender.isSelected.toggle()
         if sender.isSelected {
-            mainUsedFeet = sender.titleLabel?.text
+            let mainUsedFeet = sender.titleLabel?.text
+            viewModel?.mainUsedFeet.accept(mainUsedFeet)
+            viewModel?.updateData()
         } else {
-            mainUsedFeet = nil
+            viewModel?.mainUsedFeet.accept(nil)
+            viewModel?.updateData()
         }
-        isInfoCompleted()
     }
     
     @objc
@@ -282,11 +272,13 @@ final class InputInfoViewController: UIViewController {
         
         sender.isSelected.toggle()
         if sender.isSelected {
-            mainUsedFeet = sender.titleLabel?.text
+            let mainUsedFeet = sender.titleLabel?.text
+            viewModel?.mainUsedFeet.accept(mainUsedFeet)
+            viewModel?.updateData()
         } else {
-            mainUsedFeet = nil
+            viewModel?.mainUsedFeet.accept(nil)
+            viewModel?.updateData()
         }
-        isInfoCompleted()
     }
     
     @objc
@@ -300,57 +292,86 @@ final class InputInfoViewController: UIViewController {
         
         sender.isSelected.toggle()
         if sender.isSelected {
-            mainUsedFeet = sender.titleLabel?.text
+            let mainUsedFeet = sender.titleLabel?.text
+            viewModel?.mainUsedFeet.accept(mainUsedFeet)
+            viewModel?.updateData()
         } else {
-            mainUsedFeet = nil
+            viewModel?.mainUsedFeet.accept(nil)
+            viewModel?.updateData()
         }
-        isInfoCompleted()
     }
     
     @objc
     func fwButtonTapped(_ sender: UIButton) {
         sender.isSelected.toggle()
         if sender.isSelected {
-            position.insert(sender.titleLabel?.text)
+            guard let arr = viewModel?.position.value else { return }
+            var positionSet = Set(arr)
+            positionSet.insert(sender.titleLabel?.text)
+            viewModel?.position.accept(Array(positionSet))
+            viewModel?.updateData()
         } else {
-            position.remove(sender.titleLabel?.text)
+            guard let arr = viewModel?.position.value else { return }
+            var positionSet = Set(arr)
+            positionSet.remove(sender.titleLabel?.text)
+            viewModel?.position.accept(Array(positionSet))
+            viewModel?.updateData()
         }
-        isInfoCompleted()
     }
     
     @objc
     func mfButtonTapped(_ sender: UIButton) {
         sender.isSelected.toggle()
         if sender.isSelected {
-            position.insert(sender.titleLabel?.text)
+            guard let arr = viewModel?.position.value else { return }
+            var positionSet = Set(arr)
+            positionSet.insert(sender.titleLabel?.text)
+            viewModel?.position.accept(Array(positionSet))
+            viewModel?.updateData()
         } else {
-            position.remove(sender.titleLabel?.text)
+            guard let arr = viewModel?.position.value else { return }
+            var positionSet = Set(arr)
+            positionSet.remove(sender.titleLabel?.text)
+            viewModel?.position.accept(Array(positionSet))
+            viewModel?.updateData()
         }
-        isInfoCompleted()
     }
     
     @objc
     func dfButtonTapped(_ sender: UIButton) {
         sender.isSelected.toggle()
         if sender.isSelected {
-            position.insert(sender.titleLabel?.text)
+            guard let arr = viewModel?.position.value else { return }
+            var positionSet = Set(arr)
+            positionSet.insert(sender.titleLabel?.text)
+            viewModel?.position.accept(Array(positionSet))
+            viewModel?.updateData()
         } else {
-            position.remove(sender.titleLabel?.text)
+            guard let arr = viewModel?.position.value else { return }
+            var positionSet = Set(arr)
+            positionSet.remove(sender.titleLabel?.text)
+            viewModel?.position.accept(Array(positionSet))
+            viewModel?.updateData()
         }
-        isInfoCompleted()
     }
     
     @objc
     func gkButtonTapped(_ sender: UIButton) {
         sender.isSelected.toggle()
         if sender.isSelected {
-            position.insert(sender.titleLabel?.text)
+            guard let arr = viewModel?.position.value else { return }
+            var positionSet = Set(arr)
+            positionSet.insert(sender.titleLabel?.text)
+            viewModel?.position.accept(Array(positionSet))
+            viewModel?.updateData()
         } else {
-            position.remove(sender.titleLabel?.text)
+            guard let arr = viewModel?.position.value else { return }
+            var positionSet = Set(arr)
+            positionSet.remove(sender.titleLabel?.text)
+            viewModel?.position.accept(Array(positionSet))
+            viewModel?.updateData()
         }
-        isInfoCompleted()
     }
-
     
     //TODO: - Keyboard 함수 Utiles로 정리
     private func keyboardController() {

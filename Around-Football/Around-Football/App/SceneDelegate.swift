@@ -5,12 +5,12 @@
 //  Created by 강창현 on 2023/09/26.
 //
 
+import AuthenticationServices
 import UIKit
 
 import KakaoSDKAuth
 import KakaoSDKCommon
 import KakaoSDKUser
-import AuthenticationServices
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     

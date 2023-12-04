@@ -10,11 +10,11 @@ import Foundation
 struct User: Codable {
     var id: String
     var userName: String
-    var age: Int?
-    var gender: String?
-    var area: String?
-    var mainUsedFeet: String?
-    var position: [String?]
+    var age: Int
+    var gender: String
+    var area: String
+    var mainUsedFeet: String
+    var position: [String]
     //TODO: - FCM Token 추가
     var fcmToken: String?
     

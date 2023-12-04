@@ -11,10 +11,7 @@ protocol MainTabBarCoordinatorDelegate {
     func presentLoginViewController()
 }
 
-final class MainTabBarCoordinator: BaseCoordinator,
-                                    HomeTabCoordinatorDelegate,
-                                    InfoTabCoordinatorDelegate,
-                                   ChatTabCoordinatorDelegate {
+final class MainTabBarCoordinator: BaseCoordinator {
 
     var type: CoordinatorType = .mainTab
     var delegate: MainTabBarCoordinatorDelegate?
@@ -72,3 +69,5 @@ final class MainTabBarCoordinator: BaseCoordinator,
         delegate?.presentLoginViewController()
     }
 }
+
+extension MainTabBarCoordinator: HomeTabCoordinatorDelegate, InfoTabCoordinatorDelegate, ChatTabCoordinatorDelegate  { }
