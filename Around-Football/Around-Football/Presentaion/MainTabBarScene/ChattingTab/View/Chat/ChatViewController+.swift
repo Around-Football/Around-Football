@@ -68,22 +68,6 @@ extension ChatViewController {
             })
             .asObservable()
     }
-    
-//    func updateShowTimeLabel() {
-//        var messages: [Message] = viewModel.messages.value
-//        for i in 0..<messages.count {
-//            var message = messages[i]
-//            let previousMessage: Message? = i > 0 ? messages[i - 1] : nil
-//            if let previousMessage = previousMessage,
-//                Calendar.current.isDate(message.sentDate, equalTo: previousMessage.sentDate, toGranularity: .minute)
-//                && message.sender.senderId == previousMessage.sender.senderId {
-//                message.showTimeLabel = false
-//            } else {
-//                message.showTimeLabel = true
-//            }
-//        }
-//        viewModel.messages.accept(messages)
-//    }
 }
 
 extension ChatViewController: MessagesDataSource {
@@ -152,41 +136,29 @@ extension ChatViewController: MessagesDisplayDelegate {
                       in messagesCollectionView: MessagesCollectionView) -> MessageStyle {
         return .bubble
     }
-    
+
     // 말풍선 측면에 발송 시각 표시
     func messageBottomLabelAttributedText(for message: MessageType,
                                           at indexPath: IndexPath) -> NSAttributedString? {
+        guard let message = message as? Message else { return nil }
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "HH:mm"
         let dateString = dateFormatter.string(from: message.sentDate)
         
-        let isShowingTimeLabel = viewModel.messages.value[indexPath.row].showTimeLabel
+        let isShowingTimeLabel = message.showTimeLabel
         
-        print(indexPath.item, isShowingTimeLabel)
-        return NSAttributedString(string: dateString, attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 10)])
-//        return isConfigureTimeLabel(at: indexPath) ? NSAttributedString(string: dateString, attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 10)]) : nil
+        return isShowingTimeLabel ? NSAttributedString(string: dateString, attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 10)]) : nil
     }
     
     // 말풍선 측면 발송 시각 레이블 Height
     func messageBottomLabelHeight(for message: MessageType,
                                   at indexPath: IndexPath,
                                   in messagesCollectionView: MessagesCollectionView) -> CGFloat {
-        return 16
-    }
-    
-//    func isConfigureTimeLabel(at indexPath: IndexPath) -> Bool {
-//        let message = viewModel.messages.value[indexPath.section]
-//        let previousMessage: Message? = indexPath.section > 0 ? viewModel.messages.value[indexPath.section - 1] : nil
-//
-//        if let previousMessage = previousMessage,
-//            Calendar.current.isDate(message.sentDate, equalTo: previousMessage.sentDate, toGranularity: .minute),
-//           message.sender.senderId == previousMessage.sender.senderId {
-//            return false
-//        } else {
-//            return true
-//        }
-//    }
+        guard let message = message as? Message else { return 16 }
+        let isShowingTimeLabel = message.showTimeLabel
 
+        return isShowingTimeLabel ? 16 : 0
+    }
 }
 
 extension ChatViewController: PHPickerViewControllerDelegate {
