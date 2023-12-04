@@ -12,11 +12,13 @@ extension InputInfoViewController: UITextFieldDelegate {
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         switch textField {
         case inputInfoView.userNameTextField:
-            userName = (textField.text as NSString?)?.replacingCharacters(in: range, with: string)
-            inputData["userName"] = userName
+            let userName = (textField.text as NSString?)?.replacingCharacters(in: range, with: string)
+            viewModel?.userName.accept(userName)
+            viewModel?.updateData()
         case inputInfoView.userAgeTextField:
-            age = Int((textField.text as NSString?)?.replacingCharacters(in: range, with: string) ?? "")
-            inputData["age"] = age
+            let age = Int((textField.text as NSString?)?.replacingCharacters(in: range, with: string) ?? "")
+            viewModel?.age.accept(age)
+            viewModel?.updateData()
 //        case inputInfoView.userAreaTextField:
 //            area = (textField.text as NSString?)?.replacingCharacters(in: range, with: string)
 //            inputData["area"] = area
