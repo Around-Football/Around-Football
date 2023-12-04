@@ -95,15 +95,21 @@ final class ChannelAPI {
             }
         }
         
-        let updateData = [
+        let updateCurrentUserData = [
             "recentDate": message.sentDate,
             "previewContent": contentMessage
         ] as [String: Any]
         
+        let updateWithUserData = [
+            "recentDate": message.sentDate,
+            "previewContent": contentMessage,
+            "alarmNumber": FieldValue.increment(Int64(1))
+        ] as [String: Any]
+        
         let ownerRef = REF_USER.document(owner.id).collection("channels").document(channelId)
         let withUserRef = REF_USER.document(withUser.id).collection("channels").document(channelId)
-        updateRefData(ref: ownerRef, data: updateData)
-        updateRefData(ref: withUserRef, data: updateData)
+        updateRefData(ref: ownerRef, data: updateCurrentUserData)
+        updateRefData(ref: withUserRef, data: updateWithUserData)
         
     }
     
