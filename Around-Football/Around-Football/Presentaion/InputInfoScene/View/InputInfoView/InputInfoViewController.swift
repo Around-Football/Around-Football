@@ -64,10 +64,6 @@ final class InputInfoViewController: UIViewController {
         inputInfoView.nextButton.addTarget(self, action: #selector(nextButtonTapped), for: .touchUpInside)
     }
     
-    //    override func viewWillAppear(_ animated: Bool) {
-    //        invokedViewWillAppear.onNext(()) //유저 데이터 요청
-    //    }
-    
     // MARK: - Helpers
     
     private func bindRegionButton() {
@@ -83,15 +79,14 @@ final class InputInfoViewController: UIViewController {
     private func bindNextButton() {
         viewModel?.inputUserInfo
             .map({ user in
-                guard user.userName != "",
-                      user.age != 0,
-                      user.gender != "",
-                      user.area != "",
-                      user.mainUsedFeet != "",
-                      !user.position.isEmpty
-                else {
-                    return true
-                }
+                guard
+                    user.userName != "",
+                    user.age != 0,
+                    user.gender != "",
+                    user.area != "",
+                    user.mainUsedFeet != "",
+                    !user.position.isEmpty
+                else { return true }
                 
                 return false
             })
@@ -371,16 +366,5 @@ final class InputInfoViewController: UIViewController {
             viewModel?.position.accept(Array(positionSet))
             viewModel?.updateData()
         }
-    }
-    
-    //TODO: - Keyboard 함수 Utiles로 정리
-    private func keyboardController() {
-        //화면 탭해서 키보드 내리기
-        let tapGesture = UITapGestureRecognizer(
-            target: self,
-            action: #selector(dismissKeyboard)
-        )
-        tapGesture.cancelsTouchesInView = false
-        view.addGestureRecognizer(tapGesture)
     }
 }
