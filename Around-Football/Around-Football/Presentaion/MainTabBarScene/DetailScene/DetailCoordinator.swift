@@ -7,9 +7,14 @@
 
 import UIKit
 
+protocol DetailCoordinatorDelegate {
+    func presentLoginViewController()
+}
+
 final class DetailCoordinator: BaseCoordinator {
     
     var type: CoordinatorType = .detailScene
+    var delegate: DetailCoordinatorDelegate?
     
     // MARK: - 이동할때 각 DetailView에 Recruit 전해줌. 다른 뷰에서 쓸 수도 있어서 옵셔널
     
@@ -34,6 +39,10 @@ final class DetailCoordinator: BaseCoordinator {
         let coordinator = ChatTabCoordinator(navigationController: navigationController)
         coordinator.pushChatView(channelInfo: channelInfo, isNewChat: isNewChat)
         childCoordinators.append(coordinator)
+    }
+    
+    func presentLoginViewController() {
+        delegate?.presentLoginViewController()
     }
     
     func removeChildCoordinator() {

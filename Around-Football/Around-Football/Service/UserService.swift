@@ -65,12 +65,11 @@ final class UserService: NSObject {
         isLogoutObservable
             .withUnretained(self)
             .subscribe { (owner, _) in
+                
+                guard let uid = try? owner.currentUser_Rx.value()?.id else { return }
+                
                 // MARK: - 로그아웃시 nil보냄
                 owner.currentUser_Rx.onNext(nil)
-                
-                //TODO: - 나중에 로그아웃시 updateFCMToken 수정하기
-                guard let uid = Auth.auth().currentUser?.uid else { return }
-                
                 FirebaseAPI.shared.updateFCMToken(uid: uid, fcmToken: "") { error in
                     print("DEBUG - Logout FCM update error", error?.localizedDescription as Any)
                 }

@@ -98,7 +98,12 @@ final class DetailViewController: UIViewController {
     
     @objc
     private func clickedMessage() {
-        viewModel.checkChannel()
+        if (try? UserService.shared.currentUser_Rx.value()) != nil {
+            viewModel.checkChannelAndPushChatViewController()
+        } else {
+            viewModel.showLoginView()
+        }
+        
     }
     
     @objc

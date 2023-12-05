@@ -59,6 +59,8 @@ class BaseCoordinator: Coordinator {
 
 final class AppCoordinator: BaseCoordinator, LoginCoordinatorDelegate, MainTabBarCoordinatorDelegate {
     
+    static let shared = AppCoordinator(navigationController: nil)
+    
     var type: CoordinatorType = .app
     
     override func start() {

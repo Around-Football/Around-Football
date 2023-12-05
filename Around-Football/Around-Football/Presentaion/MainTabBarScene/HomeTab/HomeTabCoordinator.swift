@@ -11,7 +11,7 @@ protocol HomeTabCoordinatorDelegate {
     func presentLoginViewController()
 }
 
-final class HomeTabCoordinator: BaseCoordinator {
+final class HomeTabCoordinator: BaseCoordinator, DetailCoordinatorDelegate {
 
     var type: CoordinatorType = .home
     var delegate: HomeTabCoordinatorDelegate?
@@ -39,6 +39,7 @@ final class HomeTabCoordinator: BaseCoordinator {
     func pushToDetailView(recruitItem: Recruit) {
         let coordinator = DetailCoordinator(navigationController: navigationController)
         navigationController?.navigationBar.isHidden = false
+        coordinator.delegate = self
         coordinator.start(recruitItem: recruitItem)
     }
 
