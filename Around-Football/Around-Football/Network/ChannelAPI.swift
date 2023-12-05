@@ -154,7 +154,7 @@ final class ChannelAPI {
     }
     
     func deleteChannel(channelId: String) {
-        REF_CHANNELS.document(channelId).delete()
+        REF_CHANNELS.document(channelId).updateData(["deleteDate": Date()])
     }
     
     func removeListener() {
