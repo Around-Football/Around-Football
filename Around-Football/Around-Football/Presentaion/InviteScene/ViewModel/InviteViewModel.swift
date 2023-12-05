@@ -29,7 +29,9 @@ final class InviteViewModel {
                                 content: String?,
                                 matchDateString: String?,
                                 startTime: String?,
-                                endTime: String?) {
+                                endTime: String?,
+                                pendingApplicantsUID: [String?],
+                                acceptedApplicantsUID: [String?]) {
         // MARK: - 테스트용 임시 데이터 파베에 올림
         FirebaseAPI.shared.createRecruitFieldData(user: user,
                                                   fieldID: fieldID,
@@ -43,7 +45,9 @@ final class InviteViewModel {
                                                   content: content,
                                                   matchDateString: matchDateString,
                                                   startTime: startTime,
-                                                  endTime: endTime) { error in
+                                                  endTime: endTime,
+                                                  pendingApplicantsUID: pendingApplicantsUID,
+                                                  acceptedApplicantsUID: acceptedApplicantsUID) { error in
             if error == nil {
                 print("필드 올리기 성공")
                 //TODO: - 성공 알림창 띄워주기?
