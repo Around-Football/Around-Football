@@ -16,7 +16,7 @@ struct User: Codable {
     var mainUsedFeet: String
     var position: [String]
     //TODO: - FCM Token 추가
-    var fcmToken: String?
+    var fcmToken: String
     
     static func convertToArray(documents: [[String: Any]]) -> [User] {
         var array: [User] = []
