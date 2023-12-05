@@ -31,6 +31,7 @@ class ImageMessageViewController: UIViewController {
         let button = UIButton()
         button.setImage(UIImage(systemName: "xmark"), for: .normal)
         button.addTarget(self, action: #selector(closeButtonTapped), for: .touchUpInside)
+        button.tintColor = .gray
         
         return button
     }()
@@ -85,7 +86,7 @@ class ImageMessageViewController: UIViewController {
         )
         
         imageView.snp.makeConstraints {
-            $0.edges.equalToSuperview()
+            $0.center.equalToSuperview()
         }
         
         closeButton.snp.makeConstraints {
