@@ -51,4 +51,8 @@ final class ChatTabCoordinator: BaseCoordinator {
     func popCurrnetPage() {
         navigationController?.popViewController(animated: true)
     }
+    
+    func presentDeleteAlertController(alert: UIAlertController) {
+        navigationController?.present(alert, animated: true)
+    }
 }

@@ -26,6 +26,7 @@ final class ChannelViewModel {
     struct Input {
         let invokedViewWillAppear: Observable<Void>
         let selectedChannel: Observable<IndexPath>
+        let invokedDeleteChannel: Observable<IndexPath>
     }
     
     struct Output {
@@ -96,9 +97,9 @@ final class ChannelViewModel {
     
     func transform(_ input: Input) -> Output {
         setupListener(currentUser: self.currentUser.asObservable())
+        deleteChannelInfo(by: input.invokedDeleteChannel)
         let isShowing = configureShowingLoginView(by: input.invokedViewWillAppear)
         let navigateTo = emitSelectedChannelInfo(by: input.selectedChannel)
-        
         return Output(isShowing: isShowing, navigateTo: navigateTo)
     }
     
@@ -126,6 +127,26 @@ final class ChannelViewModel {
             }
     }
     
+    private func deleteChannelInfo(by inputObserver: Observable<IndexPath>) {
+        inputObserver
+            .withUnretained(self)
+            .subscribe(onNext: { (owner, indexPath) in
+                guard let currentUserId = try? owner.currentUser.value()?.id else { return }
+                let channelInfo = owner.channels.value[indexPath.row]
+                let channelId = channelInfo.id
+                let withUserId = channelInfo.withUserId
+                owner.channelAPI.deleteChannelInfo(uid: currentUserId, channelId: channelId)
+                if channelInfo.isAvailable {
+                    owner.channelAPI.updateDeleteChannelInfo(withUserId: withUserId, channelId: channelId)
+                    // TODO: - Channel에 채팅방 나간 셀 등록
+                } else {
+                    owner.channelAPI.deleteChannel(channelId: channelId)
+                }
+            })
+            .disposed(by: disposeBag)
+        
+    }
+    
     
     func showChatView(channelInfo: ChannelInfo) {
         coordinator?.pushChatView(channelInfo: channelInfo)
@@ -133,6 +154,10 @@ final class ChannelViewModel {
     
     func showLoginView() {
         coordinator?.presentLoginViewController()
+    }
+    
+    func showDeleteAlertView(alert: UIAlertController) {
+        coordinator?.presentDeleteAlertController(alert: alert)
     }
     
     func removeListner() {
