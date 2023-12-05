@@ -121,6 +121,11 @@ extension ChatViewController: MessagesDisplayDelegate {
     func backgroundColor(for message: MessageType,
                          at indexPath: IndexPath,
                          in messagesCollectionView: MessagesCollectionView) -> UIColor {
+        
+        if (message as? Message)?.image != nil {
+            return .white
+        }
+        
         return isFromCurrentSender(message: message) ? .primary : .incomingMessageBackground
     }
     

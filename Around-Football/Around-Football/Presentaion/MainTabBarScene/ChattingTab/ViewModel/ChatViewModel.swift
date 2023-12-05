@@ -184,11 +184,14 @@ final class ChatViewModel {
             var message = message
             if let url = message.downloadURL {
                 StorageAPI.downloadImage(url: url) { [weak self] image in
-                    guard let image = image,
-                          let self = self else { return }
+                    guard let self = self else { return }
                     
-                    message.image = image
-                    self.insertNewMessage(message)
+                    if let image = image {
+                        message.image = image
+                        self.insertNewMessage(message)
+                    } else {
+                        message.image = UIImage(systemName: "xmark.circle")
+                    }
                 }
             } else {
                 insertNewMessage(message)
