@@ -212,7 +212,9 @@ final class InviteViewController: UIViewController {
                     content: content,
                     matchDateString: matchDateString,
                     startTime: startTime,
-                    endTime: endTime
+                    endTime: endTime,
+                    pendingApplicantsUID: [],
+                    acceptedApplicantsUID: []
                 )
                 
                 addButton.setTitle("등록하기", for: .normal)
