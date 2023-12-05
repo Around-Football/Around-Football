@@ -144,10 +144,10 @@ final class DetailViewController: UIViewController {
                 guard let self else { return }
                 switch result {
                 case .success(let user):
-                    print("readUser성공: \(user)")
+                    print("readUser 성공: \(user)")
                     detailUserInfoView.setValues(user: user)
                 case .failure(let error):
-                    print("Error decoding user: \(error)")
+                    print("readUser 에러: \(error)")
                 }
             }
         }
