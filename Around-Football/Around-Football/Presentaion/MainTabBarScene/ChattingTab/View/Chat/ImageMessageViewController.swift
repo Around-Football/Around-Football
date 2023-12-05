@@ -86,7 +86,7 @@ class ImageMessageViewController: UIViewController {
         )
         
         imageView.snp.makeConstraints {
-            $0.center.equalToSuperview()
+            $0.edges.equalToSuperview()
         }
         
         closeButton.snp.makeConstraints {
