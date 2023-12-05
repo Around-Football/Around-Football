@@ -26,7 +26,8 @@ final class ChatViewController: MessagesViewController {
     let disposeBag = DisposeBag()
     let pickedImage = PublishSubject<UIImage>()
     private let invokedViewWillAppear = PublishSubject<Void>()
-
+    private let invokedViewWillDisappear = PublishSubject<Void>()
+    
     lazy var cameraBarButtonItem = InputBarButtonItem(type: .system).then {
         $0.tintColor = .black
         $0.image = UIImage(systemName: "camera")
@@ -61,13 +62,11 @@ final class ChatViewController: MessagesViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         UITabBar.appearance()
-        // TODO: - NotiManager.shared.currentChatRoomId = channel.id
         invokedViewWillAppear.onNext(())
-        
     }
     
     override func viewWillDisappear(_ animated: Bool) {
-        // TODO: - NotiManager.shared.currentChatRoomId = nil
+        invokedViewWillDisappear.onNext(())
     }
     
     // MARK: - Helpers
@@ -114,8 +113,9 @@ final class ChatViewController: MessagesViewController {
     private func bind() {
         let didTapSendButton = sendWithText(buttonEvent: messageInputBar.sendButton.rx.tap)
         let input = ChatViewModel.Input(didTapSendButton: didTapSendButton,
-                                        pickedImage: pickedImage, 
-                                        invokedViewWillAppear: invokedViewWillAppear)
+                                        pickedImage: pickedImage,
+                                        invokedViewWillAppear: invokedViewWillAppear,
+                                        invokedViewWillDisappear: invokedViewWillDisappear)
         _ = viewModel.transform(input)
         bindCameraBarButtonEvent()
         bindMessages()

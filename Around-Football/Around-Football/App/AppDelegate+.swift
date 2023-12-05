@@ -30,12 +30,9 @@ extension AppDelegate: UNUserNotificationCenterDelegate, MessagingDelegate {
         if let uid = Auth.auth().currentUser?.uid {
             Task {
                 do {
-                    let currentUser = try await FirebaseAPI.shared.fetchUser(uid: uid)
-                    let fromUser = try await FirebaseAPI.shared.fetchUser(uid: fromUserId)
                     guard let channelInfo = try await ChannelAPI.shared.fetchChannelInfo(channelId: channelId) else {
                         throw NSError(domain: "ChannelInfo Fetch Error", code: -1)
                     }
-                    
                         window = UIWindow(frame: UIScreen.main.bounds)
                         window?.makeKeyAndVisible()
                         

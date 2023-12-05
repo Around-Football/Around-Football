@@ -40,6 +40,7 @@ final class ChatViewModel {
         let didTapSendButton: Observable<String>
         let pickedImage: Observable<UIImage>
         let invokedViewWillAppear: Observable<Void>
+        let invokedViewWillDisappear: Observable<Void>
     }
     
     struct Output {
@@ -52,12 +53,12 @@ final class ChatViewModel {
         self.channelInfo = channelInfo
         self.isNewChat = isNewChat
         self.channel.accept(Channel(id: channelInfo.id, isAvailable: channelInfo.isAvailable))
-      
+        
         UserService.shared.currentUser_Rx
             .subscribe { [weak self] user in
                 guard let self else { return }
                 currentUser = user
-        }.dispose()
+            }.dispose()
     }
     
     // MARK: - API
@@ -103,50 +104,9 @@ final class ChatViewModel {
         fetchWithUser()
         sendMessage(by: input.didTapSendButton)
         sendPhoto(by: input.pickedImage)
-        resetAlarmNumber(by: input.invokedViewWillAppear)
+        resetAlarmInformation(by: input.invokedViewWillAppear)
+        resetNotiMangerInformation(by: input.invokedViewWillDisappear)
         return Output()
-    }
-    
-    private func loadImageAndUpdateCells(_ messages: [Message]) {
-        messages.forEach { message in
-            var message = message
-            if let url = message.downloadURL {
-                StorageAPI.downloadImage(url: url) { [weak self] image in
-                    guard let image = image,
-                          let self = self else { return }
-                    
-                    message.image = image
-                    self.insertNewMessage(message)
-                }
-            } else {
-                insertNewMessage(message)
-            }
-        }
-    }
-    
-    private func insertNewMessage(_ message: Message) {
-        var messages: [Message] = self.messages.value
-        guard let firstMessage = self.messages.value.first else {
-            messages.append(message)
-            self.messages.accept(messages)
-            return
-        }
-        var standardMessage = firstMessage
-        messages.append(message)
-        messages.sort()
-        
-        for i in 1..<messages.count {
-            if Calendar.current.isDate(standardMessage.sentDate, equalTo: messages[i].sentDate, toGranularity: .minute) && standardMessage.sender.senderId == messages[i].sender.senderId {
-                messages[i - 1].showTimeLabel = false
-            } else {
-                messages[i - 1].showTimeLabel = true
-            }
-            standardMessage = messages[i]
-        }
-        
-        messages[messages.count - 1].showTimeLabel = true
-        self.messages.accept(messages)
-        print(self.messages.value.map { $0.showTimeLabel })
     }
     
     private func sendMessage(by inputObserver: Observable<String>) {
@@ -189,13 +149,79 @@ final class ChatViewModel {
                     }
                 } else {
                     owner.uploadImage(image: image, channel: channel)
-                    
-                    // TODO: - NotiManager 적용
-                    //            NotiManager.shared.pushNotification(channel: channel, content: ("사진"), fcmToken: toUser!.fcmToken, from: user)
+                    NotiManager.shared.pushNotification(channel: channel,
+                                                        content: ("사진"),
+                                                        receiverFcmToken: withUser.fcmToken,
+                                                        from: currentUser)
                 }
             }
             .disposed(by: disposeBag)
         
+    }
+    
+    private func resetAlarmInformation(by inputObserver: Observable<Void>) {
+        inputObserver
+            .withUnretained(self)
+            .subscribe { (owner, _) in
+                if let currentUser = owner.currentUser {
+                    owner.channelAPI.resetAlarmNumber(uid: currentUser.id, channelId: owner.channelInfo.id)
+                    NotiManager.shared.currentChatRoomId = owner.channelInfo.id
+                }
+            }
+            .disposed(by: disposeBag)
+    }
+    
+    private func resetNotiMangerInformation(by inputObserver: Observable<Void>) {
+        inputObserver
+            .subscribe { _ in
+                NotiManager.shared.currentChatRoomId = nil
+            }
+            .disposed(by: disposeBag)
+    }
+    
+    private func loadImageAndUpdateCells(_ messages: [Message]) {
+        messages.forEach { message in
+            var message = message
+            if let url = message.downloadURL {
+                StorageAPI.downloadImage(url: url) { [weak self] image in
+                    guard let image = image,
+                          let self = self else { return }
+                    
+                    message.image = image
+                    self.insertNewMessage(message)
+                }
+            } else {
+                insertNewMessage(message)
+            }
+        }
+    }
+    
+    private func insertNewMessage(_ message: Message) {
+        var messages: [Message] = self.messages.value
+        guard let firstMessage = self.messages.value.first else {
+            messages.append(message)
+            self.messages.accept(messages)
+            return
+        }
+        var standardMessage = firstMessage
+        messages.append(message)
+        messages.sort()
+        
+        for i in 1..<messages.count {
+            if Calendar.current.isDate(standardMessage.sentDate, 
+                                       equalTo: messages[i].sentDate,
+                                       toGranularity: .minute)
+                &&
+                standardMessage.sender.senderId == messages[i].sender.senderId {
+                messages[i - 1].showTimeLabel = false
+            } else {
+                messages[i - 1].showTimeLabel = true
+            }
+            standardMessage = messages[i]
+        }
+        
+        messages[messages.count - 1].showTimeLabel = true
+        self.messages.accept(messages)
     }
     
     private func uploadImage(image: UIImage, channel: Channel) {
@@ -216,10 +242,9 @@ final class ChatViewModel {
                 }
             }
             self.channelAPI.updateChannelInfo(owner: currentUser,
-                                               withUser: withUser,
-                                               channelId: channel.id,
-                                               message: message)
-            
+                                              withUser: withUser,
+                                              channelId: channel.id,
+                                              message: message)
         }
     }
     
@@ -237,22 +262,13 @@ final class ChatViewModel {
                                          withUser: withUser,
                                          channelId: channel.id,
                                          message: message)
-            // TODO: - NotiManagaer
-            //                NotiManager.shared.pushNotification(channel: channel, content: text, fcmToken: toUser!.fcmToken, from: user)
+            NotiManager.shared.pushNotification(channel: channel,
+                                                content: message.content,
+                                                receiverFcmToken: withUser.fcmToken,
+                                                from: currentUser)
             
             completion?()
         }
-    }
-    
-    private func resetAlarmNumber(by inputObserver: Observable<Void>) {
-        inputObserver
-            .withUnretained(self)
-            .subscribe { (owner, _) in
-                if let currentUser = owner.currentUser {
-                    owner.channelAPI.resetAlarmNumber(uid: currentUser.id, channelId: owner.channelInfo.id)
-                }
-            }
-            .disposed(by: disposeBag)
     }
     
     func showPHPickerView(picker: UIViewController) {

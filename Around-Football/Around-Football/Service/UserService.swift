@@ -47,8 +47,9 @@ final class UserService: NSObject {
             .withUnretained(self)
             .flatMap { (owner, _) -> Observable<User?> in
                 guard let uid = Auth.auth().currentUser?.uid else { return .empty() }
-                print("setfcmToken")
-                return FirebaseAPI.shared.updateFCMTokenAndFetchUser(uid: uid, fcmToken: "fcmToken")
+                let fcmToken = UserDefaults.standard.string(forKey: "FCMToken") ?? ""
+                print("DEBUG - Set FCMToken:")
+                return FirebaseAPI.shared.updateFCMTokenAndFetchUser(uid: uid, fcmToken: fcmToken)
                     .asObservable()
                     .catchAndReturn(nil)
             }
