@@ -26,11 +26,6 @@ struct Recruit: Codable, Identifiable {
     var endTime: String? // 종료시간
     
     //TODO: - 서브 컬렉션으로 신청한사람 Uid, 수락했는지 여부 추가하기
-    //TODO: - Recruit 모델에 수락한 사람 넣는 배열, count랑 비교해서 다 찼는지 표시하기
-//    struct Applicants: Codable {
-//    var userID: String
-//        var isAccepted: Bool
-//    }
     
     // MARK: - 신청자 UID 보관할 collection 관련 함수
     
@@ -41,7 +36,7 @@ struct Recruit: Codable, Identifiable {
 
     //서브콜렉션에 신청자 추가
     func apply(withUserID userID: String?) {
-        applicantsCollectionRef.addDocument(data: ["userID": userID])
+        applicantsCollectionRef.document(userID ?? "").setData(["userID": userID])
     }
 
     //서브콜렉션에서 신청자 제거
