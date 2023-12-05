@@ -35,8 +35,8 @@ final class FirebaseAPI {
                  "gender" : user.gender,
                  "area" : user.area,
                  "mainUsedFeet" : user.mainUsedFeet,
-                 "position" : user.position
-                ])
+                 "position" : user.position]
+            )
     }
     
     //uid로 유저 불러오기
@@ -62,28 +62,6 @@ final class FirebaseAPI {
             let documentsData = snapshot.documents.map { $0.data() }
             
             completion(Field.convertToArray(documents: documentsData))
-        }
-    }
-    
-    func fetchMockFieldsData(completion: @escaping(([Field]) -> Void)) {
-        let fileName: String = "FieldMock"
-        let extensionType = "json"
-        
-        guard let fileLocation = Bundle.main.url(
-            forResource: fileName,
-            withExtension: extensionType
-        ) else {
-            print("파일 위치 없음")
-            return
-        }
-        
-        do {
-            let data = try Data(contentsOf: fileLocation)
-            let decoder = JSONDecoder()
-            let fields = try decoder.decode([Field].self, from: data)
-            completion(fields)
-        } catch {
-            print("json load fail")
         }
     }
     
@@ -132,7 +110,7 @@ final class FirebaseAPI {
         type: String?)
     ) -> Observable<[Recruit]> {
         return Observable.create { observer in
-            var collectionRef: Query = Firestore.firestore().collection("Recruit")
+            var collectionRef: Query = REF_RECRUIT
             
             if let date = input.date {
                 collectionRef = collectionRef
@@ -168,6 +146,93 @@ final class FirebaseAPI {
         }
         .subscribe(on: ConcurrentDispatchQueueScheduler(qos: .background))
     }
+    
+}
+
+// MARK: - Applicants 관련 함수
+extension FirebaseAPI {
+    //유저가 신청하기 누르면 pendingApplicationsUID 추가
+    func loadPendingApplicantRx(fieldID: String?) -> Observable<[String?]> {
+        return Observable.create { observer in
+            REF_RECRUIT.document(fieldID ?? "").getDocument { snapshot, error in
+                if error != nil {
+                    print("ppendingApplicantUID 추가 오류")
+                }
+                
+                guard
+                    let data = snapshot?.data(),
+                    let pendingApplicants = data["pendingApplicantsUID"] as? [String?]
+                else { return }
+                
+                observer.onNext(pendingApplicants)
+                observer.onCompleted()
+            }
+            
+            return Disposables.create()
+        }
+    }
+    
+    func appendPendingApplicant(fieldID: String?) {
+        REF_RECRUIT.document(fieldID ?? "").getDocument { snapshot, error in
+            if error != nil {
+                print("ppendingApplicantUID 추가 오류")
+            }
+            
+            guard
+                var data = snapshot?.data(),
+                var pendingApplicants = data["pendingApplicantsUID"] as? [String?]
+            else { return }
+            
+            pendingApplicants.append(Auth.auth().currentUser?.uid)
+            data.updateValue(pendingApplicants, forKey: "pendingApplicantsUID")
+            REF_RECRUIT.document(fieldID ?? "").updateData(data)
+        }
+    }
+    
+    //승인하면 배열 요소 이동
+    func acceptApplicants(fieldID: String, userID: String?){
+        REF_RECRUIT.document(fieldID).getDocument { snapshot, error in
+            if error != nil {
+                print("pendingApplicationsUID 추가 오류")
+            }
+            
+            guard
+                var data = snapshot?.data(),
+                var pendingApplicants = data["pendingApplicantsUID"] as? [String?],
+                var acceptedApplicants = data["acceptedApplicantsUID"] as? [String?]
+            else { return }
+            //승인한 유저 acceptedApplicantsUID 배열에 추가
+            acceptedApplicants.append(userID)
+            data.updateValue(acceptedApplicants, forKey: "acceptedApplicantsUID")
+            
+            //승인한 유저 pendingApplicantsUID 배열에서 제거
+            pendingApplicants.removeAll { str in
+                str == userID ? true : false
+            }
+            data.updateValue(pendingApplicants, forKey: "pendingApplicantsUID")
+            
+            REF_RECRUIT.document(fieldID).updateData(data)
+        }
+    }
+    
+    //거절하기 하면 uid 지움
+    func deleteApplicant(fieldID: String, userID: String?) {
+        REF_RECRUIT.document(fieldID).getDocument { snapshot, error in
+            if error != nil {
+                print("deleteApplicantError \(String(describing: error?.localizedDescription))")
+            }
+            
+            guard var data = snapshot?.data(),
+                  var pendingApplicants = data["pendingApplicantsUID"] as? [String?] else { return }
+            
+            pendingApplicants.removeAll(where: { uid in
+                uid == userID ? true : false
+            })
+            data.updateValue(pendingApplicants, forKey: "pendingApplicantsUID")
+            
+            REF_RECRUIT.document(fieldID).updateData(data)
+        }
+    }
 }
 
 // MARK: - Recruit create 함수
@@ -188,6 +253,8 @@ extension FirebaseAPI {
         matchDateString: String?,
         startTime: String?,
         endTime: String?,
+        pendingApplicantsUID: [String?],
+        acceptedApplicantsUID: [String?],
         completion: @escaping (Error?) -> Void
     ) {
         guard let user else { return }
@@ -206,8 +273,9 @@ extension FirebaseAPI {
                     "content": content,
                     "matchDateString": matchDateString,
                     "startTime": startTime,
-                    "endTime": endTime
-        ] as [String : Any]
+                    "endTime": endTime,
+                    "pendingApplicantsUID": pendingApplicantsUID,
+                    "acceptedApplicantsUID": acceptedApplicantsUID] as [String : Any]
         
         REF_RECRUIT
             .document(fieldID)
@@ -235,28 +303,28 @@ extension FirebaseAPI {
     }
 }
 
-func saveFieldJsonData<T: Encodable>(data:T) {
-    let jsonEncoder = JSONEncoder()
-    
-    do {
-        let encodedData = try jsonEncoder.encode(data)
-        print(String(data: encodedData, encoding: .utf8)!)
-        
-        guard let documentDirectoryUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else { return }
-        let fileURL = documentDirectoryUrl.appendingPathComponent("FieldMock.json")
-        print("DEBUG: FILEURL - \(fileURL.description)")
-        
-        do {
-            try encodedData.write(to: fileURL)
-            
-            print("Save File")
-        }
-        catch let error as NSError {
-            print(error)
-        }
-        
-        
-    } catch {
-        print(error)
-    }
-}
+//func saveFieldJsonData<T: Encodable>(data:T) {
+//    let jsonEncoder = JSONEncoder()
+//
+//    do {
+//        let encodedData = try jsonEncoder.encode(data)
+//        print(String(data: encodedData, encoding: .utf8)!)
+//
+//        guard let documentDirectoryUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else { return }
+//        let fileURL = documentDirectoryUrl.appendingPathComponent("FieldMock.json")
+//        print("DEBUG: FILEURL - \(fileURL.description)")
+//
+//        do {
+//            try encodedData.write(to: fileURL)
+//
+//            print("Save File")
+//        }
+//        catch let error as NSError {
+//            print(error)
+//        }
+//
+//
+//    } catch {
+//        print(error)
+//    }
+//}
