@@ -68,6 +68,16 @@ final class MainTabBarCoordinator: BaseCoordinator {
     func presentLoginViewController() {
         delegate?.presentLoginViewController()
     }
+    
+    func chatCoordinatorDeepLink(channelInfo: ChannelInfo) {
+        if let mainTabController = navigationController?.viewControllers.first as? MainTabController {
+            mainTabController.selectedIndex = 2
+        }
+        
+        if let chatTabCoordinator = childCoordinators.first(where: { $0 is ChatTabCoordinator }) as? ChatTabCoordinator {
+            chatTabCoordinator.pushChatView(channelInfo: channelInfo)
+        }
+    }
 }
 
 extension MainTabBarCoordinator: HomeTabCoordinatorDelegate, InfoTabCoordinatorDelegate, ChatTabCoordinatorDelegate  { }
