@@ -93,6 +93,7 @@ final class ChannelAPI {
         }
     }
     
+    /// 채팅 정보 업데이트
     func updateChannelInfo(owner: User, withUser: User, channelId: String, message: Message) {
         var contentMessage: String {
             switch message.kind {
@@ -119,7 +120,17 @@ final class ChannelAPI {
         let withUserRef = REF_USER.document(withUser.id).collection("channels").document(channelId)
         updateRefData(ref: ownerRef, data: updateCurrentUserData)
         updateRefData(ref: withUserRef, data: updateWithUserData)
+    }
+    
+    func updateDeleteChannelInfo(withUserId: String, channelId: String) {
+        let updateDeleteInfo = [
+            "isAvailable": false
+        ]
         
+        let withUserRef = REF_USER.document(withUserId).collection("channels").document(channelId)
+        let channelRef = REF_CHANNELS.document(channelId)
+        updateRefData(ref: withUserRef, data: updateDeleteInfo)
+        updateRefData(ref: channelRef, data: updateDeleteInfo)
     }
     
     func resetAlarmNumber(uid: String, channelId: String) {
@@ -136,6 +147,14 @@ final class ChannelAPI {
             }
             print("DEBUG - Document successfully updated", ref.path)
         }
+    }
+    
+    func deleteChannelInfo(uid: String, channelId: String) {
+        REF_USER.document(uid).collection("channels").document(channelId).delete()
+    }
+    
+    func deleteChannel(channelId: String) {
+        REF_CHANNELS.document(channelId).delete()
     }
     
     func removeListener() {

@@ -32,10 +32,14 @@ extension ChannelViewController {
             .disposed(by: disposeBag)
         
         channelTableView.rx.itemDeleted
-            .subscribe(with: self, onNext: { owner, indexPath in
-                // TODO: - Remove Channel from firestore
-                print("remove row: \(owner.viewModel.channels.value[indexPath.row])")
+            .withUnretained(self)
+            .flatMap({ (owner, indexPath) -> Observable<IndexPath> in
+                return owner.presentAlertController(indexPath: indexPath)
             })
+            .subscribe(with: self) { owner, indexPath in
+                owner.invokedDeleteChannel.onNext(indexPath)
+                print("DEBUG - remove row: \(owner.viewModel.channels.value[indexPath.row])")
+            }
             .disposed(by: disposeBag)
     }
     
@@ -44,7 +48,6 @@ extension ChannelViewController {
             .withUnretained(self)
             .subscribe(onNext: { (owner, isShowing) in
                 if isShowing {
-                    print("currentUser nil")
                     owner.viewModel.showLoginView()
                 }
             })
@@ -58,6 +61,30 @@ extension ChannelViewController {
                 owner.viewModel.showChatView(channelInfo: channelInfo)
             }
             .disposed(by: disposeBag)
+    }
+    
+    func presentAlertController(indexPath: IndexPath) -> Observable<IndexPath> {
+        return Observable.create { [weak self] observer in
+            guard let self = self else { return Disposables.create { } }
+            let alertController = UIAlertController(title: .deleteChannel,
+                                                    message: .deleteChannel,
+                                                    preferredStyle: .alert)
+            let deleteAction = UIAlertAction(title: "나가기", style: .destructive) { _ in
+                observer.onNext(indexPath)
+                observer.onCompleted()
+            }
+            let cancelAction = UIAlertAction(title: "취소", style: .cancel) { _ in
+                observer.onCompleted()
+            }
+            
+            alertController.addAction(deleteAction)
+            alertController.addAction(cancelAction)
+            
+            self.viewModel.showDeleteAlertView(alert: alertController)
+            return Disposables.create {
+                alertController.dismiss(animated: true)
+            }
+        }
     }
     
     func hideChatAlarmNumber(cell: ChannelTableViewCell) {
