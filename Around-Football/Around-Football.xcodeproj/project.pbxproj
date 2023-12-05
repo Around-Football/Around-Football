@@ -311,7 +311,6 @@
 				7C2B1AC32AF4AE6C0052EC64 /* App */,
 				7C2B1AC42AF4B0B60052EC64 /* Presentaion */,
 				2736747F2AC308D1003ADE3F /* Models */,
-				7CE25AE72ACAC3370014132F /* Extension */,
 				663417C82AD68299002FE2CA /* Network */,
 				272918552AFA6087009C9042 /* Service */,
 				7CE563A82AD13E82005DE2DF /* Utiles */,
@@ -363,6 +362,7 @@
 				668EE4A42AFCB0C5007A8844 /* ImageMediaItemModel.swift */,
 				668EE4A62AFCB120007A8844 /* MessageModel.swift */,
 				668EE4A92AFCB8F2007A8844 /* SenderModel.swift */,
+				7CE25AE72ACAC3370014132F /* Extension */,
 				668EE4AB2AFCB919007A8844 /* StreamErrorModel.swift */,
 			);
 			path = Chat;
