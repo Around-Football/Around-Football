@@ -26,7 +26,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window?.rootViewController = navigationController
         
         //AppCoordinator 생성, 첫 뷰 그리기
-        appCoordinator = AppCoordinator(navigationController: navigationController)
+        appCoordinator = AppCoordinator.shared
+        appCoordinator?.navigationController = navigationController
+//        appCoordinator = AppCoordinator(navigationController: navigationController)
         appCoordinator?.start()
     }
 
