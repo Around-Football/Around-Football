@@ -19,6 +19,15 @@ final class ChannelAPI {
         return REF_USER.document(uid).collection("channels")
     }()
     
+    func fetchChannelInfo(channelId: String) async throws -> ChannelInfo? {
+        guard let uid = Auth.auth().currentUser?.uid else { return nil }
+        guard let data = try? await REF_USER.document(uid).collection("channels").document(channelId)
+            .getDocument().data() else { return nil }
+        let channelInfo = ChannelInfo(data)
+        
+        return channelInfo
+    }
+    
     
     func createChannel(channel: Channel, owner: User, withUser: User, completion: @escaping () -> Void) {
         let ownerChannel = ChannelInfo(id: channel.id, withUser: withUser)
@@ -117,10 +126,8 @@ final class ChannelAPI {
         let ref = REF_USER.document(uid).collection("channels").document(channelId)
         let data = ["alarmNumber": 0]
         updateRefData(ref: ref, data: data)
-        
     }
     
-    // TODO: - Firebase 공통 API에 넣어버리기
     private func updateRefData(ref: DocumentReference, data: [String: Any]) {
         ref.updateData(data) { error in
             if let error = error {

@@ -43,6 +43,8 @@
 		66656F9D2AD9219F00AE1AFA /* FieldDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66656F9C2AD9219F00AE1AFA /* FieldDetailViewController.swift */; };
 		66656F9F2AD921D700AE1AFA /* FieldDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66656F9E2AD921D700AE1AFA /* FieldDetailViewModel.swift */; };
 		66656FA12ADD2FB800AE1AFA /* FieldRecruitTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66656FA02ADD2FB800AE1AFA /* FieldRecruitTableViewCell.swift */; };
+		667ABD672B1EBEE700142940 /* AppDelegate+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 667ABD662B1EBEE700142940 /* AppDelegate+.swift */; };
+		667ABD692B1EE8CD00142940 /* NotiManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 667ABD682B1EE8CD00142940 /* NotiManager.swift */; };
 		668EE49C2AFC9E84007A8844 /* ChannelViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 668EE49B2AFC9E84007A8844 /* ChannelViewController.swift */; };
 		668EE49E2AFCABCA007A8844 /* ChannelViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 668EE49D2AFCABCA007A8844 /* ChannelViewModel.swift */; };
 		668EE4A12AFCAC2C007A8844 /* MessageKit in Frameworks */ = {isa = PBXBuildFile; productRef = 668EE4A02AFCAC2C007A8844 /* MessageKit */; };
@@ -150,6 +152,8 @@
 		66656F9C2AD9219F00AE1AFA /* FieldDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FieldDetailViewController.swift; sourceTree = "<group>"; };
 		66656F9E2AD921D700AE1AFA /* FieldDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FieldDetailViewModel.swift; sourceTree = "<group>"; };
 		66656FA02ADD2FB800AE1AFA /* FieldRecruitTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FieldRecruitTableViewCell.swift; sourceTree = "<group>"; };
+		667ABD662B1EBEE700142940 /* AppDelegate+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppDelegate+.swift"; sourceTree = "<group>"; };
+		667ABD682B1EE8CD00142940 /* NotiManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotiManager.swift; sourceTree = "<group>"; };
 		668EE49B2AFC9E84007A8844 /* ChannelViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChannelViewController.swift; sourceTree = "<group>"; };
 		668EE49D2AFCABCA007A8844 /* ChannelViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChannelViewModel.swift; sourceTree = "<group>"; };
 		668EE4A22AFCAC4B007A8844 /* ChannelInfoModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChannelInfoModel.swift; sourceTree = "<group>"; };
@@ -351,6 +355,7 @@
 				27058ECB2B0656ED00C107F9 /* KakaoService.swift */,
 				668EE4B92B04E37C007A8844 /* ChatAPI.swift */,
 				668EE4C62B05048C007A8844 /* StorageAPI.swift */,
+				667ABD682B1EE8CD00142940 /* NotiManager.swift */,
 			);
 			path = Network;
 			sourceTree = "<group>";
@@ -409,6 +414,7 @@
 			isa = PBXGroup;
 			children = (
 				2736744C2AC3061C003ADE3F /* AppDelegate.swift */,
+				667ABD662B1EBEE700142940 /* AppDelegate+.swift */,
 				2736744E2AC3061C003ADE3F /* SceneDelegate.swift */,
 			);
 			path = App;
@@ -885,6 +891,7 @@
 				66656F9D2AD9219F00AE1AFA /* FieldDetailViewController.swift in Sources */,
 				668EE4C12B050305007A8844 /* ImageMessageViewController.swift in Sources */,
 				668EE4B42AFF552F007A8844 /* ChannelAPI.swift in Sources */,
+				667ABD672B1EBEE700142940 /* AppDelegate+.swift in Sources */,
 				7C5F775E2AC9CE8A004CE48F /* DateCell.swift in Sources */,
 				7C94EBD52B01BF0600A7E42A /* InfoViewModel.swift in Sources */,
 				66656FA12ADD2FB800AE1AFA /* FieldRecruitTableViewCell.swift in Sources */,
@@ -925,6 +932,7 @@
 				669674912AC3E9D40067FD48 /* MapViewController.swift in Sources */,
 				272918572AFA60A9009C9042 /* UserService.swift in Sources */,
 				7C2B1B042AF4D30D0052EC64 /* InfoTabCoordinator.swift in Sources */,
+				667ABD692B1EE8CD00142940 /* NotiManager.swift in Sources */,
 				668EE4A32AFCAC4B007A8844 /* ChannelInfoModel.swift in Sources */,
 				663417CC2AD68413002FE2CA /* Constants.swift in Sources */,
 				7C2B1AEC2AF4BD170052EC64 /* DetailViewModel.swift in Sources */,

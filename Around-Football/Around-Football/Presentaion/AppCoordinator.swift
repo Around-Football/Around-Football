@@ -79,4 +79,11 @@ final class AppCoordinator: BaseCoordinator, LoginCoordinatorDelegate, MainTabBa
         coordinator.start() //여기서 모달뷰로 만듬
         childCoordinators.append(coordinator)
     }
+    
+    func handleChatDeepLink(channelInfo: ChannelInfo) {
+        
+        if let mainTabBarCoordinator = childCoordinators.first(where: { $0 is MainTabBarCoordinator }) as? MainTabBarCoordinator {
+            mainTabBarCoordinator.chatCoordinatorDeepLink(channelInfo: channelInfo)
+        }
+    }
 }
