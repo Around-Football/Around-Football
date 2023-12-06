@@ -117,7 +117,7 @@ final class ChatViewModel {
                 guard let currentUser = owner.currentUser,
                       let channel = owner.channel.value,
                       let withUser = owner.withUser else { return }
-                let message = Message(user: currentUser, content: text)
+                let message = Message(user: currentUser, content: text, messageType: .chat)
                 if owner.isNewChat {
                     print("isNewChat = \(owner.isNewChat)")
                     owner.channelAPI.createChannel(channel: channel, owner: currentUser, withUser: withUser) {
