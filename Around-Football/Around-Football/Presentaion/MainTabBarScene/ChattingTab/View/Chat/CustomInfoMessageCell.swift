@@ -7,6 +7,7 @@
 
 import UIKit
 
+import MessageKit
 import SnapKit
 import Then
 
@@ -14,13 +15,14 @@ final class CustomInfoMessageCell: UICollectionViewCell {
     
     static let cellId = "DateMessageCell"
     
-    let dateLabel = UILabel().then {
+    let label = UILabel().then {
         $0.textColor = .white
         $0.font = .systemFont(ofSize: 10)
         $0.backgroundColor = .lightGray
         $0.layer.cornerRadius = 10
         $0.clipsToBounds = true
         $0.textAlignment = .center
+        $0.numberOfLines = 0
     }
     
     override init(frame: CGRect) {
@@ -33,9 +35,38 @@ final class CustomInfoMessageCell: UICollectionViewCell {
     }
     
     private func configureUI() {
-        addSubviews(dateLabel)
-        dateLabel.snp.makeConstraints {
+        addSubviews(label)
+        updateCustomInfoLabelUI()
+        label.snp.makeConstraints {
             $0.center.equalToSuperview()
         }
+    }
+    
+    func updateCustomInfoLabelUI() {
+        label.snp.updateConstraints {
+            let size = setTextLabelSize(label: label)
+            $0.width.equalTo(size.width)
+            $0.height.equalTo(size.height)
+        }
+    }
+    
+    private func setTextLabelSize(label: UILabel) -> CGSize {
+        let size = (label.text as NSString?)?.size() ?? .zero
+        let newSize = CGSize(width: size.width + 15, height: size.height + 10)
+        return newSize
+    }
+}
+
+final class CustomInfoMessageCellSizeLayout: CellSizeCalculator {
+    
+    init(layout: MessagesCollectionViewFlowLayout? = nil) {
+        super.init()
+        self.layout = layout
+    }
+    
+    override func sizeForItem(at _: IndexPath) -> CGSize {
+        let width = (layout?.collectionView?.bounds.width ?? 0)
+        let height: CGFloat = 20
+        return CGSize(width: width, height: height)
     }
 }

@@ -26,11 +26,18 @@ struct Message: MessageType {
     var showTimeLabel: Bool = true
     var messageType: CustomMessageType
     var kind: MessageKit.MessageKind {
-        if let image = image {
-            let mediaItem = ImageMediaItem(image: image)
-            return .photo(mediaItem)
-        } else {
-            return .text(content)
+        switch messageType {
+        case .chat:
+            if let image = image {
+                let mediaItem = ImageMediaItem(image: image)
+                return .photo(mediaItem)
+            } else {
+                return .text(content)
+            }
+        case .date:
+            return .custom(content)
+        case .inform:
+            return .custom(content)
         }
     }
     var representation: [String : Any] {
@@ -54,20 +61,21 @@ struct Message: MessageType {
     // create message
     init(user: User, content: String, messageType: CustomMessageType) {
         sender = Sender(senderId: user.id, displayName: user.userName)
-        sentDate = Date()
         messageId = UUID().uuidString
         self.messageType = messageType
         switch messageType {
-        case .chat: self.content = content
+        case .chat: 
+            sentDate = Date()
+            self.content = content
         case .date:
-            let date = sentDate
             let formatter = DateFormatter()
             formatter.locale = Locale(identifier: "ko_KR")
             formatter.dateFormat = "yyyy년 MM월 dd일 EEEE"
-            
-            let dateString = formatter.string(from: date)
+            sentDate = Calendar.current.startOfDay(for: Date())
+            let dateString = formatter.string(from: Date())
             self.content = dateString
         case .inform:
+            sentDate = Date()
             self.content = "\(sender.displayName)님이 채팅방을 나가셨습니다.\n상대방이 메시지를 확인할 수 없습니다."
         }
     }
@@ -125,3 +133,4 @@ extension Message {
         messageType = .chat
     }
 }
+

@@ -75,19 +75,15 @@ final class ChannelViewModel {
         data.forEach { channel, documentChangeType in
             switch documentChangeType {
             case .added:
-                print("added")
                 guard currentChannels.contains(channel) == false else { return }
                 currentChannels.append(channel)
                 currentChannels.sort()
                 
             case .modified:
-                print("Modified")
                 guard let index = currentChannels.firstIndex(of: channel) else { return }
                 currentChannels[index] = channel
-                print(currentChannels[index].previewContent)
                 
             case .removed:
-                print("removed")
                 guard let index = currentChannels.firstIndex(of: channel) else { return }
                 currentChannels.remove(at: index)
             }
@@ -131,14 +127,16 @@ final class ChannelViewModel {
         inputObserver
             .withUnretained(self)
             .subscribe(onNext: { (owner, indexPath) in
-                guard let currentUserId = try? owner.currentUser.value()?.id else { return }
+                guard let currentUser = try? owner.currentUser.value() else { return }
                 let channelInfo = owner.channels.value[indexPath.row]
                 let channelId = channelInfo.id
                 let withUserId = channelInfo.withUserId
-                owner.channelAPI.deleteChannelInfo(uid: currentUserId, channelId: channelId)
+                owner.channelAPI.deleteChannelInfo(uid: currentUser.id, channelId: channelId)
                 if channelInfo.isAvailable {
                     owner.channelAPI.updateDeleteChannelInfo(withUserId: withUserId, channelId: channelId)
-                    // TODO: - Channel에 채팅방 나간 셀 등록
+                    
+                    let deleteChannelMessage = Message(user: currentUser, content: "", messageType: .inform)
+                    ChatAPI.shared.save([deleteChannelMessage], channelId: channelId)
                 } else {
                     owner.channelAPI.deleteChannel(channelId: channelId)
                 }

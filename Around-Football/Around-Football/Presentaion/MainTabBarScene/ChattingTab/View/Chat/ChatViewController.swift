@@ -82,8 +82,8 @@ final class ChatViewController: MessagesViewController {
         messagesCollectionView.messagesLayoutDelegate = self
         messagesCollectionView.messagesDisplayDelegate = self
         messagesCollectionView.messageCellDelegate = self
-        
-        messageInputBar.delegate = self
+        messagesCollectionView.register(CustomInfoMessageCell.self,
+                                        forCellWithReuseIdentifier: CustomInfoMessageCell.cellId)
     }
     
     private func setupMessageInputBar() {

@@ -91,6 +91,18 @@ extension ChatViewController: MessagesDataSource {
                                   attributes: [.font: UIFont.preferredFont(forTextStyle: .caption1),
                                                .foregroundColor: UIColor(white: 0.3, alpha: 1)])
     }
+    
+    func customCell(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> UICollectionViewCell {
+        guard let message = message as? Message else { return UICollectionViewCell() }
+        guard let cell = messagesCollectionView.dequeueReusableCell(withReuseIdentifier: CustomInfoMessageCell.cellId, 
+                                                                    for: indexPath) as? CustomInfoMessageCell else {
+            return UICollectionViewCell()
+        }
+        
+        cell.label.text = message.content
+        cell.updateCustomInfoLabelUI()
+        return cell
+    }
 }
 
 extension ChatViewController: MessagesLayoutDelegate {
@@ -112,6 +124,10 @@ extension ChatViewController: MessagesLayoutDelegate {
                     at indexPath: IndexPath,
                     in messagesCollectionView: MessagesCollectionView) -> CGSize? {
         return CGSize.zero
+    }
+    
+    func customCellSizeCalculator(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> CellSizeCalculator {
+        return CustomInfoMessageCellSizeLayout(layout: messagesCollectionView.messagesCollectionViewFlowLayout)
     }
 }
 
@@ -139,7 +155,11 @@ extension ChatViewController: MessagesDisplayDelegate {
     func messageStyle(for message: MessageType,
                       at indexPath: IndexPath,
                       in messagesCollectionView: MessagesCollectionView) -> MessageStyle {
-        return .bubble
+        guard let message = message as? Message else { return .bubble }
+        switch message.messageType {
+        case .chat: return .bubble
+        default: return .none
+        }
     }
 
     // 말풍선 측면에 발송 시각 표시
@@ -183,12 +203,6 @@ extension ChatViewController: PHPickerViewControllerDelegate {
     
     func imagePickerControllerDidCancel(_ picker: PHPickerViewController) {
         picker.dismiss(animated: true)
-    }
-}
-
-extension ChatViewController: InputBarAccessoryViewDelegate {
-    func inputBar(_ inputBar: InputBarAccessoryView, didPressSendButtonWith text: String) {
-        //        inputBar.inputTextView.text.removeAll()
     }
 }
 
