@@ -18,7 +18,7 @@ final class InviteViewController: UIViewController {
     
     // MARK: - Properties
     
-    private var viewModel: InviteViewModel
+    let viewModel: InviteViewModel
     private var searchViewModel: SearchViewModel
     private var invokedViewWillAppear = PublishSubject<Void>()
     private var disposeBag = DisposeBag()
@@ -135,10 +135,7 @@ final class InviteViewController: UIViewController {
         configureUI()
         keyboardController()
         setAddButton()
-    }
-    
-    deinit {
-        NotificationCenter.default.removeObserver(self)
+        setSearchFieldButton()
     }
     
     // MARK: - Selectors
@@ -155,6 +152,39 @@ final class InviteViewController: UIViewController {
     
     // MARK: - Helpers
     
+    private func setSearchFieldButton() {
+        placeView.searchFieldButton.addTarget(self,
+                                              action: #selector(searchFieldButtonTapped),
+                                              for: .touchUpInside)
+        
+        searchViewModel.dataSubject
+            .map {
+                $0.name
+            }
+            .bind(to: placeView.searchFieldButton.rx.title())
+            .disposed(by: disposeBag)
+    }
+    
+    func areFieldsEmptyObservable() -> Observable<Bool> {
+        
+        let fieldObservables = [
+            viewModel.fieldName.asObservable(),
+            viewModel.type.asObservable(),
+            viewModel.gamePrice.asObservable(),
+            viewModel.contentTitle.asObservable(),
+            viewModel.content.asObservable(),
+//            viewModel.matchDateString.asObservable(),
+//            viewModel.startTime.asObservable(),
+//            viewModel.endTime.asObservable()
+        ]
+        
+        return Observable
+            .combineLatest(fieldObservables)
+            .map { fields in
+                return fields.filter { $0 == nil || $0 == "" }.count == 0 ? true : false
+            }
+    }
+    
     private func setAddButton() {
         
         searchViewModel.dataSubject
@@ -168,35 +198,34 @@ final class InviteViewController: UIViewController {
             .disposed(by: disposeBag)
         
         //TODO: - 다 입력했을때 버튼 활성화되도록 수정
-        //        addButton.setTitle("항목을 모두 입력해주세요", for: .normal)
-        //        addButton.setTitleColor(.gray, for: .normal)
+        
+        areFieldsEmptyObservable()
+            .bind(onNext: { [weak self] bool in
+            guard let self else { return }
+            if bool == true {
+                addButton.setTitle("작성 완료", for: .normal)
+                addButton.setTitleColor(.white, for: .normal)
+                addButton.isEnabled = true
+            } else {
+                addButton.setTitle("모든 항목을 작성해주세요", for: .normal)
+                addButton.setTitleColor(.gray, for: .normal)
+                addButton.isEnabled = false
+            }
+        }).disposed(by: disposeBag)
         
         addButton.buttonActionHandler = { [weak self] in
             guard let self else { return }
-            // MARK: - 다 채웠을때만 활성화하기
-            
-            viewModel.createRecruitFieldData(peopleCount: peopleView.count,
-                                             contentTitle: titleTextField.text,
-                                             content: contentTextView.text,
-                                             matchDateString: calenderViewController.selectedDateString,
-                                             startTime: calenderViewController.startTimeString,
-                                             endTime: calenderViewController.endTimeString)
-            
-            addButton.setTitle("등록하기", for: .normal)
+            //현재 값 뷰모델에 전달
+            viewModel.peopleCount.accept(peopleView.count)
+            viewModel.contentTitle.accept(titleTextField.text)
+            viewModel.content.accept(contentTextView.text)
+            viewModel.matchDateString.accept(calenderViewController.selectedDateString)
+            viewModel.startTime.accept(calenderViewController.startTimeString)
+            viewModel.endTime.accept(calenderViewController.endTimeString)
+            //올리기 함수
+            viewModel.createRecruitFieldData()
             viewModel.coordinator.popInviteViewController()
         }
-        
-        // MARK: - 창현이가 만든 서치 버튼
-        placeView.searchFieldButton.addTarget(self,
-                                              action: #selector(searchFieldButtonTapped),
-                                              for: .touchUpInside)
-        
-        searchViewModel.dataSubject
-            .map {
-                $0.name
-            }
-            .bind(to: placeView.searchFieldButton.rx.title())
-            .disposed(by: disposeBag)
     }
     
     private func keyboardController() {
