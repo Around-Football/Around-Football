@@ -142,7 +142,7 @@ final class InputInfoView: UIView {
             $0.showsMenuAsPrimaryAction = true
         }
         
-        let menus: [String]  = ["전체", "서울", "인천", "부산", "대구", "울산", "대전", "광주", "세종특별자치시", "경기", "강원특별자치도", "충북", "충남", "경북", "경남", "전북", "전남", "제주특별자치도"]
+        let menus: [String]  = ["서울", "인천", "부산", "대구", "울산", "대전", "광주", "세종특별자치시", "경기", "강원특별자치도", "충북", "충남", "경북", "경남", "전북", "전남", "제주특별자치도"]
         
         button.menu = UIMenu(children: menus.map { city in
             UIAction(title: city) { [weak self] _ in

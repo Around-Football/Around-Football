@@ -247,10 +247,19 @@ final class HomeViewController: UIViewController {
     // MARK: - Helpers
     
     private func setUserInfo() {
-        UserService.shared.currentUser_Rx.bind(onNext: { [weak self] user in
+        UserService.shared.currentUser_Rx
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] user in
             guard let self else { return }
-            filterRequest.region = user?.area
-            regionFilterButton.setTitle(user?.area, for: .normal)
+            guard let user else {
+                regionFilterButton.setTitle("지역 선택", for: .normal)
+                filterRequest = (nil, nil, nil)
+                loadRecruitList.onNext(filterRequest)
+                return
+            }
+            
+            filterRequest.region = user.area
+            regionFilterButton.setTitle(user.area, for: .normal)
             loadRecruitList.onNext(filterRequest)
         }).disposed(by: disposeBag)
     }
