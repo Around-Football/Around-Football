@@ -32,7 +32,7 @@ final class InviteViewController: UIViewController {
     private var fieldName: String = ""
     private var fieldAddress: String = ""
     private var region: String = ""
-    private var type: String?
+    private var type: String? = "풋살"
     private lazy var recruitedPeopleCount = peopleView.count
     private lazy var gamePrice = gamePriceButton.titleLabel?.text ?? "무료"
     private lazy var contentTitle = titleTextField.text
