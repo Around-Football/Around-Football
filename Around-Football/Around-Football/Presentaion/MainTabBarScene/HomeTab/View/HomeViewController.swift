@@ -216,12 +216,12 @@ final class HomeViewController: UIViewController {
         
         let dateformatter = DateFormatter()
         dateformatter.locale = Locale(identifier: "ko_KR")
-        dateformatter.dateFormat = "YYYY년 MM월 d일"
+        dateformatter.dateFormat = "YYYY년 M월 d일"
         let formattedDate = dateformatter.string(from: sender.date)
         
         let titleDateformatter = DateFormatter()
         titleDateformatter.locale = Locale(identifier: "ko_KR")
-        titleDateformatter.dateFormat = "MM월 d일"
+        titleDateformatter.dateFormat = "M월 d일"
         let buttonTitleDate = titleDateformatter.string(from: sender.date)
         
         filterRequest.date = formattedDate
