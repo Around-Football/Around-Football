@@ -17,7 +17,6 @@ import RxCocoa
 
 
 final class ChatViewController: MessagesViewController {
-    
     // MARK: - Properties
     
     var viewModel: ChatViewModel
