@@ -185,6 +185,12 @@ extension ChatViewController: MessagesDisplayDelegate {
 
         return isShowingTimeLabel ? 16 : 0
     }
+    
+    func messageBottomLabelAlignment(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> LabelAlignment? {
+        let leftInset = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 0)
+        let rightInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 10)
+        return isFromCurrentSender(message: message) ? .some(.init(textAlignment: .right, textInsets: rightInset)) : .some(.init(textAlignment: .left, textInsets: leftInset))
+    }
 }
 
 extension ChatViewController: PHPickerViewControllerDelegate {
