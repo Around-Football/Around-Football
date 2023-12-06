@@ -119,5 +119,6 @@ final class ChatViewController: MessagesViewController {
         bindCameraBarButtonEvent()
         bindMessages()
         bindEnabledCameraBarButton()
+        bindEnabledSendObjectButton()
     }
 }

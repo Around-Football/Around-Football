@@ -63,12 +63,12 @@ final class ChatViewModel {
     
     // MARK: - API
     
-    private func setupListener() {
-        channel
+    private func setupChatListener(by inputObserver: Observable<Void>) {
+        inputObserver
             .withUnretained(self)
             .subscribe(onNext: { (owner, _) in
                 print(#function, "channel: ", owner.channelInfo.id)
-                owner.chatAPI.subscribe(id: owner.channelInfo.id)
+                owner.chatAPI.chatSubscribe(id: owner.channelInfo.id)
                     .asObservable()
                     .subscribe { messages in
                         owner.loadImageAndUpdateCells(messages)
@@ -81,12 +81,30 @@ final class ChatViewModel {
             .disposed(by: disposeBag)
     }
     
-    func removeListener() {
-        chatAPI.removeListenr()
+    private func setupChatStatusListener(by inputObserver: Observable<Void>) {
+        inputObserver
+            .withUnretained(self)
+            .subscribe { (owner, _) in
+                owner.chatAPI.chatStatusSubscribe(id: owner.channelInfo.id) { [weak self] result in
+                    guard let self = self else { return }
+                    switch result {
+                    case .success(let channel): self.channel.accept(channel)
+                    case .failure(let error): print("DEBUG - ", #function, error.localizedDescription)
+                    }
+                }
+            } onError: { error in
+                print("DEBUG - setupStatusListener Error: \(error.localizedDescription)")
+            }
+            .disposed(by: self.disposeBag)
     }
     
-    private func fetchWithUser() {
-        channel
+    func removeListener() {
+        chatAPI.removeChatListener()
+        chatAPI.removeChatStatusListener()
+    }
+    
+    private func fetchWithUser(by inputObserver: Observable<Void>) {
+        inputObserver
             .withUnretained(self)
             .subscribe { (owner, _) in
                 FirebaseAPI.shared.fetchUser(uid: owner.channelInfo.withUserId) { user in
@@ -100,8 +118,9 @@ final class ChatViewModel {
     // MARK: - Helpers
     
     func transform(_ input: Input) -> Output {
-        setupListener()
-        fetchWithUser()
+        setupChatListener(by: input.invokedViewWillAppear)
+        setupChatStatusListener(by: input.invokedViewWillAppear)
+        fetchWithUser(by: input.invokedViewWillAppear)
         sendMessage(by: input.didTapSendButton)
         sendPhoto(by: input.pickedImage)
         resetAlarmInformation(by: input.invokedViewWillAppear)
@@ -115,12 +134,14 @@ final class ChatViewModel {
             .subscribe { (owner, text) in
                 print(#function)
                 guard let currentUser = owner.currentUser,
-                      let channel = owner.channel.value,
-                      let withUser = owner.withUser else { return }
+                      let withUser = owner.withUser,
+                      let channel = owner.channel.value else { return }
                 let message = Message(user: currentUser, content: text, messageType: .chat)
                 if owner.isNewChat {
                     print("isNewChat = \(owner.isNewChat)")
-                    owner.channelAPI.createChannel(channel: channel, owner: currentUser, withUser: withUser) {
+                    owner.channelAPI.createChannel(channel: channel,
+                                                   owner: currentUser,
+                                                   withUser: withUser) {
                         owner.saveMessage(message: message) {
                             owner.isNewChat = false
                         }
@@ -137,9 +158,9 @@ final class ChatViewModel {
         inputObserver
             .withUnretained(self)
             .subscribe { (owner, image) in
-                guard let channel = owner.channel.value,
-                      let currentUser = owner.currentUser,
-                      let withUser = owner.withUser else { return }
+                guard let currentUser = owner.currentUser,
+                      let withUser = owner.withUser,
+                let channel = owner.channel.value else { return }
                 owner.isSendingPhoto.accept(true)
                 if owner.isNewChat {
                     print("isNewChat = \(owner.isNewChat)")
@@ -211,7 +232,7 @@ final class ChatViewModel {
         messages.sort()
         
         for i in 1..<messages.count {
-            if Calendar.current.isDate(standardMessage.sentDate, 
+            if Calendar.current.isDate(standardMessage.sentDate,
                                        equalTo: messages[i].sentDate,
                                        toGranularity: .minute)
                 &&
@@ -230,7 +251,6 @@ final class ChatViewModel {
     private func uploadImage(image: UIImage, channel: Channel) {
         StorageAPI.uploadImage(image: image, channel: channel) { [weak self] url in
             guard let self = self,
-                  let channel = self.channel.value,
                   let currentUser = currentUser,
                   let withUser = withUser,
                   let url = url else { return }
@@ -248,13 +268,14 @@ final class ChatViewModel {
             } else if !Calendar.current.isDate(message.sentDate, equalTo: lastMessage!.sentDate, toGranularity: .day) {
                 saveMessages.append(dateMessage)
             }
-
+            
             self.chatAPI.save(saveMessages) { error in
                 if let error = error {
                     print("DEBUG - inputBar Error: \(error.localizedDescription)")
                     return
                 }
             }
+            
             self.channelAPI.updateChannelInfo(owner: currentUser,
                                               withUser: withUser,
                                               channelId: channel.id,
@@ -279,9 +300,9 @@ final class ChatViewModel {
                 return
             }
             guard let self = self,
-                  let channel = channel.value,
                   let currentUser = currentUser,
-                  let withUser = withUser else { return }
+                  let withUser = withUser,
+                  let channel = self.channel.value else { return }
             channelAPI.updateChannelInfo(owner: currentUser,
                                          withUser: withUser,
                                          channelId: channel.id,
