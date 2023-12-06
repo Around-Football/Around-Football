@@ -125,7 +125,7 @@ final class InputInfoViewController: UIViewController {
         
         output?.userInfo
             .map { user in
-                user?.area
+                user?.area == "" ? "지역선택" : user?.area
             }
             .bind(to: inputInfoView.regionFilterButton.rx.title())
             .disposed(by: disposeBag)
