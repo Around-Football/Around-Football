@@ -177,14 +177,11 @@ final class HomeViewController: UIViewController {
         super.viewDidLoad()
         configureUI()
         bindUI()
-        //처음 로딩시 전체 리스트 요청
-//        filterRequest = (nil, nil, nil)
-        setUserInfo()
+        setUserInfo() //유저 지역 정보로 필터링하기 위해
     }
     
     override func viewWillAppear(_ animated: Bool) {
         navigationController?.navigationBar.isHidden = true
-//        loadRecruitList.onNext(filterRequest)
     }
     
     override func viewDidLayoutSubviews() {
@@ -246,6 +243,7 @@ final class HomeViewController: UIViewController {
     
     // MARK: - Helpers
     
+    //유저 지역 정보로 필터링하고 리스트 요청
     private func setUserInfo() {
         UserService.shared.currentUser_Rx
             .observe(on: MainScheduler.instance)
