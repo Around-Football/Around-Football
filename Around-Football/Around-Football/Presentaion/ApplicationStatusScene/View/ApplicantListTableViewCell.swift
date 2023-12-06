@@ -165,7 +165,7 @@ final class ApplicantListTableViewCell: UITableViewCell {
         FirebaseAPI.shared.fetchUser(uid: uid ?? "") { [weak self] user in
             guard let self else { return }
             userNameLabel.text = user.userName
-            userAgeLabel.text = String(user.age)
+            userAgeLabel.text = user.age
             userGenderLabel.text = user.gender
             userAreaLabel.text = user.area
             userMainUsedFeetLabelLabel.text = user.mainUsedFeet
