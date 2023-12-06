@@ -14,6 +14,8 @@ final class ApplicantListViewModel {
     
     struct Input {
         let loadApplicantList: Observable<String?>
+        let acceptButtonTapped: Observable<(String?, String?)>
+        let rejectButtonTapped: Observable<(String?, String?)>
     }
     
     struct Output {
@@ -24,7 +26,6 @@ final class ApplicantListViewModel {
     
     weak var coordinator: DetailCoordinator?
     var recruitItem: Recruit?
-    
     private var disposeBag = DisposeBag()
     
     // MARK: - Lifecycles
@@ -35,7 +36,12 @@ final class ApplicantListViewModel {
     
     func transform(_ input: Input) -> Output {
         let applicantList = loadApplicationList(by: input.loadApplicantList)
-        let output = Output(applicantList: applicantList)
+        let acceptedList = loadAcceptedApplicationList(by: input.acceptButtonTapped.asObservable())
+        let rejectedList = loadRejectedApplicationList(by: input.rejectButtonTapped.asObservable())
+        
+        let list = Observable.merge(applicantList, acceptedList, rejectedList)
+        
+        let output = Output(applicantList: list)
         
         return output
     }
@@ -48,4 +54,19 @@ final class ApplicantListViewModel {
             }
     }
     
+    private func loadAcceptedApplicationList(by inputObserver: Observable<(String?, String?)>) -> Observable<[String?]> {
+        inputObserver
+            .flatMap { (fieldID, uid) -> Observable<[String?]> in
+                let applicantListObservable = FirebaseAPI.shared.loadAcceptedApplicantRx(fieldID: fieldID, uid: uid)
+                return applicantListObservable
+            }
+    }
+    
+    private func loadRejectedApplicationList(by inputObserver: Observable<(String?, String?)>) -> Observable<[String?]> {
+        inputObserver
+            .flatMap { (fieldID, uid) -> Observable<[String?]> in
+                let applicantListObservable = FirebaseAPI.shared.loadRejectedApplicantRx(fieldID: fieldID, uid: uid)
+                return applicantListObservable
+            }
+    }
 }

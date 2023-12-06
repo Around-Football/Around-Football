@@ -19,6 +19,8 @@ final class ApplicantListViewController: UIViewController {
     private var disposeBag = DisposeBag()
     
     var loadApplicantList: PublishSubject<String?> = PublishSubject()
+    let acceptButtonTappedSubject: PublishSubject<(String?, String?)> = PublishSubject()
+    let rejectButtonTappedSubject: PublishSubject<(String?, String?)> = PublishSubject()
     
     private let tableView = UITableView().then {
         $0.register(ApplicantListTableViewCell.self, forCellReuseIdentifier: ApplicantListTableViewCell.cellID)
@@ -42,15 +44,19 @@ final class ApplicantListViewController: UIViewController {
         loadApplicantList.onNext(viewModel?.recruitItem?.fieldID)
     }
     
-    private func bind() {
-        let input = ApplicantListViewModel.Input(loadApplicantList: loadApplicantList.asObservable())
+    func bind() {
+        let input = ApplicantListViewModel.Input(loadApplicantList: loadApplicantList.asObservable(),
+                                                 acceptButtonTapped: acceptButtonTappedSubject.asObservable(),
+                                                 rejectButtonTapped: rejectButtonTappedSubject.asObservable())
         
         let output = viewModel?.transform(input)
         
-        output?.applicantList
+        output?
+            .applicantList
             .bind(to: tableView.rx.items(cellIdentifier: ApplicantListTableViewCell.cellID,
                                          cellType: ApplicantListTableViewCell.self)) { [weak self]  index, item, cell in
                 guard let self else { return }
+                cell.vc = self
                 cell.viewModel = viewModel
                 cell.uid = item
                 cell.bindUI(uid: item)

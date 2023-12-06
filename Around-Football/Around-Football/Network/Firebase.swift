@@ -172,6 +172,63 @@ extension FirebaseAPI {
         }
     }
     
+    func loadAcceptedApplicantRx(fieldID: String?, uid: String?) -> Observable<[String?]> {
+        return Observable.create { observer in
+            REF_RECRUIT.document(fieldID ?? "").getDocument { snapshot, error in
+                if error != nil {
+                    print("pendingApplicationsUID 추가 오류")
+                }
+                
+                guard
+                    var data = snapshot?.data(),
+                    var pendingApplicants = data["pendingApplicantsUID"] as? [String?],
+                    var acceptedApplicants = data["acceptedApplicantsUID"] as? [String?]
+                else { return }
+                //승인한 유저 acceptedApplicantsUID 배열에 추가
+                acceptedApplicants.append(uid)
+                data.updateValue(acceptedApplicants, forKey: "acceptedApplicantsUID")
+                
+                //승인한 유저 pendingApplicantsUID 배열에서 제거
+                pendingApplicants.removeAll { str in
+                    str == uid ? true : false
+                }
+                data.updateValue(pendingApplicants, forKey: "pendingApplicantsUID")
+                
+                REF_RECRUIT.document(fieldID ?? "").updateData(data)
+                
+                observer.onNext(pendingApplicants)
+                observer.onCompleted()
+            }
+            
+            return Disposables.create()
+        }
+    }
+    
+    func loadRejectedApplicantRx(fieldID: String?, uid: String?) -> Observable<[String?]> {
+        return Observable.create { observer in
+            REF_RECRUIT.document(fieldID ?? "").getDocument { snapshot, error in
+                if error != nil {
+                    print("deleteApplicantError \(String(describing: error?.localizedDescription))")
+                }
+                
+                guard var data = snapshot?.data(),
+                      var pendingApplicants = data["pendingApplicantsUID"] as? [String?] else { return }
+                
+                pendingApplicants.removeAll(where: { userID in
+                    userID == uid ? true : false
+                })
+                data.updateValue(pendingApplicants, forKey: "pendingApplicantsUID")
+                
+                REF_RECRUIT.document(fieldID ?? "").updateData(data)
+                
+                observer.onNext(pendingApplicants)
+                observer.onCompleted()
+            }
+            
+            return Disposables.create()
+        }
+    }
+    
     func appendPendingApplicant(fieldID: String?) {
         REF_RECRUIT.document(fieldID ?? "").getDocument { snapshot, error in
             if error != nil {
@@ -189,50 +246,50 @@ extension FirebaseAPI {
         }
     }
     
-    //승인하면 배열 요소 이동
-    func acceptApplicants(fieldID: String, userID: String?){
-        REF_RECRUIT.document(fieldID).getDocument { snapshot, error in
-            if error != nil {
-                print("pendingApplicationsUID 추가 오류")
-            }
-            
-            guard
-                var data = snapshot?.data(),
-                var pendingApplicants = data["pendingApplicantsUID"] as? [String?],
-                var acceptedApplicants = data["acceptedApplicantsUID"] as? [String?]
-            else { return }
-            //승인한 유저 acceptedApplicantsUID 배열에 추가
-            acceptedApplicants.append(userID)
-            data.updateValue(acceptedApplicants, forKey: "acceptedApplicantsUID")
-            
-            //승인한 유저 pendingApplicantsUID 배열에서 제거
-            pendingApplicants.removeAll { str in
-                str == userID ? true : false
-            }
-            data.updateValue(pendingApplicants, forKey: "pendingApplicantsUID")
-            
-            REF_RECRUIT.document(fieldID).updateData(data)
-        }
-    }
+//    //승인하면 배열 요소 이동
+//    func acceptApplicants(fieldID: String, userID: String?) {
+//        REF_RECRUIT.document(fieldID).getDocument { snapshot, error in
+//            if error != nil {
+//                print("pendingApplicationsUID 추가 오류")
+//            }
+//            
+//            guard
+//                var data = snapshot?.data(),
+//                var pendingApplicants = data["pendingApplicantsUID"] as? [String?],
+//                var acceptedApplicants = data["acceptedApplicantsUID"] as? [String?]
+//            else { return }
+//            //승인한 유저 acceptedApplicantsUID 배열에 추가
+//            acceptedApplicants.append(userID)
+//            data.updateValue(acceptedApplicants, forKey: "acceptedApplicantsUID")
+//            
+//            //승인한 유저 pendingApplicantsUID 배열에서 제거
+//            pendingApplicants.removeAll { str in
+//                str == userID ? true : false
+//            }
+//            data.updateValue(pendingApplicants, forKey: "pendingApplicantsUID")
+//            
+//            REF_RECRUIT.document(fieldID).updateData(data)
+//        }
+//    }
     
-    //거절하기 하면 uid 지움
-    func deleteApplicant(fieldID: String, userID: String?) {
-        REF_RECRUIT.document(fieldID).getDocument { snapshot, error in
-            if error != nil {
-                print("deleteApplicantError \(String(describing: error?.localizedDescription))")
-            }
-            
-            guard var data = snapshot?.data(),
-                  var pendingApplicants = data["pendingApplicantsUID"] as? [String?] else { return }
-            
-            pendingApplicants.removeAll(where: { uid in
-                uid == userID ? true : false
-            })
-            data.updateValue(pendingApplicants, forKey: "pendingApplicantsUID")
-            
-            REF_RECRUIT.document(fieldID).updateData(data)
-        }
-    }
+//    //거절하기 하면 uid 지움
+//    func deleteApplicant(fieldID: String, userID: String?) {
+//        REF_RECRUIT.document(fieldID).getDocument { snapshot, error in
+//            if error != nil {
+//                print("deleteApplicantError \(String(describing: error?.localizedDescription))")
+//            }
+//            
+//            guard var data = snapshot?.data(),
+//                  var pendingApplicants = data["pendingApplicantsUID"] as? [String?] else { return }
+//            
+//            pendingApplicants.removeAll(where: { uid in
+//                uid == userID ? true : false
+//            })
+//            data.updateValue(pendingApplicants, forKey: "pendingApplicantsUID")
+//            
+//            REF_RECRUIT.document(fieldID).updateData(data)
+//        }
+//    }
 }
 
 // MARK: - Recruit create 함수

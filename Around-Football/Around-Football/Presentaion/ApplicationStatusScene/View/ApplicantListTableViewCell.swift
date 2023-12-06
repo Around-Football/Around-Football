@@ -16,11 +16,10 @@ final class ApplicantListTableViewCell: UITableViewCell {
     // MARK: - Properties
     
     static let cellID = "ApplicantListTableViewCellID"
-    
     var viewModel: ApplicantListViewModel?
+    weak var vc: ApplicantListViewController?
     var uid: String?
-    
-    var loadApplicantList: PublishSubject<String?> = PublishSubject()
+
     private var disposeBag = DisposeBag()
 
     private lazy var mainStackView = UIStackView().then {
@@ -108,7 +107,7 @@ final class ApplicantListTableViewCell: UITableViewCell {
     // TODO: - 버튼 addTarget
     private lazy var buttonStackView = UIStackView().then {
         $0.addArrangedSubviews(acceptButton,
-                               refuseButton)
+                               rejectButton)
         $0.spacing = 10
         $0.axis = .horizontal
         $0.distribution = .fill
@@ -125,14 +124,14 @@ final class ApplicantListTableViewCell: UITableViewCell {
         $0.addTarget(self, action: #selector(acceptButtonTapped), for: .touchUpInside)
     }
     
-    private lazy var refuseButton = UIButton().then {
+    private lazy var rejectButton = UIButton().then {
         $0.setTitle("거절", for: .normal)
         $0.backgroundColor = .darkGray
         $0.titleLabel?.font = .boldSystemFont(ofSize: 16)
         $0.setTitleColor(.white, for: .normal)
         $0.layer.cornerRadius = LayoutOptions.cornerRadious
         $0.clipsToBounds = true
-        $0.addTarget(self, action: #selector(refuseButtonTapped), for: .touchUpInside)
+        $0.addTarget(self, action: #selector(rejectButtonTapped), for: .touchUpInside)
     }
     
     // MARK: - Lifecycles
@@ -150,12 +149,14 @@ final class ApplicantListTableViewCell: UITableViewCell {
     
     @objc
     private func acceptButtonTapped() {
-        FirebaseAPI.shared.acceptApplicants(fieldID: viewModel?.recruitItem?.fieldID ?? "", userID: uid)
+//        FirebaseAPI.shared.acceptApplicants(fieldID: viewModel?.recruitItem?.fieldID ?? "", userID: uid)
+        vc?.acceptButtonTappedSubject.onNext((viewModel?.recruitItem?.fieldID, uid))
     }
     
     @objc
-    private func refuseButtonTapped() {
-        FirebaseAPI.shared.deleteApplicant(fieldID:  viewModel?.recruitItem?.fieldID ?? "", userID: uid)
+    private func rejectButtonTapped() {
+//        FirebaseAPI.shared.deleteApplicant(fieldID:  viewModel?.recruitItem?.fieldID ?? "", userID: uid)
+        vc?.rejectButtonTappedSubject.onNext((viewModel?.recruitItem?.fieldID, uid))
     }
     
     // MARK: - Helpers
@@ -188,7 +189,7 @@ final class ApplicantListTableViewCell: UITableViewCell {
             make.height.equalTo(40)
             make.width.equalTo(60)
         }
-        refuseButton.snp.makeConstraints { make in
+        rejectButton.snp.makeConstraints { make in
             make.height.equalTo(40)
             make.width.equalTo(60)
         }
