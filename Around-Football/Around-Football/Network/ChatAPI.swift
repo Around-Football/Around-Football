@@ -12,20 +12,22 @@ import FirebaseFirestore
 
 final class ChatAPI {
     static let shared = ChatAPI()
-    var listener: ListenerRegistration?
-    var collectionListener: CollectionReference?
+    var chatListener: ListenerRegistration?
+    var chatStatusListener: ListenerRegistration?
+    var collectionListenerRef: CollectionReference?
+    var statusListenerRef: DocumentReference?
     
-    func subscribe(id: String) -> Observable<[Message]> {
+    func chatSubscribe(id: String) -> Observable<[Message]> {
         
-        removeListenr()
-        collectionListener = REF_CHANNELS.document(id).collection("thread")
+        removeChatListener()
+        collectionListenerRef = REF_CHANNELS.document(id).collection("thread")
         
         return Observable.create { [weak self] observer in
             let disposable = Disposables.create()
             
             guard let self = self else { return Disposables.create() }
             
-            self.listener = collectionListener?
+            self.chatListener = collectionListenerRef?
                 .addSnapshotListener({ snapshot, error in
                     guard let snapshot = snapshot else {
                         observer.onError(error ?? NSError(domain: "", code: -1))
@@ -45,9 +47,32 @@ final class ChatAPI {
         }
     }
     
+    func chatStatusSubscribe(id: String, completion: @escaping(Result<Channel, StreamError>) -> Void){
+        removeChatStatusListener()
+        statusListenerRef = REF_CHANNELS.document(id)
+        chatStatusListener = statusListenerRef?.addSnapshotListener({ snapshot, error in
+            guard let snapshot = snapshot else {
+                completion(.failure(StreamError.firestoreError(error)))
+                return
+            }
+            guard let data = snapshot.data() else {
+                completion(.failure(StreamError.firestoreError(error)))
+                return
+            }
+            
+            guard let channel = Channel(data) else {
+                completion(.failure(StreamError.firestoreError(error)))
+                return
+            }
+            
+            completion(.success(channel))
+        })
+        
+    }
+    
     func save(_ messages: [Message], completion: ((Error?) -> Void)? = nil) {
         messages.forEach { message in
-            collectionListener?.addDocument(data: message.representation, completion: { error in
+            collectionListenerRef?.addDocument(data: message.representation, completion: { error in
                 if message.messageType == .chat {
                     completion?(error)
                 }
@@ -61,7 +86,11 @@ final class ChatAPI {
         }
     }
     
-    func removeListenr() {
-        listener?.remove()
+    func removeChatListener() {
+        chatListener?.remove()
+    }
+    
+    func removeChatStatusListener() {
+        chatStatusListener?.remove()
     }
 }

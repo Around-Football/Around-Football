@@ -68,6 +68,22 @@ extension ChatViewController {
             })
             .asObservable()
     }
+    
+    func bindEnabledSendObjectButton() {
+        viewModel.channel
+            .withUnretained(self)
+            .subscribe { (owner, channel) in
+                owner.messageInputBar.leftStackViewItems.forEach {
+                    guard let item = $0 as? InputBarButtonItem,
+                          let channel = channel else { return }
+                    DispatchQueue.main.async {
+                        item.isEnabled = channel.isAvailable
+                        owner.messageInputBar.isHidden = !channel.isAvailable
+                    }
+                }
+            }
+            .disposed(by: disposeBag)
+    }
 }
 
 extension ChatViewController: MessagesDataSource {
