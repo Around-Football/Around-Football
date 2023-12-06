@@ -14,7 +14,7 @@ final class NotiManager {
     
     let headers: HTTPHeaders = [
         "Content-Type": "application/json",
-        "Authorization": "key=AAAANwXOQBU:APA91bEQwxaLVeRdgJso86YO4jvjz2BwvFW9bWtxKrflPAv_gxvNI2QfD38YnvRs7q_YpOp3dcFlVgAvvXOvqwA1pYM2WK04Z1wYJQds7Pq9BKvoGg24jp17I7OPkA-NnjdiqyL9qKOL"
+        "Authorization": "key=AAAANwXOQBU:APA91bEe4GiTUDk5CDo_faOh1H_WfTUXz2HLbdFM1EVNWQ26xJVMZd_y7zaBkh-VCW_pOkyqDR5TUZjwiwS5U7OPHGMpoT4Eu3Dr9g16cgqqJvcuaIe_wIyQvOidRr8-vuQOMfr8dho6"
     ]
     
     let fcmUrlString = "https://fcm.googleapis.com/fcm/send"

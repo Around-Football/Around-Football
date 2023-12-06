@@ -52,17 +52,12 @@ final class ChannelViewModel {
                     owner.channelAPI.subscribe()
                         .asObservable()
                         .subscribe(onNext: { result in
-                            print("channels")
-                            print(result)
                             owner.updateCell(to: result)
                         }, onError: { error in
                             print("DEBUG - setupListener Error: \(error.localizedDescription)")
                             
                         })
                         .disposed(by: owner.disposeBag)
-                } else {
-                    print("nochannels")
-                    
                 }
             })
             .disposed(by: disposeBag)

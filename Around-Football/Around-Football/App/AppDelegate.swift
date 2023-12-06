@@ -32,6 +32,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         KakaoSDK.initSDK(appKey: "d120f29f71b1903d6e9191768dbdfdb2")
         
         setupFCM(application)
+        let _ = UserService.shared
         
         // MARK: - TabBar Background Color Issue
         

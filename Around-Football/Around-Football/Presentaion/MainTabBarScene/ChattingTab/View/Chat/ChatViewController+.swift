@@ -167,7 +167,8 @@ extension ChatViewController: MessagesDisplayDelegate {
                                           at indexPath: IndexPath) -> NSAttributedString? {
         guard let message = message as? Message else { return nil }
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "HH:mm"
+        dateFormatter.locale = Locale(identifier: "ko_KR")
+        dateFormatter.dateFormat = "a h:mm"
         let dateString = dateFormatter.string(from: message.sentDate)
         
         let isShowingTimeLabel = message.showTimeLabel

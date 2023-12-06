@@ -78,7 +78,6 @@ final class ChannelAPI {
                   let channelListener = self.channelListener else { return Disposables.create() }
             
             self.listener = channelListener.addSnapshotListener({ snapshot, error in
-                print("listen snapshot")
                 guard let document = snapshot?.documentChanges else {
                     observer.onError(error ?? NSError(domain: "", code: -1))
                     return
