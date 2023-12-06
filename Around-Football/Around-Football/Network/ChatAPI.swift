@@ -45,10 +45,20 @@ final class ChatAPI {
         }
     }
     
-    func save(_ message: Message, completion: ((Error?) -> Void)? = nil) {
-        collectionListener?.addDocument(data: message.representation, completion: { error in
-            completion?(error)
-        })
+    func save(_ messages: [Message], completion: ((Error?) -> Void)? = nil) {
+        messages.forEach { message in
+            collectionListener?.addDocument(data: message.representation, completion: { error in
+                if message.messageType == .chat {
+                    completion?(error)
+                }
+            })
+        }
+    }
+    
+    func save(_ messages: [Message], channelId: String) {
+        messages.forEach { message in
+            REF_CHANNELS.document(channelId).collection("thread").addDocument(data: message.representation)
+        }
     }
     
     func removeListenr() {

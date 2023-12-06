@@ -149,11 +149,11 @@ final class ChatViewModel {
                     }
                 } else {
                     owner.uploadImage(image: image, channel: channel)
-                    NotiManager.shared.pushNotification(channel: channel,
-                                                        content: ("사진"),
-                                                        receiverFcmToken: withUser.fcmToken,
-                                                        from: currentUser)
                 }
+                NotiManager.shared.pushNotification(channel: channel,
+                                                    content: ("사진"),
+                                                    receiverFcmToken: withUser.fcmToken,
+                                                    from: currentUser)
             }
             .disposed(by: disposeBag)
         
@@ -188,10 +188,10 @@ final class ChatViewModel {
                     
                     if let image = image {
                         message.image = image
-                        self.insertNewMessage(message)
                     } else {
                         message.image = UIImage(systemName: "xmark.circle")
                     }
+                    self.insertNewMessage(message)
                 }
             } else {
                 insertNewMessage(message)
@@ -238,7 +238,18 @@ final class ChatViewModel {
             self.isSendingPhoto.accept(false)
             var message = Message(user: currentUser, image: image)
             message.downloadURL = url
-            self.chatAPI.save(message) { error in
+            
+            // Date 메시지 첨부 전송 여부 로직
+            var saveMessages = [message]
+            let dateMessage = Message(user: currentUser, content: "", messageType: .date)
+            let lastMessage = messages.value.last
+            if messages.value.isEmpty {
+                saveMessages.append(dateMessage)
+            } else if !Calendar.current.isDate(message.sentDate, equalTo: lastMessage!.sentDate, toGranularity: .day) {
+                saveMessages.append(dateMessage)
+            }
+
+            self.chatAPI.save(saveMessages) { error in
                 if let error = error {
                     print("DEBUG - inputBar Error: \(error.localizedDescription)")
                     return
@@ -252,7 +263,17 @@ final class ChatViewModel {
     }
     
     private func saveMessage(message: Message, completion: (() -> Void)? = nil) {
-        chatAPI.save(message) { [weak self] error in
+        // Date 메시지 첨부 전송 여부 로직
+        var saveMessages = [message]
+        let dateMessage = Message(user: currentUser!, content: "", messageType: .date)
+        let lastMessage = messages.value.last
+        if messages.value.isEmpty {
+            saveMessages.append(dateMessage)
+        } else if !Calendar.current.isDate(message.sentDate, equalTo: lastMessage!.sentDate, toGranularity: .day) {
+            saveMessages.append(dateMessage)
+        }
+        
+        chatAPI.save(saveMessages) { [weak self] error in
             if let error = error {
                 print("DEBUG - inputBar Error: \(error.localizedDescription)")
                 return

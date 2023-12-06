@@ -44,6 +44,7 @@ final class NotiManager {
         dataRequest.response { response in
             debugPrint(response.data as Any)
         }
+        print("DEBUG - ReceiverFCMToken: \(receiverFcmToken)")
     }
 
 }

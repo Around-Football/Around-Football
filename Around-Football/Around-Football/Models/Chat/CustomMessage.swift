@@ -19,7 +19,7 @@ struct DateMessage: MessageType {
         return .custom(content)
     }
     var representation: [String : Any] {
-        var representation: [String: Any] = [
+        let representation: [String: Any] = [
             "messageId": messageId,
             "created": sentDate,
             "senderId": sender.senderId,
