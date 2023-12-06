@@ -10,6 +10,12 @@ import UIKit
 import MessageKit
 import Firebase
 
+enum CustomMessageType: String {
+    case chat
+    case date
+    case inform
+}
+
 struct Message: MessageType {
     let messageId: String
     let sender: SenderType
@@ -18,6 +24,7 @@ struct Message: MessageType {
     var downloadURL: URL?
     let sentDate: Date
     var showTimeLabel: Bool = true
+    var messageType: CustomMessageType
     var kind: MessageKit.MessageKind {
         if let image = image {
             let mediaItem = ImageMediaItem(image: image)
@@ -31,7 +38,8 @@ struct Message: MessageType {
             "messageId": messageId,
             "created": sentDate,
             "senderId": sender.senderId,
-            "senderName": sender.displayName
+            "senderName": sender.displayName,
+            "messageType": messageType.rawValue
         ]
         
         if let url = downloadURL {
@@ -42,30 +50,34 @@ struct Message: MessageType {
         
         return representation
     }
-
     
-    // create text message
-    init(user: User, content: String) {
+    // create message
+    init(user: User, content: String, messageType: CustomMessageType) {
         sender = Sender(senderId: user.id, displayName: user.userName)
-        self.content = content
         sentDate = Date()
         messageId = UUID().uuidString
-    }
-    
-    // create image message
-    init(user: User, image: UIImage) {
-        sender = Sender(senderId: user.id, displayName: user.userName)
-        self.image = image
-        sentDate = Date()
-        content = ""
-        messageId = UUID().uuidString
+        self.messageType = messageType
+        switch messageType {
+        case .chat: self.content = content
+        case .date:
+            let date = sentDate
+            let formatter = DateFormatter()
+            formatter.locale = Locale(identifier: "ko_KR")
+            formatter.dateFormat = "yyyy년 MM월 dd일 EEEE"
+            
+            let dateString = formatter.string(from: date)
+            self.content = dateString
+        case .inform:
+            self.content = "\(sender.displayName)님이 채팅방을 나가셨습니다.\n상대방이 메시지를 확인할 수 없습니다."
+        }
     }
     
     init?(dictionary: [String: Any]) {
         guard let messageId = dictionary["messageId"] as? String,
               let sentDate = dictionary["created"] as? Timestamp,
               let senderId = dictionary["senderId"] as? String,
-              let senderName = dictionary["senderName"] as? String else { return nil }
+              let senderName = dictionary["senderName"] as? String,
+              let messageType = dictionary["messageType"] as? String else { return nil }
         
         self.messageId = messageId
         self.sentDate = sentDate.dateValue()
@@ -80,6 +92,14 @@ struct Message: MessageType {
         } else {
             return nil
         }
+        
+        if CustomMessageType.chat.rawValue == messageType {
+            self.messageType = .chat
+        } else if CustomMessageType.date.rawValue == messageType {
+            self.messageType = .date
+        } else {
+            self.messageType = .inform
+        }
     }
 }
 
@@ -90,5 +110,18 @@ extension Message: Comparable {
     
     static func < (lhs: Message, rhs: Message) -> Bool {
         return lhs.sentDate < rhs.sentDate
+    }
+}
+
+// MARK: - ChatMessage
+extension Message {
+    // create image message
+    init(user: User, image: UIImage) {
+        sender = Sender(senderId: user.id, displayName: user.userName)
+        self.image = image
+        sentDate = Date()
+        content = ""
+        messageId = UUID().uuidString
+        messageType = .chat
     }
 }

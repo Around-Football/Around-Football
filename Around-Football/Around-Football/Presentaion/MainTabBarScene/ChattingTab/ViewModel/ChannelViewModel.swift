@@ -109,7 +109,7 @@ final class ChannelViewModel {
             .flatMap { [weak self] _ -> Observable<Bool> in
                 guard let self else { return .just(true) }
                 do {
-                    if let user = try currentUser.value() {
+                    if let _ = try currentUser.value() {
                         return .just(false)
                     }
                     return .just(true)

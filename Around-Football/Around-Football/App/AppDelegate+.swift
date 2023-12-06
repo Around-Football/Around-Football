@@ -39,16 +39,16 @@ extension AppDelegate: UNUserNotificationCenterDelegate, MessagingDelegate {
     }
     
     private func deepLinkChatView(channelId: String, fromUserId: String) {
-        if let uid = Auth.auth().currentUser?.uid {
+        if let _ = Auth.auth().currentUser?.uid {
             Task {
                 do {
-                    let currentUser = try await FirebaseAPI.shared.fetchUser(uid: uid)
-                    let fromUser = try await FirebaseAPI.shared.fetchUser(uid: fromUserId)
+//                    let currentUser = try await FirebaseAPI.shared.fetchUser(uid: uid)
+//                    let fromUser = try await FirebaseAPI.shared.fetchUser(uid: fromUserId)
                     guard let channelInfo = try await ChannelAPI.shared.fetchChannelInfo(channelId: channelId) else {
                         throw NSError(domain: "ChannelInfo Fetch Error", code: -1)
                     }
                     let appCoordinator = AppCoordinator.shared
-                    let chatTabCoordinator = ChatTabCoordinator(navigationController: appCoordinator.navigationController)
+//                    let chatTabCoordinator = ChatTabCoordinator(navigationController: appCoordinator.navigationController)
                     if let mainTabBarCoordinator = appCoordinator.childCoordinators
                         .first(where: { $0 is MainTabBarCoordinator }) as? MainTabBarCoordinator {
                         mainTabBarCoordinator.chatCoordinatorDeepLink(channelInfo: channelInfo)
