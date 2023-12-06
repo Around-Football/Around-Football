@@ -42,12 +42,11 @@ final class InputInfoViewController: UIViewController {
         navigationItem.title = "추가정보 입력"
         invokedViewWillAppear.onNext(()) //유저 데이터 요청
         bindUI()
-        bindRegionButton()
+        bindSubjectButton()
         bindNextButton()
         keyboardController()
         
         inputInfoView.userNameTextField.delegate = self
-        inputInfoView.userAgeTextField.delegate = self
         
         inputInfoView.maleButton.addTarget(self, action: #selector(maleButtonTapped), for: .touchUpInside)
         inputInfoView.femaleButton.addTarget(self, action: #selector(femaleButtonTapped), for: .touchUpInside)
@@ -66,14 +65,18 @@ final class InputInfoViewController: UIViewController {
     
     // MARK: - Helpers
     
-    private func bindRegionButton() {
+    private func bindSubjectButton() {
         inputInfoView.regionSubject.subscribe(onNext: { [weak self] region in
             guard let self else { return }
-            let area = region
-            viewModel?.area.accept(area)
+            viewModel?.area.accept(region)
             viewModel?.updateData()
-        })
-        .disposed(by: disposeBag)
+        }).disposed(by: disposeBag)
+        
+        inputInfoView.ageSubject.subscribe(onNext: { [weak self] age in
+            guard let self else { return }
+            viewModel?.age.accept(age)
+            viewModel?.updateData()
+        }).disposed(by: disposeBag)
     }
     
     private func bindNextButton() {
@@ -81,7 +84,7 @@ final class InputInfoViewController: UIViewController {
             .map({ user in
                 guard
                     user.userName != "",
-                    user.age != 0,
+                    user.age != "",
                     user.gender != "",
                     user.area != "",
                     user.mainUsedFeet != "",
@@ -118,9 +121,9 @@ final class InputInfoViewController: UIViewController {
         
         output?.userInfo
             .map { user in
-                String(user?.age ?? 0)
+                user?.age
             }
-            .bind(to: inputInfoView.userAgeTextField.rx.text)
+            .bind(to: inputInfoView.ageFilterButton.rx.title())
             .disposed(by: disposeBag)
         
         output?.userInfo

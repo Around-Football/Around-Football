@@ -16,6 +16,7 @@ final class InputInfoView: UIView {
     // MARK: - Properties
     
     //버튼으로 지역 누르면 보내줌
+    let ageSubject = PublishSubject<String?>()
     let regionSubject = PublishSubject<String?>()
     
     private lazy var mainScrollView = UIScrollView().then {
@@ -48,13 +49,12 @@ final class InputInfoView: UIView {
     
     // 나이
     private lazy var userAgeStackView = UIStackView().then {
-        $0.axis = .vertical
-        $0.distribution = .fill
-        $0.alignment = .leading
-        $0.spacing = 10
+        $0.axis = .horizontal
+        $0.distribution = .fillEqually
+        $0.alignment = .center
+        $0.spacing = 100
         $0.addArrangedSubviews(userAgeLabel,
-                               userAgeTextField)
-        userAgeTextField.makeSideAutoLayout()
+                               ageFilterButton)
     }
     
     private let userAgeLabel = UILabel().then{
@@ -62,13 +62,34 @@ final class InputInfoView: UIView {
         $0.font = .boldSystemFont(ofSize: 16)
     }
     
-    let userAgeTextField = UITextField().then {
-        $0.layer.cornerRadius = LayoutOptions.cornerRadious
-        $0.placeholder = "나이를 입력해주세요"
-        $0.borderStyle = .roundedRect
-        $0.font = .systemFont(ofSize: 15)
-        $0.keyboardType = .numberPad
-    }
+    lazy var ageFilterButton: UIButton = {
+        var config = UIButton.Configuration.plain()
+        config.imagePadding = 10
+        
+        let button = UIButton(configuration: config).then {
+            let image = UIImage(systemName: "chevron.down")
+            $0.setTitle("나이 선택", for: .normal)
+            $0.setTitleColor(.label, for: .normal)
+            $0.setImage(image?.withTintColor(UIColor.systemGray, renderingMode: .alwaysOriginal),
+                        for: .normal)
+            $0.layer.cornerRadius = LayoutOptions.cornerRadious
+            $0.layer.borderWidth = 1.0
+            $0.layer.borderColor = UIColor.systemGray.cgColor
+            $0.showsMenuAsPrimaryAction = true
+        }
+        
+        let menus: [String]  = ["10대", "20대", "30대", "40대", "50대 이상"]
+        
+        button.menu = UIMenu(children: menus.map { city in
+            UIAction(title: city) { [weak self] _ in
+                guard let self else { return }
+                ageSubject.onNext(city)
+                button.setTitle(city, for: .normal)
+            }
+        })
+        
+        return button
+    }()
     
     // 성별
     private lazy var userGenderStackView = UIStackView().then {
