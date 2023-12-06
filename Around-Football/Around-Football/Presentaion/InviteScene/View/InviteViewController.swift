@@ -7,8 +7,8 @@
 
 import UIKit
 
-import RxSwift
 import RxCocoa
+import RxSwift
 import SnapKit
 import Then
 
@@ -18,28 +18,15 @@ final class InviteViewController: UIViewController {
     
     // MARK: - Properties
     
-    let contentView = UIView()
-    private var inviteViewModel: InviteViewModel
+    private var viewModel: InviteViewModel
     private var searchViewModel: SearchViewModel
-    private let disposeBag = DisposeBag()
+    private var invokedViewWillAppear = PublishSubject<Void>()
+    private var disposeBag = DisposeBag()
+    
+    let contentView = UIView()
     private let placeView = GroundTitleView()
     private let peopleView = PeopleCountView()
     private let calenderViewController = CalenderViewController()
-    private var user: User?
-    private var id: String?
-    private var userName: String?
-    private var fieldID = UUID().uuidString
-    private var fieldName: String = ""
-    private var fieldAddress: String = ""
-    private var region: String = ""
-    private var type: String? = "풋살"
-    private lazy var recruitedPeopleCount = peopleView.count
-    private lazy var gamePrice = gamePriceButton.titleLabel?.text ?? "무료"
-    private lazy var contentTitle = titleTextField.text
-    private lazy var content = contentTextView.text
-    private lazy var matchDateString = calenderViewController.selectedDateString
-    private lazy var startTime = calenderViewController.startTimeString
-    private lazy var endTime = calenderViewController.endTimeString
     
     private lazy var scrollView = UIScrollView().then {
         $0.showsVerticalScrollIndicator = false
@@ -53,6 +40,7 @@ final class InviteViewController: UIViewController {
         items: ["풋살", "축구"]
     ).then {
         $0.selectedSegmentIndex = 0 //기본 선택 풋살로
+        viewModel.type.accept("풋살")
         $0.addTarget(self,
                      action: #selector(segmentedControlValueChanged),
                      for: .valueChanged)
@@ -86,7 +74,7 @@ final class InviteViewController: UIViewController {
         button.menu = UIMenu(children: prices.map { price in
             UIAction(title: price) { [weak self] _ in
                 guard let self else { return }
-                gamePrice = price
+                viewModel.gamePrice.accept(price)
                 button.setTitle(price, for: .normal)
             }
         })
@@ -133,7 +121,7 @@ final class InviteViewController: UIViewController {
     // MARK: - Lifecycles
     
     init(inviteViewModel: InviteViewModel, searchViewModel: SearchViewModel) {
-        self.inviteViewModel = inviteViewModel
+        self.viewModel = inviteViewModel
         self.searchViewModel = searchViewModel
         super.init(nibName: nil, bundle: nil)
     }
@@ -144,7 +132,6 @@ final class InviteViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        setUser()
         configureUI()
         keyboardController()
         setAddButton()
@@ -158,68 +145,45 @@ final class InviteViewController: UIViewController {
     
     @objc
     func segmentedControlValueChanged(_ sender: UISegmentedControl) {
-        type = sender.titleForSegment(at: sender.selectedSegmentIndex)
+        viewModel.type.accept(sender.titleForSegment(at: sender.selectedSegmentIndex))
     }
-
+    
     @objc
     func searchFieldButtonTapped() {
-        inviteViewModel.coordinator.presentSearchViewController()
+        viewModel.coordinator.presentSearchViewController()
     }
     
     // MARK: - Helpers
-    
-    private func setUser() {
-        UserService.shared.currentUser_Rx.subscribe(onNext: { [weak self] user in
-            guard let self else { return }
-            self.user = user
-            id = user?.id
-            userName = user?.userName
-        })
-        .disposed(by: disposeBag)
-    }
     
     private func setAddButton() {
         
         searchViewModel.dataSubject
             .subscribe(onNext: { [weak self] place in
                 guard let self else { return }
-                fieldName = place.name
-                fieldAddress = place.address
-                region = String(fieldAddress.split(separator: " ").first ?? "")
+                viewModel.fieldName.accept(place.name)
+                viewModel.fieldAddress.accept(place.address)
+                let region = String(place.address.split(separator: " ").first ?? "")
+                viewModel.region.accept(region)
             })
             .disposed(by: disposeBag)
         
         //TODO: - 다 입력했을때 버튼 활성화되도록 수정
-//        addButton.setTitle("항목을 모두 입력해주세요", for: .normal)
-//        addButton.setTitleColor(.gray, for: .normal)
+        //        addButton.setTitle("항목을 모두 입력해주세요", for: .normal)
+        //        addButton.setTitleColor(.gray, for: .normal)
         
         addButton.buttonActionHandler = { [weak self] in
             guard let self else { return }
-            if let type = type,
-               let contentTitle = contentTitle,
-               let content = content,
-               let matchDateString = matchDateString {
-                inviteViewModel.createRecruitFieldData(
-                    user: user ?? User(dictionary: [:]),
-                    fieldID: fieldID,
-                    fieldName: fieldName,
-                    fieldAddress: fieldAddress,
-                    region: region,
-                    type: type,
-                    recruitedPeopleCount: recruitedPeopleCount,
-                    gamePrice: gamePrice,
-                    title: contentTitle,
-                    content: content,
-                    matchDateString: matchDateString,
-                    startTime: startTime,
-                    endTime: endTime,
-                    pendingApplicantsUID: [],
-                    acceptedApplicantsUID: []
-                )
-                
-                addButton.setTitle("등록하기", for: .normal)
-                inviteViewModel.coordinator.popInviteViewController()
-            }
+            // MARK: - 다 채웠을때만 활성화하기
+            
+            viewModel.createRecruitFieldData(peopleCount: peopleView.count,
+                                             contentTitle: titleTextField.text,
+                                             content: contentTextView.text,
+                                             matchDateString: calenderViewController.selectedDateString,
+                                             startTime: calenderViewController.startTimeString,
+                                             endTime: calenderViewController.endTimeString)
+            
+            addButton.setTitle("등록하기", for: .normal)
+            viewModel.coordinator.popInviteViewController()
         }
         
         // MARK: - 창현이가 만든 서치 버튼
