@@ -48,7 +48,7 @@ final class UserService: NSObject {
             .flatMap { (owner, _) -> Observable<User?> in
                 guard let uid = Auth.auth().currentUser?.uid else { return .empty() }
                 let fcmToken = UserDefaults.standard.string(forKey: "FCMToken") ?? ""
-                print("DEBUG - Set FCMToken:")
+                print("DEBUG - Set FCMToken: \(fcmToken)")
                 return FirebaseAPI.shared.updateFCMTokenAndFetchUser(uid: uid, fcmToken: fcmToken)
                     .asObservable()
                     .catchAndReturn(nil)
@@ -65,13 +65,21 @@ final class UserService: NSObject {
         isLogoutObservable
             .withUnretained(self)
             .subscribe { (owner, _) in
-                
+                print("logout 1")
                 guard let uid = try? owner.currentUser_Rx.value()?.id else { return }
-                
+                print("logout 2")
                 // MARK: - 로그아웃시 nil보냄
                 owner.currentUser_Rx.onNext(nil)
+                print("logout 3")
                 FirebaseAPI.shared.updateFCMToken(uid: uid, fcmToken: "") { error in
-                    print("DEBUG - Logout FCM update error", error?.localizedDescription as Any)
+                    print("logout 4")
+                    print("DEBUG - update logout fcm token")
+                    if let error = error {
+                        print("logout 5")
+                        print("DEBUG - Logout FCM update error", error.localizedDescription as Any)
+                        return
+                    }
+                    print("logout 6")
                 }
                 
                 Messaging.messaging().deleteToken { error in
@@ -80,7 +88,7 @@ final class UserService: NSObject {
                     } else {
                         Messaging.messaging().token { token, _ in
                             if let token = token {
-                                print("FCM 토큰", #function, token)
+                                print("DEBUG - FCM 토큰", #function, token)
                                 UserDefaults.standard.set(token, forKey: "FCMToken")
                             }
                         }
