@@ -103,7 +103,6 @@ final class DetailViewController: UIViewController {
         if Auth.auth().currentUser?.uid == viewModel.recruitItem?.userID {
             viewModel.coordinator?.pushApplicationStatusViewController()
         } else {
-//            let user = try? UserService.shared.currentUser_Rx.value()
             FirebaseAPI.shared.appendPendingApplicant(fieldID: viewModel.recruitItem?.fieldID)
         }
     }

@@ -62,7 +62,7 @@ final class HomeTableViewCell: UITableViewCell {
         fieldAddress.text = "주소: \(item.fieldAddress)"
         typeLabel.text = "유형: \(item.type)"
         dateLabel.text = "일정: \(item.matchDateString ?? "") \(item.startTime ?? "") - \(item.endTime ?? "")"
-        recruitLabel.text = "모집 용병: \(item.recruitedPeopleCount) 명"
+        recruitLabel.text = "모집 용병: \(item.acceptedApplicantsUID.count) / \(item.recruitedPeopleCount) 명"
         userNameLabel.text = "\(item.userName)"
     }
     
