@@ -23,6 +23,10 @@ final class HomeTableViewCell: UITableViewCell {
         $0.font = .boldSystemFont(ofSize: 20)
     }
     
+    private var fieldLabel = UILabel().then {
+        $0.text = "Field Text"
+    }
+    
     private var fieldAddress = UILabel().then {
         $0.text = "Field Address"
     }
@@ -59,6 +63,7 @@ final class HomeTableViewCell: UITableViewCell {
     
     func bindContents(item: Recruit) {
         titleLabel.text = item.title
+        fieldLabel.text = "필드: \(item.fieldName)"
         fieldAddress.text = "주소: \(item.fieldAddress)"
         typeLabel.text = "유형: \(item.type)"
         dateLabel.text = "일정: \(item.matchDateString ?? "") \(item.startTime ?? "") - \(item.endTime ?? "")"
@@ -68,6 +73,7 @@ final class HomeTableViewCell: UITableViewCell {
     
     private func configureUI() {
         contentView.addSubviews(titleLabel,
+                                fieldLabel,
                                 fieldAddress,
                                 dateLabel,
                                 typeLabel,
@@ -79,8 +85,14 @@ final class HomeTableViewCell: UITableViewCell {
             make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
         }
         
+        fieldLabel.snp.makeConstraints { make in
+            make.top.equalTo(titleLabel.snp.bottom).offset(5)
+            make.leading.equalTo(titleLabel)
+            make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
+        }
+        
         dateLabel.snp.makeConstraints { make in
-            make.top.equalTo(titleLabel.snp.bottom).offset(10)
+            make.top.equalTo(fieldLabel.snp.bottom).offset(5)
             make.leading.equalTo(titleLabel)
             make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
         }
