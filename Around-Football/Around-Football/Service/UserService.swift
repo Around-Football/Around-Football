@@ -94,6 +94,11 @@ final class UserService: NSObject {
                         }
                     }
                 }
+                
+                // Client에 전송된, 전송될 알림 모두 제거
+                let center = UNUserNotificationCenter.current()
+                center.removeAllPendingNotificationRequests()
+                center.removeAllDeliveredNotifications()
             }
             .disposed(by: disposeBag)
     }
