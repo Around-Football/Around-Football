@@ -86,20 +86,20 @@ final class InputInfoViewController: UIViewController {
                     user.area != "",
                     user.mainUsedFeet != "",
                     !user.position.isEmpty
-                else { return true }
+                else { return false }
                 
-                return false
+                return true
             })
             .bind(onNext: { [weak self] bool in
                 guard let self else { return }
-                if bool == true { //비어있는게 트루라면
-                    inputInfoView.nextButton.setTitle("모든 항목을 작성해주세요", for: .normal)
-                    inputInfoView.nextButton.setTitleColor(.gray, for: .normal)
-                    return inputInfoView.nextButton.isEnabled = false
-                } else {
+                if bool == true {
                     inputInfoView.nextButton.setTitle("작성 완료", for: .normal)
                     inputInfoView.nextButton.setTitleColor(.white, for: .normal)
                     return inputInfoView.nextButton.isEnabled = true
+                } else {
+                    inputInfoView.nextButton.setTitle("모든 항목을 작성해주세요", for: .normal)
+                    inputInfoView.nextButton.setTitleColor(.gray, for: .normal)
+                    return inputInfoView.nextButton.isEnabled = false
                 }
             }).disposed(by: disposeBag)
     }
