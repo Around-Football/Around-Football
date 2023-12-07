@@ -17,7 +17,7 @@ final class HomeTableViewCell: UITableViewCell {
     // MARK: - Properties
     
     static let id: String = "HomeTableViewCell"
-    var isButtonSelected = false
+    var isButtonSelectedSubject = BehaviorSubject(value: false)
     var disposeBag = DisposeBag()
     
     private var titleLabel = UILabel().then {
@@ -49,7 +49,7 @@ final class HomeTableViewCell: UITableViewCell {
         $0.text = "닉네임"
         $0.font = UIFont.systemFont(ofSize: 15, weight: .semibold)
     }
-    
+
     lazy var bookmarkButton = UIButton().then {
         let symbolConfiguration = UIImage.SymbolConfiguration(pointSize: 25, weight: .medium)
         $0.setImage(UIImage(systemName: "bookmark", withConfiguration: symbolConfiguration)?
@@ -58,11 +58,16 @@ final class HomeTableViewCell: UITableViewCell {
             .withTintColor(.label, renderingMode: .alwaysOriginal), for: .selected)
     }
     
+    var isButtonSelected: Observable<Bool> {
+        return isButtonSelectedSubject.asObservable()
+    }
+    
     // MARK: - Lifecycles
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         configureUI()
+//        setupBookmarkButton()
     }
     
     required init?(coder: NSCoder) {
@@ -71,23 +76,50 @@ final class HomeTableViewCell: UITableViewCell {
     
     override func prepareForReuse() {
         super.prepareForReuse()
-        isButtonSelected = false
-        bookmarkButton.isSelected = false
+        isButtonSelectedSubject.onNext(false)
+        disposeBag = DisposeBag() // 셀이 재사용될 때 disposeBag 초기화
     }
     
     // MARK: - Helpers
     //버튼 탭
-    func setupBookmarkButtonAction() {
-        isButtonSelected.toggle()
-        
-        if isButtonSelected {
-            bookmarkButton.isSelected = true
-            //눌렀을때 user에 북마크 fieldID 추가
-        } else {
-            bookmarkButton.isSelected = false
-            //눌렀을때 user에 북마크 fieldID 삭제
-        }
+    func configureButtonTap() {
+        bookmarkButton.rx.tap
+            .map { [weak self] in
+                guard let self else { return false }
+                return !bookmarkButton.isSelected //버튼 토글
+            }
+            .bind(to: isButtonSelectedSubject)
+            .disposed(by: disposeBag)
     }
+    
+//    func setupBookmarkButton() {
+//        isButtonSelected
+//            .take(1)
+//            .observe(on: MainScheduler.instance)
+//            .subscribe { [weak self] bool in
+//            guard let self else { return }
+//            if bool == true {
+//                bookmarkButton.isSelected = true
+//            } else {
+//                bookmarkButton.isSelected = false
+//            }
+//        }.disposed(by: disposeBag)
+//    }
+//        
+//    func setupBookmarkButtonAction() {
+//        isButtonSelected
+//            .observe(on: MainScheduler.instance)
+//            .subscribe { [weak self] bool in
+//            guard let self else { return }
+//            if bool == true {
+//                bookmarkButton.isSelected = false
+//                isButtonSelected.onNext(false)
+//            } else {
+//                bookmarkButton.isSelected = true
+//                isButtonSelected.onNext(true)
+//            }
+//        }.disposed(by: disposeBag)
+//    }
     
     func bindContents(item: Recruit) {
         titleLabel.text = item.title
@@ -155,8 +187,4 @@ final class HomeTableViewCell: UITableViewCell {
             make.bottom.equalToSuperview().offset(-10)
         }
     }
-}
-
-extension Reactive where Base: HomeTableViewCell {
-    var bookmarkButtonTapped: ControlEvent<Void> { base.bookmarkButton.rx.tap }
 }
