@@ -17,6 +17,9 @@ final class HomeTableViewCell: UITableViewCell {
     // MARK: - Properties
     
     static let id: String = "HomeTableViewCell"
+    var isButtonSelected = false
+    let symbolConfiguration = UIImage.SymbolConfiguration(pointSize: 25, weight: .medium)
+    var disposeBag = DisposeBag()
     
     private var titleLabel = UILabel().then {
         $0.text = "Title Text"
@@ -48,6 +51,11 @@ final class HomeTableViewCell: UITableViewCell {
         $0.font = UIFont.systemFont(ofSize: 15, weight: .semibold)
     }
     
+    lazy var bookmarkButton = UIButton().then {
+        $0.setImage(UIImage(systemName: "bookmark", withConfiguration: symbolConfiguration)?
+            .withTintColor(.label, renderingMode: .alwaysOriginal), for: .normal)
+    }
+    
     // MARK: - Lifecycles
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -60,6 +68,22 @@ final class HomeTableViewCell: UITableViewCell {
     }
     
     // MARK: - Helpers
+    //버튼 탭
+    func setupBookmarkButtonAction() {
+        isButtonSelected.toggle()
+        
+        if isButtonSelected {
+            bookmarkButton
+                .setImage(UIImage(systemName: "bookmark.fill", withConfiguration: symbolConfiguration)?
+                    .withTintColor(.label, renderingMode: .alwaysOriginal), for: .normal)
+            //눌렀을때 user에 북마크 fieldID 추가
+        } else {
+            bookmarkButton
+                .setImage(UIImage(systemName: "bookmark", withConfiguration: symbolConfiguration)?
+                .withTintColor(.label, renderingMode: .alwaysOriginal), for: .normal)
+            //눌렀을때 user에 북마크 fieldID 삭제
+        }
+    }
     
     func bindContents(item: Recruit) {
         titleLabel.text = item.title
@@ -78,11 +102,18 @@ final class HomeTableViewCell: UITableViewCell {
                                 dateLabel,
                                 typeLabel,
                                 recruitLabel,
-                                userNameLabel)
+                                userNameLabel,
+                                bookmarkButton)
         
         titleLabel.snp.makeConstraints { make in
             make.top.equalToSuperview().offset(10)
             make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
+        }
+        
+        bookmarkButton.snp.makeConstraints { make in
+            make.top.equalToSuperview().offset(10)
+            make.leading.equalTo(titleLabel.snp.trailing).offset(10).priority(.low)
+            make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
         }
         
         fieldLabel.snp.makeConstraints { make in
@@ -120,4 +151,8 @@ final class HomeTableViewCell: UITableViewCell {
             make.bottom.equalToSuperview().offset(-10)
         }
     }
+}
+
+extension Reactive where Base: HomeTableViewCell {
+    var bookmarkButtonTapped: ControlEvent<Void> { base.bookmarkButton.rx.tap }
 }
