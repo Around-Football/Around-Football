@@ -274,6 +274,11 @@ final class HomeViewController: UIViewController {
             .bind(to: homeTableView.rx.items(cellIdentifier: HomeTableViewCell.id,
                                              cellType: HomeTableViewCell.self)) { index, item, cell in
                 cell.bindContents(item: item)
+                
+                cell.rx.bookmarkButtonTapped.subscribe { _ in
+                    cell.setupBookmarkButtonAction()
+                }.disposed(by: cell.disposeBag)
+                
             }.disposed(by: disposeBag)
         
         homeTableView.rx.modelSelected(Recruit.self)
@@ -284,11 +289,15 @@ final class HomeViewController: UIViewController {
             .disposed(by: disposeBag)
     }
     
-    func handleItemSelected(_ item: Recruit) {
+    private func handleItemSelected(_ item: Recruit) {
         viewModel.coordinator?.pushToDetailView(recruitItem: item)
     }
     
-    func configureUI() {
+    private func handelBookmarkButtonTapped() {
+        
+    }
+    
+    private func configureUI() {
         view.backgroundColor = .white
         view.addSubviews(filterScrollView,
                          homeTableView,

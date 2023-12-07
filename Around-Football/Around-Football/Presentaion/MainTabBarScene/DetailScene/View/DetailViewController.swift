@@ -91,11 +91,10 @@ final class DetailViewController: UIViewController {
         super.viewDidLoad()
         configeUI()
         bindUI()
-//        invokedViewWillAppear.onNext(())
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        invokedViewWillAppear.onNext(())
+        invokedViewWillAppear.onNext(()) //cell 실시간 데이터 반영
     }
     
     // MARK: - Selector
@@ -168,7 +167,6 @@ final class DetailViewController: UIViewController {
             sendRecruitButton.setAttributedTitle(title, for: .normal)
         }
     }
-    
     
     private func configeUI() {
         setButtonTitle() //신청하기 버튼 세팅
