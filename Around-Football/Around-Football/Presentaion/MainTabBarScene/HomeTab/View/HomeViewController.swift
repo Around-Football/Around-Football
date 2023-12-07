@@ -274,11 +274,20 @@ final class HomeViewController: UIViewController {
             .bind(to: homeTableView.rx.items(cellIdentifier: HomeTableViewCell.id,
                                              cellType: HomeTableViewCell.self)) { index, item, cell in
                 cell.bindContents(item: item)
+                cell.configureButtonTap()
                 
-                cell.rx.bookmarkButtonTapped.subscribe { _ in
-                    cell.setupBookmarkButtonAction()
+                cell.isButtonSelected.subscribe { [weak self] bool in
+                    guard let self else { return }
+                    
+                    if bool == true {
+                        print("버튼 눌림")
+                        cell.bookmarkButton.isSelected = true
+                    } else {
+                        print("버튼 해제")
+                        cell.bookmarkButton.isSelected = false
+
+                    }
                 }.disposed(by: cell.disposeBag)
-                
             }.disposed(by: disposeBag)
         
         homeTableView.rx.modelSelected(Recruit.self)
