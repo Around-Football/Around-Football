@@ -179,11 +179,11 @@ final class HomeViewController: UIViewController {
         super.viewDidLoad()
         configureUI()
         bindUI()
-        setUserInfo() //유저 지역 정보로 필터링하기 위해
     }
     
     override func viewWillAppear(_ animated: Bool) {
         navigationController?.navigationBar.isHidden = true
+        setUserInfo() //유저 지역 정보로 필터링, rx요청
     }
     
     override func viewDidLayoutSubviews() {

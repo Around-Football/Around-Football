@@ -152,6 +152,24 @@ final class FirebaseAPI {
 // MARK: - Applicants 관련 함수
 extension FirebaseAPI {
     //유저가 신청하기 누르면 pendingApplicationsUID 추가
+    func loadDetailCellApplicantRx(fieldID: String?) -> Observable<Recruit> {
+        return Observable.create { observer in
+            REF_RECRUIT.document(fieldID ?? "").getDocument { snapshot, error in
+                if error != nil {
+                    print("ppendingApplicantUID 추가 오류")
+                }
+    
+                guard let data = snapshot?.data() else { return }
+                
+                observer.onNext(Recruit(dictionary: data))
+                observer.onCompleted()
+            }
+            
+            return Disposables.create()
+        }
+    }
+    
+    //유저가 신청하기 누르면 pendingApplicationsUID 추가
     func loadPendingApplicantRx(fieldID: String?) -> Observable<[String?]> {
         return Observable.create { observer in
             REF_RECRUIT.document(fieldID ?? "").getDocument { snapshot, error in

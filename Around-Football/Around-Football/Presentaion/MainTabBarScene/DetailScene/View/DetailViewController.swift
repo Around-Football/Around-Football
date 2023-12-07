@@ -91,6 +91,10 @@ final class DetailViewController: UIViewController {
         super.viewDidLoad()
         configeUI()
         bindUI()
+//        invokedViewWillAppear.onNext(())
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
         invokedViewWillAppear.onNext(())
     }
     
@@ -113,24 +117,7 @@ final class DetailViewController: UIViewController {
     }
     
     // MARK: - Helper
-    
-    private func setButtonTitle() {
-        //글쓴이면 신청현황, 아니면 신청하기로
-        if Auth.auth().currentUser?.uid == viewModel.recruitItem?.userID {
-            let title = NSAttributedString(
-                string: "신청 현황 보기",
-                attributes: [.font: UIFont.systemFont(ofSize: 15, weight: .semibold)]
-            )
-            sendRecruitButton.setAttributedTitle(title, for: .normal)
-        } else {
-            let title = NSAttributedString(
-                string: "신청하기",
-                attributes: [.font: UIFont.systemFont(ofSize: 15, weight: .semibold)]
-            )
-            sendRecruitButton.setAttributedTitle(title, for: .normal)
-        }
-    }
-    
+
     private func bindUI() {
         let input = DetailViewModel.Input(invokedViewWillAppear: invokedViewWillAppear.asObserver())
         
@@ -163,6 +150,25 @@ final class DetailViewController: UIViewController {
                 detailView.setValues(item: recruit)
             }).disposed(by: disposeBag)
     }
+    
+    //유저에 따라 신청버튼 타이틀 설정
+    private func setButtonTitle() {
+        //글쓴이면 신청현황, 아니면 신청하기로
+        if Auth.auth().currentUser?.uid == viewModel.recruitItem?.userID {
+            let title = NSAttributedString(
+                string: "신청 현황 보기",
+                attributes: [.font: UIFont.systemFont(ofSize: 15, weight: .semibold)]
+            )
+            sendRecruitButton.setAttributedTitle(title, for: .normal)
+        } else {
+            let title = NSAttributedString(
+                string: "신청하기",
+                attributes: [.font: UIFont.systemFont(ofSize: 15, weight: .semibold)]
+            )
+            sendRecruitButton.setAttributedTitle(title, for: .normal)
+        }
+    }
+    
     
     private func configeUI() {
         setButtonTitle() //신청하기 버튼 세팅
