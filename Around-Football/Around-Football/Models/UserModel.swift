@@ -17,6 +17,8 @@ struct User: Codable {
     var position: [String]
     //TODO: - FCM Token 추가
     var fcmToken: String?
+    //TODO: - 유저 북마크 배열 추가
+    var bookmarkedFields: [String?] //북마크한 필드id 저장
     
     static func convertToArray(documents: [[String: Any]]) -> [User] {
         var array: [User] = []
@@ -37,5 +39,6 @@ struct User: Codable {
         self.mainUsedFeet = dictionary["mainUsedFeet"] as? String ?? ""
         self.position = dictionary["position"] as? [String] ?? []
         self.fcmToken = dictionary["fcmToken"] as? String ?? ""
+        self.bookmarkedFields = dictionary["bookmarkedFields"] as? [String] ?? []
     }
 }
