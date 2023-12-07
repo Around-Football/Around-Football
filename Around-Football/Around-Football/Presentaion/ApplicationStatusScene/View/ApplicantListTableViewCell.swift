@@ -149,13 +149,13 @@ final class ApplicantListTableViewCell: UITableViewCell {
     
     @objc
     private func acceptButtonTapped() {
-//        FirebaseAPI.shared.acceptApplicants(fieldID: viewModel?.recruitItem?.fieldID ?? "", userID: uid)
+        FirebaseAPI.shared.acceptApplicants(fieldID: viewModel?.recruitItem?.fieldID ?? "", userID: uid)
         vc?.acceptButtonTappedSubject.onNext((viewModel?.recruitItem?.fieldID, uid))
     }
     
     @objc
     private func rejectButtonTapped() {
-//        FirebaseAPI.shared.deleteApplicant(fieldID:  viewModel?.recruitItem?.fieldID ?? "", userID: uid)
+        FirebaseAPI.shared.deleteApplicant(fieldID: viewModel?.recruitItem?.fieldID ?? "", userID: uid)
         vc?.rejectButtonTappedSubject.onNext((viewModel?.recruitItem?.fieldID, uid))
     }
     
