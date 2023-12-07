@@ -18,7 +18,6 @@ final class HomeTableViewCell: UITableViewCell {
     
     static let id: String = "HomeTableViewCell"
     var isButtonSelected = false
-    let symbolConfiguration = UIImage.SymbolConfiguration(pointSize: 25, weight: .medium)
     var disposeBag = DisposeBag()
     
     private var titleLabel = UILabel().then {
@@ -52,8 +51,11 @@ final class HomeTableViewCell: UITableViewCell {
     }
     
     lazy var bookmarkButton = UIButton().then {
+        let symbolConfiguration = UIImage.SymbolConfiguration(pointSize: 25, weight: .medium)
         $0.setImage(UIImage(systemName: "bookmark", withConfiguration: symbolConfiguration)?
             .withTintColor(.label, renderingMode: .alwaysOriginal), for: .normal)
+        $0.setImage(UIImage(systemName: "bookmark.fill", withConfiguration: symbolConfiguration)?
+            .withTintColor(.label, renderingMode: .alwaysOriginal), for: .selected)
     }
     
     // MARK: - Lifecycles
@@ -67,20 +69,22 @@ final class HomeTableViewCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        isButtonSelected = false
+        bookmarkButton.isSelected = false
+    }
+    
     // MARK: - Helpers
     //버튼 탭
     func setupBookmarkButtonAction() {
         isButtonSelected.toggle()
         
         if isButtonSelected {
-            bookmarkButton
-                .setImage(UIImage(systemName: "bookmark.fill", withConfiguration: symbolConfiguration)?
-                    .withTintColor(.label, renderingMode: .alwaysOriginal), for: .normal)
+            bookmarkButton.isSelected = true
             //눌렀을때 user에 북마크 fieldID 추가
         } else {
-            bookmarkButton
-                .setImage(UIImage(systemName: "bookmark", withConfiguration: symbolConfiguration)?
-                .withTintColor(.label, renderingMode: .alwaysOriginal), for: .normal)
+            bookmarkButton.isSelected = false
             //눌렀을때 user에 북마크 fieldID 삭제
         }
     }

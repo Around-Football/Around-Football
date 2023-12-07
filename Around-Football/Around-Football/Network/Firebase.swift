@@ -35,7 +35,8 @@ final class FirebaseAPI {
                  "gender" : user.gender,
                  "area" : user.area,
                  "mainUsedFeet" : user.mainUsedFeet,
-                 "position" : user.position]
+                 "position" : user.position,
+                 "bookmarkedFields" : user.bookmarkedFields]
             )
     }
     
