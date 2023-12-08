@@ -291,10 +291,6 @@ final class HomeViewController: UIViewController {
         viewModel.coordinator?.pushToDetailView(recruitItem: item)
     }
     
-    private func handelBookmarkButtonTapped() {
-        
-    }
-    
     private func configureUI() {
         view.backgroundColor = .white
         view.addSubviews(filterScrollView,
