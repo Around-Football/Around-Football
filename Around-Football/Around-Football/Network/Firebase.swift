@@ -38,6 +38,8 @@ final class FirebaseAPI {
                  "position" : user.position,
                  "bookmarkedFields" : user.bookmarkedFields]
             )
+        
+        UserService.shared.currentUser_Rx.onNext(user) //유저 업데이트하고 업데이트한 유저정보 보내줌
     }
     
     //uid로 유저 불러오기

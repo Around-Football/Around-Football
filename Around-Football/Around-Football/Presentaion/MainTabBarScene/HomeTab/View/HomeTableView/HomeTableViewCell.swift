@@ -7,8 +7,8 @@
 
 import UIKit
 
-import RxSwift
 import RxCocoa
+import RxSwift
 import Then
 import SnapKit
 
@@ -16,8 +16,11 @@ final class HomeTableViewCell: UITableViewCell {
     
     // MARK: - Properties
     
-    static let id: String = "HomeTableViewCell"
-    var isButtonSelectedSubject = BehaviorSubject(value: false)
+    static let id: String = "HomeTableViewCellID"
+    private let symbolConfiguration = UIImage.SymbolConfiguration(pointSize: 25, weight: .medium)
+    private var user = try? UserService.shared.currentUser_Rx.value()
+    private var fieldID: String?
+    var isSelectedButton: Bool?
     var disposeBag = DisposeBag()
     
     private var titleLabel = UILabel().then {
@@ -51,23 +54,30 @@ final class HomeTableViewCell: UITableViewCell {
     }
 
     lazy var bookmarkButton = UIButton().then {
-        let symbolConfiguration = UIImage.SymbolConfiguration(pointSize: 25, weight: .medium)
         $0.setImage(UIImage(systemName: "bookmark", withConfiguration: symbolConfiguration)?
             .withTintColor(.label, renderingMode: .alwaysOriginal), for: .normal)
-        $0.setImage(UIImage(systemName: "bookmark.fill", withConfiguration: symbolConfiguration)?
-            .withTintColor(.label, renderingMode: .alwaysOriginal), for: .selected)
     }
     
-    var isButtonSelected: Observable<Bool> {
-        return isButtonSelectedSubject.asObservable()
+    func setSelectedBookmarkButton() {
+        bookmarkButton.setImage(UIImage(systemName: "bookmark.fill", withConfiguration: symbolConfiguration)?
+            .withTintColor(.label, renderingMode: .alwaysOriginal), for: .normal)
     }
+    
+    func setNormalBookmarkButton() {
+        bookmarkButton.setImage(UIImage(systemName: "bookmark", withConfiguration: symbolConfiguration)?
+            .withTintColor(.label, renderingMode: .alwaysOriginal), for: .normal)
+    }
+    
+//    var isButtonSelected: Observable<Bool> {
+//        return isButtonSelectedSubject.asObservable()
+//    }
     
     // MARK: - Lifecycles
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         configureUI()
-//        setupBookmarkButton()
+        print("init실행 \(fieldID)")
     }
     
     required init?(coder: NSCoder) {
@@ -76,52 +86,81 @@ final class HomeTableViewCell: UITableViewCell {
     
     override func prepareForReuse() {
         super.prepareForReuse()
-        isButtonSelectedSubject.onNext(false)
+        print("prepareForReuse")
         disposeBag = DisposeBag() // 셀이 재사용될 때 disposeBag 초기화
     }
     
     // MARK: - Helpers
     //버튼 탭
     func configureButtonTap() {
+        guard let user = user else { return }
+        
         bookmarkButton.rx.tap
             .map { [weak self] in
                 guard let self else { return false }
-                return !bookmarkButton.isSelected //버튼 토글
+                if isSelectedButton == true {
+                    setNormalBookmarkButton()
+                    //북마크 해제 메서드
+                    print("버튼 해제하기")
+                    
+                    FirebaseAPI.shared.fetchUser(uid: user.id) { user in
+                        var user = user
+                        var bookmark = user.bookmarkedFields
+                        bookmark.removeAll { fieldID in
+                            self.fieldID == fieldID
+                        }
+                        user.bookmarkedFields = bookmark
+                        FirebaseAPI.shared.updateUser(user)
+                    }
+                    
+                    return false
+                } else {
+                    setSelectedBookmarkButton()
+                    
+                    FirebaseAPI.shared.fetchUser(uid: user.id) { user in
+                        var user = user
+                        var bookmark = user.bookmarkedFields
+                        bookmark.append(self.fieldID)
+                        user.bookmarkedFields = bookmark
+                        FirebaseAPI.shared.updateUser(user)
+                    }
+                    //북마크 추가 메서드
+                    print("버튼 누르기")
+                    return true
+                }
             }
-            .bind(to: isButtonSelectedSubject)
+            .subscribe(onNext: { [weak self] bool in
+                guard let self else { return }
+                isSelectedButton = bool
+            })
             .disposed(by: disposeBag)
     }
     
-//    func setupBookmarkButton() {
-//        isButtonSelected
-//            .take(1)
-//            .observe(on: MainScheduler.instance)
-//            .subscribe { [weak self] bool in
-//            guard let self else { return }
-//            if bool == true {
-//                bookmarkButton.isSelected = true
-//            } else {
-//                bookmarkButton.isSelected = false
-//            }
-//        }.disposed(by: disposeBag)
-//    }
-//        
-//    func setupBookmarkButtonAction() {
-//        isButtonSelected
-//            .observe(on: MainScheduler.instance)
-//            .subscribe { [weak self] bool in
-//            guard let self else { return }
-//            if bool == true {
-//                bookmarkButton.isSelected = false
-//                isButtonSelected.onNext(false)
-//            } else {
-//                bookmarkButton.isSelected = true
-//                isButtonSelected.onNext(true)
-//            }
-//        }.disposed(by: disposeBag)
-//    }
+    private func setupBookmarkButton() {
+        if isSelectedButton == true {
+            setSelectedBookmarkButton()
+            print("버튼 눌린 상태")
+        } else {
+            setNormalBookmarkButton()
+            print("버튼 안 눌린 상태")
+        }
+    }
     
     func bindContents(item: Recruit) {
+        print("bindContents 실행됨 \(item.title)")
+        self.fieldID = item.fieldID
+        
+        //북마크 있는지 바인딩
+        UserService.shared.currentUser_Rx
+            .filter { $0 != nil }
+            .subscribe(onNext: { [weak self] user in
+                guard let self else { return }
+                self.user = user
+                isSelectedButton = user?.bookmarkedFields.filter { $0 == item.fieldID }.count != 0
+                ? true : false
+                setupBookmarkButton()
+            }).disposed(by: disposeBag)
+        
         titleLabel.text = item.title
         fieldLabel.text = "필드: \(item.fieldName)"
         fieldAddress.text = "주소: \(item.fieldAddress)"
