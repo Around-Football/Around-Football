@@ -20,8 +20,8 @@ final class HomeTableViewCell: UITableViewCell {
     private let symbolConfiguration = UIImage.SymbolConfiguration(pointSize: 25, weight: .medium)
     private var user = try? UserService.shared.currentUser_Rx.value()
     private var fieldID: String?
-    var isSelectedButton: Bool?
-    var disposeBag = DisposeBag()
+    private var isSelectedButton: Bool?
+    private var disposeBag = DisposeBag()
     
     private var titleLabel = UILabel().then {
         $0.text = "Title Text"
@@ -81,7 +81,6 @@ final class HomeTableViewCell: UITableViewCell {
     
     override func prepareForReuse() {
         super.prepareForReuse()
-        print("prepareForReuse")
         disposeBag = DisposeBag() // 셀이 재사용될 때 disposeBag 초기화
     }
     
@@ -98,30 +97,14 @@ final class HomeTableViewCell: UITableViewCell {
                     //북마크 해제 메서드
                     print("버튼 해제하기")
                     //북마크 삭제
-                    FirebaseAPI.shared.fetchUser(uid: user.id) { user in
-                        var user = user
-                        var bookmark = user.bookmarkedFields
-                        bookmark.removeAll { fieldID in
-                            self.fieldID == fieldID
-                        }
-                        user.bookmarkedFields = bookmark
-                        FirebaseAPI.shared.updateUser(user)
-                    }
-                    
+                    removeBookmark(uid: user.id)
                     return false
                 } else {
                     print("버튼 누르기")
                     //북마크 추가 메서드
                     setSelectedBookmarkButton()
                     //북마크 추가
-                    FirebaseAPI.shared.fetchUser(uid: user.id) { user in
-                        var user = user
-                        var bookmark = user.bookmarkedFields
-                        bookmark.append(self.fieldID)
-                        user.bookmarkedFields = bookmark
-                        FirebaseAPI.shared.updateUser(user)
-                    }
-                    
+                    addBookmark(uid: user.id)
                     return true
                 }
             }
@@ -132,31 +115,34 @@ final class HomeTableViewCell: UITableViewCell {
             .disposed(by: disposeBag)
     }
     
-    private func setupBookmarkButton() {
-        if isSelectedButton == true {
-            setSelectedBookmarkButton()
-            print("버튼 눌린 상태")
-        } else {
-            setNormalBookmarkButton()
-            print("버튼 안 눌린 상태")
+    private func addBookmark(uid: String) {
+        FirebaseAPI.shared.fetchUser(uid: uid) { user in
+            var user = user
+            var bookmark = user.bookmarkedFields
+            bookmark.append(self.fieldID)
+            user.bookmarkedFields = bookmark
+            FirebaseAPI.shared.updateUser(user)
+        }
+    }
+    
+    private func removeBookmark(uid: String) {
+        FirebaseAPI.shared.fetchUser(uid: uid) { user in
+            var user = user
+            var bookmark = user.bookmarkedFields
+            bookmark.removeAll { fieldID in
+                self.fieldID == fieldID
+            }
+            user.bookmarkedFields = bookmark
+            FirebaseAPI.shared.updateUser(user)
         }
     }
     
     func bindContents(item: Recruit) {
         //cell에 사용할 id 세팅
         self.fieldID = item.fieldID
-        
         //북마크 버튼 바인딩
-        UserService.shared.currentUser_Rx
-            .filter { $0 != nil }
-            .subscribe(onNext: { [weak self] user in
-                guard let self else { return }
-                self.user = user
-                isSelectedButton = user?.bookmarkedFields.filter { $0 == item.fieldID }.count != 0
-                ? true : false
-                setupBookmarkButton()
-            }).disposed(by: disposeBag)
-        
+        setBookmarkBinding(fieldID: item.fieldID)
+        //UI정보 바인딩
         titleLabel.text = item.title
         fieldLabel.text = "필드: \(item.fieldName)"
         fieldAddress.text = "주소: \(item.fieldAddress)"
@@ -164,6 +150,27 @@ final class HomeTableViewCell: UITableViewCell {
         dateLabel.text = "일정: \(item.matchDateString ?? "") \(item.startTime ?? "") - \(item.endTime ?? "")"
         recruitLabel.text = "모집 용병: \(item.acceptedApplicantsUID.count) / \(item.recruitedPeopleCount) 명"
         userNameLabel.text = "\(item.userName)"
+    }
+    
+    //북마크 버튼 세팅
+    private func setBookmarkBinding(fieldID: String) {
+        UserService.shared.currentUser_Rx
+            .filter { $0 != nil }
+            .subscribe(onNext: { [weak self] user in
+                guard let self else { return }
+                self.user = user
+                isSelectedButton = user?.bookmarkedFields.filter { $0 == fieldID }.count != 0
+                ? true : false
+                setupBookmarkButton()
+            }).disposed(by: disposeBag)
+    }
+    
+    private func setupBookmarkButton() {
+        if isSelectedButton == true {
+            setSelectedBookmarkButton()
+        } else {
+            setNormalBookmarkButton()
+        }
     }
     
     private func configureUI() {

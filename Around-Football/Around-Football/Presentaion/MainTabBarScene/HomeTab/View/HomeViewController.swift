@@ -179,7 +179,6 @@ final class HomeViewController: UIViewController {
         super.viewDidLoad()
         configureUI()
         bindUI()
-//        setUserInfo()
     }
     
     override func viewWillAppear(_ animated: Bool) {
