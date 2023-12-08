@@ -68,16 +68,11 @@ final class HomeTableViewCell: UITableViewCell {
             .withTintColor(.label, renderingMode: .alwaysOriginal), for: .normal)
     }
     
-//    var isButtonSelected: Observable<Bool> {
-//        return isButtonSelectedSubject.asObservable()
-//    }
-    
     // MARK: - Lifecycles
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         configureUI()
-        print("init실행 \(fieldID)")
     }
     
     required init?(coder: NSCoder) {
@@ -102,7 +97,7 @@ final class HomeTableViewCell: UITableViewCell {
                     setNormalBookmarkButton()
                     //북마크 해제 메서드
                     print("버튼 해제하기")
-                    
+                    //북마크 삭제
                     FirebaseAPI.shared.fetchUser(uid: user.id) { user in
                         var user = user
                         var bookmark = user.bookmarkedFields
@@ -115,8 +110,10 @@ final class HomeTableViewCell: UITableViewCell {
                     
                     return false
                 } else {
+                    print("버튼 누르기")
+                    //북마크 추가 메서드
                     setSelectedBookmarkButton()
-                    
+                    //북마크 추가
                     FirebaseAPI.shared.fetchUser(uid: user.id) { user in
                         var user = user
                         var bookmark = user.bookmarkedFields
@@ -124,8 +121,7 @@ final class HomeTableViewCell: UITableViewCell {
                         user.bookmarkedFields = bookmark
                         FirebaseAPI.shared.updateUser(user)
                     }
-                    //북마크 추가 메서드
-                    print("버튼 누르기")
+                    
                     return true
                 }
             }
@@ -147,10 +143,10 @@ final class HomeTableViewCell: UITableViewCell {
     }
     
     func bindContents(item: Recruit) {
-        print("bindContents 실행됨 \(item.title)")
+        //cell에 사용할 id 세팅
         self.fieldID = item.fieldID
         
-        //북마크 있는지 바인딩
+        //북마크 버튼 바인딩
         UserService.shared.currentUser_Rx
             .filter { $0 != nil }
             .subscribe(onNext: { [weak self] user in
