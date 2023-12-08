@@ -8,8 +8,8 @@
 import UIKit
 
 import FirebaseAuth
-import RxSwift
 import RxCocoa
+import RxSwift
 import Then
 import SnapKit
 
@@ -179,11 +179,12 @@ final class HomeViewController: UIViewController {
         super.viewDidLoad()
         configureUI()
         bindUI()
+        setUserInfo()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         navigationController?.navigationBar.isHidden = true
-        setUserInfo() //유저 지역 정보로 필터링, rx요청
+//        setUserInfo() //유저 지역 정보로 필터링, rx요청
     }
     
     override func viewDidLayoutSubviews() {
@@ -249,6 +250,8 @@ final class HomeViewController: UIViewController {
     private func setUserInfo() {
         UserService.shared.currentUser_Rx
             .observe(on: MainScheduler.instance)
+            .filter { $0 != nil }
+            .take(1)
             .subscribe(onNext: { [weak self] user in
             guard let self else { return }
             guard let user else {
@@ -257,7 +260,6 @@ final class HomeViewController: UIViewController {
                 loadRecruitList.onNext(filterRequest)
                 return
             }
-            
             filterRequest.region = user.area
             regionFilterButton.setTitle(user.area, for: .normal)
             loadRecruitList.onNext(filterRequest)
@@ -275,19 +277,6 @@ final class HomeViewController: UIViewController {
                                              cellType: HomeTableViewCell.self)) { index, item, cell in
                 cell.bindContents(item: item)
                 cell.configureButtonTap()
-                
-                cell.isButtonSelected.subscribe { [weak self] bool in
-                    guard let self else { return }
-                    
-                    if bool == true {
-                        print("버튼 눌림")
-                        cell.bookmarkButton.isSelected = true
-                    } else {
-                        print("버튼 해제")
-                        cell.bookmarkButton.isSelected = false
-
-                    }
-                }.disposed(by: cell.disposeBag)
             }.disposed(by: disposeBag)
         
         homeTableView.rx.modelSelected(Recruit.self)
