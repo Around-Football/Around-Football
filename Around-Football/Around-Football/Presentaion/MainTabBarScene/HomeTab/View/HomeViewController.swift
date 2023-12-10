@@ -273,7 +273,9 @@ final class HomeViewController: UIViewController {
         output
             .recruitList
             .bind(to: homeTableView.rx.items(cellIdentifier: HomeTableViewCell.id,
-                                             cellType: HomeTableViewCell.self)) { index, item, cell in
+                                             cellType: HomeTableViewCell.self)) { [weak self] index, item, cell in
+                guard let self else { return }
+                cell.viewModel = viewModel
                 cell.bindContents(item: item)
                 cell.configureButtonTap()
             }.disposed(by: disposeBag)

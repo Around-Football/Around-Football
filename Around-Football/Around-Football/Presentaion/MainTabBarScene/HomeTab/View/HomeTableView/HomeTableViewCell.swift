@@ -17,11 +17,13 @@ final class HomeTableViewCell: UITableViewCell {
     // MARK: - Properties
     
     static let id: String = "HomeTableViewCellID"
-    private let symbolConfiguration = UIImage.SymbolConfiguration(pointSize: 25, weight: .medium)
+    var viewModel: HomeViewModel?
     private var user = try? UserService.shared.currentUser_Rx.value()
+    private var disposeBag = DisposeBag()
     private var fieldID: String?
     private var isSelectedButton: Bool?
-    private var disposeBag = DisposeBag()
+
+    private let symbolConfiguration = UIImage.SymbolConfiguration(pointSize: 25, weight: .medium)
     
     private var titleLabel = UILabel().then {
         $0.text = "Title Text"
@@ -93,18 +95,18 @@ final class HomeTableViewCell: UITableViewCell {
             .map { [weak self] in
                 guard let self else { return false }
                 if isSelectedButton == true {
-                    setNormalBookmarkButton()
                     //북마크 해제 메서드
+                    setNormalBookmarkButton()
                     print("버튼 해제하기")
                     //북마크 삭제
-                    removeBookmark(uid: user.id)
+                    viewModel?.removeBookmark(uid: user.id, fieldID: fieldID)
                     return false
                 } else {
-                    print("버튼 누르기")
                     //북마크 추가 메서드
                     setSelectedBookmarkButton()
+                    print("버튼 누르기")
                     //북마크 추가
-                    addBookmark(uid: user.id)
+                    viewModel?.addBookmark(uid: user.id, fieldID: fieldID)
                     return true
                 }
             }
@@ -113,28 +115,6 @@ final class HomeTableViewCell: UITableViewCell {
                 isSelectedButton = bool
             })
             .disposed(by: disposeBag)
-    }
-    
-    private func addBookmark(uid: String) {
-        FirebaseAPI.shared.fetchUser(uid: uid) { user in
-            var user = user
-            var bookmark = user.bookmarkedFields
-            bookmark.append(self.fieldID)
-            user.bookmarkedFields = bookmark
-            FirebaseAPI.shared.updateUser(user)
-        }
-    }
-    
-    private func removeBookmark(uid: String) {
-        FirebaseAPI.shared.fetchUser(uid: uid) { user in
-            var user = user
-            var bookmark = user.bookmarkedFields
-            bookmark.removeAll { fieldID in
-                self.fieldID == fieldID
-            }
-            user.bookmarkedFields = bookmark
-            FirebaseAPI.shared.updateUser(user)
-        }
     }
     
     func bindContents(item: Recruit) {

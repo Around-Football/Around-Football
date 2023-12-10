@@ -45,4 +45,28 @@ final class HomeViewModel {
                 return recruitObservable
             }
     }
+    
+    // MARK: - Cell 북마크 메서드
+    
+    func addBookmark(uid: String, fieldID: String?) {
+        FirebaseAPI.shared.fetchUser(uid: uid) { user in
+            var user = user
+            var bookmark = user.bookmarkedFields
+            bookmark.append(fieldID)
+            user.bookmarkedFields = bookmark
+            FirebaseAPI.shared.updateUser(user)
+        }
+    }
+    
+    func removeBookmark(uid: String, fieldID: String?) {
+        FirebaseAPI.shared.fetchUser(uid: uid) { user in
+            var user = user
+            var bookmark = user.bookmarkedFields
+            bookmark.removeAll { fID in
+                fieldID == fID
+            }
+            user.bookmarkedFields = bookmark
+            FirebaseAPI.shared.updateUser(user)
+        }
+    }
 }
