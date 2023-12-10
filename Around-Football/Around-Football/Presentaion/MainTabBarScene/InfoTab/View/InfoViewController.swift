@@ -20,11 +20,9 @@ final class InfoViewController: UIViewController {
     private let profileAndEditView = ProfileAndEditView()
     
     private let iconAndImage: [(icon: String, title: String)] = [
-        (icon: "heart", title: "관심 글"),
+        (icon: "star", title: "관심 글"),
         (icon: "doc.text", title: "작성 글"),
-        (icon: "trophy", title: "트로피"),
-        (icon: "clock", title: "풋살장 예약"),
-        (icon: "ellipsis.message", title: "리뷰 작성"),
+        (icon: "ellipsis.message", title: "신청 글"),
     ]
     
     private lazy var infoCollectionView: UICollectionView = {
@@ -119,7 +117,7 @@ final class InfoViewController: UIViewController {
                     let contents = [String(user.age), user.area, user.mainUsedFeet, user.position.joined(separator: ", ")] as? [String]
                 else { return }
                 
-            var titles = ["성별", "지역", "주발", "포지션"]
+                let titles = ["성별", "지역", "주발", "포지션"]
             
             (0..<titles.count).forEach {
                 views[$0].setValues(name: titles[$0], content: contents[$0])
@@ -147,7 +145,7 @@ final class InfoViewController: UIViewController {
             make.top.equalTo(profileAndEditView.snp.bottom).offset(10)
             make.leading.equalToSuperview().offset((SuperviewOffsets.leadingPadding))
             make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
-            make.height.equalTo(240)
+            make.height.equalTo(120)
         }
         
         infoStackView.snp.makeConstraints { make in
@@ -198,6 +196,8 @@ final class InfoViewController: UIViewController {
     }
 }
 
+//TODO: -Rx 리팩토링
+
 extension InfoViewController: UICollectionViewDelegateFlowLayout, UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView,
@@ -220,9 +220,28 @@ extension InfoViewController: UICollectionViewDelegateFlowLayout, UICollectionVi
         ) as? InfoCell else {
             return UICollectionViewCell()
         }
-        
+
         cell.setValues(icon: iconAndImage[indexPath.item].icon,
                        title: iconAndImage[indexPath.item].title)
         return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        
+        //TODO: - 코디네이터 분리
+        let title = iconAndImage[indexPath.item].title
+        switch title {
+        case _ where "관심 글" == title:
+            let vc = BookmarkPostViewController()
+            present(vc, animated: true)
+        case _ where "작성 글" == title:
+            let vc = WrittenPostViewController()
+            present(vc, animated: true)
+        case _ where "신청 글" == title:
+            let vc = ApplicationPostViewController()
+            present(vc, animated: true)
+        default:
+            print("cell 없음")
+        }
     }
 }
