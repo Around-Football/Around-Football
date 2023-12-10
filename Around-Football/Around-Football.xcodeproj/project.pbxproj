@@ -99,6 +99,9 @@
 		7C2B1B002AF4D2B40052EC64 /* MapTabCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C2B1AFF2AF4D2B40052EC64 /* MapTabCoordinator.swift */; };
 		7C2B1B022AF4D2E30052EC64 /* ChatTabCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C2B1B012AF4D2E30052EC64 /* ChatTabCoordinator.swift */; };
 		7C2B1B042AF4D30D0052EC64 /* InfoTabCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C2B1B032AF4D30D0052EC64 /* InfoTabCoordinator.swift */; };
+		7C2F9FE32B25EFC200F1EF1B /* BookmarkPostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C2F9FE22B25EFC200F1EF1B /* BookmarkPostViewController.swift */; };
+		7C2F9FE52B25EFE000F1EF1B /* WrittenPostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C2F9FE42B25EFE000F1EF1B /* WrittenPostViewController.swift */; };
+		7C2F9FE72B25EFF500F1EF1B /* ApplicationPostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C2F9FE62B25EFF500F1EF1B /* ApplicationPostViewController.swift */; };
 		7C33060F2B109E780042A815 /* DetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C33060E2B109E780042A815 /* DetailView.swift */; };
 		7C5F775C2AC9C698004CE48F /* InviteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C5F775B2AC9C698004CE48F /* InviteViewController.swift */; };
 		7C5F775E2AC9CE8A004CE48F /* DateCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C5F775D2AC9CE8A004CE48F /* DateCell.swift */; };
@@ -195,6 +198,9 @@
 		7C2B1AFF2AF4D2B40052EC64 /* MapTabCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapTabCoordinator.swift; sourceTree = "<group>"; };
 		7C2B1B012AF4D2E30052EC64 /* ChatTabCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatTabCoordinator.swift; sourceTree = "<group>"; };
 		7C2B1B032AF4D30D0052EC64 /* InfoTabCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoTabCoordinator.swift; sourceTree = "<group>"; };
+		7C2F9FE22B25EFC200F1EF1B /* BookmarkPostViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkPostViewController.swift; sourceTree = "<group>"; };
+		7C2F9FE42B25EFE000F1EF1B /* WrittenPostViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WrittenPostViewController.swift; sourceTree = "<group>"; };
+		7C2F9FE62B25EFF500F1EF1B /* ApplicationPostViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplicationPostViewController.swift; sourceTree = "<group>"; };
 		7C33060E2B109E780042A815 /* DetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailView.swift; sourceTree = "<group>"; };
 		7C5F775B2AC9C698004CE48F /* InviteViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InviteViewController.swift; sourceTree = "<group>"; };
 		7C5F775D2AC9CE8A004CE48F /* DateCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateCell.swift; sourceTree = "<group>"; };
@@ -734,6 +740,9 @@
 			children = (
 				7CE0143D2AF8C5B700ED77D2 /* EditViewController.swift */,
 				7CE0143F2AF8C5C300ED77D2 /* SettingViewController.swift */,
+				7C2F9FE22B25EFC200F1EF1B /* BookmarkPostViewController.swift */,
+				7C2F9FE42B25EFE000F1EF1B /* WrittenPostViewController.swift */,
+				7C2F9FE62B25EFF500F1EF1B /* ApplicationPostViewController.swift */,
 			);
 			path = InfoDetailView;
 			sourceTree = "<group>";
@@ -888,6 +897,7 @@
 				7C5F775E2AC9CE8A004CE48F /* DateCell.swift in Sources */,
 				7C94EBD52B01BF0600A7E42A /* InfoViewModel.swift in Sources */,
 				66656FA12ADD2FB800AE1AFA /* FieldRecruitTableViewCell.swift in Sources */,
+				7C2F9FE32B25EFC200F1EF1B /* BookmarkPostViewController.swift in Sources */,
 				7CB21BA32AC94D36001D0058 /* DetailViewController.swift in Sources */,
 				7929A3182ADFECD9006ED4FA /* ApplicantListViewController.swift in Sources */,
 				7C5F77622AC9DB7B004CE48F /* PeopleCountView.swift in Sources */,
@@ -909,6 +919,7 @@
 				668EE49E2AFCABCA007A8844 /* ChannelViewModel.swift in Sources */,
 				7C2B1B022AF4D2E30052EC64 /* ChatTabCoordinator.swift in Sources */,
 				7CBFED752AE69FE400915D65 /* UserModel.swift in Sources */,
+				7C2F9FE52B25EFE000F1EF1B /* WrittenPostViewController.swift in Sources */,
 				7C5F77642AC9E180004CE48F /* UIView+.swift in Sources */,
 				669674932AC3E9DF0067FD48 /* InfoViewController.swift in Sources */,
 				668EE4C32B050373007A8844 /* ImageTransition.swift in Sources */,
@@ -937,6 +948,7 @@
 				668EE4C52B05038B007A8844 /* DisMissAnimation.swift in Sources */,
 				7C5F77602AC9DA08004CE48F /* GroundTitleView.swift in Sources */,
 				7CB21BA52AC94EE4001D0058 /* DetailUserInfoView.swift in Sources */,
+				7C2F9FE72B25EFF500F1EF1B /* ApplicationPostViewController.swift in Sources */,
 				273674832AC308D1003ADE3F /* RecruitModel.swift in Sources */,
 				2729185D2B023682009C9042 /* SearchModel.swift in Sources */,
 				7CC619762AD448A90085DF90 /* InfoCell.swift in Sources */,
