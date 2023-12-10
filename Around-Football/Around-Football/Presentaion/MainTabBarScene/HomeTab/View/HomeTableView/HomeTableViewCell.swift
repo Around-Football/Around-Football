@@ -56,17 +56,17 @@ final class HomeTableViewCell: UITableViewCell {
     }
 
     lazy var bookmarkButton = UIButton().then {
-        $0.setImage(UIImage(systemName: "bookmark", withConfiguration: symbolConfiguration)?
+        $0.setImage(UIImage(systemName: "star", withConfiguration: symbolConfiguration)?
             .withTintColor(.label, renderingMode: .alwaysOriginal), for: .normal)
     }
     
     func setSelectedBookmarkButton() {
-        bookmarkButton.setImage(UIImage(systemName: "bookmark.fill", withConfiguration: symbolConfiguration)?
-            .withTintColor(.label, renderingMode: .alwaysOriginal), for: .normal)
+        bookmarkButton.setImage(UIImage(systemName: "star.fill", withConfiguration: symbolConfiguration)?
+            .withTintColor(.systemYellow, renderingMode: .alwaysOriginal), for: .normal)
     }
     
     func setNormalBookmarkButton() {
-        bookmarkButton.setImage(UIImage(systemName: "bookmark", withConfiguration: symbolConfiguration)?
+        bookmarkButton.setImage(UIImage(systemName: "star", withConfiguration: symbolConfiguration)?
             .withTintColor(.label, renderingMode: .alwaysOriginal), for: .normal)
     }
     
@@ -97,14 +97,12 @@ final class HomeTableViewCell: UITableViewCell {
                 if isSelectedButton == true {
                     //북마크 해제 메서드
                     setNormalBookmarkButton()
-                    print("버튼 해제하기")
                     //북마크 삭제
                     viewModel?.removeBookmark(uid: user.id, fieldID: fieldID)
                     return false
                 } else {
                     //북마크 추가 메서드
                     setSelectedBookmarkButton()
-                    print("버튼 누르기")
                     //북마크 추가
                     viewModel?.addBookmark(uid: user.id, fieldID: fieldID)
                     return true
