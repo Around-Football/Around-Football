@@ -19,17 +19,18 @@ final class InfoPostViewModel {
     }
     
     struct Input {
-        let loadBookmarkPost: Observable<Void>
+        let loadPost: Observable<Void>
     }
     
     struct Output {
-        let bookmartPost: Observable<[Recruit]>
+        let bookmarkList: Observable<[Recruit]>
+        let writtenList: Observable<[Recruit]>
     }
     
     func transform(_ input: Input) -> Output {
-        let bookmarkList = loadBookmarkPost(by: input.loadBookmarkPost)
-        
-        return Output(bookmartPost: bookmarkList)
+        let bookmarkList = loadBookmarkPost(by: input.loadPost)
+        let writtenList = loadWrittenPost(by: input.loadPost)
+        return Output(bookmarkList: bookmarkList, writtenList: writtenList)
     }
     
     private func loadBookmarkPost(by inputObserver: Observable<Void>) -> Observable<[Recruit]> {
@@ -40,8 +41,12 @@ final class InfoPostViewModel {
             }
     }
     
-    private func loadWrittenPost() {
-        
+    private func loadWrittenPost(by inputObserver: Observable<Void>) -> Observable<[Recruit]> {
+        inputObserver
+            .flatMap { () -> Observable<[Recruit]> in
+                let recruitObservable = FirebaseAPI.shared.loadWrittenPostRx(userID: Auth.auth().currentUser?.uid)
+                return recruitObservable
+            }
     }
     
     private func loadApplicationPost() {
