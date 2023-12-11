@@ -22,11 +22,13 @@ final class ChannelViewController: UIViewController {
     let disposeBag = DisposeBag()
     
     private let invokedViewWillAppear = PublishSubject<Void>()
+    let invokedDeleteChannel = PublishSubject<IndexPath>()
     
     lazy var channelTableView = UITableView().then {
         $0.register(ChannelTableViewCell.self, forCellReuseIdentifier: ChannelTableViewCell.cellId)
         $0.delegate = self
     }
+    let deleteChannelAlert = UIAlertController(title: .deleteChannel, message: .deleteChannel, preferredStyle: .alert)
     
     var channelTableViewDataSource: RxTableViewSectionedReloadDataSource<ChannelSectionModel>!
     
@@ -95,7 +97,7 @@ final class ChannelViewController: UIViewController {
         
         channelTableViewDataSource?.canEditRowAtIndexPath = { dataSource, index in return true }
     }
-    
+        
     func configureUI() {
         view.backgroundColor = .systemBackground
         
@@ -115,7 +117,8 @@ final class ChannelViewController: UIViewController {
     func bind() {
         let input = ChannelViewModel.Input(
             invokedViewWillAppear: invokedViewWillAppear,
-            selectedChannel: channelTableView.rx.itemSelected.asObservable()
+            selectedChannel: channelTableView.rx.itemSelected.asObservable(),
+            invokedDeleteChannel: invokedDeleteChannel
         )
         
         let output = viewModel.transform(input)

@@ -40,6 +40,7 @@ final class ChatViewModel {
         let didTapSendButton: Observable<String>
         let pickedImage: Observable<UIImage>
         let invokedViewWillAppear: Observable<Void>
+        let invokedViewWillDisappear: Observable<Void>
     }
     
     struct Output {
@@ -52,22 +53,22 @@ final class ChatViewModel {
         self.channelInfo = channelInfo
         self.isNewChat = isNewChat
         self.channel.accept(Channel(id: channelInfo.id, isAvailable: channelInfo.isAvailable))
-      
+        
         UserService.shared.currentUser_Rx
             .subscribe { [weak self] user in
                 guard let self else { return }
                 currentUser = user
-        }.dispose()
+            }.dispose()
     }
     
     // MARK: - API
     
-    private func setupListener() {
-        channel
+    private func setupChatListener(by inputObserver: Observable<Void>) {
+        inputObserver
             .withUnretained(self)
             .subscribe(onNext: { (owner, _) in
                 print(#function, "channel: ", owner.channelInfo.id)
-                owner.chatAPI.subscribe(id: owner.channelInfo.id)
+                owner.chatAPI.chatSubscribe(id: owner.channelInfo.id)
                     .asObservable()
                     .subscribe { messages in
                         owner.loadImageAndUpdateCells(messages)
@@ -80,12 +81,30 @@ final class ChatViewModel {
             .disposed(by: disposeBag)
     }
     
-    func removeListener() {
-        chatAPI.removeListenr()
+    private func setupChatStatusListener(by inputObserver: Observable<Void>) {
+        inputObserver
+            .withUnretained(self)
+            .subscribe { (owner, _) in
+                owner.chatAPI.chatStatusSubscribe(id: owner.channelInfo.id) { [weak self] result in
+                    guard let self = self else { return }
+                    switch result {
+                    case .success(let channel): self.channel.accept(channel)
+                    case .failure(let error): print("DEBUG - ", #function, error.localizedDescription)
+                    }
+                }
+            } onError: { error in
+                print("DEBUG - setupStatusListener Error: \(error.localizedDescription)")
+            }
+            .disposed(by: self.disposeBag)
     }
     
-    private func fetchWithUser() {
-        channel
+    func removeListener() {
+        chatAPI.removeChatListener()
+        chatAPI.removeChatStatusListener()
+    }
+    
+    private func fetchWithUser(by inputObserver: Observable<Void>) {
+        inputObserver
             .withUnretained(self)
             .subscribe { (owner, _) in
                 FirebaseAPI.shared.fetchUser(uid: owner.channelInfo.withUserId) { user in
@@ -99,12 +118,86 @@ final class ChatViewModel {
     // MARK: - Helpers
     
     func transform(_ input: Input) -> Output {
-        setupListener()
-        fetchWithUser()
+        setupChatListener(by: input.invokedViewWillAppear)
+        setupChatStatusListener(by: input.invokedViewWillAppear)
+        fetchWithUser(by: input.invokedViewWillAppear)
         sendMessage(by: input.didTapSendButton)
         sendPhoto(by: input.pickedImage)
-        resetAlarmNumber(by: input.invokedViewWillAppear)
+        resetAlarmInformation(by: input.invokedViewWillAppear)
+        resetNotiMangerInformation(by: input.invokedViewWillDisappear)
         return Output()
+    }
+    
+    private func sendMessage(by inputObserver: Observable<String>) {
+        inputObserver
+            .withUnretained(self)
+            .subscribe { (owner, text) in
+                print(#function)
+                guard let currentUser = owner.currentUser,
+                      let withUser = owner.withUser,
+                      let channel = owner.channel.value else { return }
+                let message = Message(user: currentUser, content: text, messageType: .chat)
+                if owner.isNewChat {
+                    print("isNewChat = \(owner.isNewChat)")
+                    owner.channelAPI.createChannel(channel: channel,
+                                                   owner: currentUser,
+                                                   withUser: withUser) {
+                        owner.saveMessage(message: message) {
+                            owner.isNewChat = false
+                        }
+                    }
+                } else {
+                    print("isNewChat = \(owner.isNewChat)")
+                    owner.saveMessage(message: message)
+                }
+            }
+            .disposed(by: disposeBag)
+    }
+    
+    private func sendPhoto(by inputObserver: Observable<UIImage>) {
+        inputObserver
+            .withUnretained(self)
+            .subscribe { (owner, image) in
+                guard let currentUser = owner.currentUser,
+                      let withUser = owner.withUser,
+                let channel = owner.channel.value else { return }
+                owner.isSendingPhoto.accept(true)
+                if owner.isNewChat {
+                    print("isNewChat = \(owner.isNewChat)")
+                    owner.channelAPI.createChannel(channel: channel, owner: currentUser, withUser: withUser) {
+                        owner.uploadImage(image: image, channel: channel)
+                        owner.isNewChat = false
+                    }
+                } else {
+                    owner.uploadImage(image: image, channel: channel)
+                }
+                NotiManager.shared.pushNotification(channel: channel,
+                                                    content: ("사진"),
+                                                    receiverFcmToken: withUser.fcmToken,
+                                                    from: currentUser)
+            }
+            .disposed(by: disposeBag)
+        
+    }
+    
+    private func resetAlarmInformation(by inputObserver: Observable<Void>) {
+        inputObserver
+            .withUnretained(self)
+            .subscribe { (owner, _) in
+                if let currentUser = owner.currentUser {
+                    owner.channelAPI.resetAlarmNumber(uid: currentUser.id, channelId: owner.channelInfo.id)
+                    NotiManager.shared.currentChatRoomId = owner.channelInfo.id
+                }
+            }
+            .disposed(by: disposeBag)
+    }
+    
+    private func resetNotiMangerInformation(by inputObserver: Observable<Void>) {
+        inputObserver
+            .subscribe { _ in
+                NotiManager.shared.currentChatRoomId = nil
+            }
+            .disposed(by: disposeBag)
     }
     
     private func loadImageAndUpdateCells(_ messages: [Message]) {
@@ -112,10 +205,13 @@ final class ChatViewModel {
             var message = message
             if let url = message.downloadURL {
                 StorageAPI.downloadImage(url: url) { [weak self] image in
-                    guard let image = image,
-                          let self = self else { return }
+                    guard let self = self else { return }
                     
-                    message.image = image
+                    if let image = image {
+                        message.image = image
+                    } else {
+                        message.image = UIImage(systemName: "xmark.circle")
+                    }
                     self.insertNewMessage(message)
                 }
             } else {
@@ -136,7 +232,11 @@ final class ChatViewModel {
         messages.sort()
         
         for i in 1..<messages.count {
-            if Calendar.current.isDate(standardMessage.sentDate, equalTo: messages[i].sentDate, toGranularity: .minute) && standardMessage.sender.senderId == messages[i].sender.senderId {
+            if Calendar.current.isDate(standardMessage.sentDate,
+                                       equalTo: messages[i].sentDate,
+                                       toGranularity: .minute)
+                &&
+                standardMessage.sender.senderId == messages[i].sender.senderId {
                 messages[i - 1].showTimeLabel = false
             } else {
                 messages[i - 1].showTimeLabel = true
@@ -146,62 +246,11 @@ final class ChatViewModel {
         
         messages[messages.count - 1].showTimeLabel = true
         self.messages.accept(messages)
-        print(self.messages.value.map { $0.showTimeLabel })
-    }
-    
-    private func sendMessage(by inputObserver: Observable<String>) {
-        inputObserver
-            .withUnretained(self)
-            .subscribe { (owner, text) in
-                print(#function)
-                guard let currentUser = owner.currentUser,
-                      let channel = owner.channel.value,
-                      let withUser = owner.withUser else { return }
-                let message = Message(user: currentUser, content: text)
-                if owner.isNewChat {
-                    print("isNewChat = \(owner.isNewChat)")
-                    owner.channelAPI.createChannel(channel: channel, owner: currentUser, withUser: withUser) {
-                        owner.saveMessage(message: message) {
-                            owner.isNewChat = false
-                        }
-                    }
-                } else {
-                    print("isNewChat = \(owner.isNewChat)")
-                    owner.saveMessage(message: message)
-                }
-            }
-            .disposed(by: disposeBag)
-    }
-    
-    private func sendPhoto(by inputObserver: Observable<UIImage>) {
-        inputObserver
-            .withUnretained(self)
-            .subscribe { (owner, image) in
-                guard let channel = owner.channel.value,
-                      let currentUser = owner.currentUser,
-                      let withUser = owner.withUser else { return }
-                owner.isSendingPhoto.accept(true)
-                if owner.isNewChat {
-                    print("isNewChat = \(owner.isNewChat)")
-                    owner.channelAPI.createChannel(channel: channel, owner: currentUser, withUser: withUser) {
-                        owner.uploadImage(image: image, channel: channel)
-                        owner.isNewChat = false
-                    }
-                } else {
-                    owner.uploadImage(image: image, channel: channel)
-                    
-                    // TODO: - NotiManager 적용
-                    //            NotiManager.shared.pushNotification(channel: channel, content: ("사진"), fcmToken: toUser!.fcmToken, from: user)
-                }
-            }
-            .disposed(by: disposeBag)
-        
     }
     
     private func uploadImage(image: UIImage, channel: Channel) {
         StorageAPI.uploadImage(image: image, channel: channel) { [weak self] url in
             guard let self = self,
-                  let channel = self.channel.value,
                   let currentUser = currentUser,
                   let withUser = withUser,
                   let url = url else { return }
@@ -209,50 +258,62 @@ final class ChatViewModel {
             self.isSendingPhoto.accept(false)
             var message = Message(user: currentUser, image: image)
             message.downloadURL = url
-            self.chatAPI.save(message) { error in
+            
+            // Date 메시지 첨부 전송 여부 로직
+            var saveMessages = [message]
+            let dateMessage = Message(user: currentUser, content: "", messageType: .date)
+            let lastMessage = messages.value.last
+            if messages.value.isEmpty {
+                saveMessages.append(dateMessage)
+            } else if !Calendar.current.isDate(message.sentDate, equalTo: lastMessage!.sentDate, toGranularity: .day) {
+                saveMessages.append(dateMessage)
+            }
+            
+            self.chatAPI.save(saveMessages) { error in
                 if let error = error {
                     print("DEBUG - inputBar Error: \(error.localizedDescription)")
                     return
                 }
             }
-            self.channelAPI.updateChannelInfo(owner: currentUser,
-                                               withUser: withUser,
-                                               channelId: channel.id,
-                                               message: message)
             
+            self.channelAPI.updateChannelInfo(owner: currentUser,
+                                              withUser: withUser,
+                                              channelId: channel.id,
+                                              message: message)
         }
     }
     
     private func saveMessage(message: Message, completion: (() -> Void)? = nil) {
-        chatAPI.save(message) { [weak self] error in
+        // Date 메시지 첨부 전송 여부 로직
+        var saveMessages = [message]
+        let dateMessage = Message(user: currentUser!, content: "", messageType: .date)
+        let lastMessage = messages.value.last
+        if messages.value.isEmpty {
+            saveMessages.append(dateMessage)
+        } else if !Calendar.current.isDate(message.sentDate, equalTo: lastMessage!.sentDate, toGranularity: .day) {
+            saveMessages.append(dateMessage)
+        }
+        
+        chatAPI.save(saveMessages) { [weak self] error in
             if let error = error {
                 print("DEBUG - inputBar Error: \(error.localizedDescription)")
                 return
             }
             guard let self = self,
-                  let channel = channel.value,
                   let currentUser = currentUser,
-                  let withUser = withUser else { return }
+                  let withUser = withUser,
+                  let channel = self.channel.value else { return }
             channelAPI.updateChannelInfo(owner: currentUser,
                                          withUser: withUser,
                                          channelId: channel.id,
                                          message: message)
-            // TODO: - NotiManagaer
-            //                NotiManager.shared.pushNotification(channel: channel, content: text, fcmToken: toUser!.fcmToken, from: user)
+            NotiManager.shared.pushNotification(channel: channel,
+                                                content: message.content,
+                                                receiverFcmToken: withUser.fcmToken,
+                                                from: currentUser)
             
             completion?()
         }
-    }
-    
-    private func resetAlarmNumber(by inputObserver: Observable<Void>) {
-        inputObserver
-            .withUnretained(self)
-            .subscribe { (owner, _) in
-                if let currentUser = owner.currentUser {
-                    owner.channelAPI.resetAlarmNumber(uid: currentUser.id, channelId: owner.channelInfo.id)
-                }
-            }
-            .disposed(by: disposeBag)
     }
     
     func showPHPickerView(picker: UIViewController) {

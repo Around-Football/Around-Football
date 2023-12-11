@@ -68,6 +68,22 @@ extension ChatViewController {
             })
             .asObservable()
     }
+    
+    func bindEnabledSendObjectButton() {
+        viewModel.channel
+            .withUnretained(self)
+            .subscribe { (owner, channel) in
+                owner.messageInputBar.leftStackViewItems.forEach {
+                    guard let item = $0 as? InputBarButtonItem,
+                          let channel = channel else { return }
+                    DispatchQueue.main.async {
+                        item.isEnabled = channel.isAvailable
+                        owner.messageInputBar.isHidden = !channel.isAvailable
+                    }
+                }
+            }
+            .disposed(by: disposeBag)
+    }
 }
 
 extension ChatViewController: MessagesDataSource {
@@ -91,6 +107,18 @@ extension ChatViewController: MessagesDataSource {
                                   attributes: [.font: UIFont.preferredFont(forTextStyle: .caption1),
                                                .foregroundColor: UIColor(white: 0.3, alpha: 1)])
     }
+    
+    func customCell(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> UICollectionViewCell {
+        guard let message = message as? Message else { return UICollectionViewCell() }
+        guard let cell = messagesCollectionView.dequeueReusableCell(withReuseIdentifier: CustomInfoMessageCell.cellId, 
+                                                                    for: indexPath) as? CustomInfoMessageCell else {
+            return UICollectionViewCell()
+        }
+        
+        cell.label.text = message.content
+        cell.updateCustomInfoLabelUI()
+        return cell
+    }
 }
 
 extension ChatViewController: MessagesLayoutDelegate {
@@ -113,6 +141,10 @@ extension ChatViewController: MessagesLayoutDelegate {
                     in messagesCollectionView: MessagesCollectionView) -> CGSize? {
         return CGSize.zero
     }
+    
+    func customCellSizeCalculator(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> CellSizeCalculator {
+        return CustomInfoMessageCellSizeLayout(layout: messagesCollectionView.messagesCollectionViewFlowLayout)
+    }
 }
 
 // 상대방이 보낸 메시지, 내가 보낸 메시지를 구분하여 색상과 모양 지정
@@ -121,6 +153,11 @@ extension ChatViewController: MessagesDisplayDelegate {
     func backgroundColor(for message: MessageType,
                          at indexPath: IndexPath,
                          in messagesCollectionView: MessagesCollectionView) -> UIColor {
+        
+        if (message as? Message)?.image != nil {
+            return .white
+        }
+        
         return isFromCurrentSender(message: message) ? .primary : .incomingMessageBackground
     }
     
@@ -134,7 +171,11 @@ extension ChatViewController: MessagesDisplayDelegate {
     func messageStyle(for message: MessageType,
                       at indexPath: IndexPath,
                       in messagesCollectionView: MessagesCollectionView) -> MessageStyle {
-        return .bubble
+        guard let message = message as? Message else { return .bubble }
+        switch message.messageType {
+        case .chat: return .bubble
+        default: return .none
+        }
     }
 
     // 말풍선 측면에 발송 시각 표시
@@ -142,7 +183,8 @@ extension ChatViewController: MessagesDisplayDelegate {
                                           at indexPath: IndexPath) -> NSAttributedString? {
         guard let message = message as? Message else { return nil }
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "HH:mm"
+        dateFormatter.locale = Locale(identifier: "ko_KR")
+        dateFormatter.dateFormat = "a h:mm"
         let dateString = dateFormatter.string(from: message.sentDate)
         
         let isShowingTimeLabel = message.showTimeLabel
@@ -158,6 +200,12 @@ extension ChatViewController: MessagesDisplayDelegate {
         let isShowingTimeLabel = message.showTimeLabel
 
         return isShowingTimeLabel ? 16 : 0
+    }
+    
+    func messageBottomLabelAlignment(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> LabelAlignment? {
+        let leftInset = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 0)
+        let rightInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 10)
+        return isFromCurrentSender(message: message) ? .some(.init(textAlignment: .right, textInsets: rightInset)) : .some(.init(textAlignment: .left, textInsets: leftInset))
     }
 }
 
@@ -178,12 +226,6 @@ extension ChatViewController: PHPickerViewControllerDelegate {
     
     func imagePickerControllerDidCancel(_ picker: PHPickerViewController) {
         picker.dismiss(animated: true)
-    }
-}
-
-extension ChatViewController: InputBarAccessoryViewDelegate {
-    func inputBar(_ inputBar: InputBarAccessoryView, didPressSendButtonWith text: String) {
-        //        inputBar.inputTextView.text.removeAll()
     }
 }
 
