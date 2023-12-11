@@ -16,7 +16,7 @@ struct User: Codable {
     var mainUsedFeet: String
     var position: [String]
     //TODO: - FCM Token 추가
-    var fcmToken: String?
+    var fcmToken: String
     //TODO: - 유저 북마크 배열 추가
     var bookmarkedFields: [String?] //북마크한 필드id 저장
     

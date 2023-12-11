@@ -93,8 +93,8 @@ final class DetailViewController: UIViewController {
         configeUI()
         bindUI()
     }
-    
-    override func viewWillAppear(_ animated: Bool) {
+  
+      override func viewWillAppear(_ animated: Bool) {
         invokedViewWillAppear.onNext(()) //cell 실시간 데이터 반영
     }
     
@@ -113,7 +113,11 @@ final class DetailViewController: UIViewController {
     
     @objc
     private func sendMessageButtonTapped() {
-        viewModel.checkChannel()
+        if (try? UserService.shared.currentUser_Rx.value()) != nil {
+            viewModel.checkChannelAndPushChatViewController()
+        } else {
+            viewModel.showLoginView()
+        }
     }
     
     // MARK: - Helper

@@ -52,6 +52,13 @@ final class FirebaseAPI {
         }
     }
     
+    func fetchUser(uid: String) async throws -> User {
+        let result = try await REF_USER.document(uid).getDocument()
+        
+        let user = User(dictionary: result.data()!)
+        return user
+    }
+    
     
     func fetchFields(completion: @escaping(([Field]) -> Void)) {
         REF_FIELD.getDocuments { snapshot, error in
@@ -90,9 +97,7 @@ final class FirebaseAPI {
         let data = ["fcmToken": fcmToken]
         updateRefData(ref: ref, data: data, completion: completion)
     }
-    
-    // TODO: - ChannelAPI와 통합하기
-    
+        
     func updateRefData(ref: DocumentReference, data: [String: Any], completion: @escaping ((Error?) -> Void)) {
         ref.updateData(data) { error in
             if let error = error {

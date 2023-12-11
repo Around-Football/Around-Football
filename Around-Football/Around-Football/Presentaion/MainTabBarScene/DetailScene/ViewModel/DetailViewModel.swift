@@ -40,7 +40,6 @@ final class DetailViewModel {
     
     func transform(_ input: Input) -> Output {
         let recruitItem = loadRecruitItem(by: input.invokedViewWillAppear)
-        checkChannel()
         let output = Output(recruitItem: recruitItem)
         return output
     }
@@ -61,7 +60,7 @@ final class DetailViewModel {
             }
     }
     
-    func checkChannel() {
+    func checkChannelAndPushChatViewController() {
         guard let currentUser = try? currentUser.value(),
         let recruitUser = recruitUser else { return }
         channelAPI.checkExistAvailableChannel(owner: currentUser,
@@ -76,5 +75,9 @@ final class DetailViewModel {
                 self.coordinator?.pushChatViewController(channelInfo: channelInfo, isNewChat: true)
             }
         }
+    }
+
+    func showLoginView() {
+        coordinator?.presentLoginViewController()
     }
 }

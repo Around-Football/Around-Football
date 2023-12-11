@@ -31,6 +31,7 @@ class ImageMessageViewController: UIViewController {
         let button = UIButton()
         button.setImage(UIImage(systemName: "xmark"), for: .normal)
         button.addTarget(self, action: #selector(closeButtonTapped), for: .touchUpInside)
+        button.tintColor = .gray
         
         return button
     }()
