@@ -228,18 +228,14 @@ extension InfoViewController: UICollectionViewDelegateFlowLayout, UICollectionVi
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
-        //TODO: - 코디네이터 분리
         let title = iconAndImage[indexPath.item].title
         switch title {
         case _ where "관심 글" == title:
-            let vc = BookmarkPostViewController()
-            present(vc, animated: true)
+            viewModel.coordinator?.pushBookmarkPostViewController()
         case _ where "작성 글" == title:
-            let vc = WrittenPostViewController()
-            present(vc, animated: true)
+            viewModel.coordinator?.pushWrittenPostViewController()
         case _ where "신청 글" == title:
-            let vc = ApplicationPostViewController()
-            present(vc, animated: true)
+            viewModel.coordinator?.pushApplicationPostViewController()
         default:
             print("cell 없음")
         }
