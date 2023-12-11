@@ -155,13 +155,43 @@ final class FirebaseAPI {
 // MARK: - Applicants 관련 함수
 extension FirebaseAPI {
     //유저가 신청하기 누르면 pendingApplicationsUID 추가
+    func loadBookmarkPostRx(userID: String?) -> Observable<[Recruit]> {
+        return Observable.create { [weak self] observer in
+            guard let self else { return Disposables.create() }
+            //유저불러옴
+            guard let user = try? UserService.shared.currentUser_Rx.value() else { return Disposables.create() }
+            
+            let userBookmarkList = user.bookmarkedFields
+            
+            REF_RECRUIT
+                .whereField("fieldID", in: userBookmarkList)
+                .getDocuments { snapshot, error in
+                    if error != nil {
+                        print("ppendingApplicantUID 추가 오류")
+                    }
+                    
+                    guard let documents = snapshot?.documents else { return }
+                    let bookmarkRecruits = documents.compactMap { document -> Recruit? in
+                        var recruitData = document.data()
+                        return Recruit(dictionary: recruitData)
+                    }
+                    
+                    observer.onNext(bookmarkRecruits)
+                    observer.onCompleted()
+                }
+            
+            return Disposables.create()
+        }
+    }
+    
+    //유저가 신청하기 누르면 pendingApplicationsUID 추가
     func loadDetailCellApplicantRx(fieldID: String?) -> Observable<Recruit> {
         return Observable.create { observer in
             REF_RECRUIT.document(fieldID ?? "").getDocument { snapshot, error in
                 if error != nil {
                     print("ppendingApplicantUID 추가 오류")
                 }
-    
+                
                 guard let data = snapshot?.data() else { return }
                 
                 observer.onNext(Recruit(dictionary: data))
