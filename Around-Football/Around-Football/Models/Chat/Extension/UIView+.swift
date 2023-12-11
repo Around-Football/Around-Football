@@ -22,7 +22,6 @@ extension UIView {
         self.layer.shadowOffset = CGSize(width: 0, height: 4)
         self.layer.shadowRadius = LayoutOptions.shadowCornerRadious
         self.layer.shadowOpacity = LayoutOptions.shadowOpacity
-
     }
     
     func makeSideAutoLayout() {

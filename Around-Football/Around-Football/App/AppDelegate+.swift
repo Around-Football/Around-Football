@@ -22,9 +22,7 @@ extension AppDelegate: UNUserNotificationCenterDelegate, MessagingDelegate {
             return
         }
         
-        if UIApplication.shared.applicationState == .active {
-            
-        } else {
+        if UIApplication.shared.applicationState != .active {
             window = UIWindow(frame: UIScreen.main.bounds)
             window?.makeKeyAndVisible()
             let navigationController = UINavigationController()
@@ -34,33 +32,22 @@ extension AppDelegate: UNUserNotificationCenterDelegate, MessagingDelegate {
             appCoordinator = AppCoordinator(navigationController: navigationController)
             appCoordinator?.start()
         }
-        deepLinkChatView(channelId: channelId, fromUserId: fromUserId)
         
+        deepLinkChatView(channelId: channelId, fromUserId: fromUserId)
     }
     
     private func deepLinkChatView(channelId: String, fromUserId: String) {
         if let _ = Auth.auth().currentUser?.uid {
             Task {
                 do {
-                    //                    let currentUser = try await FirebaseAPI.shared.fetchUser(uid: uid)
-                    //                    let fromUser = try await FirebaseAPI.shared.fetchUser(uid: fromUserId)
                     guard let channelInfo = try await ChannelAPI.shared.fetchChannelInfo(channelId: channelId) else {
                         throw NSError(domain: "ChannelInfo Fetch Error", code: -1)
                     }
                     let appCoordinator = AppCoordinator.shared
-                    //                    let chatTabCoordinator = ChatTabCoordinator(navigationController: appCoordinator.navigationController)
                     if let mainTabBarCoordinator = appCoordinator.childCoordinators
                         .first(where: { $0 is MainTabBarCoordinator }) as? MainTabBarCoordinator {
                         mainTabBarCoordinator.chatCoordinatorDeepLink(channelInfo: channelInfo)
                     }
-                    
-                    
-                    //                        window?.rootViewController = navigationController
-                    //
-                    //                        //AppCoordinator 생성, 첫 뷰 그리기
-                    //                        appCoordinator = AppCoordinator(navigationController: navigationController)
-                    //                        appCoordinator?.start()
-                    //                        appCoordinator?.handleChatDeepLink(channelInfo: channelInfo)
                 } catch(let error as NSError) {
                     print("DEBUG - Tap Push Notification Error", error.localizedDescription)
                 }
