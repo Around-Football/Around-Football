@@ -102,6 +102,7 @@
 		7C2F9FE32B25EFC200F1EF1B /* BookmarkPostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C2F9FE22B25EFC200F1EF1B /* BookmarkPostViewController.swift */; };
 		7C2F9FE52B25EFE000F1EF1B /* WrittenPostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C2F9FE42B25EFE000F1EF1B /* WrittenPostViewController.swift */; };
 		7C2F9FE72B25EFF500F1EF1B /* ApplicationPostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C2F9FE62B25EFF500F1EF1B /* ApplicationPostViewController.swift */; };
+		7C2F9FE92B26E73200F1EF1B /* InfoPostViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C2F9FE82B26E73200F1EF1B /* InfoPostViewModel.swift */; };
 		7C33060F2B109E780042A815 /* DetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C33060E2B109E780042A815 /* DetailView.swift */; };
 		7C5F775C2AC9C698004CE48F /* InviteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C5F775B2AC9C698004CE48F /* InviteViewController.swift */; };
 		7C5F775E2AC9CE8A004CE48F /* DateCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C5F775D2AC9CE8A004CE48F /* DateCell.swift */; };
@@ -201,6 +202,7 @@
 		7C2F9FE22B25EFC200F1EF1B /* BookmarkPostViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkPostViewController.swift; sourceTree = "<group>"; };
 		7C2F9FE42B25EFE000F1EF1B /* WrittenPostViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WrittenPostViewController.swift; sourceTree = "<group>"; };
 		7C2F9FE62B25EFF500F1EF1B /* ApplicationPostViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplicationPostViewController.swift; sourceTree = "<group>"; };
+		7C2F9FE82B26E73200F1EF1B /* InfoPostViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoPostViewModel.swift; sourceTree = "<group>"; };
 		7C33060E2B109E780042A815 /* DetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailView.swift; sourceTree = "<group>"; };
 		7C5F775B2AC9C698004CE48F /* InviteViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InviteViewController.swift; sourceTree = "<group>"; };
 		7C5F775D2AC9CE8A004CE48F /* DateCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateCell.swift; sourceTree = "<group>"; };
@@ -583,6 +585,7 @@
 			children = (
 				7C94EBD42B01BF0600A7E42A /* InfoViewModel.swift */,
 				66656F9E2AD921D700AE1AFA /* FieldDetailViewModel.swift */,
+				7C2F9FE82B26E73200F1EF1B /* InfoPostViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -907,6 +910,7 @@
 				7C2B1ADE2AF4B2DA0052EC64 /* InputInfoCoordinator.swift in Sources */,
 				7929A31A2ADFED07006ED4FA /* ApplicantListTableViewCell.swift in Sources */,
 				7929A31D2ADFFB15006ED4FA /* ApplicationStatusViewController+.swift in Sources */,
+				7C2F9FE92B26E73200F1EF1B /* InfoPostViewModel.swift in Sources */,
 				273674842AC308D1003ADE3F /* FieldModel.swift in Sources */,
 				669674882AC3E82B0067FD48 /* MainTabController.swift in Sources */,
 				7CE2B4F72B06142B00ECF71C /* InviteCoordinator.swift in Sources */,

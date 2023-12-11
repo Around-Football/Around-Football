@@ -7,46 +7,67 @@
 
 import UIKit
 
+import RxCocoa
+import RxSwift
 import SnapKit
 import Then
 
 final class BookmarkPostViewController: UIViewController {
+    
+    // MARK: - Properties
+    
+    var viewModel: InfoPostViewModel
+    private let loadBookmarkPost: PublishSubject<Void> = PublishSubject()
+    private let disposeBag = DisposeBag()
 
     private var bookmarkTableView = UITableView().then {
         $0.register(HomeTableViewCell.self, forCellReuseIdentifier: HomeTableViewCell.id)
     }
-
+    
+    // MARK: - Lifecycles
+    
+    init(viewModel: InfoPostViewModel) {
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .red
         configureUI()
+        bindUI()
+        loadBookmarkPost.onNext(())
     }
     
-//    private func bindUI() {
-//        let input = HomeViewModel.Input(loadRecruitList: loadRecruitList.asObservable())
-//        
-//        let output = viewModel.transform(input)
-//        
-//        output
-//            .recruitList
-//            .bind(to: homeTableView.rx.items(cellIdentifier: HomeTableViewCell.id,
-//                                             cellType: HomeTableViewCell.self)) { [weak self] index, item, cell in
-//                guard let self else { return }
-//                cell.viewModel = viewModel
-//                cell.bindContents(item: item)
-//                cell.configureButtonTap()
-//            }.disposed(by: disposeBag)
-//        
-//        homeTableView.rx.modelSelected(Recruit.self)
-//            .subscribe(onNext: { [weak self] selectedRecruit in
-//                guard let self else { return }
-//                handleItemSelected(selectedRecruit)
-//            })
-//            .disposed(by: disposeBag)
-//    }
-    
-    private func bind() {
+    private func bindUI() {
+        let input = InfoPostViewModel.Input(loadBookmarkPost: loadBookmarkPost.asObservable())
         
+        let output = viewModel.transform(input)
+        
+        output
+            .bookmartPost
+            .bind(to: bookmarkTableView.rx.items(cellIdentifier: HomeTableViewCell.id,
+                                             cellType: HomeTableViewCell.self)) { [weak self] index, item, cell in
+                guard let self else { return }
+//                cell.viewModel = viewModel
+                cell.bindContents(item: item)
+                cell.configureButtonTap()
+            }.disposed(by: disposeBag)
+        
+        bookmarkTableView.rx.modelSelected(Recruit.self)
+            .subscribe(onNext: { [weak self] selectedRecruit in
+                guard let self else { return }
+                handleItemSelected(recruitItem: selectedRecruit)
+            })
+            .disposed(by: disposeBag)
+    }
+    
+    private func handleItemSelected(recruitItem: Recruit) {
+        viewModel.coordinator?.pushDetailCell(recruitItem: recruitItem)
     }
     
     private func configureUI() {
