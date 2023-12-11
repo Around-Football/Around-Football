@@ -67,7 +67,6 @@ final class ChannelViewController: UIViewController {
         configure()
         configureUI()
         bind()
-        
     }
     
     override func viewWillAppear(_ animated: Bool) {

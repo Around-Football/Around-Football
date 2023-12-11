@@ -239,7 +239,7 @@ extension CalenderViewController {
     private func updateTitle() {
         dateFormatter.locale = Locale(identifier: "ko_kr")
         dateFormatter.timeZone = TimeZone(abbreviation: "KST")
-        dateFormatter.dateFormat = "yyyy년 MM월"
+        dateFormatter.dateFormat = "yyyy년 M월"
         let calenderMonth = dateFormatter.string(from: calanderDate)
         monthLabel.text = calenderMonth
     }
