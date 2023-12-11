@@ -21,9 +21,9 @@ final class HomeViewModel {
     
     // MARK: - Properties
     
-    private let disposeBag = DisposeBag()
     weak var coordinator: HomeTabCoordinator?
-    
+    private let disposeBag = DisposeBag()
+
     // MARK: - Lifecycles
     
     init(coordinator: HomeTabCoordinator) {
@@ -44,5 +44,29 @@ final class HomeViewModel {
                 let recruitObservable = FirebaseAPI.shared.readRecruitRx(input: inputTuple)
                 return recruitObservable
             }
+    }
+    
+    // MARK: - Cell 북마크 메서드
+    
+    func addBookmark(uid: String, fieldID: String?) {
+        FirebaseAPI.shared.fetchUser(uid: uid) { user in
+            var user = user
+            var bookmark = user.bookmarkedFields
+            bookmark.append(fieldID)
+            user.bookmarkedFields = bookmark
+            FirebaseAPI.shared.updateUser(user)
+        }
+    }
+    
+    func removeBookmark(uid: String, fieldID: String?) {
+        FirebaseAPI.shared.fetchUser(uid: uid) { user in
+            var user = user
+            var bookmark = user.bookmarkedFields
+            bookmark.removeAll { fID in
+                fieldID == fID
+            }
+            user.bookmarkedFields = bookmark
+            FirebaseAPI.shared.updateUser(user)
+        }
     }
 }

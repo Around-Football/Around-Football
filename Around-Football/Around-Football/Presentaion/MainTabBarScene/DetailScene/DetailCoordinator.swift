@@ -10,10 +10,11 @@ import UIKit
 final class DetailCoordinator: BaseCoordinator {
     
     var type: CoordinatorType = .detailScene
+    var recruitItem: Recruit?
     
     // MARK: - 이동할때 각 DetailView에 Recruit 전해줌. 다른 뷰에서 쓸 수도 있어서 옵셔널
     
-    func start(recruitItem: Recruit?) {
+    override func start() {
         let viewModel = DetailViewModel(coordinator: self, recruitItem: recruitItem)
         let controller = DetailViewController(viewModel: viewModel)
         navigationController?.pushViewController(controller, animated: true)
@@ -26,7 +27,9 @@ final class DetailCoordinator: BaseCoordinator {
     }
     
     func pushApplicationStatusViewController() {
-        let controller = ApplicationStatusViewController()
+        let viewModel = ApplicantListViewModel(coordinator: self)
+        viewModel.recruitItem = recruitItem
+        let controller = ApplicantListViewController(viewModel: viewModel)
         navigationController?.pushViewController(controller, animated: true)
     }
     

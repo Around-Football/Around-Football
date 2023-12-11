@@ -74,8 +74,8 @@
 		7929A30F2ADE4B45006ED4FA /* InputInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7929A30E2ADE4B45006ED4FA /* InputInfoViewController.swift */; };
 		7929A3112ADEAD35006ED4FA /* InputInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7929A3102ADEAD35006ED4FA /* InputInfoView.swift */; };
 		7929A3132ADEB319006ED4FA /* InputInfoViewController+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7929A3122ADEB319006ED4FA /* InputInfoViewController+.swift */; };
-		7929A3182ADFECD9006ED4FA /* ApplicationStatusViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7929A3172ADFECD9006ED4FA /* ApplicationStatusViewController.swift */; };
-		7929A31A2ADFED07006ED4FA /* ApplicationStatusTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7929A3192ADFED07006ED4FA /* ApplicationStatusTableViewCell.swift */; };
+		7929A3182ADFECD9006ED4FA /* ApplicantListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7929A3172ADFECD9006ED4FA /* ApplicantListViewController.swift */; };
+		7929A31A2ADFED07006ED4FA /* ApplicantListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7929A3192ADFED07006ED4FA /* ApplicantListTableViewCell.swift */; };
 		7929A31D2ADFFB15006ED4FA /* ApplicationStatusViewController+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7929A31C2ADFFB15006ED4FA /* ApplicationStatusViewController+.swift */; };
 		7C141C622ADA5F38002CF180 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C141C612ADA5F38002CF180 /* LoginViewController.swift */; };
 		7C141C652ADA6008002CF180 /* KakaoSDK in Frameworks */ = {isa = PBXBuildFile; productRef = 7C141C642ADA6008002CF180 /* KakaoSDK */; };
@@ -92,13 +92,17 @@
 		7C2B1AE72AF4BCB40052EC64 /* ChatViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C2B1AE62AF4BCB40052EC64 /* ChatViewModel.swift */; };
 		7C2B1AEC2AF4BD170052EC64 /* DetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C2B1AEB2AF4BD170052EC64 /* DetailViewModel.swift */; };
 		7C2B1AF12AF4BD460052EC64 /* InviteViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C2B1AF02AF4BD460052EC64 /* InviteViewModel.swift */; };
-		7C2B1AF72AF4BE160052EC64 /* ApplicationStatusViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C2B1AF62AF4BE160052EC64 /* ApplicationStatusViewModel.swift */; };
+		7C2B1AF72AF4BE160052EC64 /* ApplicantListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C2B1AF62AF4BE160052EC64 /* ApplicantListViewModel.swift */; };
 		7C2B1AFA2AF4C1C90052EC64 /* InviteViewController+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C2B1AF92AF4C1C90052EC64 /* InviteViewController+.swift */; };
 		7C2B1AFC2AF4CE8A0052EC64 /* AppCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C2B1AFB2AF4CE8A0052EC64 /* AppCoordinator.swift */; };
 		7C2B1AFE2AF4D28D0052EC64 /* HomeTabCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C2B1AFD2AF4D28D0052EC64 /* HomeTabCoordinator.swift */; };
 		7C2B1B002AF4D2B40052EC64 /* MapTabCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C2B1AFF2AF4D2B40052EC64 /* MapTabCoordinator.swift */; };
 		7C2B1B022AF4D2E30052EC64 /* ChatTabCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C2B1B012AF4D2E30052EC64 /* ChatTabCoordinator.swift */; };
 		7C2B1B042AF4D30D0052EC64 /* InfoTabCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C2B1B032AF4D30D0052EC64 /* InfoTabCoordinator.swift */; };
+		7C2F9FE32B25EFC200F1EF1B /* BookmarkPostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C2F9FE22B25EFC200F1EF1B /* BookmarkPostViewController.swift */; };
+		7C2F9FE52B25EFE000F1EF1B /* WrittenPostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C2F9FE42B25EFE000F1EF1B /* WrittenPostViewController.swift */; };
+		7C2F9FE72B25EFF500F1EF1B /* ApplicationPostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C2F9FE62B25EFF500F1EF1B /* ApplicationPostViewController.swift */; };
+		7C2F9FE92B26E73200F1EF1B /* InfoPostViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C2F9FE82B26E73200F1EF1B /* InfoPostViewModel.swift */; };
 		7C33060F2B109E780042A815 /* DetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C33060E2B109E780042A815 /* DetailView.swift */; };
 		7C5F775C2AC9C698004CE48F /* InviteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C5F775B2AC9C698004CE48F /* InviteViewController.swift */; };
 		7C5F775E2AC9CE8A004CE48F /* DateCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C5F775D2AC9CE8A004CE48F /* DateCell.swift */; };
@@ -175,8 +179,8 @@
 		7929A30E2ADE4B45006ED4FA /* InputInfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputInfoViewController.swift; sourceTree = "<group>"; };
 		7929A3102ADEAD35006ED4FA /* InputInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputInfoView.swift; sourceTree = "<group>"; };
 		7929A3122ADEB319006ED4FA /* InputInfoViewController+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "InputInfoViewController+.swift"; sourceTree = "<group>"; };
-		7929A3172ADFECD9006ED4FA /* ApplicationStatusViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplicationStatusViewController.swift; sourceTree = "<group>"; };
-		7929A3192ADFED07006ED4FA /* ApplicationStatusTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplicationStatusTableViewCell.swift; sourceTree = "<group>"; };
+		7929A3172ADFECD9006ED4FA /* ApplicantListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplicantListViewController.swift; sourceTree = "<group>"; };
+		7929A3192ADFED07006ED4FA /* ApplicantListTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplicantListTableViewCell.swift; sourceTree = "<group>"; };
 		7929A31C2ADFFB15006ED4FA /* ApplicationStatusViewController+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ApplicationStatusViewController+.swift"; sourceTree = "<group>"; };
 		7C141C612ADA5F38002CF180 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		7C2B1AC62AF4B10B0052EC64 /* LoginCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginCoordinator.swift; sourceTree = "<group>"; };
@@ -188,13 +192,17 @@
 		7C2B1AE62AF4BCB40052EC64 /* ChatViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewModel.swift; sourceTree = "<group>"; };
 		7C2B1AEB2AF4BD170052EC64 /* DetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewModel.swift; sourceTree = "<group>"; };
 		7C2B1AF02AF4BD460052EC64 /* InviteViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InviteViewModel.swift; sourceTree = "<group>"; };
-		7C2B1AF62AF4BE160052EC64 /* ApplicationStatusViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplicationStatusViewModel.swift; sourceTree = "<group>"; };
+		7C2B1AF62AF4BE160052EC64 /* ApplicantListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplicantListViewModel.swift; sourceTree = "<group>"; };
 		7C2B1AF92AF4C1C90052EC64 /* InviteViewController+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "InviteViewController+.swift"; sourceTree = "<group>"; };
 		7C2B1AFB2AF4CE8A0052EC64 /* AppCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCoordinator.swift; sourceTree = "<group>"; };
 		7C2B1AFD2AF4D28D0052EC64 /* HomeTabCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeTabCoordinator.swift; sourceTree = "<group>"; };
 		7C2B1AFF2AF4D2B40052EC64 /* MapTabCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapTabCoordinator.swift; sourceTree = "<group>"; };
 		7C2B1B012AF4D2E30052EC64 /* ChatTabCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatTabCoordinator.swift; sourceTree = "<group>"; };
 		7C2B1B032AF4D30D0052EC64 /* InfoTabCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoTabCoordinator.swift; sourceTree = "<group>"; };
+		7C2F9FE22B25EFC200F1EF1B /* BookmarkPostViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkPostViewController.swift; sourceTree = "<group>"; };
+		7C2F9FE42B25EFE000F1EF1B /* WrittenPostViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WrittenPostViewController.swift; sourceTree = "<group>"; };
+		7C2F9FE62B25EFF500F1EF1B /* ApplicationPostViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplicationPostViewController.swift; sourceTree = "<group>"; };
+		7C2F9FE82B26E73200F1EF1B /* InfoPostViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoPostViewModel.swift; sourceTree = "<group>"; };
 		7C33060E2B109E780042A815 /* DetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailView.swift; sourceTree = "<group>"; };
 		7C5F775B2AC9C698004CE48F /* InviteViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InviteViewController.swift; sourceTree = "<group>"; };
 		7C5F775D2AC9CE8A004CE48F /* DateCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateCell.swift; sourceTree = "<group>"; };
@@ -311,7 +319,6 @@
 				7C2B1AC32AF4AE6C0052EC64 /* App */,
 				7C2B1AC42AF4B0B60052EC64 /* Presentaion */,
 				2736747F2AC308D1003ADE3F /* Models */,
-				7CE25AE72ACAC3370014132F /* Extension */,
 				663417C82AD68299002FE2CA /* Network */,
 				272918552AFA6087009C9042 /* Service */,
 				7CE563A82AD13E82005DE2DF /* Utiles */,
@@ -363,6 +370,7 @@
 				668EE4A42AFCB0C5007A8844 /* ImageMediaItemModel.swift */,
 				668EE4A62AFCB120007A8844 /* MessageModel.swift */,
 				668EE4A92AFCB8F2007A8844 /* SenderModel.swift */,
+				7CE25AE72ACAC3370014132F /* Extension */,
 				668EE4AB2AFCB919007A8844 /* StreamErrorModel.swift */,
 			);
 			path = Chat;
@@ -577,6 +585,7 @@
 			children = (
 				7C94EBD42B01BF0600A7E42A /* InfoViewModel.swift */,
 				66656F9E2AD921D700AE1AFA /* FieldDetailViewModel.swift */,
+				7C2F9FE82B26E73200F1EF1B /* InfoPostViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -705,7 +714,7 @@
 		7C2B1AF42AF4BDF40052EC64 /* ViewModel */ = {
 			isa = PBXGroup;
 			children = (
-				7C2B1AF62AF4BE160052EC64 /* ApplicationStatusViewModel.swift */,
+				7C2B1AF62AF4BE160052EC64 /* ApplicantListViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -713,9 +722,9 @@
 		7C2B1AF52AF4BDFA0052EC64 /* View */ = {
 			isa = PBXGroup;
 			children = (
-				7929A3172ADFECD9006ED4FA /* ApplicationStatusViewController.swift */,
+				7929A3172ADFECD9006ED4FA /* ApplicantListViewController.swift */,
+				7929A3192ADFED07006ED4FA /* ApplicantListTableViewCell.swift */,
 				7929A31C2ADFFB15006ED4FA /* ApplicationStatusViewController+.swift */,
-				7929A3192ADFED07006ED4FA /* ApplicationStatusTableViewCell.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -734,6 +743,9 @@
 			children = (
 				7CE0143D2AF8C5B700ED77D2 /* EditViewController.swift */,
 				7CE0143F2AF8C5C300ED77D2 /* SettingViewController.swift */,
+				7C2F9FE22B25EFC200F1EF1B /* BookmarkPostViewController.swift */,
+				7C2F9FE42B25EFE000F1EF1B /* WrittenPostViewController.swift */,
+				7C2F9FE62B25EFF500F1EF1B /* ApplicationPostViewController.swift */,
 			);
 			path = InfoDetailView;
 			sourceTree = "<group>";
@@ -888,15 +900,17 @@
 				7C5F775E2AC9CE8A004CE48F /* DateCell.swift in Sources */,
 				7C94EBD52B01BF0600A7E42A /* InfoViewModel.swift in Sources */,
 				66656FA12ADD2FB800AE1AFA /* FieldRecruitTableViewCell.swift in Sources */,
+				7C2F9FE32B25EFC200F1EF1B /* BookmarkPostViewController.swift in Sources */,
 				7CB21BA32AC94D36001D0058 /* DetailViewController.swift in Sources */,
-				7929A3182ADFECD9006ED4FA /* ApplicationStatusViewController.swift in Sources */,
+				7929A3182ADFECD9006ED4FA /* ApplicantListViewController.swift in Sources */,
 				7C5F77622AC9DB7B004CE48F /* PeopleCountView.swift in Sources */,
 				27058ED12B06814F00C107F9 /* SearchCoordinator.swift in Sources */,
 				274C22112AD6D6EF005469E6 /* HomeTableViewCell.swift in Sources */,
 				7C2B1AFC2AF4CE8A0052EC64 /* AppCoordinator.swift in Sources */,
 				7C2B1ADE2AF4B2DA0052EC64 /* InputInfoCoordinator.swift in Sources */,
-				7929A31A2ADFED07006ED4FA /* ApplicationStatusTableViewCell.swift in Sources */,
+				7929A31A2ADFED07006ED4FA /* ApplicantListTableViewCell.swift in Sources */,
 				7929A31D2ADFFB15006ED4FA /* ApplicationStatusViewController+.swift in Sources */,
+				7C2F9FE92B26E73200F1EF1B /* InfoPostViewModel.swift in Sources */,
 				273674842AC308D1003ADE3F /* FieldModel.swift in Sources */,
 				669674882AC3E82B0067FD48 /* MainTabController.swift in Sources */,
 				7CE2B4F72B06142B00ECF71C /* InviteCoordinator.swift in Sources */,
@@ -909,6 +923,7 @@
 				668EE49E2AFCABCA007A8844 /* ChannelViewModel.swift in Sources */,
 				7C2B1B022AF4D2E30052EC64 /* ChatTabCoordinator.swift in Sources */,
 				7CBFED752AE69FE400915D65 /* UserModel.swift in Sources */,
+				7C2F9FE52B25EFE000F1EF1B /* WrittenPostViewController.swift in Sources */,
 				7C5F77642AC9E180004CE48F /* UIView+.swift in Sources */,
 				669674932AC3E9DF0067FD48 /* InfoViewController.swift in Sources */,
 				668EE4C32B050373007A8844 /* ImageTransition.swift in Sources */,
@@ -917,7 +932,7 @@
 				668EE4BA2B04E37C007A8844 /* ChatAPI.swift in Sources */,
 				7C2B1AE02AF4B5DB0052EC64 /* InputInfoViewModel.swift in Sources */,
 				66656F9F2AD921D700AE1AFA /* FieldDetailViewModel.swift in Sources */,
-				7C2B1AF72AF4BE160052EC64 /* ApplicationStatusViewModel.swift in Sources */,
+				7C2B1AF72AF4BE160052EC64 /* ApplicantListViewModel.swift in Sources */,
 				668EE4A72AFCB120007A8844 /* MessageModel.swift in Sources */,
 				668EE4AC2AFCB919007A8844 /* StreamErrorModel.swift in Sources */,
 				7C2B1ACB2AF4B1530052EC64 /* MainTabBarCoordinator.swift in Sources */,
@@ -937,6 +952,7 @@
 				668EE4C52B05038B007A8844 /* DisMissAnimation.swift in Sources */,
 				7C5F77602AC9DA08004CE48F /* GroundTitleView.swift in Sources */,
 				7CB21BA52AC94EE4001D0058 /* DetailUserInfoView.swift in Sources */,
+				7C2F9FE72B25EFF500F1EF1B /* ApplicationPostViewController.swift in Sources */,
 				273674832AC308D1003ADE3F /* RecruitModel.swift in Sources */,
 				2729185D2B023682009C9042 /* SearchModel.swift in Sources */,
 				7CC619762AD448A90085DF90 /* InfoCell.swift in Sources */,
