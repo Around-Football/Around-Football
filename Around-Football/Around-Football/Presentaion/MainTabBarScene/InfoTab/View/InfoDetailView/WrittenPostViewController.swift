@@ -12,7 +12,9 @@ import RxSwift
 import SnapKit
 import Then
 
-class WrittenPostViewController: UIViewController {
+final class WrittenPostViewController: UIViewController {
+    
+    // MARK: - Properties
     
     var viewModel: InfoPostViewModel
     private let loadWrittenPost: PublishSubject<Void> = PublishSubject()
@@ -41,6 +43,8 @@ class WrittenPostViewController: UIViewController {
         loadWrittenPost.onNext(())
     }
     
+    // MARK: - Helpers
+    
     private func bindUI() {
         let input = InfoPostViewModel.Input(loadPost: loadWrittenPost.asObservable())
         
@@ -67,10 +71,10 @@ class WrittenPostViewController: UIViewController {
     }
     
     private func configureUI() {
+        title = "작성 글"
         view.addSubview(writtenPostTableView)
         writtenPostTableView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
     }
-    
 }

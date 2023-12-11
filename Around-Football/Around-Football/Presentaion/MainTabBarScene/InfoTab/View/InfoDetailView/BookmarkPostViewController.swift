@@ -69,6 +69,7 @@ final class BookmarkPostViewController: UIViewController {
     }
     
     private func configureUI() {
+        title = "관심 글"
         view.addSubview(bookmarkTableView)
         bookmarkTableView.snp.makeConstraints { make in
             make.edges.equalToSuperview()

@@ -60,6 +60,7 @@ final class InfoTabCoordinator: BaseCoordinator {
     func pushBookmarkPostViewController() {
         let viewModel = InfoPostViewModel(coordinator: self)
         let vc = BookmarkPostViewController(viewModel: viewModel)
+        
         navigationController?.pushViewController(vc, animated: true)
     }
     
