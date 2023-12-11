@@ -44,16 +44,14 @@ final class BookmarkPostViewController: UIViewController {
     }
     
     private func bindUI() {
-        let input = InfoPostViewModel.Input(loadBookmarkPost: loadBookmarkPost.asObservable())
+        let input = InfoPostViewModel.Input(loadPost: loadBookmarkPost.asObservable())
         
         let output = viewModel.transform(input)
         
         output
-            .bookmartPost
+            .bookmarkList
             .bind(to: bookmarkTableView.rx.items(cellIdentifier: HomeTableViewCell.id,
-                                             cellType: HomeTableViewCell.self)) { [weak self] index, item, cell in
-                guard let self else { return }
-//                cell.viewModel = viewModel
+                                             cellType: HomeTableViewCell.self)) { index, item, cell in
                 cell.bindContents(item: item)
                 cell.configureButtonTap()
             }.disposed(by: disposeBag)

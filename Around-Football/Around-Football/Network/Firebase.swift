@@ -154,7 +154,7 @@ final class FirebaseAPI {
 
 // MARK: - Applicants 관련 함수
 extension FirebaseAPI {
-    //유저가 신청하기 누르면 pendingApplicationsUID 추가
+    //유저가 등록한 북마크만 찾아서 보냄
     func loadBookmarkPostRx(userID: String?) -> Observable<[Recruit]> {
         return Observable.create { [weak self] observer in
             guard let self else { return Disposables.create() }
@@ -177,6 +177,34 @@ extension FirebaseAPI {
                     }
                     
                     observer.onNext(bookmarkRecruits)
+                    observer.onCompleted()
+                }
+            
+            return Disposables.create()
+        }
+    }
+    
+    //유저가 신청하기 누르면 pendingApplicationsUID 추가
+    func loadWrittenPostRx(userID: String?) -> Observable<[Recruit]> {
+        return Observable.create { [weak self] observer in
+            guard let self else { return Disposables.create() }
+            //유저불러옴
+            guard let user = try? UserService.shared.currentUser_Rx.value() else { return Disposables.create() }
+            
+            REF_RECRUIT
+                .whereField("userID", isEqualTo: user.id)
+                .getDocuments { snapshot, error in
+                    if error != nil {
+                        print("ppendingApplicantUID 추가 오류")
+                    }
+                    
+                    guard let documents = snapshot?.documents else { return }
+                    let writtenPostRecruits = documents.compactMap { document -> Recruit? in
+                        var recruitData = document.data()
+                        return Recruit(dictionary: recruitData)
+                    }
+                    
+                    observer.onNext(writtenPostRecruits)
                     observer.onCompleted()
                 }
             
