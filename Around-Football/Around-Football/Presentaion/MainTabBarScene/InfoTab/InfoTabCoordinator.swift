@@ -51,18 +51,26 @@ final class InfoTabCoordinator: BaseCoordinator {
     
     // MARK: - 관심 글, 작성 글 ,신청 글 이동
     
+    func pushDetailCell(recruitItem: Recruit?) {
+        let viewModel = DetailViewModel(coordinator: nil, recruitItem: recruitItem)
+        let vc = DetailViewController(viewModel: viewModel)
+    }
+    
     func pushBookmarkPostViewController() {
-        let vc = BookmarkPostViewController()
+        let viewModel = InfoPostViewModel(coordinator: self)
+        let vc = BookmarkPostViewController(viewModel: viewModel)
         navigationController?.pushViewController(vc, animated: true)
     }
     
     func pushWrittenPostViewController() {
-        let vc = WrittenPostViewController()
+        let viewModel = InfoPostViewModel(coordinator: self)
+        let vc = WrittenPostViewController(viewModel: viewModel)
         navigationController?.pushViewController(vc, animated: true)
     }
     
     func pushApplicationPostViewController() {
-        let vc = ApplicationPostViewController()
+        let viewModel = InfoPostViewModel(coordinator: self)
+        let vc = ApplicationPostViewController(viewModel: viewModel)
         navigationController?.pushViewController(vc, animated: true)
     }
 }
