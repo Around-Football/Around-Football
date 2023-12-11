@@ -10,8 +10,8 @@ import UIKit
 import FirebaseAuth
 import RxCocoa
 import RxSwift
-import Then
 import SnapKit
+import Then
 
 final class HomeViewController: UIViewController {
     
