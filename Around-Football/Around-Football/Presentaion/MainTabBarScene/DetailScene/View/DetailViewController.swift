@@ -24,6 +24,7 @@ final class DetailViewController: UIViewController {
     private let detailView = DetailView()
     private let scrollView = UIScrollView()
     private let contentView = UIView()
+    private var user = try? UserService.shared.currentUser_Rx.value()
     
     private let mainImageView = UIImageView().then {
         $0.image = UIImage(named: "AppIcon")
@@ -103,7 +104,7 @@ final class DetailViewController: UIViewController {
     private func sendRecruitButtonTapped() {
         //TODO: -메세지 버튼 타이틀 분기처리 (작성자 or 신청자)
         ///글쓴이면 신청현황 보기, 아니면 신청한 UID에 추가
-        if Auth.auth().currentUser?.uid == viewModel.recruitItem?.userID {
+        if user?.id == viewModel.recruitItem?.userID {
             viewModel.coordinator?.pushApplicationStatusViewController()
         } else {
             FirebaseAPI.shared.appendPendingApplicant(fieldID: viewModel.recruitItem?.fieldID)
@@ -116,6 +117,29 @@ final class DetailViewController: UIViewController {
     }
     
     // MARK: - Helper
+    
+    //유저에 따라 신청버튼 타이틀 설정
+    private func setButtonTitle() {
+        //글쓴이면 신청현황, 아니면 신청하기로
+        if user?.id == viewModel.recruitItem?.userID {
+            let title = NSAttributedString(
+                string: "신청 현황 보기",
+                attributes: [.font: UIFont.systemFont(ofSize: 15, weight: .semibold)]
+            )
+            sendRecruitButton.setAttributedTitle(title, for: .normal)
+            //메세지 보내기 버튼 없애기
+            sendMessageButton.isHidden = true
+        } else {
+            let title = NSAttributedString(
+                string: "신청하기",
+                attributes: [.font: UIFont.systemFont(ofSize: 15, weight: .semibold)]
+            )
+            sendRecruitButton.setAttributedTitle(title, for: .normal)
+            //메세지 보내기 버튼 원위치
+            sendMessageButton.isHidden = false
+        }
+    }
+    
 
     private func bindUI() {
         let input = DetailViewModel.Input(invokedViewWillAppear: invokedViewWillAppear.asObserver())
@@ -148,24 +172,6 @@ final class DetailViewController: UIViewController {
                 groundAddressLabel.text = recruit.fieldAddress
                 detailView.setValues(item: recruit)
             }).disposed(by: disposeBag)
-    }
-    
-    //유저에 따라 신청버튼 타이틀 설정
-    private func setButtonTitle() {
-        //글쓴이면 신청현황, 아니면 신청하기로
-        if Auth.auth().currentUser?.uid == viewModel.recruitItem?.userID {
-            let title = NSAttributedString(
-                string: "신청 현황 보기",
-                attributes: [.font: UIFont.systemFont(ofSize: 15, weight: .semibold)]
-            )
-            sendRecruitButton.setAttributedTitle(title, for: .normal)
-        } else {
-            let title = NSAttributedString(
-                string: "신청하기",
-                attributes: [.font: UIFont.systemFont(ofSize: 15, weight: .semibold)]
-            )
-            sendRecruitButton.setAttributedTitle(title, for: .normal)
-        }
     }
     
     private func configeUI() {
