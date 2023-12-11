@@ -100,7 +100,7 @@ final class DetailView: UIView {
         title.text = item.title
         matchDayLabel.text = "\(item.matchDateString ?? "")  \(item.startTime ?? "") - \(item.endTime ?? "")"
         typeLabel.text = item.type
-        recruitingLabel.text = "\(item.acceptedApplicantsUID.count) / \(item.recruitedPeopleCount)" + " 명"
+        recruitingLabel.text = String(item.recruitedPeopleCount) + " 명"
         gamePriceLabel.text = item.gamePrice
         contentLabel.text = item.content
     }

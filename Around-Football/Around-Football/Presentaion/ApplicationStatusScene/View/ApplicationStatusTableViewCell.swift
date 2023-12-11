@@ -7,20 +7,12 @@
 
 import UIKit
 
-import RxSwift
-import SnapKit
 import Then
+import SnapKit
 
-final class ApplicantListTableViewCell: UITableViewCell {
-
-    // MARK: - Properties
+class ApplicationStatusTableViewCell: UITableViewCell {
     
-    static let cellID = "ApplicantListTableViewCellID"
-    var viewModel: ApplicantListViewModel?
-    weak var vc: ApplicantListViewController?
-    var uid: String?
-
-    private var disposeBag = DisposeBag()
+    // MARK: - Properties
 
     private lazy var mainStackView = UIStackView().then {
         $0.addArrangedSubviews(profileImage,
@@ -55,7 +47,7 @@ final class ApplicantListTableViewCell: UITableViewCell {
     private lazy var detailInfoStackView1 = UIStackView().then {
         $0.addArrangedSubviews(userAgeLabel,
                                createDotView(),
-                               userGenderLabel,
+                               userDetailSexLabel,
                                createDotView(),
                                userAreaLabel)
         $0.spacing = 1
@@ -70,7 +62,7 @@ final class ApplicantListTableViewCell: UITableViewCell {
         $0.textColor = .gray
     }
     
-    private let userGenderLabel = UILabel().then {
+    private let userDetailSexLabel = UILabel().then {
         $0.text = "성별"
         $0.font = UIFont.systemFont(ofSize: 15)
         $0.textColor = .gray
@@ -85,7 +77,9 @@ final class ApplicantListTableViewCell: UITableViewCell {
     private lazy var detailInfoStackView2 = UIStackView().then {
         $0.addArrangedSubviews(userMainUsedFeetLabelLabel,
                                createDotView(),
-                               userPositionLabel)
+                               userPositionLabel,
+                               createDotView(),
+                               userMannerLabel)
         $0.spacing = 1
         $0.axis = .horizontal
         $0.distribution = .fill
@@ -103,35 +97,39 @@ final class ApplicantListTableViewCell: UITableViewCell {
         $0.font = UIFont.systemFont(ofSize: 15)
         $0.textColor = .gray
     }
+    
+    private let userMannerLabel = UILabel().then {
+        $0.text = "매너온도"
+        $0.font = UIFont.systemFont(ofSize: 15)
+        $0.textColor = .gray
+    }
 
     // TODO: - 버튼 addTarget
     private lazy var buttonStackView = UIStackView().then {
         $0.addArrangedSubviews(acceptButton,
-                               rejectButton)
+                               refuseButton)
         $0.spacing = 10
         $0.axis = .horizontal
         $0.distribution = .fill
         $0.alignment = .trailing
     }
     
-    private lazy var acceptButton = UIButton().then {
+    private let acceptButton = UIButton().then {
         $0.setTitle("수락", for: .normal)
         $0.backgroundColor = .blue
         $0.titleLabel?.font = .boldSystemFont(ofSize: 16)
         $0.setTitleColor(.white, for: .normal)
         $0.layer.cornerRadius = LayoutOptions.cornerRadious
         $0.clipsToBounds = true
-        $0.addTarget(self, action: #selector(acceptButtonTapped), for: .touchUpInside)
     }
     
-    private lazy var rejectButton = UIButton().then {
+    private let refuseButton = UIButton().then {
         $0.setTitle("거절", for: .normal)
         $0.backgroundColor = .darkGray
         $0.titleLabel?.font = .boldSystemFont(ofSize: 16)
         $0.setTitleColor(.white, for: .normal)
         $0.layer.cornerRadius = LayoutOptions.cornerRadious
         $0.clipsToBounds = true
-        $0.addTarget(self, action: #selector(rejectButtonTapped), for: .touchUpInside)
     }
     
     // MARK: - Lifecycles
@@ -145,39 +143,13 @@ final class ApplicantListTableViewCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    // MARK: - Selectors
-    
-    @objc
-    private func acceptButtonTapped() {
-        FirebaseAPI.shared.acceptApplicants(fieldID: viewModel?.recruitItem?.fieldID ?? "", userID: uid)
-        vc?.acceptButtonTappedSubject.onNext((viewModel?.recruitItem?.fieldID, uid))
-    }
-    
-    @objc
-    private func rejectButtonTapped() {
-        FirebaseAPI.shared.deleteApplicant(fieldID: viewModel?.recruitItem?.fieldID ?? "", userID: uid)
-        vc?.rejectButtonTappedSubject.onNext((viewModel?.recruitItem?.fieldID, uid))
-    }
-    
     // MARK: - Helpers
-    
-    func bindUI(uid: String?) {
-        FirebaseAPI.shared.fetchUser(uid: uid ?? "") { [weak self] user in
-            guard let self else { return }
-            userNameLabel.text = user.userName
-            userAgeLabel.text = user.age
-            userGenderLabel.text = user.gender
-            userAreaLabel.text = user.area
-            userMainUsedFeetLabelLabel.text = user.mainUsedFeet
-            userPositionLabel.text = user.position.joined(separator: ", ")
-        }
-    }
 
     private func setupUI() {
-        contentView.addSubview(mainStackView)
+        self.contentView.addSubview(mainStackView)
         
         mainStackView.snp.makeConstraints { make in
-            make.edges.equalTo(120).inset(UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10))
+            make.edges.equalTo(self).inset(UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10))
         }
         
         profileImage.snp.makeConstraints { make in
@@ -189,7 +161,7 @@ final class ApplicantListTableViewCell: UITableViewCell {
             make.height.equalTo(40)
             make.width.equalTo(60)
         }
-        rejectButton.snp.makeConstraints { make in
+        refuseButton.snp.makeConstraints { make in
             make.height.equalTo(40)
             make.width.equalTo(60)
         }

@@ -30,7 +30,7 @@ final class DetailViewModel {
     
     // MARK: - Lifecycles
     
-    init(coordinator: DetailCoordinator?, recruitItem: Recruit?) {
+    init(coordinator: DetailCoordinator, recruitItem: Recruit?) {
         self.coordinator = coordinator
         self.recruitItem = recruitItem
         fetchUser()
@@ -57,10 +57,16 @@ final class DetailViewModel {
         inputObserver
             .flatMap { [weak self] () -> Observable<Recruit> in
                 guard let self else { return Observable.empty() }
-                return FirebaseAPI.shared.loadDetailCellApplicantRx(fieldID: recruitItem?.fieldID)
+                return Observable.create { observer in
+                    guard let recruitItem = self.recruitItem else { return Disposables.create()
+                    }
+                    observer.onNext(recruitItem)
+                    observer.onCompleted()
+                    
+                    return Disposables.create()
+                }
             }
     }
-    
     func checkChannel() {
         guard let currentUser = try? currentUser.value(),
         let recruitUser = recruitUser else { return }
@@ -76,5 +82,9 @@ final class DetailViewModel {
                 self.coordinator?.pushChatViewController(channelInfo: channelInfo, isNewChat: true)
             }
         }
+    }
+    
+    private func pushChatViewController() {
+        
     }
 }
