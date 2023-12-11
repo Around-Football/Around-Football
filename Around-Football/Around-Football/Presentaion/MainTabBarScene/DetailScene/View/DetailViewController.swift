@@ -24,7 +24,6 @@ final class DetailViewController: UIViewController {
     private let detailView = DetailView()
     private let scrollView = UIScrollView()
     private let contentView = UIView()
-    private var user = try? UserService.shared.currentUser_Rx.value()
     
     private let mainImageView = UIImageView().then {
         $0.image = UIImage(named: "AppIcon")
@@ -43,9 +42,9 @@ final class DetailViewController: UIViewController {
         $0.font = .systemFont(ofSize: 10)
     }
     
-    private lazy var sendMessageButton = UIButton().then {
+    private lazy var applyButton = UIButton().then {
         let title = NSAttributedString(
-            string: "메세지 보내기",
+            string: "신청하기",
             attributes: [.font: UIFont.systemFont(ofSize: 15, weight: .semibold)]
         )
         $0.setAttributedTitle(title, for: .normal)
@@ -53,7 +52,7 @@ final class DetailViewController: UIViewController {
         $0.backgroundColor = .black
         $0.layer.cornerRadius = 10
         $0.clipsToBounds = true
-        $0.addTarget(self, action: #selector(sendMessageButtonTapped), for: .touchUpInside)
+        $0.addTarget(self, action: #selector(clickedApplyButton), for: .touchUpInside)
     }
     
     private let groundIconView = UIImageView().then {
@@ -68,13 +67,13 @@ final class DetailViewController: UIViewController {
         $0.backgroundColor = .secondarySystemBackground
     }
     
-    private lazy var sendRecruitButton = UIButton().then {
-        $0.setTitle("신청하기", for: .normal)
+    private lazy var sendMessageButton = UIButton().then {
+        $0.setTitle("메세지 보내기", for: .normal)
         $0.setTitleColor(.white, for: .normal)
         $0.backgroundColor = .black
         $0.layer.cornerRadius = 5
         $0.clipsToBounds = true
-        $0.addTarget(self, action: #selector(sendRecruitButtonTapped), for: .touchUpInside)
+        $0.addTarget(self, action: #selector(clickedMessage), for: .touchUpInside)
     }
     
     // MARK: - Lifecycles
@@ -92,55 +91,46 @@ final class DetailViewController: UIViewController {
         super.viewDidLoad()
         configeUI()
         bindUI()
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        invokedViewWillAppear.onNext(()) //cell 실시간 데이터 반영
+        invokedViewWillAppear.onNext(())
     }
     
     // MARK: - Selector
     
     @objc
-    private func sendRecruitButtonTapped() {
-        //TODO: -메세지 버튼 타이틀 분기처리 (작성자 or 신청자)
-        ///글쓴이면 신청현황 보기, 아니면 신청한 UID에 추가
-        if user?.id == viewModel.recruitItem?.userID {
-            viewModel.coordinator?.pushApplicationStatusViewController()
-        } else {
-            FirebaseAPI.shared.appendPendingApplicant(fieldID: viewModel.recruitItem?.fieldID)
-        }
+    private func clickedMessage() {
+        viewModel.checkChannel()
     }
     
     @objc
-    private func sendMessageButtonTapped() {
-        viewModel.checkChannel()
+    private func clickedApplyButton() {
+        //TODO: -메세지 버튼 타이틀 분기처리 (작성자 or 신청자)
+        ///글쓴이면 신청현황 보기, 아니면 신청한 UID에 추가
+        if Auth.auth().currentUser?.uid == viewModel.recruitItem?.userID {
+            viewModel.coordinator?.pushApplicationStatusViewController()
+        } else {
+            viewModel.recruitItem?.apply(withUserID: Auth.auth().currentUser?.uid)
+        }
     }
     
     // MARK: - Helper
     
-    //유저에 따라 신청버튼 타이틀 설정
     private func setButtonTitle() {
         //글쓴이면 신청현황, 아니면 신청하기로
-        if user?.id == viewModel.recruitItem?.userID {
+        if Auth.auth().currentUser?.uid == viewModel.recruitItem?.userID {
             let title = NSAttributedString(
-                string: "신청 현황 보기",
+                string: "신청 현황",
                 attributes: [.font: UIFont.systemFont(ofSize: 15, weight: .semibold)]
             )
-            sendRecruitButton.setAttributedTitle(title, for: .normal)
-            //메세지 보내기 버튼 없애기
-            sendMessageButton.isHidden = true
+            applyButton.setAttributedTitle(title, for: .normal)
         } else {
             let title = NSAttributedString(
-                string: "신청하기",
+                string: "신청 하기",
                 attributes: [.font: UIFont.systemFont(ofSize: 15, weight: .semibold)]
             )
-            sendRecruitButton.setAttributedTitle(title, for: .normal)
-            //메세지 보내기 버튼 원위치
-            sendMessageButton.isHidden = false
+            applyButton.setAttributedTitle(title, for: .normal)
         }
     }
     
-
     private func bindUI() {
         let input = DetailViewModel.Input(invokedViewWillAppear: invokedViewWillAppear.asObserver())
         
@@ -154,10 +144,10 @@ final class DetailViewController: UIViewController {
                 guard let self else { return }
                 switch result {
                 case .success(let user):
-                    print("readUser 성공: \(user)")
+                    print("readUser성공: \(user)")
                     detailUserInfoView.setValues(user: user)
                 case .failure(let error):
-                    print("readUser 에러: \(error)")
+                    print("Error decoding user: \(error)")
                 }
             }
         }
@@ -166,12 +156,14 @@ final class DetailViewController: UIViewController {
         
         output
             .recruitItem
-            .bind(onNext: { [weak self] recruit in
+            .do(onNext: { [weak self] item in
                 guard let self else { return }
-                groundLabel.text = recruit.fieldName
-                groundAddressLabel.text = recruit.fieldAddress
-                detailView.setValues(item: recruit)
-            }).disposed(by: disposeBag)
+                groundLabel.text = item.fieldName
+                groundAddressLabel.text = item.fieldAddress
+                detailView.setValues(item: item)
+            })
+            .subscribe()
+            .disposed(by: disposeBag)
     }
     
     private func configeUI() {
@@ -183,12 +175,12 @@ final class DetailViewController: UIViewController {
         contentView.addSubviews(mainImageView,
                                 groundLabel,
                                 groundAddressLabel,
-                                sendMessageButton,
+                                applyButton,
                                 grayLineView1,
                                 detailUserInfoView,
                                 grayLineView2,
                                 detailView,
-                                sendRecruitButton)
+                                sendMessageButton)
         
         scrollView.snp.makeConstraints { make in
             make.top.bottom.equalTo(view.safeAreaLayoutGuide)
@@ -216,12 +208,12 @@ final class DetailViewController: UIViewController {
             make.bottom.equalTo(grayLineView1.snp.top).offset(SuperviewOffsets.bottomPadding)
         }
         
-        sendMessageButton.snp.makeConstraints { make in
+        applyButton.snp.makeConstraints { make in
             make.top.equalTo(mainImageView.snp.bottom).offset(SuperviewOffsets.topPadding)
             make.bottom.equalTo(grayLineView1.snp.top).offset(SuperviewOffsets.bottomPadding)
             make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
-            make.width.equalTo(100)
-            make.height.equalTo(40)
+            make.width.equalTo(70)
+            make.height.equalTo(45)
         }
         
         grayLineView1.snp.makeConstraints { make in
@@ -245,10 +237,10 @@ final class DetailViewController: UIViewController {
             make.top.equalTo(grayLineView2).offset(SuperviewOffsets.topPadding)
             make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
             make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
-            make.bottom.equalTo(sendRecruitButton.snp.top).offset(SuperviewOffsets.bottomPadding)
+            make.bottom.equalTo(sendMessageButton.snp.top).offset(SuperviewOffsets.bottomPadding)
         }
         
-        sendRecruitButton.snp.makeConstraints { make in
+        sendMessageButton.snp.makeConstraints { make in
             make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
             make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
             make.bottom.equalToSuperview().offset(SuperviewOffsets.bottomPadding).priority(.required)

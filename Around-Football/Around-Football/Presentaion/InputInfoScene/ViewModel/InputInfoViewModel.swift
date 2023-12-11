@@ -24,7 +24,7 @@ final class InputInfoViewModel {
     private var currentUserRx = UserService.shared.currentUser_Rx
     var inputUserInfo: BehaviorRelay<User> = BehaviorRelay(value: User(dictionary: [:]))
     var userName: BehaviorRelay<String?> = BehaviorRelay(value: "")
-    var age: BehaviorRelay<String?> = BehaviorRelay(value: "")
+    var age: BehaviorRelay<Int?> = BehaviorRelay(value: 0)
     var gender: BehaviorRelay<String?> = BehaviorRelay(value: "")
     var area: BehaviorRelay<String?> = BehaviorRelay(value: "")
     var mainUsedFeet: BehaviorRelay<String?> = BehaviorRelay(value: "")
@@ -71,7 +71,7 @@ final class InputInfoViewModel {
     
     func updateData() {
         let inputData = ["userName": userName.value ?? "",
-                         "age": age.value ?? "",
+                         "age": age.value ?? 0,
                          "gender": gender.value ?? "",
                          "area": area.value ?? "",
                          "mainUsedFeet": mainUsedFeet.value ?? "",
