@@ -121,7 +121,7 @@ final class InputInfoViewController: UIViewController {
         
         output?.userInfo
             .map { user in
-                user?.age == "" ? "나이 선택" : user?.area
+                user?.age == "" ? "나이 선택" : user?.age
             }
             .bind(to: inputInfoView.ageFilterButton.rx.title())
             .disposed(by: disposeBag)
