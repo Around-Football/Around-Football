@@ -38,6 +38,7 @@ final class HomeTabCoordinator: BaseCoordinator, DetailCoordinatorDelegate {
     
     func pushToDetailView(recruitItem: Recruit) {
         let coordinator = DetailCoordinator(navigationController: navigationController)
+        coordinator.recruitItem = recruitItem
         navigationController?.navigationBar.isHidden = false
         coordinator.delegate = self
         coordinator.start(recruitItem: recruitItem)
@@ -51,10 +52,11 @@ final class HomeTabCoordinator: BaseCoordinator, DetailCoordinatorDelegate {
         navigationController?.pushViewController(controller, animated: true)
     }
 
-    func pushApplicationStatusView() {
-        let ApplicationStatusVc = ApplicationStatusViewController()
-        navigationController?.pushViewController(ApplicationStatusVc, animated: true)
-    }
+//    func pushApplicationStatusView() {
+//        let viewModel = ApplicantListViewModel(coordinator: self)
+//        let ApplicationStatusVc = ApplicantListViewController(viewModel: viewModel)
+//        navigationController?.pushViewController(ApplicationStatusVc, animated: true)
+//    }
     
     func pushInviteView() {
         let coordinator = InviteCoordinator(navigationController: navigationController)

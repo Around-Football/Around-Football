@@ -10,13 +10,15 @@ import Foundation
 struct User: Codable {
     var id: String
     var userName: String
-    var age: Int
+    var age: String
     var gender: String
     var area: String
     var mainUsedFeet: String
     var position: [String]
     //TODO: - FCM Token 추가
     var fcmToken: String
+    //TODO: - 유저 북마크 배열 추가
+    var bookmarkedFields: [String?] //북마크한 필드id 저장
     
     static func convertToArray(documents: [[String: Any]]) -> [User] {
         var array: [User] = []
@@ -31,11 +33,12 @@ struct User: Codable {
     init(dictionary: [String: Any]) {
         self.id = dictionary["id"] as? String ?? UUID().uuidString
         self.userName = dictionary["userName"] as? String ?? ""
-        self.age = dictionary["age"] as? Int ?? Int()
+        self.age = dictionary["age"] as? String ?? ""
         self.gender = dictionary["gender"] as? String ?? ""
         self.area = dictionary["area"] as? String ?? ""
         self.mainUsedFeet = dictionary["mainUsedFeet"] as? String ?? ""
         self.position = dictionary["position"] as? [String] ?? []
         self.fcmToken = dictionary["fcmToken"] as? String ?? ""
+        self.bookmarkedFields = dictionary["bookmarkedFields"] as? [String] ?? []
     }
 }
