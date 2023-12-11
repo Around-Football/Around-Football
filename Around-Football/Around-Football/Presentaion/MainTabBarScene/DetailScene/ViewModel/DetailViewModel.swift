@@ -30,7 +30,7 @@ final class DetailViewModel {
     
     // MARK: - Lifecycles
     
-    init(coordinator: DetailCoordinator, recruitItem: Recruit?) {
+    init(coordinator: DetailCoordinator?, recruitItem: Recruit?) {
         self.coordinator = coordinator
         self.recruitItem = recruitItem
         fetchUser()
@@ -56,14 +56,7 @@ final class DetailViewModel {
         inputObserver
             .flatMap { [weak self] () -> Observable<Recruit> in
                 guard let self else { return Observable.empty() }
-                return Observable.create { observer in
-                    guard let recruitItem = self.recruitItem else { return Disposables.create()
-                    }
-                    observer.onNext(recruitItem)
-                    observer.onCompleted()
-                    
-                    return Disposables.create()
-                }
+                return FirebaseAPI.shared.loadDetailCellApplicantRx(fieldID: recruitItem?.fieldID)
             }
     }
     
@@ -83,7 +76,7 @@ final class DetailViewModel {
             }
         }
     }
-    
+
     func showLoginView() {
         coordinator?.presentLoginViewController()
     }
