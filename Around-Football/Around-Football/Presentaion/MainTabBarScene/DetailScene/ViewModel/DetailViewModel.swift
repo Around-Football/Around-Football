@@ -30,7 +30,7 @@ final class DetailViewModel {
     
     // MARK: - Lifecycles
     
-    init(coordinator: DetailCoordinator, recruitItem: Recruit?) {
+    init(coordinator: DetailCoordinator?, recruitItem: Recruit?) {
         self.coordinator = coordinator
         self.recruitItem = recruitItem
         fetchUser()
