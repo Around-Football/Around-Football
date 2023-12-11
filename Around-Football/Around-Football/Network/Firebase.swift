@@ -167,16 +167,16 @@ extension FirebaseAPI {
                 .whereField("fieldID", in: userBookmarkList)
                 .getDocuments { snapshot, error in
                     if error != nil {
-                        print("ppendingApplicantUID 추가 오류")
+                        print("loadBookmarkPostRx 추가 오류: \(error?.localizedDescription)")
                     }
                     
                     guard let documents = snapshot?.documents else { return }
-                    let bookmarkRecruits = documents.compactMap { document -> Recruit? in
+                    let bookmarkPost = documents.compactMap { document -> Recruit? in
                         var recruitData = document.data()
                         return Recruit(dictionary: recruitData)
                     }
                     
-                    observer.onNext(bookmarkRecruits)
+                    observer.onNext(bookmarkPost)
                     observer.onCompleted()
                 }
             
@@ -195,16 +195,43 @@ extension FirebaseAPI {
                 .whereField("userID", isEqualTo: user.id)
                 .getDocuments { snapshot, error in
                     if error != nil {
-                        print("ppendingApplicantUID 추가 오류")
+                        print("loadWrittenPostRx 추가 오류: \(error?.localizedDescription)")
                     }
                     
                     guard let documents = snapshot?.documents else { return }
-                    let writtenPostRecruits = documents.compactMap { document -> Recruit? in
+                    let writtenPost = documents.compactMap { document -> Recruit? in
                         var recruitData = document.data()
                         return Recruit(dictionary: recruitData)
                     }
                     
-                    observer.onNext(writtenPostRecruits)
+                    observer.onNext(writtenPost)
+                    observer.onCompleted()
+                }
+            
+            return Disposables.create()
+        }
+    }
+    
+    func loadApplicationPostRx(userID: String?) -> Observable<[Recruit]> {
+        return Observable.create { [weak self] observer in
+            guard let self else { return Disposables.create() }
+            //유저불러옴
+            guard let user = try? UserService.shared.currentUser_Rx.value() else { return Disposables.create() }
+            
+            REF_RECRUIT
+                .whereField("pendingApplicantsUID", arrayContains: user.id)
+                .getDocuments { snapshot, error in
+                    if error != nil {
+                        print("loadApplicationPostRx 추가 오류: \(error?.localizedDescription)")
+                    }
+                    
+                    guard let documents = snapshot?.documents else { return }
+                    let applicationPost = documents.compactMap { document -> Recruit? in
+                        var recruitData = document.data()
+                        return Recruit(dictionary: recruitData)
+                    }
+                    
+                    observer.onNext(applicationPost)
                     observer.onCompleted()
                 }
             
@@ -308,6 +335,7 @@ extension FirebaseAPI {
         }
     }
     
+    //유저 추가
     func appendPendingApplicant(fieldID: String?) {
         REF_RECRUIT.document(fieldID ?? "").getDocument { snapshot, error in
             if error != nil {
