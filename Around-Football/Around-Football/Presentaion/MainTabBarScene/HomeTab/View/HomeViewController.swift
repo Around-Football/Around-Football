@@ -8,10 +8,10 @@
 import UIKit
 
 import FirebaseAuth
-import RxCocoa
 import RxSwift
-import SnapKit
+import RxCocoa
 import Then
+import SnapKit
 
 final class HomeViewController: UIViewController {
     
@@ -82,6 +82,7 @@ final class HomeViewController: UIViewController {
         $0.preferredDatePickerStyle = .compact
         $0.datePickerMode = .date
         $0.locale = Locale(identifier: "ko_KR")
+        $0.subviews[0].subviews[0].subviews[0].alpha = 0
         $0.layer.backgroundColor = UIColor.white.cgColor
         $0.layer.cornerRadius = LayoutOptions.cornerRadious
         $0.addSubview(dateFilterButton)
@@ -98,15 +99,12 @@ final class HomeViewController: UIViewController {
             $0.setImage(image?.withTintColor(UIColor.systemGray, renderingMode: .alwaysOriginal),
                         for: .normal)
             $0.setTitleColor(.systemGray, for: .normal)
-            $0.setTitleColor(.systemGray, for: .highlighted)
             $0.layer.cornerRadius = LayoutOptions.cornerRadious
             $0.layer.borderWidth = 1.0
             $0.layer.borderColor = UIColor.systemGray.cgColor
             $0.showsMenuAsPrimaryAction = true
         }
-        let menus: [String]  = ["전체", "서울", "인천", "부산", "대구", "울산",
-                                "대전", "광주", "세종특별자치시","경기", "강원특별자치도",
-                                "충북", "충남", "경북", "경남", "전북", "전남", "제주특별자치도"]
+        let menus: [String]  = ["전체", "서울", "인천", "부산", "대구", "울산", "대전", "광주", "세종특별자치시", "경기", "강원특별자치도", "충북", "충남", "경북", "경남", "전북", "전남", "제주특별자치도"]
         
         button.menu = UIMenu(children: menus.map { city in
             UIAction(title: city) { [weak self] _ in
@@ -127,7 +125,6 @@ final class HomeViewController: UIViewController {
             $0.setImage(image?.withTintColor(UIColor.systemGray, renderingMode: .alwaysOriginal),
                         for: .normal)
             $0.setTitleColor(.systemGray, for: .normal)
-            $0.setTitleColor(.systemGray, for: .highlighted)
             $0.layer.cornerRadius = LayoutOptions.cornerRadious
             $0.layer.borderWidth = 1.0
             $0.layer.borderColor = UIColor.systemGray.cgColor
@@ -179,11 +176,13 @@ final class HomeViewController: UIViewController {
         super.viewDidLoad()
         configureUI()
         bindUI()
+        //처음 로딩시 전체 리스트 요청
+        filterRequest = (nil, nil, nil)
     }
     
     override func viewWillAppear(_ animated: Bool) {
         navigationController?.navigationBar.isHidden = true
-        setUserInfo() //유저 지역 정보로 필터링, rx요청
+        loadRecruitList.onNext(filterRequest)
     }
     
     override func viewDidLayoutSubviews() {
@@ -216,12 +215,12 @@ final class HomeViewController: UIViewController {
         
         let dateformatter = DateFormatter()
         dateformatter.locale = Locale(identifier: "ko_KR")
-        dateformatter.dateFormat = "YYYY년 M월 d일"
+        dateformatter.dateFormat = "YYYY년 MM월 d일"
         let formattedDate = dateformatter.string(from: sender.date)
         
         let titleDateformatter = DateFormatter()
         titleDateformatter.locale = Locale(identifier: "ko_KR")
-        titleDateformatter.dateFormat = "M월 d일"
+        titleDateformatter.dateFormat = "MM월 d일"
         let buttonTitleDate = titleDateformatter.string(from: sender.date)
         
         filterRequest.date = formattedDate
@@ -245,27 +244,7 @@ final class HomeViewController: UIViewController {
     
     // MARK: - Helpers
     
-    //유저 지역 정보로 필터링하고 리스트 요청
-    private func setUserInfo() {
-        UserService.shared.currentUser_Rx
-            .observe(on: MainScheduler.instance)
-            .filter { $0 != nil }
-            .take(1)
-            .subscribe(onNext: { [weak self] user in
-            guard let self else { return }
-            guard let user else {
-                regionFilterButton.setTitle("지역 선택", for: .normal)
-                filterRequest = (nil, nil, nil)
-                loadRecruitList.onNext(filterRequest)
-                return
-            }
-            filterRequest.region = user.area
-            regionFilterButton.setTitle(user.area, for: .normal)
-            loadRecruitList.onNext(filterRequest)
-        }).disposed(by: disposeBag)
-    }
-    
-    private func bindUI() {
+    func bindUI() {
         let input = HomeViewModel.Input(loadRecruitList: loadRecruitList.asObservable())
         
         let output = viewModel.transform(input)
@@ -273,11 +252,8 @@ final class HomeViewController: UIViewController {
         output
             .recruitList
             .bind(to: homeTableView.rx.items(cellIdentifier: HomeTableViewCell.id,
-                                             cellType: HomeTableViewCell.self)) { [weak self] index, item, cell in
-                guard let self else { return }
-                cell.viewModel = viewModel
+                                             cellType: HomeTableViewCell.self)) { index, item, cell in
                 cell.bindContents(item: item)
-                cell.configureButtonTap()
             }.disposed(by: disposeBag)
         
         homeTableView.rx.modelSelected(Recruit.self)
@@ -288,11 +264,11 @@ final class HomeViewController: UIViewController {
             .disposed(by: disposeBag)
     }
     
-    private func handleItemSelected(_ item: Recruit) {
+    func handleItemSelected(_ item: Recruit) {
         viewModel.coordinator?.pushToDetailView(recruitItem: item)
     }
     
-    private func configureUI() {
+    func configureUI() {
         view.backgroundColor = .white
         view.addSubviews(filterScrollView,
                          homeTableView,
