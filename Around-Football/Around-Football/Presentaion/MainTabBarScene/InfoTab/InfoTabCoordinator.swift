@@ -54,6 +54,7 @@ final class InfoTabCoordinator: BaseCoordinator {
     func pushDetailCell(recruitItem: Recruit?) {
         let viewModel = DetailViewModel(coordinator: nil, recruitItem: recruitItem)
         let vc = DetailViewController(viewModel: viewModel)
+        navigationController?.pushViewController(vc, animated: true)
     }
     
     func pushBookmarkPostViewController() {
