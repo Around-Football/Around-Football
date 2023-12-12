@@ -259,16 +259,18 @@ final class HomeViewController: UIViewController {
     
     // MARK: - Helpers
     
+    //유저디폴트 저장
     func saveFilterRequestToUserDefaults(filterRequest: (date: String?, region: String?, type: String?)) {
-        UserDefaults.standard.set(filterRequest.date, forKey: "dateKey")
-        UserDefaults.standard.set(filterRequest.region, forKey: "regionKey")
-        UserDefaults.standard.set(filterRequest.type, forKey: "typeKey")
+        UserDefaults.standard.set(filterRequest.date, forKey: FilterRequest.date.rawValue)
+        UserDefaults.standard.set(filterRequest.region, forKey: FilterRequest.region.rawValue)
+        UserDefaults.standard.set(filterRequest.type, forKey: FilterRequest.type.rawValue)
     }
     
+    //유저디폴트 값 설정
     func getFilterRequestFromUserDefaults() {
-        let date = UserDefaults.standard.string(forKey: "dateKey")
-        let region = UserDefaults.standard.string(forKey: "regionKey")
-        let type = UserDefaults.standard.string(forKey: "typeKey")
+        let date = UserDefaults.standard.string(forKey: FilterRequest.date.rawValue)
+        let region = UserDefaults.standard.string(forKey: FilterRequest.region.rawValue)
+        let type = UserDefaults.standard.string(forKey: FilterRequest.type.rawValue)
 
         self.filterRequest = (date: date, region: region, type: type)
     }
