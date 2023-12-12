@@ -24,6 +24,7 @@ enum CoordinatorType {
     case chat
     case info
     case detailScene
+    case deepLink
 }
 
 protocol Coordinator: AnyObject {
@@ -73,17 +74,11 @@ final class AppCoordinator: BaseCoordinator, LoginCoordinatorDelegate, MainTabBa
     }
     
     //TODO: - 온보딩뷰 컨트롤러로 변경
+    
     func presentLoginViewController() {
         let coordinator = LoginCoordinator(navigationController: navigationController)
         coordinator.delegate = self
         coordinator.start() //여기서 모달뷰로 만듬
         childCoordinators.append(coordinator)
-    }
-    
-    func handleChatDeepLink(channelInfo: ChannelInfo) {
-        
-        if let mainTabBarCoordinator = childCoordinators.first(where: { $0 is MainTabBarCoordinator }) as? MainTabBarCoordinator {
-            mainTabBarCoordinator.chatCoordinatorDeepLink(channelInfo: channelInfo)
-        }
     }
 }
