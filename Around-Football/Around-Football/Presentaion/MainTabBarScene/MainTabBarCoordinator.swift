@@ -15,6 +15,7 @@ final class MainTabBarCoordinator: BaseCoordinator {
 
     var type: CoordinatorType = .mainTab
     var delegate: MainTabBarCoordinatorDelegate?
+    var deepLinkCoordinator: DeepLinkCoordinator?
     
     override func start() {
         showMainTabController()
@@ -30,7 +31,7 @@ final class MainTabBarCoordinator: BaseCoordinator {
         let homeTabCoordinator = HomeTabCoordinator(navigationController: nil)
         let mapTabCoordinator = MapTabCoordinator(navigationController: nil)
         let chatTabCoordinator = ChatTabCoordinator(navigationController: nil)
-        let infoTabCoordinator = InfoTabCoordinator(navigationController: nil)
+        let infoTabCoordinator = InfoTabCoordinator(navigationController: self.navigationController)
         
         childCoordinators.append(homeTabCoordinator)
         childCoordinators.append(mapTabCoordinator)
@@ -50,7 +51,16 @@ final class MainTabBarCoordinator: BaseCoordinator {
                                  mapVC: mapViewController,
                                  chatVC: channelViewController,
                                  infoVC: infoViewController)
+        
+        //딥링크와 앱 코디네이터, 네비게이션 컨트롤러 연결
+        let deepLinkCoordinator = DeepLinkCoordinator(
+            navigationController: navigationController,
+            chatTabCoordinator: chatTabCoordinator
+        )
+        childCoordinators.append(deepLinkCoordinator)
+        self.deepLinkCoordinator = deepLinkCoordinator
     }
+    
 
     private func makeMainTabBarController(
         homeVC: UINavigationController,
@@ -67,16 +77,6 @@ final class MainTabBarCoordinator: BaseCoordinator {
     // HomeTabCoordinatorDelegate
     func presentLoginViewController() {
         delegate?.presentLoginViewController()
-    }
-    
-    func chatCoordinatorDeepLink(channelInfo: ChannelInfo) {
-        if let mainTabController = navigationController?.viewControllers.first as? MainTabController {
-            mainTabController.selectedIndex = 2
-        }
-        
-        if let chatTabCoordinator = childCoordinators.first(where: { $0 is ChatTabCoordinator }) as? ChatTabCoordinator {
-            chatTabCoordinator.pushChatView(channelInfo: channelInfo)
-        }
     }
 }
 
