@@ -17,7 +17,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var window: UIWindow?
     var appCoordinator: AppCoordinator?
     
-    func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
+    func scene(
+        _ scene: UIScene,
+        willConnectTo session: UISceneSession,
+        options connectionOptions: UIScene.ConnectionOptions
+    ) {
         guard let scene = (scene as? UIWindowScene) else { return }
         window = UIWindow(windowScene: scene)
         window?.makeKeyAndVisible()
@@ -26,30 +30,28 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window?.rootViewController = navigationController
         
         //AppCoordinator 생성, 첫 뷰 그리기
-        appCoordinator = AppCoordinator.shared
-        appCoordinator?.navigationController = navigationController
-//        appCoordinator = AppCoordinator(navigationController: navigationController)
+        appCoordinator = AppCoordinator(navigationController: navigationController)
         appCoordinator?.start()
     }
-
+    
     func sceneDidDisconnect(_ scene: UIScene) {
-
+        
     }
-
+    
     func sceneDidBecomeActive(_ scene: UIScene) {
-
+        
     }
-
+    
     func sceneWillResignActive(_ scene: UIScene) {
-
+        
     }
-
+    
     func sceneWillEnterForeground(_ scene: UIScene) {
-
+        
     }
-
+    
     func sceneDidEnterBackground(_ scene: UIScene) {
-
+        
     }
 }
 

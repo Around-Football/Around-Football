@@ -23,14 +23,14 @@ extension AppDelegate: UNUserNotificationCenterDelegate, MessagingDelegate {
         }
         
         if UIApplication.shared.applicationState != .active {
-            window = UIWindow(frame: UIScreen.main.bounds)
-            window?.makeKeyAndVisible()
-            let navigationController = UINavigationController()
-            window?.rootViewController = navigationController
             
-            //AppCoordinator 생성, 첫 뷰 그리기
-            appCoordinator = AppCoordinator(navigationController: navigationController)
-            appCoordinator?.start()
+            // MARK: - sceneDelegate 불러오기
+            
+            guard
+                let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+                let sceneDelegate = windowScene.delegate as? SceneDelegate
+            else { return }
+            sceneDelegate.appCoordinator?.start()
         }
         
         deepLinkChatView(channelId: channelId, fromUserId: fromUserId)
@@ -43,7 +43,15 @@ extension AppDelegate: UNUserNotificationCenterDelegate, MessagingDelegate {
                     guard let channelInfo = try await ChannelAPI.shared.fetchChannelInfo(channelId: channelId) else {
                         throw NSError(domain: "ChannelInfo Fetch Error", code: -1)
                     }
-                    let appCoordinator = AppCoordinator.shared
+                    
+                    // MARK: - sceneDelegate, coordinator 불러오기
+                    
+                    guard
+                        let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+                        let sceneDelegate = windowScene.delegate as? SceneDelegate,
+                        let appCoordinator = sceneDelegate.appCoordinator
+                    else { return }
+
                     if let mainTabBarCoordinator = appCoordinator.childCoordinators
                         .first(where: { $0 is MainTabBarCoordinator }) as? MainTabBarCoordinator {
                         mainTabBarCoordinator.chatCoordinatorDeepLink(channelInfo: channelInfo)
