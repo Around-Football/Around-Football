@@ -189,11 +189,12 @@ final class HomeViewController: UIViewController {
         super.viewDidLoad()
         configureUI()
         bindUI()
+        setUserInfo()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         navigationController?.navigationBar.isHidden = true
-        setUserInfo() //유저 지역 정보로 필터링, rx요청
+        loadRecruitList.onNext(filterRequest)
     }
     
     override func viewDidLayoutSubviews() {
@@ -279,7 +280,7 @@ final class HomeViewController: UIViewController {
     private func setUserInfo() {
         UserService.shared.currentUser_Rx
             .observe(on: MainScheduler.instance)
-//            .filter { $0 != nil }
+//            .filter { $0 != nil } //로그아웃 했을때도 리스트 뜨도록
             .take(1)
             .subscribe(onNext: { [weak self] user in
             guard let self else { return }
@@ -287,16 +288,14 @@ final class HomeViewController: UIViewController {
                 else {
                 filterRequest.region = user?.area
                 regionFilterButton.setTitle(user?.area ?? "지역 선택", for: .normal)
-//                filterRequest = (nil, nil, nil)
                 saveFilterRequestToUserDefaults(filterRequest: filterRequest)
                 getFilterRequestFromUserDefaults()
-                loadRecruitList.onNext(filterRequest)
                 return
             }
+            filterRequest.region = region
             saveFilterRequestToUserDefaults(filterRequest: filterRequest)
             getFilterRequestFromUserDefaults()
             regionFilterButton.setTitle(region, for: .normal)
-            loadRecruitList.onNext(filterRequest)
         }).disposed(by: disposeBag)
     }
     
