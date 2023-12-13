@@ -279,7 +279,7 @@ final class HomeViewController: UIViewController {
     private func setUserInfo() {
         UserService.shared.currentUser_Rx
             .observe(on: MainScheduler.instance)
-            .filter { $0 != nil }
+//            .filter { $0 != nil }
             .take(1)
             .subscribe(onNext: { [weak self] user in
             guard let self else { return }
