@@ -11,7 +11,7 @@ protocol ChatTabCoordinatorDelegate {
     func presentLoginViewController()
 }
 
-final class ChatTabCoordinator: BaseCoordinator {
+final class ChatTabCoordinator: BaseCoordinator, ChatCoordinatorProtocol {
     
     var type: CoordinatorType = .chat
     var delegate: ChatTabCoordinatorDelegate?
@@ -37,22 +37,7 @@ final class ChatTabCoordinator: BaseCoordinator {
         delegate?.presentLoginViewController()
     }
     
-    func presentPHPickerView(picker: UIViewController) {
-        navigationController?.present(picker, animated: true)
-    }
-    
-    func pushChatView(channelInfo: ChannelInfo, isNewChat: Bool = false) {
-        let viewModel = ChatViewModel(coordinator: self, channelInfo: channelInfo, isNewChat: isNewChat)
-        let controller = ChatViewController(viewModel: viewModel)
-        controller.hidesBottomBarWhenPushed = true
-        navigationController?.pushViewController(controller, animated: true)
-    }
-    
     func popCurrnetPage() {
         navigationController?.popViewController(animated: true)
-    }
-    
-    func presentDeleteAlertController(alert: UIAlertController) {
-        navigationController?.present(alert, animated: true)
     }
 }

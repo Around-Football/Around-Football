@@ -109,6 +109,7 @@
 		7C2F9FE72B25EFF500F1EF1B /* ApplicationPostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C2F9FE62B25EFF500F1EF1B /* ApplicationPostViewController.swift */; };
 		7C2F9FE92B26E73200F1EF1B /* InfoPostViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C2F9FE82B26E73200F1EF1B /* InfoPostViewModel.swift */; };
 		7C33060F2B109E780042A815 /* DetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C33060E2B109E780042A815 /* DetailView.swift */; };
+		7C5EB89A2B28A7B2002545BD /* DeepLinkCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C5EB8992B28A7B2002545BD /* DeepLinkCoordinator.swift */; };
 		7C5F775C2AC9C698004CE48F /* InviteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C5F775B2AC9C698004CE48F /* InviteViewController.swift */; };
 		7C5F775E2AC9CE8A004CE48F /* DateCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C5F775D2AC9CE8A004CE48F /* DateCell.swift */; };
 		7C5F77602AC9DA08004CE48F /* GroundTitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C5F775F2AC9DA08004CE48F /* GroundTitleView.swift */; };
@@ -214,6 +215,7 @@
 		7C2F9FE62B25EFF500F1EF1B /* ApplicationPostViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplicationPostViewController.swift; sourceTree = "<group>"; };
 		7C2F9FE82B26E73200F1EF1B /* InfoPostViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoPostViewModel.swift; sourceTree = "<group>"; };
 		7C33060E2B109E780042A815 /* DetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailView.swift; sourceTree = "<group>"; };
+		7C5EB8992B28A7B2002545BD /* DeepLinkCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeepLinkCoordinator.swift; sourceTree = "<group>"; };
 		7C5F775B2AC9C698004CE48F /* InviteViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InviteViewController.swift; sourceTree = "<group>"; };
 		7C5F775D2AC9CE8A004CE48F /* DateCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateCell.swift; sourceTree = "<group>"; };
 		7C5F775F2AC9DA08004CE48F /* GroundTitleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroundTitleView.swift; sourceTree = "<group>"; };
@@ -440,6 +442,7 @@
 			isa = PBXGroup;
 			children = (
 				7C2B1AFB2AF4CE8A0052EC64 /* AppCoordinator.swift */,
+				7C5EB8992B28A7B2002545BD /* DeepLinkCoordinator.swift */,
 				7C2B1AC52AF4B0F40052EC64 /* LoginScene */,
 				7C2B1ADA2AF4B2930052EC64 /* InputInfoScene */,
 				7C2B1AC92AF4B13C0052EC64 /* MainTabBarScene */,
@@ -979,6 +982,7 @@
 				7929A3132ADEB319006ED4FA /* InputInfoViewController+.swift in Sources */,
 				66391CAD2B20158A00DB7249 /* CustomInfoMessageCell.swift in Sources */,
 				274C21C72ACFF902005469E6 /* TextFieldDelegateHandler.swift in Sources */,
+				7C5EB89A2B28A7B2002545BD /* DeepLinkCoordinator.swift in Sources */,
 				7CE0143E2AF8C5B700ED77D2 /* EditViewController.swift in Sources */,
 				7C33060F2B109E780042A815 /* DetailView.swift in Sources */,
 				668EE4BF2B0500D5007A8844 /* ChatViewController+.swift in Sources */,

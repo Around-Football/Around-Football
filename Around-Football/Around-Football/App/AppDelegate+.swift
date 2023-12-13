@@ -23,14 +23,14 @@ extension AppDelegate: UNUserNotificationCenterDelegate, MessagingDelegate {
         }
         
         if UIApplication.shared.applicationState != .active {
-            window = UIWindow(frame: UIScreen.main.bounds)
-            window?.makeKeyAndVisible()
-            let navigationController = UINavigationController()
-            window?.rootViewController = navigationController
             
-            //AppCoordinator 생성, 첫 뷰 그리기
-            appCoordinator = AppCoordinator(navigationController: navigationController)
-            appCoordinator?.start()
+            // MARK: - sceneDelegate 불러오고 coordinator 실행
+
+            guard
+                let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+                let sceneDelegate = windowScene.delegate as? SceneDelegate
+            else { return }
+            sceneDelegate.appCoordinator?.start()
         }
         
         deepLinkChatView(channelId: channelId, fromUserId: fromUserId)
@@ -43,11 +43,24 @@ extension AppDelegate: UNUserNotificationCenterDelegate, MessagingDelegate {
                     guard let channelInfo = try await ChannelAPI.shared.fetchChannelInfo(channelId: channelId) else {
                         throw NSError(domain: "ChannelInfo Fetch Error", code: -1)
                     }
-                    let appCoordinator = AppCoordinator.shared
-                    if let mainTabBarCoordinator = appCoordinator.childCoordinators
-                        .first(where: { $0 is MainTabBarCoordinator }) as? MainTabBarCoordinator {
-                        mainTabBarCoordinator.chatCoordinatorDeepLink(channelInfo: channelInfo)
-                    }
+                    
+                    // MARK: - sceneDelegate, coordinator 불러오기
+                    
+                    guard
+                        let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+                        let sceneDelegate = windowScene.delegate as? SceneDelegate,
+                        let appCoordinator = sceneDelegate.appCoordinator
+                    else { return }
+
+                    guard
+                        let mainTabBarCoordinator = appCoordinator
+                            .childCoordinators
+                            .first(where: { $0 is MainTabBarCoordinator }) as? MainTabBarCoordinator,
+                        let deepLinkCoordinator = mainTabBarCoordinator.deepLinkCoordinator
+                    else { return }
+                    
+                    deepLinkCoordinator.start(channelInfo: channelInfo)
+                    //TODO: - 딥링크 코디네이터 start하고 이동
                 } catch(let error as NSError) {
                     print("DEBUG - Tap Push Notification Error", error.localizedDescription)
                 }

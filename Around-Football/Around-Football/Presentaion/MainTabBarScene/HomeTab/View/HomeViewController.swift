@@ -13,6 +13,12 @@ import RxSwift
 import SnapKit
 import Then
 
+enum FilterRequest: String {
+    case date = "dateKey"
+    case region = "regionKey"
+    case type = "typeKey"
+}
+
 final class HomeViewController: UIViewController {
     
     // MARK: - Properties
@@ -112,6 +118,8 @@ final class HomeViewController: UIViewController {
             UIAction(title: city) { [weak self] _ in
                 guard let self else { return }
                 filterRequest.region = (city == "전체" ? nil : city)
+                saveFilterRequestToUserDefaults(filterRequest: filterRequest)
+                getFilterRequestFromUserDefaults()
                 loadRecruitList.onNext(filterRequest)
                 button.setTitle(city, for: .normal)
             }
@@ -140,6 +148,8 @@ final class HomeViewController: UIViewController {
             UIAction(title: type) { [weak self] _ in
                 guard let self else { return }
                 filterRequest.type = (type == "전체" ? nil : type)
+                saveFilterRequestToUserDefaults(filterRequest: filterRequest)
+                getFilterRequestFromUserDefaults()
                 loadRecruitList.onNext(filterRequest)
                 button.setTitle(type, for: .normal)
             }
@@ -179,11 +189,12 @@ final class HomeViewController: UIViewController {
         super.viewDidLoad()
         configureUI()
         bindUI()
+        setUserInfo()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         navigationController?.navigationBar.isHidden = true
-        setUserInfo() //유저 지역 정보로 필터링, rx요청
+        loadRecruitList.onNext(filterRequest)
     }
     
     override func viewDidLayoutSubviews() {
@@ -204,6 +215,8 @@ final class HomeViewController: UIViewController {
     @objc
     private func resetButtonTapped() {
         filterRequest = (nil, nil, nil)
+        saveFilterRequestToUserDefaults(filterRequest: filterRequest)
+        getFilterRequestFromUserDefaults()
         loadRecruitList.onNext(filterRequest)
         dateFilterButton.setTitle("날짜 선택", for: .normal)
         regionFilterButton.setTitle("지역 선택", for: .normal)
@@ -225,6 +238,8 @@ final class HomeViewController: UIViewController {
         let buttonTitleDate = titleDateformatter.string(from: sender.date)
         
         filterRequest.date = formattedDate
+        saveFilterRequestToUserDefaults(filterRequest: filterRequest)
+        getFilterRequestFromUserDefaults()
         dateFilterButton.setTitle(buttonTitleDate, for: .normal)
         loadRecruitList.onNext(filterRequest)
     }
@@ -245,23 +260,42 @@ final class HomeViewController: UIViewController {
     
     // MARK: - Helpers
     
+    //유저디폴트 저장
+    func saveFilterRequestToUserDefaults(filterRequest: (date: String?, region: String?, type: String?)) {
+        UserDefaults.standard.set(filterRequest.date, forKey: FilterRequest.date.rawValue)
+        UserDefaults.standard.set(filterRequest.region, forKey: FilterRequest.region.rawValue)
+        UserDefaults.standard.set(filterRequest.type, forKey: FilterRequest.type.rawValue)
+    }
+    
+    //유저디폴트 값 설정
+    func getFilterRequestFromUserDefaults() {
+        let date = UserDefaults.standard.string(forKey: FilterRequest.date.rawValue)
+        let region = UserDefaults.standard.string(forKey: FilterRequest.region.rawValue)
+        let type = UserDefaults.standard.string(forKey: FilterRequest.type.rawValue)
+
+        self.filterRequest = (date: date, region: region, type: type)
+    }
+    
     //유저 지역 정보로 필터링하고 리스트 요청
     private func setUserInfo() {
         UserService.shared.currentUser_Rx
             .observe(on: MainScheduler.instance)
-            .filter { $0 != nil }
+//            .filter { $0 != nil } //로그아웃 했을때도 리스트 뜨도록
             .take(1)
             .subscribe(onNext: { [weak self] user in
             guard let self else { return }
-            guard let user else {
-                regionFilterButton.setTitle("지역 선택", for: .normal)
-                filterRequest = (nil, nil, nil)
-                loadRecruitList.onNext(filterRequest)
+            guard let region = UserDefaults.standard.string(forKey: "regionKey")
+                else {
+                filterRequest.region = user?.area
+                regionFilterButton.setTitle(user?.area ?? "지역 선택", for: .normal)
+                saveFilterRequestToUserDefaults(filterRequest: filterRequest)
+                getFilterRequestFromUserDefaults()
                 return
             }
-            filterRequest.region = user.area
-            regionFilterButton.setTitle(user.area, for: .normal)
-            loadRecruitList.onNext(filterRequest)
+            filterRequest.region = region
+            saveFilterRequestToUserDefaults(filterRequest: filterRequest)
+            getFilterRequestFromUserDefaults()
+            regionFilterButton.setTitle(region, for: .normal)
         }).disposed(by: disposeBag)
     }
     
