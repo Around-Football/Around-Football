@@ -50,10 +50,7 @@ extension AppDelegate: UNUserNotificationCenterDelegate, MessagingDelegate {
                         let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
                         let sceneDelegate = windowScene.delegate as? SceneDelegate,
                         let appCoordinator = sceneDelegate.appCoordinator
-                    else {
-                        print("뭐없나?")
-                        return
-                    }
+                    else { return }
 
                     guard
                         let mainTabBarCoordinator = appCoordinator
