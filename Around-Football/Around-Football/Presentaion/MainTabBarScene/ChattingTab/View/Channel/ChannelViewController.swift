@@ -52,7 +52,6 @@ final class ChannelViewController: UIViewController {
         title = "채팅"
         
         print("\(String(describing: Auth.auth().currentUser?.uid))")
-        
     }
     
     required init?(coder: NSCoder) {
