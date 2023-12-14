@@ -32,6 +32,13 @@ final class ChatTabCoordinator: BaseCoordinator, ChatCoordinatorProtocol {
 
         return navigationController
     }
+    
+    //채팅 상단 탭 누르면 디테일뷰 진입
+    func pushToDetailView(recruitItem: Recruit) {
+        let viewModel = DetailViewModel(coordinator: nil, recruitItem: recruitItem)
+        let controller = DetailViewController(viewModel: viewModel)
+        navigationController?.pushViewController(controller, animated: true)
+    }
       
     func presentLoginViewController() {
         delegate?.presentLoginViewController()
