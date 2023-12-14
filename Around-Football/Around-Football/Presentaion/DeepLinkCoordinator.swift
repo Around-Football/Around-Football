@@ -7,6 +7,10 @@
 
 import UIKit
 
+protocol DeepLinkCoordinatorDelegate {
+    func pushChatView(channelInfo: ChannelInfo, isNewChat: Bool)
+}
+
 final class DeepLinkCoordinator: BaseCoordinator {
 
     var type: CoordinatorType = .deepLink

@@ -55,11 +55,10 @@ extension AppDelegate: UNUserNotificationCenterDelegate, MessagingDelegate {
                     guard
                         let mainTabBarCoordinator = appCoordinator
                             .childCoordinators
-                            .first(where: { $0 is MainTabBarCoordinator }) as? MainTabBarCoordinator,
-                        let deepLinkCoordinator = mainTabBarCoordinator.deepLinkCoordinator
+                            .first(where: { $0 is MainTabBarCoordinator }) as? MainTabBarCoordinator
                     else { return }
 
-                    deepLinkCoordinator.pushToChatViewController(channelInfo: channelInfo)
+                    mainTabBarCoordinator.deepLinkCoordinator.pushToChatViewController(channelInfo: channelInfo)
                     //TODO: - 딥링크 코디네이터 start하고 이동
                 } catch(let error as NSError) {
                     print("DEBUG - Tap Push Notification Error", error.localizedDescription)

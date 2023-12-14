@@ -11,10 +11,6 @@ protocol ChatTabCoordinatorDelegate {
     func presentLoginViewController()
 }
 
-protocol DeepLinkCoordinatorDelegate {
-    func pushChatView(channelInfo: ChannelInfo, isNewChat: Bool)
-}
-
 final class ChatTabCoordinator: BaseCoordinator {
     
     var type: CoordinatorType = .chat
@@ -28,7 +24,6 @@ final class ChatTabCoordinator: BaseCoordinator {
         let channelViewModel = ChannelViewModel(coordinator: self)
         let channelViewController = ChannelViewController(viewModel: channelViewModel)
         navigationController = UINavigationController(rootViewController: channelViewController)
-        navigationController?.navigationBar.isHidden = false
         
         guard let navigationController = navigationController else {
             return UINavigationController()
@@ -45,7 +40,6 @@ final class ChatTabCoordinator: BaseCoordinator {
         let controller = ChatViewController(viewModel: viewModel)
         controller.hidesBottomBarWhenPushed = true
         navigationController?.pushViewController(controller, animated: true)
-        navigationController?.isNavigationBarHidden = false
     }
     
     func presentPHPickerView(picker: UIViewController) {

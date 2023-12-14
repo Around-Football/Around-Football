@@ -15,7 +15,11 @@ final class MainTabBarCoordinator: BaseCoordinator {
 
     var type: CoordinatorType = .mainTab
     var delegate: MainTabBarCoordinatorDelegate?
-    var deepLinkCoordinator: DeepLinkCoordinator?
+    let homeTabCoordinator = HomeTabCoordinator(navigationController: nil)
+    let mapTabCoordinator = MapTabCoordinator(navigationController: nil)
+    let chatTabCoordinator = ChatTabCoordinator(navigationController: nil)
+    lazy var infoTabCoordinator = InfoTabCoordinator(navigationController: navigationController)
+    lazy var deepLinkCoordinator = DeepLinkCoordinator(navigationController: navigationController)
     
     override func start() {
         showMainTabController()
@@ -28,19 +32,21 @@ final class MainTabBarCoordinator: BaseCoordinator {
     private func showMainTabController() {
         navigationController?.isNavigationBarHidden = true
         // MARK: - navigationController 내부에서 새로 만들어줌
-        let homeTabCoordinator = HomeTabCoordinator(navigationController: nil)
-        let mapTabCoordinator = MapTabCoordinator(navigationController: nil)
-        let chatTabCoordinator = ChatTabCoordinator(navigationController: nil)
-        let infoTabCoordinator = InfoTabCoordinator(navigationController: self.navigationController)
+//        let homeTabCoordinator = HomeTabCoordinator(navigationController: nil)
+//        let mapTabCoordinator = MapTabCoordinator(navigationController: nil)
+//        let chatTabCoordinator = ChatTabCoordinator(navigationController: nil)
+//        let infoTabCoordinator = InfoTabCoordinator(navigationController: self.navigationController)
         
         childCoordinators.append(homeTabCoordinator)
         childCoordinators.append(mapTabCoordinator)
         childCoordinators.append(chatTabCoordinator)
         childCoordinators.append(infoTabCoordinator)
+        childCoordinators.append(deepLinkCoordinator)
         
         homeTabCoordinator.delegate = self
         infoTabCoordinator.delegate = self
         chatTabCoordinator.delegate = self
+        deepLinkCoordinator.deepLinkDelegate = self
         
         let homeViewController = homeTabCoordinator.makeHomeViewController()
         let mapViewController = mapTabCoordinator.makeMapViewController()
@@ -53,13 +59,7 @@ final class MainTabBarCoordinator: BaseCoordinator {
                                  infoVC: infoViewController)
         
         //딥링크와 앱 코디네이터, 네비게이션 컨트롤러 연결
-        let deepLinkCoordinator = DeepLinkCoordinator(
-            navigationController: navigationController)
-        deepLinkCoordinator.deepLinkDelegate = self
-        childCoordinators.append(deepLinkCoordinator)
-        self.deepLinkCoordinator = deepLinkCoordinator
     }
-    
 
     private func makeMainTabBarController(
         homeVC: UINavigationController,
@@ -81,14 +81,12 @@ final class MainTabBarCoordinator: BaseCoordinator {
     //DeepLinkCoordinatorDelegate
     //딥링크 관련 함수 작성
     func pushChatView(channelInfo: ChannelInfo, isNewChat: Bool) {
-        print("MainTabBarCoordinator함수")
-        let viewModel = ChatViewModel(coordinator: nil, channelInfo: channelInfo, isNewChat: isNewChat)
+        //chatTabCoordinator 사용해서 이동
+        let viewModel = ChatViewModel(coordinator: chatTabCoordinator, channelInfo: channelInfo, isNewChat: isNewChat)
         let controller = ChatViewController(viewModel: viewModel)
-        controller.hidesBottomBarWhenPushed = true
-        navigationController?.pushViewController(controller, animated: true)
-        navigationController?.isNavigationBarHidden = false
+        controller.viewModel.coordinator?.pushChatView(channelInfo: channelInfo, isNewChat: isNewChat)
     }
 }
 
-extension MainTabBarCoordinator: HomeTabCoordinatorDelegate, InfoTabCoordinatorDelegate, ChatTabCoordinatorDelegate, DeepLinkCoordinatorDelegate  {
+extension MainTabBarCoordinator: HomeTabCoordinatorDelegate, InfoTabCoordinatorDelegate, ChatTabCoordinatorDelegate, DeepLinkCoordinatorDelegate {
 }
