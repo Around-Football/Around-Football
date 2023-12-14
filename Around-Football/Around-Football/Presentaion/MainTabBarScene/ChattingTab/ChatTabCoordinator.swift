@@ -39,7 +39,13 @@ final class ChatTabCoordinator: BaseCoordinator {
         let viewModel = ChatViewModel(coordinator: self, channelInfo: channelInfo, isNewChat: isNewChat)
         let controller = ChatViewController(viewModel: viewModel)
         controller.hidesBottomBarWhenPushed = true
-        navigationController?.pushViewController(controller, animated: true)
+        
+        //ChatViewController에서 다시 접근할때 중복으로 push안함
+        if let currentVC = navigationController?.viewControllers.last as? ChatViewController{
+            print("현재 ChatViewController, push안함")
+        } else {
+            navigationController?.pushViewController(controller, animated: true)
+        }
     }
     
     func presentPHPickerView(picker: UIViewController) {

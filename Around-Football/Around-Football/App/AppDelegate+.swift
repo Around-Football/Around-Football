@@ -22,17 +22,8 @@ extension AppDelegate: UNUserNotificationCenterDelegate, MessagingDelegate {
             return
         }
         
-        if UIApplication.shared.applicationState != .active {
-            
-            // MARK: - sceneDelegate 불러오고 coordinator 실행
-
-            guard
-                let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-                let sceneDelegate = windowScene.delegate as? SceneDelegate
-            else { return }
-            sceneDelegate.appCoordinator?.start()
-        }
-        
+        // MARK: - 알림 누르면 앱 시작하면서 SceneDelegate 시작되므로 기존에 start 중복실행됐었음
+    
         deepLinkChatView(channelId: channelId, fromUserId: fromUserId)
     }
     
@@ -44,7 +35,7 @@ extension AppDelegate: UNUserNotificationCenterDelegate, MessagingDelegate {
                         throw NSError(domain: "ChannelInfo Fetch Error", code: -1)
                     }
                     
-                    // MARK: - sceneDelegate, coordinator 불러오기
+                    // MARK: - sceneDelegate, coordinator 불러옴
                     
                     guard
                         let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
@@ -57,9 +48,9 @@ extension AppDelegate: UNUserNotificationCenterDelegate, MessagingDelegate {
                             .childCoordinators
                             .first(where: { $0 is MainTabBarCoordinator }) as? MainTabBarCoordinator
                     else { return }
-
-                    mainTabBarCoordinator.deepLinkCoordinator.pushToChatViewController(channelInfo: channelInfo)
-                    //TODO: - 딥링크 코디네이터 start하고 이동
+                    
+                    //채팅뷰로 이동
+                    mainTabBarCoordinator.deepLinkCoordinator.pushToChatView(channelInfo: channelInfo)
                 } catch(let error as NSError) {
                     print("DEBUG - Tap Push Notification Error", error.localizedDescription)
                 }
