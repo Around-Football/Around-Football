@@ -35,6 +35,7 @@ extension ChatCoordinatorProtocol {
 }
 
 final class DeepLinkCoordinator: BaseCoordinator, ChatCoordinatorProtocol {
+    
     var type: CoordinatorType = .deepLink
     var chatTabCoordinator: ChatTabCoordinator?
     

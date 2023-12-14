@@ -28,6 +28,7 @@ final class ChannelViewController: UIViewController {
         $0.register(ChannelTableViewCell.self, forCellReuseIdentifier: ChannelTableViewCell.cellId)
         $0.delegate = self
     }
+    
     let deleteChannelAlert = UIAlertController(title: .deleteChannel, message: .deleteChannel, preferredStyle: .alert)
     
     var channelTableViewDataSource: RxTableViewSectionedReloadDataSource<ChannelSectionModel>!
@@ -69,6 +70,12 @@ final class ChannelViewController: UIViewController {
         configure()
         configureUI()
         bind()
+        
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "디테일뷰로", style: .done, target: self, action: #selector(rightBarbuttonTapped))
+    }
+    
+    @objc func rightBarbuttonTapped() {
+        viewModel.coordinator?.pushToDetailView(recruitItem: Recruit(dictionary: <#T##[String : Any]#>)))
     }
     
     override func viewWillAppear(_ animated: Bool) {
