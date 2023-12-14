@@ -46,7 +46,7 @@ final class MainTabBarCoordinator: BaseCoordinator {
         homeTabCoordinator.delegate = self
         infoTabCoordinator.delegate = self
         chatTabCoordinator.delegate = self
-        deepLinkCoordinator.deepLinkDelegate = self
+        deepLinkCoordinator.delegate = self
         
         let homeViewController = homeTabCoordinator.makeHomeViewController()
         let mapViewController = mapTabCoordinator.makeMapViewController()
@@ -80,13 +80,22 @@ final class MainTabBarCoordinator: BaseCoordinator {
     
     //DeepLinkCoordinatorDelegate
     //딥링크 관련 함수 작성
-    func pushChatView(channelInfo: ChannelInfo, isNewChat: Bool) {
+    func pushToChatView(channelInfo: ChannelInfo, isNewChat: Bool) {
         //chatTabCoordinator 사용해서 이동
         let viewModel = ChatViewModel(coordinator: chatTabCoordinator, channelInfo: channelInfo, isNewChat: isNewChat)
         let controller = ChatViewController(viewModel: viewModel)
+        
         controller.viewModel.coordinator?.pushChatView(channelInfo: channelInfo, isNewChat: isNewChat)
+    }
+    
+    func pushToDetailView(recruit: Recruit) {
+        let viewModel = DetailViewModel(coordinator: homeTabCoordinator.detailCoordinator, recruitItem: recruit)
+        let controller = DetailViewController(viewModel: viewModel)
+        controller.viewModel.coordinator?.start(recruitItem: recruit)
     }
 }
 
-extension MainTabBarCoordinator: HomeTabCoordinatorDelegate, InfoTabCoordinatorDelegate, ChatTabCoordinatorDelegate, DeepLinkCoordinatorDelegate {
-}
+extension MainTabBarCoordinator: HomeTabCoordinatorDelegate,
+                                 InfoTabCoordinatorDelegate,
+                                 ChatTabCoordinatorDelegate,
+                                 DeepLinkCoordinatorDelegate { }

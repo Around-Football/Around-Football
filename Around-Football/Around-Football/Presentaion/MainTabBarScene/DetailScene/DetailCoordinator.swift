@@ -38,10 +38,11 @@ final class DetailCoordinator: BaseCoordinator {
         navigationController?.pushViewController(controller, animated: true)
     }
     
-    func pushChatViewController(channelInfo: ChannelInfo, isNewChat: Bool = false) {
-        let coordinator = ChatTabCoordinator(navigationController: navigationController)
-        coordinator.pushChatView(channelInfo: channelInfo, isNewChat: isNewChat)
-        childCoordinators.append(coordinator)
+    func pushToChatView(channelInfo: ChannelInfo, isNewChat: Bool = false) {
+//        let coordinator = ChatTabCoordinator(navigationController: navigationController)
+        let viewModel = ChatViewModel(coordinator: nil, channelInfo: channelInfo, isNewChat: isNewChat)
+        let viewController = ChatViewController(viewModel: viewModel)
+        navigationController?.pushViewController(viewController, animated: true)
     }
     
     func presentLoginViewController() {

@@ -8,18 +8,19 @@
 import UIKit
 
 protocol DeepLinkCoordinatorDelegate {
-    func pushChatView(channelInfo: ChannelInfo, isNewChat: Bool)
+    func pushToChatView(channelInfo: ChannelInfo, isNewChat: Bool)
+    func pushToDetailView(recruit: Recruit)
 }
 
 final class DeepLinkCoordinator: BaseCoordinator {
 
     var type: CoordinatorType = .deepLink
-    var deepLinkDelegate: DeepLinkCoordinatorDelegate?
+    var delegate: DeepLinkCoordinatorDelegate?
     
-    func pushToChatViewController(channelInfo: ChannelInfo) {
+    func pushToChatView(channelInfo: ChannelInfo, isNewChat: Bool = false) {
         guard let mainTabController = navigationController?.viewControllers.first as? MainTabController else { return }
         //채팅 탭으로 이동
         mainTabController.selectedIndex = 2
-        deepLinkDelegate?.pushChatView(channelInfo: channelInfo, isNewChat: false)
+        delegate?.pushToChatView(channelInfo: channelInfo, isNewChat: false)
     }
 }
