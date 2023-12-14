@@ -51,7 +51,6 @@ final class ChannelViewController: UIViewController {
         navigationController?.navigationBar.backgroundColor = .systemBackground
         title = "채팅"
         
-        
         print("\(String(describing: Auth.auth().currentUser?.uid))")
         
     }
@@ -70,19 +69,12 @@ final class ChannelViewController: UIViewController {
         configure()
         configureUI()
         bind()
-        
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "디테일뷰로", style: .done, target: self, action: #selector(rightBarbuttonTapped))
-    }
-    
-    @objc func rightBarbuttonTapped() {
-        viewModel.coordinator?.pushToDetailView(recruitItem: Recruit(dictionary: <#T##[String : Any]#>)))
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         invokedViewWillAppear.onNext(())
     }
-    
     
     // MARK: - Helpers
     
