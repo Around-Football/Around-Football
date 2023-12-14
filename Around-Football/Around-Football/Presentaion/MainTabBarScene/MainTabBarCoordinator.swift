@@ -54,9 +54,8 @@ final class MainTabBarCoordinator: BaseCoordinator {
         
         //딥링크와 앱 코디네이터, 네비게이션 컨트롤러 연결
         let deepLinkCoordinator = DeepLinkCoordinator(
-            navigationController: navigationController,
-            chatTabCoordinator: chatTabCoordinator
-        )
+            navigationController: navigationController)
+        deepLinkCoordinator.deepLinkDelegate = self
         childCoordinators.append(deepLinkCoordinator)
         self.deepLinkCoordinator = deepLinkCoordinator
     }
@@ -78,6 +77,18 @@ final class MainTabBarCoordinator: BaseCoordinator {
     func presentLoginViewController() {
         delegate?.presentLoginViewController()
     }
+    
+    //DeepLinkCoordinatorDelegate
+    //딥링크 관련 함수 작성
+    func pushChatView(channelInfo: ChannelInfo, isNewChat: Bool) {
+        print("MainTabBarCoordinator함수")
+        let viewModel = ChatViewModel(coordinator: nil, channelInfo: channelInfo, isNewChat: isNewChat)
+        let controller = ChatViewController(viewModel: viewModel)
+        controller.hidesBottomBarWhenPushed = true
+        navigationController?.pushViewController(controller, animated: true)
+        navigationController?.isNavigationBarHidden = false
+    }
 }
 
-extension MainTabBarCoordinator: HomeTabCoordinatorDelegate, InfoTabCoordinatorDelegate, ChatTabCoordinatorDelegate  { }
+extension MainTabBarCoordinator: HomeTabCoordinatorDelegate, InfoTabCoordinatorDelegate, ChatTabCoordinatorDelegate, DeepLinkCoordinatorDelegate  {
+}
