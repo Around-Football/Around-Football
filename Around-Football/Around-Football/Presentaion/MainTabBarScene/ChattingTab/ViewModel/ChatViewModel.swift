@@ -23,6 +23,7 @@ final class ChatViewModel {
     var channel: BehaviorRelay<Channel?> = BehaviorRelay(value: nil)
     var messages: BehaviorRelay<[Message]> = BehaviorRelay(value: [])
     let channelInfo: ChannelInfo
+    var recruit: BehaviorRelay<Recruit?> = BehaviorRelay(value: nil)
     var currentUser: User?
     var withUser: User? = nil
     var isSendingPhoto: BehaviorRelay<Bool> = BehaviorRelay(value: false)
@@ -115,12 +116,23 @@ final class ChatViewModel {
             .disposed(by: disposeBag)
     }
     
+    private func fetchRecruit(by inputObserver: Observable<Void>) {
+        inputObserver
+            .withUnretained(self)
+            .subscribe { (owner, _) in
+                FirebaseAPI.shared.fetchRecruit(recruitID: owner.channelInfo.recruitID) { recruit in
+                    owner.recruit.accept(recruit)
+                }
+            }
+            .disposed(by: disposeBag)
+    }
     // MARK: - Helpers
     
     func transform(_ input: Input) -> Output {
         setupChatListener(by: input.invokedViewWillAppear)
         setupChatStatusListener(by: input.invokedViewWillAppear)
         fetchWithUser(by: input.invokedViewWillAppear)
+        fetchRecruit(by: input.invokedViewWillAppear)
         sendMessage(by: input.didTapSendButton)
         sendPhoto(by: input.pickedImage)
         resetAlarmInformation(by: input.invokedViewWillAppear)
@@ -133,15 +145,11 @@ final class ChatViewModel {
             .withUnretained(self)
             .subscribe { (owner, text) in
                 print(#function)
-                guard let currentUser = owner.currentUser,
-                      let withUser = owner.withUser,
-                      let channel = owner.channel.value else { return }
+                guard let currentUser = owner.currentUser else { return }
                 let message = Message(user: currentUser, content: text, messageType: .chat)
                 if owner.isNewChat {
                     print("isNewChat = \(owner.isNewChat)")
-                    owner.channelAPI.createChannel(channel: channel,
-                                                   owner: currentUser,
-                                                   withUser: withUser) {
+                    owner.channelAPI.createChannel(channelInfo: owner.channelInfo) {
                         owner.saveMessage(message: message) {
                             owner.isNewChat = false
                         }
@@ -164,7 +172,7 @@ final class ChatViewModel {
                 owner.isSendingPhoto.accept(true)
                 if owner.isNewChat {
                     print("isNewChat = \(owner.isNewChat)")
-                    owner.channelAPI.createChannel(channel: channel, owner: currentUser, withUser: withUser) {
+                    owner.channelAPI.createChannel(channelInfo: owner.channelInfo) {
                         owner.uploadImage(image: image, channel: channel)
                         owner.isNewChat = false
                     }

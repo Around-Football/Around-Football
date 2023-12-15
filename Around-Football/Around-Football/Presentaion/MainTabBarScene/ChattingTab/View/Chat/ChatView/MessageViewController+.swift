@@ -1,5 +1,5 @@
 //
-//  ChatViewController+.swift
+//  MessageViewController+.swift
 //  Around-Football
 //
 //  Created by 진태영 on 11/15/23.
@@ -15,7 +15,7 @@ import RxCocoa
 
 // MARK: - Binding
 
-extension ChatViewController {
+extension MessageViewController {
     func bindEnabledCameraBarButton() {
         viewModel.isSendingPhoto
             .withUnretained(self)
@@ -86,7 +86,7 @@ extension ChatViewController {
     }
 }
 
-extension ChatViewController: MessagesDataSource {
+extension MessageViewController: MessagesDataSource {
     var currentSender: MessageKit.SenderType {
         return viewModel.currentSender
     }
@@ -121,7 +121,7 @@ extension ChatViewController: MessagesDataSource {
     }
 }
 
-extension ChatViewController: MessagesLayoutDelegate {
+extension MessageViewController: MessagesLayoutDelegate {
     // 아래 여백
     func cellBottomLabelHeight(for message: MessageType,
                                at indexPath: IndexPath,
@@ -148,7 +148,7 @@ extension ChatViewController: MessagesLayoutDelegate {
 }
 
 // 상대방이 보낸 메시지, 내가 보낸 메시지를 구분하여 색상과 모양 지정
-extension ChatViewController: MessagesDisplayDelegate {
+extension MessageViewController: MessagesDisplayDelegate {
     // 말풍선의 배경 색상
     func backgroundColor(for message: MessageType,
                          at indexPath: IndexPath,
@@ -209,7 +209,7 @@ extension ChatViewController: MessagesDisplayDelegate {
     }
 }
 
-extension ChatViewController: PHPickerViewControllerDelegate {
+extension MessageViewController: PHPickerViewControllerDelegate {
     func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
         picker.dismiss(animated: true)
         
@@ -231,7 +231,7 @@ extension ChatViewController: PHPickerViewControllerDelegate {
 
 // MARK: - ImageCell Custom DetailView
 
-extension ChatViewController: MessageCellDelegate {
+extension MessageViewController: MessageCellDelegate {
     func didTapImage(in cell: MessageCollectionViewCell) {
         print(#function)
         print("didTapMessage")
@@ -265,7 +265,7 @@ extension ChatViewController: MessageCellDelegate {
     }
 }
 
-extension ChatViewController: UIViewControllerTransitioningDelegate {
+extension MessageViewController: UIViewControllerTransitioningDelegate {
     func animationController(forPresented presented: UIViewController,
                              presenting: UIViewController,
                              source: UIViewController) -> UIViewControllerAnimatedTransitioning? {

@@ -1,5 +1,5 @@
 //
-//  ChatViewController.swift
+//  MessageViewController.swift
 //  Around-Football
 //
 //  Created by Deokhun KIM on 11/3/23.
@@ -16,7 +16,7 @@ import RxSwift
 import RxCocoa
 
 
-final class ChatViewController: MessagesViewController {
+final class MessageViewController: MessagesViewController {
     // MARK: - Properties
     
     var viewModel: ChatViewModel
@@ -76,8 +76,6 @@ final class ChatViewController: MessagesViewController {
     
     private func configure() {
         view.backgroundColor = .systemBackground
-        navigationController?.navigationBar.prefersLargeTitles = false
-        title = viewModel.channelInfo.withUserName
     }
     
     private func configureDelegate() {
