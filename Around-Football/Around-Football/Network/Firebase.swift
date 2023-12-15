@@ -59,7 +59,6 @@ final class FirebaseAPI {
         return user
     }
     
-    
     func fetchFields(completion: @escaping(([Field]) -> Void)) {
         REF_FIELD.getDocuments { snapshot, error in
             
@@ -72,6 +71,19 @@ final class FirebaseAPI {
             let documentsData = snapshot.documents.map { $0.data() }
             
             completion(Field.convertToArray(documents: documentsData))
+        }
+    }
+    
+    func fetchRecruit(recruitID: String, completion: @escaping(Recruit) -> Void) {
+        REF_RECRUIT.document(recruitID).getDocument { snapshot, error in
+            if let error = error {
+                print("DEBUG - Fetch Recruit Error: \(error.localizedDescription)")
+                return
+            }
+            
+            guard let data = snapshot?.data() else { return }
+            let recruit = Recruit(dictionary: data)
+            completion(recruit)
         }
     }
     
@@ -424,8 +436,8 @@ extension FirebaseAPI {
         completion: @escaping (Error?) -> Void
     ) {
         guard let user else { return }
-        
-        let data = ["id": UUID().uuidString,
+        let id = UUID().uuidString
+        let data = ["id": id,
                     "userID": user.id,
                     "userName": user.userName,
                     "fieldID": fieldID,
@@ -444,7 +456,7 @@ extension FirebaseAPI {
                     "acceptedApplicantsUID": acceptedApplicantsUID] as [String : Any]
         
         REF_RECRUIT
-            .document(fieldID)
+            .document(id)
             .setData(data, completion: completion)
     }
     
