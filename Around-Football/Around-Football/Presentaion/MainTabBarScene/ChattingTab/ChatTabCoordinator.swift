@@ -41,7 +41,7 @@ final class ChatTabCoordinator: BaseCoordinator {
         controller.hidesBottomBarWhenPushed = true
         
         //ChatViewController에서 다시 접근할때 중복으로 push안함
-        if let currentVC = navigationController?.viewControllers.last as? ChatViewController{
+        if let currentVC = navigationController?.viewControllers.last as? ChatViewController {
             print("현재 ChatViewController, push안함")
         } else {
             navigationController?.pushViewController(controller, animated: true)
