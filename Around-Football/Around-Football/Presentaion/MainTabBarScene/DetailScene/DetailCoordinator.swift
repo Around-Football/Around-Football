@@ -11,7 +11,7 @@ protocol DetailCoordinatorDelegate {
     func presentLoginViewController()
 }
 
-final class DetailCoordinator: BaseCoordinator {
+final class DetailCoordinator: BaseCoordinator, ChatCoordinatorProtocol {
     
     var type: CoordinatorType = .detailScene
     var delegate: DetailCoordinatorDelegate?
@@ -38,11 +38,11 @@ final class DetailCoordinator: BaseCoordinator {
         navigationController?.pushViewController(controller, animated: true)
     }
     
-    func pushChatViewController(channelInfo: ChannelInfo, isNewChat: Bool = false) {
-        let coordinator = ChatTabCoordinator(navigationController: navigationController)
-        coordinator.pushChatView(channelInfo: channelInfo, isNewChat: isNewChat)
-        childCoordinators.append(coordinator)
-    }
+//    func pushChatViewController(channelInfo: ChannelInfo, isNewChat: Bool = false) {
+//        let coordinator = ChatTabCoordinator(navigationController: navigationController)
+//        coordinator.pushChatView(channelInfo: channelInfo, isNewChat: isNewChat)
+//        childCoordinators.append(coordinator)
+//    }
     
     func presentLoginViewController() {
         delegate?.presentLoginViewController()

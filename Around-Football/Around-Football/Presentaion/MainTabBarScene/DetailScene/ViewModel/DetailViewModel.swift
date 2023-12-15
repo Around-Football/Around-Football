@@ -65,15 +65,15 @@ final class DetailViewModel {
               let recruitItem = recruitItem,
               let recruitUser = recruitUser else { return }
         channelAPI.checkExistAvailableChannel(owner: currentUser,
-                                              withUser: recruitUser) { [weak self] isAvailable, channelId in
+                                              recruitID: recruitItem.id) { [weak self] isAvailable, channelId in
             guard let self = self else { return }
             print("DEBUG - ", #function, isAvailable)
             if isAvailable, let channelId = channelId {
                 let channelInfo = ChannelInfo(id: channelId, withUser: recruitUser, recruitID: recruitItem.id)
-                self.coordinator?.pushChatViewController(channelInfo: channelInfo)
+                self.coordinator?.pushChatView(channelInfo: channelInfo)
             } else {
                 let channelInfo = ChannelInfo(id: UUID().uuidString, withUser: recruitUser, recruitID: recruitItem.id)
-                self.coordinator?.pushChatViewController(channelInfo: channelInfo, isNewChat: true)
+                self.coordinator?.pushChatView(channelInfo: channelInfo, isNewChat: true)
             }
         }
     }

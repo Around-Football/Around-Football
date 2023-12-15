@@ -90,4 +90,11 @@ class ChatHeaderView: UIView {
         self.typeLabel.text = "유형: \(recruit.type)"
     }
     
+    func configureErrorInfo() {
+        self.titleLabel.text = "게시글을 확인할 수 없습니다."
+        self.dateLabel.text = ""
+        self.imageView.image = nil
+        self.locationLabel.text = ""
+        self.typeLabel.text = ""
+    }
 }
