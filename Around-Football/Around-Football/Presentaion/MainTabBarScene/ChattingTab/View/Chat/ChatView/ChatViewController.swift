@@ -74,7 +74,10 @@ class ChatViewController: UIViewController {
         viewModel.recruit
             .withUnretained(self)
             .subscribe { (owner, recruit) in
-                guard let recruit = recruit else { return }
+                guard let recruit = recruit else {
+                    owner.chatHeaderView.configureErrorInfo()
+                    return
+                }
                 owner.chatHeaderView.configureInfo(recruit: recruit)
             }
             .disposed(by: disposeBag)

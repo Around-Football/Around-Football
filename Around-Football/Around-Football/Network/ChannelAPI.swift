@@ -57,9 +57,9 @@ final class ChannelAPI {
             .setData(channelInfo.representation)
     }
     
-    func checkExistAvailableChannel(owner: User, withUser: User, completion: @escaping(Bool, String?) -> Void) {
+    func checkExistAvailableChannel(owner: User, recruitID: String, completion: @escaping(Bool, String?) -> Void) {
         REF_USER.document(owner.id).collection("channels")
-            .whereField("withUserId", isEqualTo: withUser.id)
+            .whereField("recruitID", isEqualTo: recruitID)
             .whereField("isAvailable", isEqualTo: true)
             .getDocuments { snapshot, error in
                 guard let isEmpty = snapshot?.isEmpty else {
