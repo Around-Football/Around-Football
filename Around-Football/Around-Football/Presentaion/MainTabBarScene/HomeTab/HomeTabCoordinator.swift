@@ -12,9 +12,10 @@ protocol HomeTabCoordinatorDelegate {
 }
 
 final class HomeTabCoordinator: BaseCoordinator, DetailCoordinatorDelegate {
-
+    
     var type: CoordinatorType = .home
     var delegate: HomeTabCoordinatorDelegate?
+    lazy var detailCoordinator = DetailCoordinator(navigationController: navigationController)
     
     deinit {
         print("HomeTabCoordinator deinit")
@@ -32,16 +33,11 @@ final class HomeTabCoordinator: BaseCoordinator, DetailCoordinatorDelegate {
         return navigationController
     }
     
-    func presentLoginViewController() {
-        delegate?.presentLoginViewController()
-    }
-    
     func pushToDetailView(recruitItem: Recruit) {
-        let coordinator = DetailCoordinator(navigationController: navigationController)
-        coordinator.recruitItem = recruitItem
+        detailCoordinator.recruitItem = recruitItem
+        detailCoordinator.delegate = self
         navigationController?.navigationBar.isHidden = false
-        coordinator.delegate = self
-        coordinator.start(recruitItem: recruitItem)
+        detailCoordinator.start(recruitItem: recruitItem)
     }
 
     func pushMapView() {
@@ -51,16 +47,15 @@ final class HomeTabCoordinator: BaseCoordinator, DetailCoordinatorDelegate {
         let controller = MapViewController(viewModel: MapViewModel(latitude: 37, longitude: 126))
         navigationController?.pushViewController(controller, animated: true)
     }
-
-//    func pushApplicationStatusView() {
-//        let viewModel = ApplicantListViewModel(coordinator: self)
-//        let ApplicationStatusVc = ApplicantListViewController(viewModel: viewModel)
-//        navigationController?.pushViewController(ApplicationStatusVc, animated: true)
-//    }
     
     func pushInviteView() {
         let coordinator = InviteCoordinator(navigationController: navigationController)
         coordinator.start()
         coordinator.navigationController?.navigationBar.isHidden = false
+    }
+    
+    //DetailCoordinatorDelegate
+    func presentLoginViewController() {
+        delegate?.presentLoginViewController()
     }
 }

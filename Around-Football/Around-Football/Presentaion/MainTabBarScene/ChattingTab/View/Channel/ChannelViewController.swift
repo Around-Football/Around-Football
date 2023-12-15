@@ -28,6 +28,7 @@ final class ChannelViewController: UIViewController {
         $0.register(ChannelTableViewCell.self, forCellReuseIdentifier: ChannelTableViewCell.cellId)
         $0.delegate = self
     }
+    
     let deleteChannelAlert = UIAlertController(title: .deleteChannel, message: .deleteChannel, preferredStyle: .alert)
     
     var channelTableViewDataSource: RxTableViewSectionedReloadDataSource<ChannelSectionModel>!
@@ -50,9 +51,7 @@ final class ChannelViewController: UIViewController {
         navigationController?.navigationBar.backgroundColor = .systemBackground
         title = "채팅"
         
-        
         print("\(String(describing: Auth.auth().currentUser?.uid))")
-        
     }
     
     required init?(coder: NSCoder) {
@@ -75,7 +74,6 @@ final class ChannelViewController: UIViewController {
         super.viewWillAppear(animated)
         invokedViewWillAppear.onNext(())
     }
-    
     
     // MARK: - Helpers
     
