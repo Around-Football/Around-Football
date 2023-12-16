@@ -5,11 +5,11 @@
       "scale" : "1x"
     },
     {
-      "filename" : "AFUser.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
+      "filename" : "AFUser.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

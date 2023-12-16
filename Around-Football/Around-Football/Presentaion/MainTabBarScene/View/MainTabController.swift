@@ -42,17 +42,21 @@ final class MainTabController: UITabBarController {
         tabBar.tintColor = .black
         viewControllers = pages
     
-        pages[0].tabBarItem = UITabBarItem(title: "Home",
-                                           image: UIImage(systemName: "house"),
-                                           tag: 0)
-        pages[1].tabBarItem = UITabBarItem(title: "Map",
-                                           image: UIImage(systemName: "map"),
-                                           tag: 1)
-        pages[2].tabBarItem = UITabBarItem(title: "Chat",
-                                           image: UIImage(systemName: "bubble"),
-                                           tag: 2)
-        pages[3].tabBarItem = UITabBarItem(title: "Info",
-                                           image: UIImage(systemName: "info.square"),
-                                           tag: 3)
+        pages[0].tabBarItem = UITabBarItem(title: "홈",
+                                           image: UIImage(named: "AFHome"),
+                                           selectedImage: UIImage(named: "AFHomeSelect"))
+        pages[1].tabBarItem = UITabBarItem(title: "지도",
+                                           image: UIImage(named: "AFLocation"),
+                                           selectedImage: UIImage(named: "AFLocationSelect"))
+        pages[2].tabBarItem = UITabBarItem(title: "채팅",
+                                           image: UIImage(named: "AFChat"),
+                                           selectedImage: UIImage(named: "AFChatSelect"))
+        pages[3].tabBarItem = UITabBarItem(title: "내 정보",
+                                           image: UIImage(named: "AFUser"),
+                                           selectedImage: UIImage(named: "AFUserSelect"))
+        pages[0].tabBarItem.tag = 0
+        pages[1].tabBarItem.tag = 1
+        pages[2].tabBarItem.tag = 2
+        pages[3].tabBarItem.tag = 3
     }
 }
