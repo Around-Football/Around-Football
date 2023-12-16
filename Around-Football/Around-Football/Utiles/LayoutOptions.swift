@@ -8,18 +8,17 @@
 import UIKit
 
 enum LayoutOptions {
-    static let cornerRadious: CGFloat = 5
+    static let cornerRadious: CGFloat = 8
     static let shadowCornerRadious: CGFloat = 5
     static let shadowOpacity: Float = 0.3
     static let titleSize: CGFloat = 15
 }
 
 enum SuperviewOffsets {
-    static let topPadding: Float = 20
+    static let topPadding: Float = 24
     static let leadingPadding: Float = 20
     static let trailingPadding: Float = -20
-    static let bottomPadding: Float = -20
-    static let yPadding = 24
+    static let bottomPadding: Float = -24
 }
 
 extension UIColor {
