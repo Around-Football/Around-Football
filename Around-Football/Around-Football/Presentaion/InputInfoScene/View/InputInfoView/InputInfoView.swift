@@ -24,6 +24,11 @@ final class InputInfoView: UIView {
     }
     private let contentView = UIView()
     
+    private let titleLabel = UILabel().then {
+        $0.text = "추가 정보를 작성해주세요"
+        $0.font = AFFont.titleMedium
+    }
+    
     // 이름
     private lazy var userNameStackView = UIStackView().then{
         $0.axis = .vertical
@@ -37,14 +42,14 @@ final class InputInfoView: UIView {
     
     private let userNameLabel = UILabel().then {
         $0.text = "이름"
-        $0.font = .boldSystemFont(ofSize: 16)
+        $0.font = .boldSystemFont(ofSize: 14)
     }
     
     let userNameTextField = UITextField().then {
         $0.layer.cornerRadius = LayoutOptions.cornerRadious
         $0.placeholder = "이름을 입력해주세요"
         $0.borderStyle = .roundedRect
-        $0.font = .systemFont(ofSize: 15)
+        $0.font = .systemFont(ofSize: 16)
     }
     
     // 나이
@@ -321,7 +326,8 @@ final class InputInfoView: UIView {
     private func setupUI() {
         addSubviews(mainScrollView)
         mainScrollView.addSubview(contentView)
-        contentView.addSubviews(userNameStackView,
+        contentView.addSubviews(titleLabel,
+                                userNameStackView,
                                 userAgeStackView,
                                 userGenderStackView,
                                 userAreaStackView,
@@ -341,8 +347,14 @@ final class InputInfoView: UIView {
             make.height.equalTo(mainScrollView.snp.height)
         }
         
+        titleLabel.snp.makeConstraints { make in
+            make.top.equalToSuperview()
+            make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
+        }
+        
         userNameStackView.snp.makeConstraints { make in
-            make.top.leading.equalToSuperview().offset(SuperviewOffsets.topPadding)
+            make.top.equalTo(titleLabel.snp.bottom).offset(32)
+            make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
             make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
             make.bottom.equalTo(userAgeStackView.snp.top).offset(SuperviewOffsets.bottomPadding)
         }

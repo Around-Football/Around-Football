@@ -19,6 +19,7 @@ enum SuperviewOffsets {
     static let leadingPadding: Float = 20
     static let trailingPadding: Float = -20
     static let bottomPadding: Float = -20
+    static let yPadding = 24
 }
 
 extension UIColor {
