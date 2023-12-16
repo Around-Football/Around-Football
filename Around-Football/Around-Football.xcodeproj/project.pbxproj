@@ -120,7 +120,8 @@
 		7C88C1AA2B2D9F0200FB7385 /* Pretendard-SemiBold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 7C88C1A52B2D9F0100FB7385 /* Pretendard-SemiBold.otf */; };
 		7C88C1AB2B2D9F0200FB7385 /* Pretendard-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 7C88C1A62B2D9F0200FB7385 /* Pretendard-Regular.otf */; };
 		7C88C1AD2B2D9F2000FB7385 /* Pretendard-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = 7C88C1AC2B2D9F2000FB7385 /* Pretendard-Medium.otf */; };
-		7C88C1AF2B2D9F4D00FB7385 /* UIFont+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C88C1AE2B2D9F4D00FB7385 /* UIFont+.swift */; };
+		7C88C1AF2B2D9F4D00FB7385 /* AFFont.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C88C1AE2B2D9F4D00FB7385 /* AFFont.swift */; };
+		7C88C1B12B2DA40900FB7385 /* AFColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C88C1B02B2DA40900FB7385 /* AFColor.swift */; };
 		7C94EBD52B01BF0600A7E42A /* InfoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C94EBD42B01BF0600A7E42A /* InfoViewModel.swift */; };
 		7CB21BA32AC94D36001D0058 /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CB21BA22AC94D36001D0058 /* DetailViewController.swift */; };
 		7CB21BA52AC94EE4001D0058 /* DetailUserInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CB21BA42AC94EE4001D0058 /* DetailUserInfoView.swift */; };
@@ -233,7 +234,8 @@
 		7C88C1A52B2D9F0100FB7385 /* Pretendard-SemiBold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Pretendard-SemiBold.otf"; sourceTree = "<group>"; };
 		7C88C1A62B2D9F0200FB7385 /* Pretendard-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Pretendard-Regular.otf"; sourceTree = "<group>"; };
 		7C88C1AC2B2D9F2000FB7385 /* Pretendard-Medium.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Pretendard-Medium.otf"; sourceTree = "<group>"; };
-		7C88C1AE2B2D9F4D00FB7385 /* UIFont+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIFont+.swift"; sourceTree = "<group>"; };
+		7C88C1AE2B2D9F4D00FB7385 /* AFFont.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AFFont.swift; sourceTree = "<group>"; };
+		7C88C1B02B2DA40900FB7385 /* AFColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AFColor.swift; sourceTree = "<group>"; };
 		7C94EBD42B01BF0600A7E42A /* InfoViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoViewModel.swift; sourceTree = "<group>"; };
 		7CB21BA22AC94D36001D0058 /* DetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
 		7CB21BA42AC94EE4001D0058 /* DetailUserInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailUserInfoView.swift; sourceTree = "<group>"; };
@@ -811,7 +813,8 @@
 				668EE4C22B050373007A8844 /* ImageTransition.swift */,
 				668EE4C42B05038B007A8844 /* DisMissAnimation.swift */,
 				66391CA82B1F5E2000DB7249 /* UIAlertController+.swift */,
-				7C88C1AE2B2D9F4D00FB7385 /* UIFont+.swift */,
+				7C88C1AE2B2D9F4D00FB7385 /* AFFont.swift */,
+				7C88C1B02B2DA40900FB7385 /* AFColor.swift */,
 			);
 			path = Utiles;
 			sourceTree = "<group>";
@@ -983,8 +986,9 @@
 				7C2B1AE02AF4B5DB0052EC64 /* InputInfoViewModel.swift in Sources */,
 				66656F9F2AD921D700AE1AFA /* FieldDetailViewModel.swift in Sources */,
 				7C2B1AF72AF4BE160052EC64 /* ApplicantListViewModel.swift in Sources */,
+				7C88C1B12B2DA40900FB7385 /* AFColor.swift in Sources */,
 				668EE4A72AFCB120007A8844 /* MessageModel.swift in Sources */,
-				7C88C1AF2B2D9F4D00FB7385 /* UIFont+.swift in Sources */,
+				7C88C1AF2B2D9F4D00FB7385 /* AFFont.swift in Sources */,
 				668EE4AC2AFCB919007A8844 /* StreamErrorModel.swift in Sources */,
 				7C2B1ACB2AF4B1530052EC64 /* MainTabBarCoordinator.swift in Sources */,
 				668EE49C2AFC9E84007A8844 /* ChannelViewController.swift in Sources */,
