@@ -8,6 +8,10 @@
 import UIKit
 
 import RxSwift
+import SnapKit
+import Then
+
+// MARK: - 큰 버튼
 
 final class AFButton: UIButton {
     
@@ -50,6 +54,8 @@ final class AFButton: UIButton {
     }
 }
 
+// MARK: - 작은 버튼
+
 final class AFSmallButton: UIButton {
     
     // MARK: - Lifecycles
@@ -78,10 +84,12 @@ final class AFSmallButton: UIButton {
     }
 }
 
+// MARK: - MENU버튼
+
 final class AFMenuButton: UIButton {
     
     var menuButtonSubject = PublishSubject<String?>()
-    var config = UIButton.Configuration.plain()
+    let chevronImage = UIImage(systemName: "chevron.down")
     
     // MARK: - Lifecycles
     
@@ -97,16 +105,13 @@ final class AFMenuButton: UIButton {
     // MARK: - Helpers
     
     private func configureUI(buttonTitle: String, menus: [String]) {
-        let image = UIImage(systemName: "chevron.down")
         setTitle(buttonTitle, for: .normal)
         setTitleColor(.label, for: .normal)
-        setImage(image?.withTintColor(UIColor.systemGray, renderingMode: .alwaysOriginal),
-                 for: .normal)
+        tintColor = .black
         layer.cornerRadius = LayoutOptions.cornerRadious
         layer.borderWidth = 1.0
         layer.borderColor = AFColor.grayScale100.cgColor
         showsMenuAsPrimaryAction = true
-        semanticContentAttribute = .forceRightToLeft
         
         let menus: [String]  = menus
         
@@ -118,6 +123,21 @@ final class AFMenuButton: UIButton {
             }
         })
         
-        config.imagePadding = 30
+        if let titleLabel = titleLabel {
+            titleLabel.snp.makeConstraints { make in
+                make.leading.equalToSuperview().offset(16)
+                make.centerY.equalToSuperview()
+            }
+        }
+        
+        // Add the chevronImage directly to the button
+        if let chevronImage = chevronImage {
+            let chevronImageView = UIImageView(image: chevronImage)
+            addSubview(chevronImageView)
+            chevronImageView.snp.makeConstraints { make in
+                make.trailing.equalToSuperview().offset(-16)
+                make.centerY.equalToSuperview()
+            }
+        }
     }
 }
