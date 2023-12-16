@@ -10,16 +10,14 @@ import UIKit
 final class AFButton: UIButton {
     
     // MARK: - Properties
-    
-    private var buttonTitle: String
+
     var buttonActionHandler: (() -> Void)?
     
     // MARK: - Lifecycles
     
-    init(frame: CGRect, buttonTitle: String) {
-        self.buttonTitle = buttonTitle
-        super.init(frame: frame)
-        configureUI()
+    init(buttonTitle: String, color: UIColor) {
+        super.init(frame: .zero)
+        configureUI(buttonTitle: buttonTitle, color: color)
     }
     
     required init?(coder: NSCoder) {
@@ -38,12 +36,42 @@ final class AFButton: UIButton {
     
     // MARK: - Helpers
     
-    private func configureUI() {
+    private func configureUI(buttonTitle: String, color: UIColor) {
         setTitle(buttonTitle, for: .normal)
-        setTitleColor(.white, for: .normal)
-        backgroundColor = .black
         layer.cornerRadius = LayoutOptions.cornerRadious
         clipsToBounds = true
         addTarget(self, action: #selector(buttonClicked), for: .touchUpInside)
+        color == .black ? setTitleColor(.white, for: .normal) : setTitleColor(.black, for: .normal)
+        setBackgroundColor(color, for: .normal)
+        setTitleColor(AFColor.grayScale300, for: .disabled)
+        setBackgroundColor(AFColor.grayScale100, for: .disabled)
+    }
+}
+
+final class AFSmallButton: UIButton {
+    
+    // MARK: - Lifecycles
+    
+    init(buttonTitle: String) {
+        super.init(frame: .zero)
+        configureUI(buttonTitle: buttonTitle)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    // MARK: - Helpers
+    
+    private func configureUI(buttonTitle: String) {
+        setTitle(buttonTitle, for: .normal)
+        titleLabel?.font = AFFont.text
+        setTitleColor(AFColor.grayScale200, for: .normal)
+        setTitleColor(.black, for: .selected)
+        layer.cornerRadius = LayoutOptions.cornerRadious
+        layer.borderWidth = 1.0
+        layer.borderColor = AFColor.grayScale100.cgColor
+        setBackgroundColor(AFColor.primary, for: .selected)
+        setBackgroundColor(.clear, for: .normal)
     }
 }
