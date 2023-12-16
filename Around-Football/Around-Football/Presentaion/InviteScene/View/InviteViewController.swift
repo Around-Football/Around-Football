@@ -116,7 +116,7 @@ final class InviteViewController: UIViewController {
         $0.textAlignment = .left
     }
     
-    private lazy var addButton = AFButton(frame: .zero, buttonTitle: "등록하기")
+    private lazy var addButton = AFButton(buttonTitle: "등록하기", color: AFColor.primary)
     
     // MARK: - Lifecycles
     
