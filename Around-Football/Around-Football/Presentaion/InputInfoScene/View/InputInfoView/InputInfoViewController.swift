@@ -40,6 +40,9 @@ final class InputInfoViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.title = "내 정보"
+        navigationController?.navigationBar.titleTextAttributes = [
+            NSAttributedString.Key.foregroundColor: AFColor.grayScale200
+        ]
         
         invokedViewWillAppear.onNext(()) //유저 데이터 요청
         bindUI()
@@ -66,13 +69,13 @@ final class InputInfoViewController: UIViewController {
     // MARK: - Helpers
     
     private func bindSubjectButton() {
-        inputInfoView.regionSubject.subscribe(onNext: { [weak self] region in
+        inputInfoView.regionFilterButton.menuButtonSubject.subscribe(onNext: { [weak self] region in
             guard let self else { return }
             viewModel?.area.accept(region)
             viewModel?.updateData()
         }).disposed(by: disposeBag)
         
-        inputInfoView.ageSubject.subscribe(onNext: { [weak self] age in
+        inputInfoView.ageFilterButton.menuButtonSubject.subscribe(onNext: { [weak self] age in
             guard let self else { return }
             viewModel?.age.accept(age)
             viewModel?.updateData()

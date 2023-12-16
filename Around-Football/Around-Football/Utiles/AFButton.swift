@@ -7,10 +7,12 @@
 
 import UIKit
 
+import RxSwift
+
 final class AFButton: UIButton {
     
     // MARK: - Properties
-
+    
     var buttonActionHandler: (() -> Void)?
     
     // MARK: - Lifecycles
@@ -26,7 +28,7 @@ final class AFButton: UIButton {
     
     // MARK: - Selectors
     
-    @objc 
+    @objc
     func buttonClicked() {
         print("DEBUG: buttonClicked")
         if let buttonActionHandler {
@@ -73,5 +75,49 @@ final class AFSmallButton: UIButton {
         layer.borderColor = AFColor.grayScale100.cgColor
         setBackgroundColor(AFColor.primary, for: .selected)
         setBackgroundColor(.clear, for: .normal)
+    }
+}
+
+final class AFMenuButton: UIButton {
+    
+    var menuButtonSubject = PublishSubject<String?>()
+    var config = UIButton.Configuration.plain()
+    
+    // MARK: - Lifecycles
+    
+    init(buttonTitle: String, menus: [String]) {
+        super.init(frame: .zero)
+        configureUI(buttonTitle: buttonTitle, menus: menus)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    // MARK: - Helpers
+    
+    private func configureUI(buttonTitle: String, menus: [String]) {
+        let image = UIImage(systemName: "chevron.down")
+        setTitle(buttonTitle, for: .normal)
+        setTitleColor(.label, for: .normal)
+        setImage(image?.withTintColor(UIColor.systemGray, renderingMode: .alwaysOriginal),
+                 for: .normal)
+        layer.cornerRadius = LayoutOptions.cornerRadious
+        layer.borderWidth = 1.0
+        layer.borderColor = AFColor.grayScale100.cgColor
+        showsMenuAsPrimaryAction = true
+        semanticContentAttribute = .forceRightToLeft
+        
+        let menus: [String]  = menus
+        
+        menu = UIMenu(children: menus.map { city in
+            UIAction(title: city) { [weak self] _ in
+                guard let self else { return }
+                menuButtonSubject.onNext(city)
+                setTitle(city, for: .normal)
+            }
+        })
+        
+        config.imagePadding = 30
     }
 }

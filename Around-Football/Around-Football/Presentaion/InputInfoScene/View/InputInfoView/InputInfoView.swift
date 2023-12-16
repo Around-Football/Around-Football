@@ -15,10 +15,6 @@ final class InputInfoView: UIView {
 
     // MARK: - Properties
     
-    //버튼으로 지역 누르면 보내줌
-    let ageSubject = PublishSubject<String?>()
-    let regionSubject = PublishSubject<String?>()
-    
     private let userNameLabel = AFTitleSmall(title: "이름")
     private let userAgeLabel = AFTitleSmall(title: "나이")
     private let userAreaLabel = AFTitleSmall(title: "지역")
@@ -74,6 +70,8 @@ final class InputInfoView: UIView {
     }
     
     // 나이
+    let ageMenus: [String]  = ["10대", "20대", "30대", "40대", "50대 이상"]
+    lazy var ageFilterButton = AFMenuButton(buttonTitle: "나이 선택", menus: ageMenus)
     private lazy var userAgeStackView = UIStackView().then {
         $0.axis = .vertical
         $0.distribution = .fill
@@ -86,39 +84,12 @@ final class InputInfoView: UIView {
             make.height.equalTo(48)
         }
     }
-    
-    //나이
-    lazy var ageFilterButton: UIButton = {
-        var config = UIButton.Configuration.plain()
-        config.imagePadding = 30
-        
-        let button = UIButton(configuration: config).then {
-            let image = UIImage(systemName: "chevron.down")
-            $0.setTitle("나이 선택", for: .normal)
-            $0.setTitleColor(.label, for: .normal)
-            $0.setImage(image?.withTintColor(UIColor.systemGray, renderingMode: .alwaysOriginal),
-                        for: .normal)
-            $0.layer.cornerRadius = LayoutOptions.cornerRadious
-            $0.layer.borderWidth = 1.0
-            $0.layer.borderColor = AFColor.grayScale100.cgColor
-            $0.showsMenuAsPrimaryAction = true
-            $0.semanticContentAttribute = .forceRightToLeft
-        }
-        
-        let menus: [String]  = ["10대", "20대", "30대", "40대", "50대 이상"]
-        
-        button.menu = UIMenu(children: menus.map { city in
-            UIAction(title: city) { [weak self] _ in
-                guard let self else { return }
-                ageSubject.onNext(city)
-                button.setTitle(city, for: .normal)
-            }
-        })
-        
-        return button
-    }()
-    
+
     // 지역
+    let regionMenus: [String]  = ["서울", "인천", "부산", "대구", "울산", "대전", "광주",
+                                  "세종특별자치시", "경기", "강원특별자치도", "충북", "충남",
+                                  "경북", "경남", "전북", "전남", "제주특별자치도"]
+    lazy var regionFilterButton = AFMenuButton(buttonTitle: "지역 선택", menus: regionMenus)
     private lazy var userRegionStackView = UIStackView().then{
         $0.axis = .vertical
         $0.distribution = .fill
@@ -131,36 +102,6 @@ final class InputInfoView: UIView {
             make.height.equalTo(48)
         }
     }
-
-    lazy var regionFilterButton: UIButton = {
-        var config = UIButton.Configuration.plain()
-        config.imagePadding = 30
-        
-        let button = UIButton(configuration: config).then {
-            let image = UIImage(systemName: "chevron.down")
-            $0.setTitle("지역 선택", for: .normal)
-            $0.setTitleColor(.label, for: .normal)
-            $0.setImage(image?.withTintColor(UIColor.systemGray, renderingMode: .alwaysOriginal),
-                        for: .normal)
-            $0.layer.cornerRadius = LayoutOptions.cornerRadious
-            $0.layer.borderWidth = 1.0
-            $0.layer.borderColor = AFColor.grayScale100.cgColor
-            $0.showsMenuAsPrimaryAction = true
-            $0.semanticContentAttribute = .forceRightToLeft
-        }
-        
-        let menus: [String]  = ["서울", "인천", "부산", "대구", "울산", "대전", "광주", "세종특별자치시", "경기", "강원특별자치도", "충북", "충남", "경북", "경남", "전북", "전남", "제주특별자치도"]
-        
-        button.menu = UIMenu(children: menus.map { city in
-            UIAction(title: city) { [weak self] _ in
-                guard let self else { return }
-                regionSubject.onNext(city)
-                button.setTitle(city, for: .normal)
-            }
-        })
-        
-        return button
-    }()
     
     // 성별
     private lazy var userGenderStackView = UIStackView().then {
