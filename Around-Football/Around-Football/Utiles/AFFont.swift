@@ -21,3 +21,21 @@ enum AFFont {
     static let filterRegular = UIFont(name: "Pretendard-Regular", size: 12)
     static let filterDay = UIFont(name: "Pretendard-Light", size: 11)
 }
+
+final class AFTitleSmall: UILabel {
+    
+    init(title: String) {
+        super.init(frame: .zero)
+        configureUI(title: title)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    private func configureUI(title: String) {
+        text = title
+        font = AFFont.titleSmall
+        textColor = AFColor.grayScale300
+    }
+}
