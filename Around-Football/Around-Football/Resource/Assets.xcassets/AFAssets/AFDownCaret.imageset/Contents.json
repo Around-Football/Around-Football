@@ -5,11 +5,11 @@
       "scale" : "1x"
     },
     {
-      "filename" : "AFDownCaret.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
+      "filename" : "AFDownCaret.png",
       "idiom" : "universal",
       "scale" : "3x"
     }
