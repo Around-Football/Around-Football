@@ -15,6 +15,9 @@ final class InputInfoView: UIView {
 
     // MARK: - Properties
     
+    private lazy var mainScrollView = UIScrollView()
+    private let contentView = UIView()
+    
     private let userNameLabel = AFTitleSmall(title: "이름")
     private let userAgeLabel = AFTitleSmall(title: "나이")
     private let userAreaLabel = AFTitleSmall(title: "지역")
@@ -34,14 +37,8 @@ final class InputInfoView: UIView {
     let dfButton = AFSmallButton(buttonTitle: "DF")
     let gkButton = AFSmallButton(buttonTitle: "GK")
     
-    // 다음 버튼
     let nextButton = AFButton(buttonTitle: "확인", color: .black)
-    
-    private lazy var mainScrollView = UIScrollView().then {
-        $0.backgroundColor = .systemBackground
-    }
-    private let contentView = UIView()
-    
+
     private let titleLabel = UILabel().then {
         $0.text = "추가 정보를 작성해주세요"
         $0.font = AFFont.titleMedium
@@ -240,15 +237,13 @@ final class InputInfoView: UIView {
                                 nextButton)
         
         mainScrollView.snp.makeConstraints { make in
-            make.top.equalTo(safeAreaLayoutGuide)
-            make.bottom.equalTo(safeAreaLayoutGuide)
-            make.leading.equalToSuperview()
-            make.trailing.equalToSuperview()
+            make.top.bottom.equalTo(safeAreaLayoutGuide)
+            make.leading.trailing.equalToSuperview()
         }
         
         contentView.snp.makeConstraints { make in
-            make.width.equalTo(mainScrollView.snp.width)
-            make.height.equalTo(mainScrollView.snp.height)
+            make.top.leading.trailing.bottom.equalToSuperview()
+            make.width.equalToSuperview()
         }
         
         titleLabel.snp.makeConstraints { make in
@@ -304,7 +299,7 @@ final class InputInfoView: UIView {
             make.top.equalTo(userPositionStackView.snp.bottom).offset(SuperviewOffsets.topPadding)
             make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
             make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
-            make.bottom.equalToSuperview().offset(SuperviewOffsets.bottomPadding).priority(.required)
+            make.bottom.equalTo(contentView.snp.bottom).offset(SuperviewOffsets.bottomPadding).priority(.required)
             make.height.equalTo(55)
         }
     }
