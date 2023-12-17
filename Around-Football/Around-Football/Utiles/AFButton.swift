@@ -60,9 +60,9 @@ final class AFSmallButton: UIButton {
     
     // MARK: - Lifecycles
     
-    init(buttonTitle: String) {
+    init(buttonTitle: String, color: UIColor) {
         super.init(frame: .zero)
-        configureUI(buttonTitle: buttonTitle)
+        configureUI(buttonTitle: buttonTitle, color: color)
     }
     
     required init?(coder: NSCoder) {
@@ -71,7 +71,7 @@ final class AFSmallButton: UIButton {
     
     // MARK: - Helpers
     
-    private func configureUI(buttonTitle: String) {
+    private func configureUI(buttonTitle: String, color: UIColor) {
         setTitle(buttonTitle, for: .normal)
         titleLabel?.font = AFFont.text
         setTitleColor(AFColor.grayScale200, for: .normal)
@@ -79,7 +79,7 @@ final class AFSmallButton: UIButton {
         layer.cornerRadius = LayoutOptions.cornerRadious
         layer.borderWidth = 1.0
         layer.borderColor = AFColor.grayScale100.cgColor
-        setBackgroundColor(AFColor.primary, for: .selected)
+        setBackgroundColor(color, for: .selected)
         setBackgroundColor(.clear, for: .normal)
     }
 }
@@ -141,3 +141,85 @@ final class AFMenuButton: UIButton {
         }
     }
 }
+
+final class AFRoundSmallButton: UIButton {
+    
+    // MARK: - Lifecycles
+    
+    init(buttonTitle: String, color: UIColor) {
+        super.init(frame: .zero)
+        configureUI(buttonTitle: buttonTitle, color: color)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    // MARK: - Helpers
+    
+    private func configureUI(buttonTitle: String, color: UIColor) {
+        setTitle(buttonTitle, for: .normal)
+        setTitleColor(AFColor.grayScale300, for: .normal)
+        setBackgroundColor(.clear, for: .normal)
+        setTitleColor(.white, for: .selected)
+        setBackgroundColor(.black, for: .selected)
+        layer.cornerRadius = 15
+        clipsToBounds = true
+        layer.borderWidth = 1.0
+        layer.borderColor = AFColor.grayScale100.cgColor
+        
+        titleLabel?.font = AFFont.filterMedium
+        contentEdgeInsets = UIEdgeInsets(top: 0, left: 12, bottom: 0, right: 12)
+    }
+}
+
+final class AFRoundMenuButton: UIButton {
+    
+    var menuButtonSubject = PublishSubject<String?>()
+    let chevronImage = UIImage(systemName: "chevron.down")?.withConfiguration(UIImage.SymbolConfiguration(pointSize: 16, weight: .regular))
+    
+    
+    // MARK: - Lifecycles
+    
+    init(buttonTitle: String, menus: [String]) {
+        super.init(frame: .zero)
+        configureUI(buttonTitle: buttonTitle, menus: menus)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    // MARK: - Helpers
+    
+    private func configureUI(buttonTitle: String, menus: [String]) {
+        titleLabel?.font = AFFont.filterMedium
+        setTitle(buttonTitle, for: .normal)
+        setTitleColor(AFColor.grayScale300, for: .normal)
+        setImage(chevronImage, for: .normal)
+        setBackgroundColor(.white, for: .normal)
+        setTitleColor(.white, for: .selected)
+        setBackgroundColor(.black, for: .selected)
+        tintColor = AFColor.grayScale300
+        layer.cornerRadius = 15
+        clipsToBounds = true
+        layer.borderWidth = 1.0
+        layer.borderColor = AFColor.grayScale100.cgColor
+        showsMenuAsPrimaryAction = true
+        semanticContentAttribute = .forceRightToLeft
+        
+        imageEdgeInsets = UIEdgeInsets(top: 0, left: 2, bottom: 0, right: 0)
+        contentEdgeInsets = UIEdgeInsets(top: 0, left: 12, bottom: 0, right: 12)
+        
+        let menus: [String]  = menus
+        
+        menu = UIMenu(children: menus.map { city in
+            UIAction(title: city) { [weak self] _ in
+                guard let self else { return }
+                menuButtonSubject.onNext(city)
+                setTitle(city, for: .normal)
+            }
+        })
+    }
+}
+
