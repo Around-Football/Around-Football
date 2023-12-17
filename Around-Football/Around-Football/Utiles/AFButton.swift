@@ -197,7 +197,7 @@ final class AFRoundMenuButton: UIButton {
         setTitle(buttonTitle, for: .normal)
         setTitleColor(AFColor.grayScale300, for: .normal)
         setImage(chevronImage, for: .normal)
-        setBackgroundColor(.white, for: .normal)
+        setBackgroundColor(.clear, for: .normal)
         setTitleColor(.white, for: .selected)
         setBackgroundColor(.black, for: .selected)
         tintColor = AFColor.grayScale300
