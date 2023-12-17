@@ -62,10 +62,15 @@ final class HomeViewController: UIViewController {
         $0.preferredDatePickerStyle = .compact
         $0.datePickerMode = .date
         $0.locale = Locale(identifier: "ko_KR")
-        $0.layer.backgroundColor = UIColor.white.cgColor
         $0.layer.cornerRadius = 15
         $0.clipsToBounds = true
+        let emptyView = UIView()
+        emptyView.backgroundColor = .white
+        $0.addSubviews(emptyView)
         $0.addSubview(dateFilterButton)
+        emptyView.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
         dateFilterButton.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
@@ -234,6 +239,7 @@ final class HomeViewController: UIViewController {
             .subscribe { [weak self] button in
                 guard let self else { return }
                 if button != "" {
+                    resetButton.isSelected = false
                     dateFilterButton.isSelected = true
                     filterRequest.date = button
                     saveFilterRequestToUserDefaults(filterRequest: filterRequest)
@@ -249,6 +255,7 @@ final class HomeViewController: UIViewController {
             .subscribe { [weak self] button in
                 guard let self else { return }
                 if button != "" {
+                    resetButton.isSelected = false
                     regionFilterButton.isSelected = true
                     filterRequest.region = button
                     saveFilterRequestToUserDefaults(filterRequest: filterRequest)
@@ -264,6 +271,7 @@ final class HomeViewController: UIViewController {
             .subscribe { [weak self] button in
                 guard let self else { return }
                 if button != "" {
+                    resetButton.isSelected = false
                     typeFilterButton.isSelected = true
                     filterRequest.type = button
                     saveFilterRequestToUserDefaults(filterRequest: filterRequest)
