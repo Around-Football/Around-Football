@@ -34,62 +34,37 @@ final class HomeViewController: UIViewController {
     }
     
     private lazy var filterScrollView = UIScrollView().then {
-        $0.contentSize = CGSize(width: view.frame.size.width, height: 30)
+        $0.contentSize = CGSize(width: view.frame.size.width, height: 32)
         $0.showsHorizontalScrollIndicator = false
     }
     
     private lazy var optionStackView = UIStackView().then {
         $0.axis = .horizontal
         $0.alignment = .fill
-        $0.distribution = .fillEqually
-        $0.spacing = 5
+        $0.distribution = .equalSpacing
+        $0.spacing = 4
         $0.addArrangedSubviews(resetButton,
                                datePicker,
                                regionFilterButton,
                                typeFilterButton)
     }
     
-    private var buttonConfig: UIButton.Configuration {
-        var config = UIButton.Configuration.plain()
-        config.imagePadding = 8
-        config.contentInsets = NSDirectionalEdgeInsets(top: 10,
-                                                       leading: 10,
-                                                       bottom: 10,
-                                                       trailing: 10)
-        
-        return config
-    }
+    private lazy var resetButton = AFRoundSmallButton(buttonTitle: "전체 보기", color: .black)
     
-    private lazy var resetButton = UIButton(configuration: buttonConfig).then {
-        let image = UIImage(systemName: "arrow.triangle.2.circlepath")
-        $0.setTitle("초기화", for: .normal)
-        $0.setImage(image?.withTintColor(UIColor.systemGray, renderingMode: .alwaysOriginal),
-                    for: .normal)
-        $0.setTitleColor(.systemGray, for: .normal)
-        $0.layer.cornerRadius = LayoutOptions.cornerRadious // 버튼의 모서리를 둥글게 만듭니다.
-        $0.layer.borderWidth = 1.0
-        $0.layer.borderColor = UIColor.systemGray.cgColor
-        $0.addTarget(self, action: #selector(resetButtonTapped), for: .touchUpInside)
-    }
+    let regionMenus: [String]  = ["모든 지역", "서울", "인천", "부산", "대구", "울산",
+                            "대전", "광주", "세종특별자치시","경기", "강원특별자치도",
+                            "충북", "충남", "경북", "경남", "전북", "전남", "제주특별자치도"]
+    private lazy var regionFilterButton = AFRoundMenuButton(buttonTitle: "모든 지역", menus: regionMenus)
     
-    private lazy var dateFilterButton = UIButton(configuration: buttonConfig).then {
-        let image = UIImage(systemName: "chevron.down")
-        $0.setTitle("날짜 선택", for: .normal)
-        $0.setImage(image?.withTintColor(UIColor.systemGray, renderingMode: .alwaysOriginal),
-                    for: .normal)
-        $0.setTitleColor(.systemGray, for: .normal)
-        $0.backgroundColor = .white
-        $0.layer.cornerRadius = LayoutOptions.cornerRadious
-        $0.layer.borderWidth = 1.0
-        $0.layer.borderColor = UIColor.systemGray.cgColor
-    }
+    private let dateFilterButton = AFRoundMenuButton(buttonTitle: "날짜 선택", menus: [])
     
     private lazy var datePicker = UIDatePicker().then {
         $0.preferredDatePickerStyle = .compact
         $0.datePickerMode = .date
         $0.locale = Locale(identifier: "ko_KR")
         $0.layer.backgroundColor = UIColor.white.cgColor
-        $0.layer.cornerRadius = LayoutOptions.cornerRadious
+        $0.layer.cornerRadius = 15
+        $0.clipsToBounds = true
         $0.addSubview(dateFilterButton)
         dateFilterButton.snp.makeConstraints { make in
             make.edges.equalToSuperview()
@@ -97,66 +72,8 @@ final class HomeViewController: UIViewController {
         $0.addTarget(self, action: #selector(changeDate), for: .valueChanged)
     }
     
-    private lazy var regionFilterButton: UIButton = {
-        let button = UIButton(configuration: buttonConfig).then {
-            let image = UIImage(systemName: "chevron.down")
-            $0.setTitle("지역 선택", for: .normal)
-            $0.setImage(image?.withTintColor(UIColor.systemGray, renderingMode: .alwaysOriginal),
-                        for: .normal)
-            $0.setTitleColor(.systemGray, for: .normal)
-            $0.setTitleColor(.systemGray, for: .highlighted)
-            $0.layer.cornerRadius = LayoutOptions.cornerRadious
-            $0.layer.borderWidth = 1.0
-            $0.layer.borderColor = UIColor.systemGray.cgColor
-            $0.showsMenuAsPrimaryAction = true
-        }
-        let menus: [String]  = ["전체", "서울", "인천", "부산", "대구", "울산",
-                                "대전", "광주", "세종특별자치시","경기", "강원특별자치도",
-                                "충북", "충남", "경북", "경남", "전북", "전남", "제주특별자치도"]
-        
-        button.menu = UIMenu(children: menus.map { city in
-            UIAction(title: city) { [weak self] _ in
-                guard let self else { return }
-                filterRequest.region = (city == "전체" ? nil : city)
-                saveFilterRequestToUserDefaults(filterRequest: filterRequest)
-                getFilterRequestFromUserDefaults()
-                loadRecruitList.onNext(filterRequest)
-                button.setTitle(city, for: .normal)
-            }
-        })
-        
-        return button
-    }()
-    
-    private lazy var typeFilterButton: UIButton = {
-        let button = UIButton(configuration: buttonConfig).then {
-            let image = UIImage(systemName: "chevron.down")
-            $0.setTitle("매치 유형", for: .normal)
-            $0.setImage(image?.withTintColor(UIColor.systemGray, renderingMode: .alwaysOriginal),
-                        for: .normal)
-            $0.setTitleColor(.systemGray, for: .normal)
-            $0.setTitleColor(.systemGray, for: .highlighted)
-            $0.layer.cornerRadius = LayoutOptions.cornerRadious
-            $0.layer.borderWidth = 1.0
-            $0.layer.borderColor = UIColor.systemGray.cgColor
-            $0.showsMenuAsPrimaryAction = true
-        }
-        
-        let menus: [String] = ["전체", "풋살", "축구"]
-        
-        button.menu = UIMenu(children: menus.map { type in
-            UIAction(title: type) { [weak self] _ in
-                guard let self else { return }
-                filterRequest.type = (type == "전체" ? nil : type)
-                saveFilterRequestToUserDefaults(filterRequest: filterRequest)
-                getFilterRequestFromUserDefaults()
-                loadRecruitList.onNext(filterRequest)
-                button.setTitle(type, for: .normal)
-            }
-        })
-        
-        return button
-    }()
+    let typeMenus: [String] = ["전체", "풋살", "축구"]
+    private lazy var typeFilterButton = AFRoundMenuButton(buttonTitle: "매치 유형", menus: typeMenus)
     
     private lazy var floatingButton: UIButton = {
         let button = UIButton()
@@ -188,6 +105,7 @@ final class HomeViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         configureUI()
+        bindScrollButtons()
         bindUI()
         setUserInfo()
     }
@@ -214,17 +132,23 @@ final class HomeViewController: UIViewController {
     
     @objc
     private func resetButtonTapped() {
+        dateFilterButton.isSelected = false
+        regionFilterButton.isSelected = false
+        typeFilterButton.isSelected = false
+        
+        dateFilterButton.setTitle("날짜 선택", for: .normal)
+        regionFilterButton.setTitle("모든 지역", for: .normal)
+        typeFilterButton.setTitle("매치 유형", for: .normal)
+        
         filterRequest = (nil, nil, nil)
         saveFilterRequestToUserDefaults(filterRequest: filterRequest)
         getFilterRequestFromUserDefaults()
         loadRecruitList.onNext(filterRequest)
-        dateFilterButton.setTitle("날짜 선택", for: .normal)
-        regionFilterButton.setTitle("지역 선택", for: .normal)
-        typeFilterButton.setTitle("유형 선택", for: .normal)
     }
     
     @objc
     func changeDate(_ sender: UIDatePicker) {
+        dateFilterButton.isSelected.toggle()
         selectedDate = sender.date
         
         let dateformatter = DateFormatter()
@@ -280,7 +204,6 @@ final class HomeViewController: UIViewController {
     private func setUserInfo() {
         UserService.shared.currentUser_Rx
             .observe(on: MainScheduler.instance)
-//            .filter { $0 != nil } //로그아웃 했을때도 리스트 뜨도록
             .take(1)
             .subscribe(onNext: { [weak self] user in
             guard let self else { return }
@@ -297,6 +220,59 @@ final class HomeViewController: UIViewController {
             getFilterRequestFromUserDefaults()
             regionFilterButton.setTitle(region, for: .normal)
         }).disposed(by: disposeBag)
+    }
+    
+    private func bindScrollButtons() {
+        resetButton.rx.tap.bind { [weak self] _ in
+            guard let self else { return }
+            resetButtonTapped()
+            resetButton.isSelected = true
+        }.disposed(by: disposeBag)
+        
+        dateFilterButton.menuButtonSubject
+            .observe(on: MainScheduler.instance)
+            .subscribe { [weak self] button in
+                guard let self else { return }
+                if button != "" {
+                    dateFilterButton.isSelected = true
+                    filterRequest.date = button
+                    saveFilterRequestToUserDefaults(filterRequest: filterRequest)
+                    getFilterRequestFromUserDefaults()
+                    loadRecruitList.onNext(filterRequest)
+                } else {
+                    dateFilterButton.isSelected = false
+                }
+            }.disposed(by: disposeBag)
+        
+        regionFilterButton.menuButtonSubject
+            .observe(on: MainScheduler.instance)
+            .subscribe { [weak self] button in
+                guard let self else { return }
+                if button != "" {
+                    regionFilterButton.isSelected = true
+                    filterRequest.region = button
+                    saveFilterRequestToUserDefaults(filterRequest: filterRequest)
+                    getFilterRequestFromUserDefaults()
+                    loadRecruitList.onNext(filterRequest)
+                } else {
+                    regionFilterButton.isSelected = false
+                }
+            }.disposed(by: disposeBag)
+        
+        typeFilterButton.menuButtonSubject
+            .observe(on: MainScheduler.instance)
+            .subscribe { [weak self] button in
+                guard let self else { return }
+                if button != "" {
+                    typeFilterButton.isSelected = true
+                    filterRequest.type = button
+                    saveFilterRequestToUserDefaults(filterRequest: filterRequest)
+                    getFilterRequestFromUserDefaults()
+                    loadRecruitList.onNext(filterRequest)
+                } else {
+                    typeFilterButton.isSelected = false
+                }
+            }.disposed(by: disposeBag)
     }
     
     private func bindUI() {
@@ -337,7 +313,6 @@ final class HomeViewController: UIViewController {
             make.top.equalTo(view.safeAreaLayoutGuide).offset(SuperviewOffsets.topPadding)
             make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
             make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
-            make.height.equalTo(50)
         }
         
         optionStackView.snp.makeConstraints { make in
