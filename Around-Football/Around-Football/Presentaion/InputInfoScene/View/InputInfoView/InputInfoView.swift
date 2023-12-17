@@ -295,8 +295,10 @@ final class InputInfoView: UIView {
             make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
         }
         
+        //TODO: - 아래 고정하기
+        
         nextButton.snp.makeConstraints { make in
-            make.top.equalTo(userPositionStackView.snp.bottom).offset(SuperviewOffsets.topPadding)
+            make.top.equalTo(userPositionStackView.snp.bottom).offset(70)
             make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
             make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
             make.bottom.equalTo(contentView.snp.bottom).offset(SuperviewOffsets.bottomPadding).priority(.required)
