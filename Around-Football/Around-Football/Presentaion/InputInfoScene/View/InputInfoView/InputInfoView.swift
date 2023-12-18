@@ -279,7 +279,7 @@ final class InputInfoView: UIView {
             make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
             make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
             make.bottom.equalTo(userMainUsedFeetStackView.snp.top).offset(SuperviewOffsets.bottomPadding)
-            make.height.equalTo(65) //안넣으면 성별 lable 표시안되는 이슈있음
+            make.height.equalTo(65)
         }
         
         userMainUsedFeetStackView.snp.makeConstraints { make in
@@ -287,12 +287,14 @@ final class InputInfoView: UIView {
             make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
             make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
             make.bottom.equalTo(userPositionStackView.snp.top).offset(SuperviewOffsets.bottomPadding)
+            make.height.equalTo(65)
         }
         
         userPositionStackView.snp.makeConstraints { make in
             make.top.equalTo(userMainUsedFeetStackView.snp.bottom).offset(SuperviewOffsets.topPadding)
             make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
             make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
+            make.height.equalTo(65)
         }
         
         //TODO: - 아래 고정하기

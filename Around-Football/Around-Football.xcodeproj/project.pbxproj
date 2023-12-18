@@ -811,13 +811,13 @@
 				7C2B1AF22AF4BD8F0052EC64 /* Calendar */,
 				7CE563A92AD140A9005DE2DF /* LayoutOptions.swift */,
 				274C21C62ACFF901005469E6 /* TextFieldDelegateHandler.swift */,
-				7CE25AE52ACABF620014132F /* AFButton.swift */,
 				663417CB2AD68413002FE2CA /* Constants.swift */,
 				668EE4C22B050373007A8844 /* ImageTransition.swift */,
 				668EE4C42B05038B007A8844 /* DisMissAnimation.swift */,
 				66391CA82B1F5E2000DB7249 /* UIAlertController+.swift */,
 				7C88C1AE2B2D9F4D00FB7385 /* AFFont.swift */,
 				7C88C1B02B2DA40900FB7385 /* AFColor.swift */,
+				7CE25AE52ACABF620014132F /* AFButton.swift */,
 			);
 			path = Utiles;
 			sourceTree = "<group>";
