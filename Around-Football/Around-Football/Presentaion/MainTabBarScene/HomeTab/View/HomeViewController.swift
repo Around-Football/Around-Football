@@ -325,8 +325,8 @@ final class HomeViewController: UIViewController {
         
         homeTableView.snp.makeConstraints { make in
             make.top.equalTo(filterScrollView.snp.bottom).offset(10)
-            make.leading.equalToSuperview()
-            make.trailing.equalToSuperview()
+            make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
+            make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
             make.bottom.equalToSuperview()
         }
     }
