@@ -8,7 +8,7 @@
 import UIKit
 
 //ChatCoordinator 추상화
-protocol ChatCoordinatorProtocol: MainTabBarCoordinatorDelegate {
+protocol ChatCoordinatorProtocol: MainTabBarCoordinatorDelegate, BaseCoordinator {
     var navigationController: UINavigationController? { get }
     func pushChatView(channelInfo: ChannelInfo, isNewChat: Bool)
     func presentPHPickerView(picker: UIViewController)
@@ -38,6 +38,7 @@ extension ChatCoordinatorProtocol {
     func pushToDetailView(recruitItem: Recruit) {
         if navigationController?.viewControllers.first(where: { $0 is DetailViewController }) != nil {
             navigationController?.popViewController(animated: true)
+            removeThisChildCoordinators(coordinator: self)
         } else {
             let coordinator = DetailCoordinator(navigationController: navigationController)
             navigationController?.navigationBar.isHidden = false

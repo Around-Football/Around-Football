@@ -47,7 +47,6 @@ class ChatViewController: UIViewController {
     }
     
     deinit {
-        viewModel.removeListener()
         
     }
     
@@ -69,11 +68,7 @@ class ChatViewController: UIViewController {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         NotiManager.shared.currentChatRoomId = nil
-        
-        //딥링크 네비게이션으로 왔을때만 네비게이션바 없애줌
-        if viewModel.coordinator as? DeepLinkCoordinator != nil {
-            navigationController?.isNavigationBarHidden = true
-        }
+        viewModel.removeListener()
     }
     
     // MARK: - Helpers
