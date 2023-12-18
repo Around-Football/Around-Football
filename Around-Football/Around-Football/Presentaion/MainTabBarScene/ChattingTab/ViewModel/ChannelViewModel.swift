@@ -77,6 +77,7 @@ final class ChannelViewModel {
             case .modified:
                 guard let index = currentChannels.firstIndex(of: channel) else { return }
                 currentChannels[index] = channel
+                currentChannels.sort()
                 
             case .removed:
                 guard let index = currentChannels.firstIndex(of: channel) else { return }

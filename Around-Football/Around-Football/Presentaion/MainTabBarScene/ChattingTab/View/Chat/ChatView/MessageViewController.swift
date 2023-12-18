@@ -1,5 +1,5 @@
 //
-//  ChatViewController.swift
+//  MessageViewController.swift
 //  Around-Football
 //
 //  Created by Deokhun KIM on 11/3/23.
@@ -16,16 +16,10 @@ import RxSwift
 import RxCocoa
 
 
-final class ChatViewController: MessagesViewController {
+final class MessageViewController: MessagesViewController {
     // MARK: - Properties
     
-    var viewModel: ChatViewModel
-    
     let imageTransition = ImageTransition()
-    let disposeBag = DisposeBag()
-    let pickedImage = PublishSubject<UIImage>()
-    private let invokedViewWillAppear = PublishSubject<Void>()
-    private let invokedViewWillDisappear = PublishSubject<Void>()
     
     lazy var cameraBarButtonItem = InputBarButtonItem(type: .system).then {
         $0.tintColor = .black
@@ -34,8 +28,7 @@ final class ChatViewController: MessagesViewController {
     
     // MARK: - Lifecycles
     
-    init(viewModel: ChatViewModel) {
-        self.viewModel = viewModel
+    init() {
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -43,52 +36,36 @@ final class ChatViewController: MessagesViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
-    deinit {
-        viewModel.removeListener()
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         configure()
-        configureDelegate()
         setupMessageInputBar()
         removeOutgoingMessageAvatars()
         addCameraBarButtonToMessageInputBar()
-        bind()
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        UITabBar.appearance()
-        invokedViewWillAppear.onNext(())
-    }
+    // override func viewWillAppear(_ animated: Bool) {
+    //     super.viewWillAppear(animated)
+    //     UITabBar.appearance()
+
+    //     invokedViewWillAppear.onNext(())
+    // }
     
-    override func viewWillDisappear(_ animated: Bool) {
-        invokedViewWillDisappear.onNext(())
+    // override func viewWillDisappear(_ animated: Bool) {
+    //     invokedViewWillDisappear.onNext(())
         //딥링크 네비게이션으로 왔을때만 네비게이션바 없애줌
 //        if viewModel.coordinator == nil {
 //            navigationController?.isNavigationBarHidden = true
 //        }
-    }
+    // }
     
     // MARK: - Helpers
     
     private func configure() {
         view.backgroundColor = .systemBackground
-        navigationController?.navigationBar.prefersLargeTitles = false
-        title = viewModel.channelInfo.withUserName
     }
-    
-    private func configureDelegate() {
-        messagesCollectionView.messagesDataSource = self
-        messagesCollectionView.messagesLayoutDelegate = self
-        messagesCollectionView.messagesDisplayDelegate = self
-        messagesCollectionView.messageCellDelegate = self
-        messagesCollectionView.register(CustomInfoMessageCell.self,
-                                        forCellWithReuseIdentifier: CustomInfoMessageCell.cellId)
-    }
-    
+        
     private func setupMessageInputBar() {
         messageInputBar.inputTextView.tintColor = .black
         messageInputBar.sendButton.setTitleColor(.blue, for: .normal)
@@ -113,16 +90,4 @@ final class ChatViewController: MessagesViewController {
         messageInputBar.setStackViewItems([cameraBarButtonItem], forStack: .left, animated: false)
     }
     
-    private func bind() {
-        let didTapSendButton = sendWithText(buttonEvent: messageInputBar.sendButton.rx.tap)
-        let input = ChatViewModel.Input(didTapSendButton: didTapSendButton,
-                                        pickedImage: pickedImage,
-                                        invokedViewWillAppear: invokedViewWillAppear,
-                                        invokedViewWillDisappear: invokedViewWillDisappear)
-        _ = viewModel.transform(input)
-        bindCameraBarButtonEvent()
-        bindMessages()
-        bindEnabledCameraBarButton()
-        bindEnabledSendObjectButton()
-    }
 }

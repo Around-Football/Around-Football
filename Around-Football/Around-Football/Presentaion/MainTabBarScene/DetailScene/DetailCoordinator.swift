@@ -12,11 +12,10 @@ protocol DetailCoordinatorDelegate {
     func pushToChatView(channelInfo: ChannelInfo, isNewChat: Bool)
 }
 
-final class DetailCoordinator: BaseCoordinator {
+final class DetailCoordinator: BaseCoordinator, ChatCoordinatorProtocol {
     
     var type: CoordinatorType = .detailScene
-    var delegate: DetailCoordinatorDelegate?
-    var recruitItem: Recruit?
+    var delegate: MainTabBarCoordinatorDelegate?
     
     // MARK: - 이동할때 각 DetailView에 Recruit 전해줌. 다른 뷰에서 쓸 수도 있어서 옵셔널
     
@@ -32,19 +31,35 @@ final class DetailCoordinator: BaseCoordinator {
         removeThisChildCoordinators(coordinator: self)
     }
     
-    func pushApplicationStatusViewController() {
+    func pushApplicationStatusViewController(recruit: Recruit) {
         let viewModel = ApplicantListViewModel(coordinator: self)
-        viewModel.recruitItem = recruitItem
+        viewModel.recruitItem = recruit
         let controller = ApplicantListViewController(viewModel: viewModel)
         navigationController?.pushViewController(controller, animated: true)
     }
     
-    func pushToChatView(channelInfo: ChannelInfo, isNewChat: Bool = false) {
+
+//    func pushChatViewController(channelInfo: ChannelInfo, isNewChat: Bool = false) {
 //        let coordinator = ChatTabCoordinator(navigationController: navigationController)
-        let viewModel = ChatViewModel(coordinator: nil, channelInfo: channelInfo, isNewChat: isNewChat)
-        let viewController = ChatViewController(viewModel: viewModel)
-        navigationController?.pushViewController(viewController, animated: true)
+//        coordinator.pushChatView(channelInfo: channelInfo, isNewChat: isNewChat)
+//        childCoordinators.append(coordinator)
+//    }
+    
+    func clickSendMessageButton(channelInfo: ChannelInfo, isNewChat: Bool = false) {
+        if navigationController?.viewControllers.first(where: { $0 is ChatViewController }) != nil {
+            navigationController?.popViewController(animated: true)
+            removeThisChildCoordinators(coordinator: self)
+        } else {
+            self.pushChatView(channelInfo: channelInfo, isNewChat: isNewChat)
+        }
+
+    // func pushToChatView(channelInfo: ChannelInfo, isNewChat: Bool = false) {
+//        let coordinator = ChatTabCoordinator(navigationController: navigationController)
+        // let viewModel = ChatViewModel(coordinator: nil, channelInfo: channelInfo, isNewChat: isNewChat)
+        // let viewController = ChatViewController(viewModel: viewModel)
+        // navigationController?.pushViewController(viewController, animated: true)
 //        delegate?.pushToChatView(channelInfo: channelInfo, isNewChat: isNewChat)
+
     }
     
     func presentLoginViewController() {

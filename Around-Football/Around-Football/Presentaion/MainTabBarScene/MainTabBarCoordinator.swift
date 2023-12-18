@@ -11,7 +11,7 @@ protocol MainTabBarCoordinatorDelegate {
     func presentLoginViewController()
 }
 
-final class MainTabBarCoordinator: BaseCoordinator {
+final class MainTabBarCoordinator: BaseCoordinator, MainTabBarCoordinatorDelegate {
 
     var type: CoordinatorType = .mainTab
     var delegate: MainTabBarCoordinatorDelegate?
@@ -59,6 +59,13 @@ final class MainTabBarCoordinator: BaseCoordinator {
                                  infoVC: infoViewController)
         
         //딥링크와 앱 코디네이터, 네비게이션 컨트롤러 연결
+        let deepLinkCoordinator = DeepLinkCoordinator(
+            navigationController: navigationController,
+            chatTabCoordinator: chatTabCoordinator
+        )
+        deepLinkCoordinator.delegate = self
+        childCoordinators.append(deepLinkCoordinator)
+        self.deepLinkCoordinator = deepLinkCoordinator
     }
 
     private func makeMainTabBarController(
@@ -95,7 +102,10 @@ final class MainTabBarCoordinator: BaseCoordinator {
     }
 }
 
-extension MainTabBarCoordinator: HomeTabCoordinatorDelegate,
-                                 InfoTabCoordinatorDelegate,
-                                 ChatTabCoordinatorDelegate,
-                                 DeepLinkCoordinatorDelegate { }
+extension MainTabBarCoordinator: InfoTabCoordinatorDelegate  { }
+
+// extension MainTabBarCoordinator: HomeTabCoordinatorDelegate,
+//                                  InfoTabCoordinatorDelegate,
+//                                  ChatTabCoordinatorDelegate,
+//                                  DeepLinkCoordinatorDelegate { }
+// >>>>>>> Feat_ChatMerge

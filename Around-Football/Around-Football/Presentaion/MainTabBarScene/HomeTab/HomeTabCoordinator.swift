@@ -12,11 +12,15 @@ protocol HomeTabCoordinatorDelegate {
     func pushToChatView(channelInfo: ChannelInfo, isNewChat: Bool)
 }
 
-final class HomeTabCoordinator: BaseCoordinator, DetailCoordinatorDelegate {
-    
+final class HomeTabCoordinator: BaseCoordinator, MainTabBarCoordinatorDelegate {
+
     var type: CoordinatorType = .home
-    var delegate: HomeTabCoordinatorDelegate?
-    lazy var detailCoordinator = DetailCoordinator(navigationController: navigationController)
+    var delegate: MainTabBarCoordinatorDelegate?
+// final class HomeTabCoordinator: BaseCoordinator, DetailCoordinatorDelegate {
+    
+//     var type: CoordinatorType = .home
+//     var delegate: HomeTabCoordinatorDelegate?
+//     lazy var detailCoordinator = DetailCoordinator(navigationController: navigationController)
     
     deinit {
         print("HomeTabCoordinator deinit")
@@ -35,10 +39,15 @@ final class HomeTabCoordinator: BaseCoordinator, DetailCoordinatorDelegate {
     }
     
     func pushToDetailView(recruitItem: Recruit) {
-        detailCoordinator.recruitItem = recruitItem
-        detailCoordinator.delegate = self
+        let coordinator = DetailCoordinator(navigationController: navigationController)
+        navigationController?.navigationBar.isHidden = false
+        coordinator.delegate = self
+        coordinator.start(recruitItem: recruitItem)
+
+        // detailCoordinator.recruitItem = recruitItem
+        // detailCoordinator.delegate = self
 //        navigationController?.navigationBar.isHidden = false
-        detailCoordinator.start(recruitItem: recruitItem)
+        // detailCoordinator.start(recruitItem: recruitItem)
     }
 
     func pushMapView() {
