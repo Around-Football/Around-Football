@@ -115,6 +115,7 @@ final class HomeViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         loadRecruitList.onNext((filterRequest))
+        navigationController?.navigationBar.prefersLargeTitles = true
     }
     
     //floatingButtonSetting
@@ -303,7 +304,7 @@ final class HomeViewController: UIViewController {
     
     private func configureUI() {
         navigationItem.title = "용병 구해요"
-        navigationController?.navigationBar.prefersLargeTitles = true
+
         
         view.backgroundColor = .white
         view.addSubviews(filterScrollView,

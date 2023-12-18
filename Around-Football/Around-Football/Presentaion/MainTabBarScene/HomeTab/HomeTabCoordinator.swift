@@ -9,6 +9,7 @@ import UIKit
 
 protocol HomeTabCoordinatorDelegate {
     func presentLoginViewController()
+    func pushToChatView(channelInfo: ChannelInfo, isNewChat: Bool)
 }
 
 final class HomeTabCoordinator: BaseCoordinator, DetailCoordinatorDelegate {
@@ -57,5 +58,9 @@ final class HomeTabCoordinator: BaseCoordinator, DetailCoordinatorDelegate {
     //DetailCoordinatorDelegate
     func presentLoginViewController() {
         delegate?.presentLoginViewController()
+    }
+    
+    func pushToChatView(channelInfo: ChannelInfo, isNewChat: Bool) {
+        delegate?.pushToChatView(channelInfo: channelInfo, isNewChat: isNewChat)
     }
 }
