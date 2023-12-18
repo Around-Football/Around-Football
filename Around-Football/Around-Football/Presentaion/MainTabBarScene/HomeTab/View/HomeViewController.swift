@@ -44,7 +44,7 @@ final class HomeViewController: UIViewController {
     }
     
     private lazy var filterScrollView = UIScrollView().then {
-        $0.contentSize = CGSize(width: view.frame.size.width, height: 32)
+        $0.contentSize = .zero
         $0.showsHorizontalScrollIndicator = false
     }
     
@@ -107,14 +107,14 @@ final class HomeViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        bindUI()
         configureUI()
+        bindUI()
         bindScrollButtons()
         setUserInfo()
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        loadRecruitList.onNext(filterRequest)
+        loadRecruitList.onNext((filterRequest))
     }
     
     //floatingButtonSetting
@@ -209,20 +209,12 @@ final class HomeViewController: UIViewController {
             .observe(on: MainScheduler.instance)
             .take(1)
             .subscribe(onNext: { [weak self] user in
-            guard let self else { return }
-            guard let region = UserDefaults.standard.string(forKey: "regionKey")
-                else {
-                filterRequest.region = user?.area
-                regionFilterButton.setTitle(user?.area ?? "지역 선택", for: .normal)
-                saveFilterRequestToUserDefaults(filterRequest: filterRequest)
+                guard let self else { return }
                 getFilterRequestFromUserDefaults()
-                return
-            }
-            filterRequest.region = region
-            saveFilterRequestToUserDefaults(filterRequest: filterRequest)
-            getFilterRequestFromUserDefaults()
-            regionFilterButton.setTitle(region, for: .normal)
-        }).disposed(by: disposeBag)
+                dateFilterButton.menuButtonSubject.onNext(filterRequest.date)
+                regionFilterButton.menuButtonSubject.onNext(filterRequest.region)
+                typeFilterButton.menuButtonSubject.onNext(filterRequest.type)
+            }).disposed(by: disposeBag)
     }
     
     private func bindScrollButtons() {
@@ -236,7 +228,7 @@ final class HomeViewController: UIViewController {
             .observe(on: MainScheduler.instance)
             .subscribe { [weak self] button in
                 guard let self else { return }
-                if button != "" {
+                if let button {
                     resetButton.isSelected = false
                     dateFilterButton.isSelected = true
                     filterRequest.date = button
@@ -252,7 +244,8 @@ final class HomeViewController: UIViewController {
             .observe(on: MainScheduler.instance)
             .subscribe { [weak self] button in
                 guard let self else { return }
-                if button != "" {
+                if let button {
+                    print(button)
                     resetButton.isSelected = false
                     regionFilterButton.isSelected = true
                     filterRequest.region = button
@@ -268,7 +261,7 @@ final class HomeViewController: UIViewController {
             .observe(on: MainScheduler.instance)
             .subscribe { [weak self] button in
                 guard let self else { return }
-                if button != "" {
+                if let button {
                     resetButton.isSelected = false
                     typeFilterButton.isSelected = true
                     filterRequest.type = button
@@ -282,8 +275,6 @@ final class HomeViewController: UIViewController {
     }
     
     private func bindUI() {
-        
-        print("===========================================================cell왜 안나와")
         let input = HomeViewModel.Input(loadRecruitList: loadRecruitList.asObservable())
         
         let output = viewModel.transform(input)
@@ -295,7 +286,6 @@ final class HomeViewController: UIViewController {
                 guard let self else { return }
                 cell.viewModel = viewModel
                 cell.bindContents(item: item)
-                print("===========================================================cell왜 안나와 \(item)")
                 cell.configureButtonTap()
             }.disposed(by: disposeBag)
         
@@ -319,19 +309,18 @@ final class HomeViewController: UIViewController {
         view.addSubviews(filterScrollView,
                          homeTableView,
                          floatingButton)
-        
         filterScrollView.addSubview(optionStackView)
+        
         filterScrollView.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide).offset(SuperviewOffsets.topPadding)
             make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
             make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
+            make.height.equalTo(32)
         }
         
         optionStackView.snp.makeConstraints { make in
-            make.top.equalTo(filterScrollView)
-            make.leading.equalTo(filterScrollView)
-            make.trailing.equalTo(filterScrollView)
-            make.bottom.equalTo(filterScrollView)
+            make.edges.equalTo(filterScrollView)
+            make.height.equalTo(32)
         }
         
         homeTableView.snp.makeConstraints { make in
