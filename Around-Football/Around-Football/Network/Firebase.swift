@@ -424,8 +424,8 @@ extension FirebaseAPI {
         completion: @escaping (Error?) -> Void
     ) {
         guard let user else { return }
-        
-        let data = ["id": UUID().uuidString,
+        let id = UUID().uuidString
+        let data = ["id": id,
                     "userID": user.id,
                     "userName": user.userName,
                     "fieldID": fieldID,
@@ -444,7 +444,7 @@ extension FirebaseAPI {
                     "acceptedApplicantsUID": acceptedApplicantsUID] as [String : Any]
         
         REF_RECRUIT
-            .document(fieldID)
+            .document(id)
             .setData(data, completion: completion)
     }
     
