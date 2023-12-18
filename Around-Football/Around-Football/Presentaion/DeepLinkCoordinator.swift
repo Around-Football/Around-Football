@@ -36,10 +36,14 @@ extension ChatCoordinatorProtocol {
     }
     
     func pushToDetailView(recruitItem: Recruit) {
-        let coordinator = DetailCoordinator(navigationController: navigationController)
-        navigationController?.navigationBar.isHidden = false
-        coordinator.delegate = self
-        coordinator.start(recruitItem: recruitItem)
+        if navigationController?.viewControllers.first(where: { $0 is DetailViewController }) != nil {
+            navigationController?.popViewController(animated: true)
+        } else {
+            let coordinator = DetailCoordinator(navigationController: navigationController)
+            navigationController?.navigationBar.isHidden = false
+            coordinator.delegate = self
+            coordinator.start(recruitItem: recruitItem)
+        }
     }
 }
 
