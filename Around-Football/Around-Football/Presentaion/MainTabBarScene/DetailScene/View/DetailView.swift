@@ -96,9 +96,19 @@ final class DetailView: UIView {
     
     // MARK: - Helpers
     
+    func formatMatchDate(_ date: Date) -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "MM/dd (E)"
+        dateFormatter.locale = Locale(identifier: "ko_KR")
+        let formattedDate = dateFormatter.string(from: date)
+        return formattedDate
+    }
+    
     func setValues(item: Recruit) {
+        let formattedCellDate = formatMatchDate(item.matchDate?.dateValue() ?? Date())
+        
         title.text = item.title
-        matchDayLabel.text = "\(item.matchDateString ?? "")  \(item.startTime ?? "") - \(item.endTime ?? "")"
+        matchDayLabel.text = formattedCellDate
         typeLabel.text = item.type
         recruitingLabel.text = "\(item.acceptedApplicantsUID.count) / \(item.recruitedPeopleCount)" + " 명"
         gamePriceLabel.text = item.gamePrice

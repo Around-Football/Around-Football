@@ -47,8 +47,8 @@ final class AFButton: UIButton {
         layer.cornerRadius = LayoutOptions.cornerRadious
         clipsToBounds = true
         addTarget(self, action: #selector(buttonClicked), for: .touchUpInside)
-        color == .black ? setTitleColor(.white, for: .normal) : setTitleColor(.black, for: .normal)
         setBackgroundColor(color, for: .normal)
+        setTitleColor(color == AFColor.primary ? .black : .white, for: .normal)
         setTitleColor(AFColor.grayScale300, for: .disabled)
         setBackgroundColor(AFColor.grayScale100, for: .disabled)
     }

@@ -25,18 +25,8 @@ final class HomeTableViewCell: UITableViewCell {
 
     private let symbolConfiguration = UIImage.SymbolConfiguration(pointSize: 25, weight: .medium)
     
-    private var titleLabel = UILabel().then {
-        $0.text = "Title Text"
-        $0.font = .boldSystemFont(ofSize: 20)
-    }
-    
-    private var fieldLabel = UILabel().then {
-        $0.text = "Field Text"
-    }
-    
-    private var fieldAddress = UILabel().then {
-        $0.text = "Field Address"
-    }
+    private let defaultFieldImage = UIImage(named: AFIcon.fieldImage)
+    private lazy var fieldImageView = UIImageView(image: defaultFieldImage)
     
     private var typeLabel = UILabel().then {
         $0.text = "Field Address"
@@ -49,19 +39,35 @@ final class HomeTableViewCell: UITableViewCell {
     
     private var dateLabel = UILabel().then {
         $0.text = "DateLabel"
+        $0.font = AFFont.titleCard
+    }
+    
+    private var fieldLabel = UILabel().then {
+        $0.text = "Field Text"
+        $0.font = AFFont.titleSmall
     }
     
     private var recruitLabel = UILabel().then {
-        $0.text = "Recurit 0명"
+        $0.text = "2/2명 모집"
+        $0.font = AFFont.filterRegular
+        $0.textColor = AFColor.grayScale300
+    }
+    
+    // MARK: - 예전 디자인 코드
+    
+    private var titleLabel = UILabel().then {
+        $0.text = "Title Text"
+        $0.font = .boldSystemFont(ofSize: 20)
+    }
+    
+    private var fieldAddress = UILabel().then {
+        $0.text = "Field Address"
     }
     
     private var userNameLabel = UILabel().then {
         $0.text = "닉네임"
         $0.font = UIFont.systemFont(ofSize: 15, weight: .semibold)
     }
-    
-    private let defaultFieldImage = UIImage(named: AFIcon.fieldImage)
-    private lazy var fieldImageView = UIImageView(image: defaultFieldImage)
 
     lazy var bookmarkButton = UIButton().then {
         $0.setImage(UIImage(systemName: "star", withConfiguration: symbolConfiguration)?
@@ -123,19 +129,32 @@ final class HomeTableViewCell: UITableViewCell {
             .disposed(by: disposeBag)
     }
     
+    func formatMatchDate(_ date: Date) -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "MM/dd (E)"
+        dateFormatter.locale = Locale(identifier: "ko_KR")
+        let formattedDate = dateFormatter.string(from: date)
+        return formattedDate
+    }
+    
     func bindContents(item: Recruit) {
+        guard let date = item.matchDate?.dateValue() else { return }
+        let formattedCellDate = formatMatchDate(date)
+        
         //cell에 사용할 id 세팅
         self.fieldID = item.fieldID
         //북마크 버튼 바인딩
         setBookmarkBinding(fieldID: item.fieldID)
         //UI정보 바인딩
-        titleLabel.text = item.title
-        fieldLabel.text = "필드: \(item.fieldName)"
-        fieldAddress.text = "주소: \(item.fieldAddress)"
         typeLabel.text = item.type
         typeLabel.backgroundColor = item.type == "축구" ? AFColor.soccor : AFColor.futsal
-        dateLabel.text = "일정: \(item.matchDateString ?? "") \(item.startTime ?? "") - \(item.endTime ?? "")"
-        recruitLabel.text = "모집 용병: \(item.acceptedApplicantsUID.count) / \(item.recruitedPeopleCount) 명"
+        dateLabel.text = formattedCellDate
+        fieldLabel.text = "\(item.fieldName)"
+        recruitLabel.text = " \(item.acceptedApplicantsUID.count) / \(item.recruitedPeopleCount)명 모집"
+        
+        // MARK: - 예전 디자인 코드
+        titleLabel.text = item.title
+        fieldAddress.text = "주소: \(item.fieldAddress)"
         userNameLabel.text = "\(item.userName)"
     }
     
@@ -202,6 +221,7 @@ final class HomeTableViewCell: UITableViewCell {
             make.leading.equalTo(typeLabel.snp.leading)
         }
         
+        // MARK: - 예전 디자인 코드
 //        userNameLabel.snp.makeConstraints { make in
 //            make.top.equalTo(recruitLabel.snp.bottom).offset(5)
 //            make.trailing.equalTo(snp.trailing).offset(SuperviewOffsets.trailingPadding)
