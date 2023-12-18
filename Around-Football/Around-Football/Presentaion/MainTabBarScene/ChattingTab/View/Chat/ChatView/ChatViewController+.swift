@@ -261,14 +261,11 @@ extension ChatViewController: PHPickerViewControllerDelegate {
 
 extension ChatViewController: MessageCellDelegate {
     func didTapImage(in cell: MessageCollectionViewCell) {
-        print(#function)
-        print("didTapMessage")
         guard let indexPath = messageViewController.messagesCollectionView.indexPath(for: cell),
               let messagesDataSource = messageViewController.messagesCollectionView.messagesDataSource else { return }
         let message = messagesDataSource.messageForItem(at: indexPath, in: messageViewController.messagesCollectionView)
         switch message.kind {
         case .photo(let photoItem):
-            print("DEBUG - Message in a photo")
             if let image = photoItem.image {
                 // cell의 위치정보
                 let cellOriginFrame = cell.superview?.convert(cell.frame, to: nil)

@@ -110,7 +110,7 @@ class ChatViewController: UIViewController {
         }
         
         messageViewController.view.snp.makeConstraints {
-            $0.top.equalTo(chatHeaderView.snp.bottom).offset(10)
+            $0.top.equalTo(chatHeaderView.snp.bottom)
             $0.leading.trailing.bottom.equalToSuperview()
         }
         
