@@ -113,7 +113,6 @@ final class ChatViewModel {
             .subscribe { (owner, _) in
                 FirebaseAPI.shared.fetchUser(uid: owner.channelInfo.withUserId) { user in
                     owner.withUser = user
-                    print("withUser: \(String(describing: owner.withUser))")
                 }
             }
             .disposed(by: disposeBag)
