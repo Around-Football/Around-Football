@@ -19,12 +19,7 @@ import RxCocoa
 final class MessageViewController: MessagesViewController {
     // MARK: - Properties
     
-    var viewModel: ChatViewModel
-    
     let imageTransition = ImageTransition()
-    let disposeBag = DisposeBag()
-    let pickedImage = PublishSubject<UIImage>()
-    private let invokedViewWillAppear = PublishSubject<Void>()
     
     lazy var cameraBarButtonItem = InputBarButtonItem(type: .system).then {
         $0.tintColor = .black
@@ -33,8 +28,7 @@ final class MessageViewController: MessagesViewController {
     
     // MARK: - Lifecycles
     
-    init(viewModel: ChatViewModel) {
-        self.viewModel = viewModel
+    init() {
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -46,25 +40,14 @@ final class MessageViewController: MessagesViewController {
         super.viewDidLoad()
         
         configure()
-        configureDelegate()
         setupMessageInputBar()
         removeOutgoingMessageAvatars()
         addCameraBarButtonToMessageInputBar()
-        bind()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         UITabBar.appearance()
-        invokedViewWillAppear.onNext(())
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        viewModel.removeListener()
-        //딥링크 네비게이션으로 왔을때만 네비게이션바 없애줌
-        if viewModel.coordinator as? DeepLinkCoordinator != nil {
-            navigationController?.isNavigationBarHidden = true
-        }
     }
     
     // MARK: - Helpers
@@ -72,16 +55,7 @@ final class MessageViewController: MessagesViewController {
     private func configure() {
         view.backgroundColor = .systemBackground
     }
-    
-    private func configureDelegate() {
-        messagesCollectionView.messagesDataSource = self
-        messagesCollectionView.messagesLayoutDelegate = self
-        messagesCollectionView.messagesDisplayDelegate = self
-        messagesCollectionView.messageCellDelegate = self
-        messagesCollectionView.register(CustomInfoMessageCell.self,
-                                        forCellWithReuseIdentifier: CustomInfoMessageCell.cellId)
-    }
-    
+        
     private func setupMessageInputBar() {
         messageInputBar.inputTextView.tintColor = .black
         messageInputBar.sendButton.setTitleColor(.blue, for: .normal)
@@ -106,15 +80,4 @@ final class MessageViewController: MessagesViewController {
         messageInputBar.setStackViewItems([cameraBarButtonItem], forStack: .left, animated: false)
     }
     
-    private func bind() {
-        let didTapSendButton = sendWithText(buttonEvent: messageInputBar.sendButton.rx.tap)
-        let input = ChatViewModel.Input(didTapSendButton: didTapSendButton,
-                                        pickedImage: pickedImage,
-                                        invokedViewWillAppear: invokedViewWillAppear)
-        _ = viewModel.transform(input)
-        bindCameraBarButtonEvent()
-        bindMessages()
-        bindEnabledCameraBarButton()
-        bindEnabledSendObjectButton()
-    }
 }

@@ -44,6 +44,7 @@ final class ChatViewModel {
     }
     
     struct Output {
+        let recruitStatus: Observable<Recruit>
     }
     
     // MARK: - Lifecycles
@@ -115,25 +116,24 @@ final class ChatViewModel {
             .disposed(by: disposeBag)
     }
     
-    func fetchRecruit(by inputObserver: Observable<Void>) -> Single<Recruit> {
+    private func fetchRecruit(by inputObserver: Observable<Void>) -> Observable<Recruit> {
         return inputObserver
-            .flatMapLatest { _ in
-                return Single<Recruit>.create { [weak self] single -> Disposable in
-                    guard let self = self else { return Disposables.create() }
-                    FirebaseAPI.shared.fetchRecruit(recruitID: self.channelInfo.recruitID) { recruit, error  in
+            .flatMap { _ in
+                return Observable<Recruit>.create { observe in
+                    FirebaseAPI.shared.fetchRecruit(recruitID: self.channelInfo.recruitID) { [weak self] recruit, error  in
+                        guard let self = self else { return }
                         if let recruit = recruit {
                             self.recruit.accept(recruit)
-                            single(.success(recruit))
+                            observe.onNext(recruit)
                         }
                         
                         if let error = error {
-                            single(.failure(error))
+                            observe.onError(error)
                         }
                     }
                     return Disposables.create()
                 }
             }
-            .asSingle()
     }
     
     // MARK: - Helpers
@@ -142,9 +142,10 @@ final class ChatViewModel {
         setupChatListener(by: input.invokedViewWillAppear)
         setupChatStatusListener(by: input.invokedViewWillAppear)
         fetchWithUser(by: input.invokedViewWillAppear)
+        let recruitStatus = fetchRecruit(by: input.invokedViewWillAppear)
         sendMessage(by: input.didTapSendButton)
         sendPhoto(by: input.pickedImage)
-        return Output()
+        return Output(recruitStatus: recruitStatus)
     }
     
     private func sendMessage(by inputObserver: Observable<String>) {

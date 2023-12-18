@@ -15,12 +15,12 @@ import RxCocoa
 
 // MARK: - Binding
 
-extension MessageViewController {
+extension ChatViewController {
     func bindEnabledCameraBarButton() {
         viewModel.isSendingPhoto
             .withUnretained(self)
             .subscribe { (owner, isSendingPhoto) in
-                owner.messageInputBar.leftStackViewItems.forEach {
+                owner.messageViewController.messageInputBar.leftStackViewItems.forEach {
                     guard let item = $0 as? InputBarButtonItem else { return }
                     DispatchQueue.main.async {
                         item.isEnabled = !isSendingPhoto
@@ -31,7 +31,7 @@ extension MessageViewController {
     }
     
     func bindCameraBarButtonEvent() {
-        cameraBarButtonItem.rx.tap
+        messageViewController.cameraBarButtonItem.rx.tap
             .withUnretained(self)
             .subscribe { (owner, event) in
                 var configuration = PHPickerConfiguration()
@@ -50,9 +50,9 @@ extension MessageViewController {
             .withUnretained(self)
             .subscribe { (owner, messages) in
                 DispatchQueue.main.async {
-                    owner.messagesCollectionView.reloadData()
+                    owner.messageViewController.messagesCollectionView.reloadData()
                     if owner.viewModel.messages.value.count > 0 {
-                        owner.messagesCollectionView.scrollToLastItem(animated: false)
+                        owner.messageViewController.messagesCollectionView.scrollToLastItem(animated: false)
                     }
                 }
             }
@@ -61,10 +61,10 @@ extension MessageViewController {
     
     func sendWithText(buttonEvent: ControlEvent<Void>) -> Observable<String> {
         return buttonEvent
-            .withLatestFrom(messageInputBar.inputTextView.rx.text.orEmpty)
+            .withLatestFrom(messageViewController.messageInputBar.inputTextView.rx.text.orEmpty)
             .do(onNext: { [weak self] _ in
                 print(#function)
-                self?.messageInputBar.inputTextView.text.removeAll()
+                self?.messageViewController.messageInputBar.inputTextView.text.removeAll()
             })
             .asObservable()
     }
@@ -73,12 +73,12 @@ extension MessageViewController {
         viewModel.channel
             .withUnretained(self)
             .subscribe { (owner, channel) in
-                owner.messageInputBar.leftStackViewItems.forEach {
+                owner.messageViewController.messageInputBar.leftStackViewItems.forEach {
                     guard let item = $0 as? InputBarButtonItem,
                           let channel = channel else { return }
                     DispatchQueue.main.async {
                         item.isEnabled = channel.isAvailable
-                        owner.messageInputBar.isHidden = !channel.isAvailable
+                        owner.messageViewController.messageInputBar.isHidden = !channel.isAvailable
                     }
                 }
             }
@@ -86,7 +86,7 @@ extension MessageViewController {
     }
 }
 
-extension MessageViewController: MessagesDataSource {
+extension ChatViewController: MessagesDataSource {
     var currentSender: MessageKit.SenderType {
         return viewModel.currentSender
     }
@@ -121,7 +121,7 @@ extension MessageViewController: MessagesDataSource {
     }
 }
 
-extension MessageViewController: MessagesLayoutDelegate {
+extension ChatViewController: MessagesLayoutDelegate {
     // 아래 여백
     func cellBottomLabelHeight(for message: MessageType,
                                at indexPath: IndexPath,
@@ -148,7 +148,7 @@ extension MessageViewController: MessagesLayoutDelegate {
 }
 
 // 상대방이 보낸 메시지, 내가 보낸 메시지를 구분하여 색상과 모양 지정
-extension MessageViewController: MessagesDisplayDelegate {
+extension ChatViewController: MessagesDisplayDelegate {
     // 말풍선의 배경 색상
     func backgroundColor(for message: MessageType,
                          at indexPath: IndexPath,
@@ -209,7 +209,7 @@ extension MessageViewController: MessagesDisplayDelegate {
     }
 }
 
-extension MessageViewController: PHPickerViewControllerDelegate {
+extension ChatViewController: PHPickerViewControllerDelegate {
     func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
         picker.dismiss(animated: true)
         
@@ -231,13 +231,13 @@ extension MessageViewController: PHPickerViewControllerDelegate {
 
 // MARK: - ImageCell Custom DetailView
 
-extension MessageViewController: MessageCellDelegate {
+extension ChatViewController: MessageCellDelegate {
     func didTapImage(in cell: MessageCollectionViewCell) {
         print(#function)
         print("didTapMessage")
-        guard let indexPath = messagesCollectionView.indexPath(for: cell),
-              let messagesDataSource = messagesCollectionView.messagesDataSource else { return }
-        let message = messagesDataSource.messageForItem(at: indexPath, in: messagesCollectionView)
+        guard let indexPath = messageViewController.messagesCollectionView.indexPath(for: cell),
+              let messagesDataSource = messageViewController.messagesCollectionView.messagesDataSource else { return }
+        let message = messagesDataSource.messageForItem(at: indexPath, in: messageViewController.messagesCollectionView)
         switch message.kind {
         case .photo(let photoItem):
             print("DEBUG - Message in a photo")
@@ -248,12 +248,12 @@ extension MessageViewController: MessageCellDelegate {
                 
                 
                 // Transition 설정
-                imageTransition.setPoint(point: cellOriginPoint)
-                imageTransition.setFrame(frame: cellOriginFrame)
+                messageViewController.imageTransition.setPoint(point: cellOriginPoint)
+                messageViewController.imageTransition.setFrame(frame: cellOriginFrame)
                 
                 let imageMessageViewController = ImageMessageViewController()
                 imageMessageViewController.image = image
-                imageMessageViewController.transitioningDelegate = self
+                imageMessageViewController.transitioningDelegate = self.messageViewController
                 imageMessageViewController.modalPresentationStyle = .custom
                 
                 present(imageMessageViewController, animated: true)
