@@ -11,10 +11,10 @@ protocol ChatTabCoordinatorDelegate {
     func presentLoginViewController()
 }
 
-final class ChatTabCoordinator: BaseCoordinator, ChatCoordinatorProtocol {
+final class ChatTabCoordinator: BaseCoordinator, ChatCoordinatorProtocol, MainTabBarCoordinatorDelegate {
     
     var type: CoordinatorType = .chat
-    var delegate: ChatTabCoordinatorDelegate?
+    var delegate: MainTabBarCoordinatorDelegate?
     
     deinit {
         print("DEBUG: ChatTabCoordinator deinit")

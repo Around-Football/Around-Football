@@ -8,11 +8,13 @@
 import UIKit
 
 //ChatCoordinator 추상화
-protocol ChatCoordinatorProtocol {
+protocol ChatCoordinatorProtocol: MainTabBarCoordinatorDelegate {
     var navigationController: UINavigationController? { get }
     func pushChatView(channelInfo: ChannelInfo, isNewChat: Bool)
     func presentPHPickerView(picker: UIViewController)
     func presentDeleteAlertController(alert: UIAlertController)
+    func presentLoginViewController()
+    func pushToDetailView(recruitItem: Recruit)
 }
 
 //chatProtocol 중복 메서드 기본구현
@@ -32,11 +34,23 @@ extension ChatCoordinatorProtocol {
     func presentDeleteAlertController(alert: UIAlertController) {
         navigationController?.present(alert, animated: true)
     }
+    
+    func pushToDetailView(recruitItem: Recruit) {
+        let coordinator = DetailCoordinator(navigationController: navigationController)
+        navigationController?.navigationBar.isHidden = false
+        coordinator.delegate = self
+        coordinator.start(recruitItem: recruitItem)
+    }
 }
 
 final class DeepLinkCoordinator: BaseCoordinator, ChatCoordinatorProtocol {
+    func presentLoginViewController() {
+        delegate?.presentLoginViewController()
+    }
+    
     var type: CoordinatorType = .deepLink
     var chatTabCoordinator: ChatTabCoordinator?
+    var delegate: MainTabBarCoordinatorDelegate?
     
     init(navigationController: UINavigationController?, chatTabCoordinator: ChatTabCoordinator?) {
         self.chatTabCoordinator = chatTabCoordinator

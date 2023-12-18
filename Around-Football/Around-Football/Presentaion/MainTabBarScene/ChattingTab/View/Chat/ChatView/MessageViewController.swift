@@ -25,7 +25,6 @@ final class MessageViewController: MessagesViewController {
     let disposeBag = DisposeBag()
     let pickedImage = PublishSubject<UIImage>()
     private let invokedViewWillAppear = PublishSubject<Void>()
-    private let invokedViewWillDisappear = PublishSubject<Void>()
     
     lazy var cameraBarButtonItem = InputBarButtonItem(type: .system).then {
         $0.tintColor = .black
@@ -41,10 +40,6 @@ final class MessageViewController: MessagesViewController {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-    
-    deinit {
-        viewModel.removeListener()
     }
     
     override func viewDidLoad() {
@@ -65,7 +60,7 @@ final class MessageViewController: MessagesViewController {
     }
     
     override func viewWillDisappear(_ animated: Bool) {
-        invokedViewWillDisappear.onNext(())
+        viewModel.removeListener()
         //딥링크 네비게이션으로 왔을때만 네비게이션바 없애줌
         if viewModel.coordinator as? DeepLinkCoordinator != nil {
             navigationController?.isNavigationBarHidden = true
@@ -115,8 +110,7 @@ final class MessageViewController: MessagesViewController {
         let didTapSendButton = sendWithText(buttonEvent: messageInputBar.sendButton.rx.tap)
         let input = ChatViewModel.Input(didTapSendButton: didTapSendButton,
                                         pickedImage: pickedImage,
-                                        invokedViewWillAppear: invokedViewWillAppear,
-                                        invokedViewWillDisappear: invokedViewWillDisappear)
+                                        invokedViewWillAppear: invokedViewWillAppear)
         _ = viewModel.transform(input)
         bindCameraBarButtonEvent()
         bindMessages()
