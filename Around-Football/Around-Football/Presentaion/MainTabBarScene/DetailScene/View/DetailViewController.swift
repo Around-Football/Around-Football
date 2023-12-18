@@ -17,7 +17,7 @@ final class DetailViewController: UIViewController {
     
     // MARK: - Properties
     
-    private var viewModel: DetailViewModel
+    var viewModel: DetailViewModel
     private var invokedViewWillAppear = PublishSubject<Void>()
     private var disposeBag = DisposeBag()
     private let detailUserInfoView = DetailUserInfoView()

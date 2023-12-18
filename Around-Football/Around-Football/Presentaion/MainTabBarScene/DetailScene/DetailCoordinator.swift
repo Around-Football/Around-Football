@@ -9,6 +9,7 @@ import UIKit
 
 protocol DetailCoordinatorDelegate {
     func presentLoginViewController()
+    func pushToChatView(channelInfo: ChannelInfo, isNewChat: Bool)
 }
 
 final class DetailCoordinator: BaseCoordinator, ChatCoordinatorProtocol {
@@ -37,6 +38,7 @@ final class DetailCoordinator: BaseCoordinator, ChatCoordinatorProtocol {
         navigationController?.pushViewController(controller, animated: true)
     }
     
+
 //    func pushChatViewController(channelInfo: ChannelInfo, isNewChat: Bool = false) {
 //        let coordinator = ChatTabCoordinator(navigationController: navigationController)
 //        coordinator.pushChatView(channelInfo: channelInfo, isNewChat: isNewChat)
@@ -50,6 +52,14 @@ final class DetailCoordinator: BaseCoordinator, ChatCoordinatorProtocol {
         } else {
             self.pushChatView(channelInfo: channelInfo, isNewChat: isNewChat)
         }
+
+    // func pushToChatView(channelInfo: ChannelInfo, isNewChat: Bool = false) {
+//        let coordinator = ChatTabCoordinator(navigationController: navigationController)
+        // let viewModel = ChatViewModel(coordinator: nil, channelInfo: channelInfo, isNewChat: isNewChat)
+        // let viewController = ChatViewController(viewModel: viewModel)
+        // navigationController?.pushViewController(viewController, animated: true)
+//        delegate?.pushToChatView(channelInfo: channelInfo, isNewChat: isNewChat)
+
     }
     
     func presentLoginViewController() {

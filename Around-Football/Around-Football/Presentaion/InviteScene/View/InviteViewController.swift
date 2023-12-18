@@ -7,6 +7,7 @@
 
 import UIKit
 
+import Firebase
 import RxCocoa
 import RxSwift
 import SnapKit
@@ -116,7 +117,7 @@ final class InviteViewController: UIViewController {
         $0.textAlignment = .left
     }
     
-    private lazy var addButton = AFButton(frame: .zero, buttonTitle: "등록하기")
+    private lazy var addButton = AFButton(buttonTitle: "등록하기", color: AFColor.primary)
     
     // MARK: - Lifecycles
     
@@ -219,7 +220,7 @@ final class InviteViewController: UIViewController {
             viewModel.peopleCount.accept(peopleView.count)
             viewModel.contentTitle.accept(titleTextField.text)
             viewModel.content.accept(contentTextView.text)
-            viewModel.matchDateString.accept(calenderViewController.selectedDateString)
+            viewModel.matchDate.accept(Timestamp(date: calenderViewController.selectedDate ?? Date()))
             viewModel.startTime.accept(calenderViewController.startTimeString)
             viewModel.endTime.accept(calenderViewController.endTimeString)
             //올리기 함수
