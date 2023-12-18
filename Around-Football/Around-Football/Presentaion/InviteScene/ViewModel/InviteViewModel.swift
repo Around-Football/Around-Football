@@ -7,6 +7,7 @@
 
 import Foundation
 
+import Firebase
 import RxCocoa
 import RxSwift
 
@@ -26,7 +27,7 @@ final class InviteViewModel {
     var peopleCount: BehaviorRelay<Int> = BehaviorRelay(value: 1)
     var contentTitle: BehaviorRelay<String?> = BehaviorRelay(value: nil)
     var content: BehaviorRelay<String?> = BehaviorRelay(value: nil)
-    var matchDateString: BehaviorRelay<String?> = BehaviorRelay(value: nil)
+    var matchDate: BehaviorRelay<Timestamp?> = BehaviorRelay(value: nil)
     var startTime: BehaviorRelay<String?> = BehaviorRelay(value: nil)
     var endTime: BehaviorRelay<String?> = BehaviorRelay(value: nil)
     private let pendingApplicantsUID: [String?] = []
@@ -61,7 +62,7 @@ final class InviteViewModel {
                                                   gamePrice: gamePrice.value ?? "",
                                                   title: contentTitle.value ?? "",
                                                   content: content.value ?? "",
-                                                  matchDateString: matchDateString.value ?? "",
+                                                  matchDate: matchDate.value ?? Timestamp(),
                                                   startTime: startTime.value ?? "",
                                                   endTime: endTime.value ?? "",
                                                   pendingApplicantsUID: pendingApplicantsUID,
