@@ -142,6 +142,8 @@ final class AFMenuButton: UIButton {
     }
 }
 
+
+//필터뷰 동그란 버튼
 final class AFRoundSmallButton: UIButton {
     
     // MARK: - Lifecycles
@@ -173,6 +175,7 @@ final class AFRoundSmallButton: UIButton {
     }
 }
 
+//필터뷰 동그란 메뉴 버튼
 final class AFRoundMenuButton: UIButton {
     
     var menuButtonSubject = PublishSubject<String?>()

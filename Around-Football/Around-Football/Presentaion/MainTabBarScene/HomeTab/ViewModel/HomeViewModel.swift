@@ -34,6 +34,7 @@ final class HomeViewModel {
     
     func transform(_ input: Input) -> Output {
         let recruitList = loadRecruitList(by: input.loadRecruitList)
+        print("되나==========================================\(recruitList.values)")
         let output = Output(recruitList: recruitList)
         return output
     }

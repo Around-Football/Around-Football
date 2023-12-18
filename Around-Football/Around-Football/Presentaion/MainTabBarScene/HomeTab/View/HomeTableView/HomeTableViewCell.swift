@@ -116,6 +116,7 @@ final class HomeTableViewCell: UITableViewCell {
     }
     
     func bindContents(item: Recruit) {
+        print("++++++++++++++++++++++++++++++++\(item)")
         //cell에 사용할 id 세팅
         self.fieldID = item.fieldID
         //북마크 버튼 바인딩

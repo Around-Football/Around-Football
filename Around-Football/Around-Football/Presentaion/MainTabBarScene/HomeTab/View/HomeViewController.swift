@@ -29,6 +29,16 @@ final class HomeViewController: UIViewController {
     private var disposeBag = DisposeBag()
     private var selectedDate: Date?
     
+    let regionMenus: [String]  = ["모든 지역", "서울", "인천", "부산", "대구", "울산",
+                            "대전", "광주", "세종특별자치시","경기", "강원특별자치도",
+                            "충북", "충남", "경북", "경남", "전북", "전남", "제주특별자치도"]
+    let typeMenus: [String] = ["전체", "풋살", "축구"]
+    
+    private lazy var resetButton = AFRoundSmallButton(buttonTitle: "전체 보기", color: .black)
+    private lazy var regionFilterButton = AFRoundMenuButton(buttonTitle: "모든 지역", menus: regionMenus)
+    private lazy var typeFilterButton = AFRoundMenuButton(buttonTitle: "매치 유형", menus: typeMenus)
+    private let dateFilterButton = AFRoundMenuButton(buttonTitle: "날짜 선택", menus: [])
+    
     private lazy var homeTableView = UITableView().then {
         $0.register(HomeTableViewCell.self, forCellReuseIdentifier: HomeTableViewCell.id)
     }
@@ -49,15 +59,6 @@ final class HomeViewController: UIViewController {
                                typeFilterButton)
     }
     
-    private lazy var resetButton = AFRoundSmallButton(buttonTitle: "전체 보기", color: .black)
-    
-    let regionMenus: [String]  = ["모든 지역", "서울", "인천", "부산", "대구", "울산",
-                            "대전", "광주", "세종특별자치시","경기", "강원특별자치도",
-                            "충북", "충남", "경북", "경남", "전북", "전남", "제주특별자치도"]
-    private lazy var regionFilterButton = AFRoundMenuButton(buttonTitle: "모든 지역", menus: regionMenus)
-    
-    private let dateFilterButton = AFRoundMenuButton(buttonTitle: "날짜 선택", menus: [])
-    
     private lazy var datePicker = UIDatePicker().then {
         $0.preferredDatePickerStyle = .compact
         $0.datePickerMode = .date
@@ -76,9 +77,6 @@ final class HomeViewController: UIViewController {
         }
         $0.addTarget(self, action: #selector(changeDate), for: .valueChanged)
     }
-    
-    let typeMenus: [String] = ["전체", "풋살", "축구"]
-    private lazy var typeFilterButton = AFRoundMenuButton(buttonTitle: "매치 유형", menus: typeMenus)
     
     private lazy var floatingButton: UIButton = {
         let button = UIButton()
@@ -109,17 +107,17 @@ final class HomeViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        bindUI()
         configureUI()
         bindScrollButtons()
-        bindUI()
         setUserInfo()
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        navigationController?.navigationBar.isHidden = true
         loadRecruitList.onNext(filterRequest)
     }
     
+    //floatingButtonSetting
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
@@ -284,6 +282,8 @@ final class HomeViewController: UIViewController {
     }
     
     private func bindUI() {
+        
+        print("===========================================================cell왜 안나와")
         let input = HomeViewModel.Input(loadRecruitList: loadRecruitList.asObservable())
         
         let output = viewModel.transform(input)
@@ -295,6 +295,7 @@ final class HomeViewController: UIViewController {
                 guard let self else { return }
                 cell.viewModel = viewModel
                 cell.bindContents(item: item)
+                print("===========================================================cell왜 안나와 \(item)")
                 cell.configureButtonTap()
             }.disposed(by: disposeBag)
         
@@ -311,6 +312,9 @@ final class HomeViewController: UIViewController {
     }
     
     private func configureUI() {
+        navigationItem.title = "용병 구해요"
+        navigationController?.navigationBar.prefersLargeTitles = true
+        
         view.backgroundColor = .white
         view.addSubviews(filterScrollView,
                          homeTableView,

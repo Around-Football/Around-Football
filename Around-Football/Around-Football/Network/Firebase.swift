@@ -146,6 +146,8 @@ final class FirebaseAPI {
                     Recruit(dictionary: document.data())
                 }
                 
+                print("===============================\(recruits)")
+                
                 observer.onNext(recruits)
                 observer.onCompleted()
             }
