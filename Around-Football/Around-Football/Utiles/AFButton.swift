@@ -84,20 +84,27 @@ final class AFSmallButton: UIButton {
     }
 }
 
-// MARK: - MENU버튼
+// MARK: - MENU 버튼
 
 final class AFMenuButton: UIButton {
     
     var menuButtonSubject = PublishSubject<String?>()
     let chevronImage = UIImage(systemName: "chevron.down")
+    let disposeBag = DisposeBag()
     
     // MARK: - Lifecycles
     
     init(buttonTitle: String, menus: [String]) {
         super.init(frame: .zero)
         configureUI(buttonTitle: buttonTitle, menus: menus)
+        
+        menuButtonSubject.subscribe { [weak self] title in
+            guard let self,
+                  let title else { return }
+            setTitle(title, for: .normal)
+        }.disposed(by: disposeBag)
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -115,11 +122,10 @@ final class AFMenuButton: UIButton {
         
         let menus: [String]  = menus
         
-        menu = UIMenu(children: menus.map { city in
-            UIAction(title: city) { [weak self] _ in
+        menu = UIMenu(children: menus.map { title in
+            UIAction(title: title) { [weak self] _ in
                 guard let self else { return }
-                menuButtonSubject.onNext(city)
-                setTitle(city, for: .normal)
+                menuButtonSubject.onNext(title)
             }
         })
         
@@ -222,10 +228,10 @@ final class AFRoundMenuButton: UIButton {
         
         let menus: [String]  = menus
         
-        menu = UIMenu(children: menus.map { city in
-            UIAction(title: city) { [weak self] _ in
+        menu = UIMenu(children: menus.map { title in
+            UIAction(title: title) { [weak self] _ in
                 guard let self else { return }
-                menuButtonSubject.onNext(city)
+                menuButtonSubject.onNext(title)
             }
         })
     }

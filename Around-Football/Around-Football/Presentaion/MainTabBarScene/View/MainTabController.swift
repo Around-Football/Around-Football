@@ -43,17 +43,17 @@ final class MainTabController: UITabBarController {
         viewControllers = pages
     
         pages[0].tabBarItem = UITabBarItem(title: "홈",
-                                           image: UIImage(named: "AFHome"),
-                                           selectedImage: UIImage(named: "AFHomeSelect"))
+                                           image: UIImage(named: AFIcon.home),
+                                           selectedImage: UIImage(named: AFIcon.homeSelect))
         pages[1].tabBarItem = UITabBarItem(title: "지도",
-                                           image: UIImage(named: "AFLocation"),
-                                           selectedImage: UIImage(named: "AFLocationSelect"))
+                                           image: UIImage(named: AFIcon.location),
+                                           selectedImage: UIImage(named: AFIcon.locationSelect))
         pages[2].tabBarItem = UITabBarItem(title: "채팅",
-                                           image: UIImage(named: "AFChat"),
-                                           selectedImage: UIImage(named: "AFChatSelect"))
+                                           image: UIImage(named: AFIcon.chat),
+                                           selectedImage: UIImage(named: AFIcon.chatSelect))
         pages[3].tabBarItem = UITabBarItem(title: "내 정보",
-                                           image: UIImage(named: "AFUser"),
-                                           selectedImage: UIImage(named: "AFUserSelect"))
+                                           image: UIImage(named: AFIcon.user),
+                                           selectedImage: UIImage(named: AFIcon.userSelect))
         pages[0].tabBarItem.tag = 0
         pages[1].tabBarItem.tag = 1
         pages[2].tabBarItem.tag = 2
