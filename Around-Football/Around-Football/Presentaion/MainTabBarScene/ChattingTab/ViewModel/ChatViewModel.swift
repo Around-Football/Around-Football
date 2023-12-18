@@ -66,7 +66,6 @@ final class ChatViewModel {
     
     private func setupChatListener(by inputObserver: Observable<Void>) {
         inputObserver
-            .take(1)
             .withUnretained(self)
             .subscribe(onNext: { (owner, _) in
                 print(#function, "channel: ", owner.channelInfo.id)
@@ -85,7 +84,6 @@ final class ChatViewModel {
     
     private func setupChatStatusListener(by inputObserver: Observable<Void>) {
         inputObserver
-            .take(1)
             .withUnretained(self)
             .subscribe { (owner, _) in
                 owner.chatAPI.chatStatusSubscribe(id: owner.channelInfo.id) { [weak self] result in
@@ -104,11 +102,11 @@ final class ChatViewModel {
     func removeListener() {
         chatAPI.removeChatListener()
         chatAPI.removeChatStatusListener()
+        self.messages.accept([])
     }
     
     private func fetchWithUser(by inputObserver: Observable<Void>) {
         inputObserver
-            .take(1)
             .withUnretained(self)
             .subscribe { (owner, _) in
                 FirebaseAPI.shared.fetchUser(uid: owner.channelInfo.withUserId) { user in
@@ -120,7 +118,6 @@ final class ChatViewModel {
     
     private func fetchRecruit(by inputObserver: Observable<Void>) -> Observable<Recruit?> {
         return inputObserver
-            .take(1)
             .flatMap { _ in
                 return Observable<Recruit?>.create { observe in
                     FirebaseAPI.shared.fetchRecruit(recruitID: self.channelInfo.recruitID) { [weak self] recruit, error  in
