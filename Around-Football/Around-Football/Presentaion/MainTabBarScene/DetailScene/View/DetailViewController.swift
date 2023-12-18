@@ -105,7 +105,7 @@ final class DetailViewController: UIViewController {
         //TODO: -메세지 버튼 타이틀 분기처리 (작성자 or 신청자)
         ///글쓴이면 신청현황 보기, 아니면 신청한 UID에 추가
         if user?.id == viewModel.recruitItem?.userID {
-            viewModel.coordinator?.pushApplicationStatusViewController()
+            viewModel.coordinator?.pushApplicationStatusViewController(recruit: viewModel.recruitItem!)
         } else {
             FirebaseAPI.shared.appendPendingApplicant(fieldID: viewModel.recruitItem?.fieldID)
         }

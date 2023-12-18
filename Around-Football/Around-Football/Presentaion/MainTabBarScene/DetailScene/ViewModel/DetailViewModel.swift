@@ -70,10 +70,10 @@ final class DetailViewModel {
             print("DEBUG - ", #function, isAvailable)
             if isAvailable, let channelId = channelId {
                 let channelInfo = ChannelInfo(id: channelId, withUser: recruitUser, recruitID: recruitItem.id)
-                self.coordinator?.pushChatView(channelInfo: channelInfo)
+                self.coordinator?.clickSendMessageButton(channelInfo: channelInfo)
             } else {
                 let channelInfo = ChannelInfo(id: UUID().uuidString, withUser: recruitUser, recruitID: recruitItem.id)
-                self.coordinator?.pushChatView(channelInfo: channelInfo, isNewChat: true)
+                self.coordinator?.clickSendMessageButton(channelInfo: channelInfo, isNewChat: true)
             }
         }
     }

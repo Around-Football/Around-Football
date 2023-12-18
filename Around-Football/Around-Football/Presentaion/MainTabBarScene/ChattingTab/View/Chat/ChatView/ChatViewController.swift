@@ -10,16 +10,19 @@ import UIKit
 import SnapKit
 import Then
 import RxSwift
+import RxCocoa
 
 class ChatViewController: UIViewController {
     
     // MARK: - Properties
     private let viewModel: ChatViewModel
     private let disposeBag = DisposeBag()
+    private let tapGesture = UITapGestureRecognizer()
     
-    private let chatHeaderView = ChatHeaderView().then {
+    private lazy var chatHeaderView = ChatHeaderView().then {
         $0.layer.borderColor = UIColor.lightGray.withAlphaComponent(0.7).cgColor
         $0.layer.borderWidth = 1.0 / UIScreen.main.scale
+        $0.addGestureRecognizer(tapGesture)
     }
     private lazy var messageViewController = MessageViewController(viewModel: viewModel)
     
@@ -39,6 +42,16 @@ class ChatViewController: UIViewController {
         configure()
         configureUI()
         bind()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        viewModel.resetAlarmInformation()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        NotiManager.shared.currentChatRoomId = nil
     }
     
     // MARK: - Helpers
@@ -71,14 +84,23 @@ class ChatViewController: UIViewController {
     }
     
     private func bind() {
+        bindRecruitInfo()
+        bindRecruitInfoTapEvent()
+    }
+    
+    private func bindRecruitInfo() {
         viewModel.recruit
             .withUnretained(self)
-            .subscribe { (owner, recruit) in
-                guard let recruit = recruit else {
-                    owner.chatHeaderView.configureErrorInfo()
-                    return
-                }
+            .subscribe(onNext: { (owner, recruit) in
                 owner.chatHeaderView.configureInfo(recruit: recruit)
+            })
+            .disposed(by: disposeBag)
+    }
+    
+    private func bindRecruitInfoTapEvent() {
+        tapGesture.rx.event
+            .bind(with: self) { owner, _ in
+                owner.viewModel.showDetailRecruitView()
             }
             .disposed(by: disposeBag)
     }

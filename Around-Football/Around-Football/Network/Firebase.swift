@@ -74,16 +74,17 @@ final class FirebaseAPI {
         }
     }
     
-    func fetchRecruit(recruitID: String, completion: @escaping(Recruit) -> Void) {
+    func fetchRecruit(recruitID: String, completion: @escaping(Recruit?, Error?) -> Void) {
         REF_RECRUIT.document(recruitID).getDocument { snapshot, error in
             if let error = error {
                 print("DEBUG - Fetch Recruit Error: \(error.localizedDescription)")
+                completion(nil, error)
                 return
             }
             
             guard let data = snapshot?.data() else { return }
             let recruit = Recruit(dictionary: data)
-            completion(recruit)
+            completion(recruit, nil)
         }
     }
     

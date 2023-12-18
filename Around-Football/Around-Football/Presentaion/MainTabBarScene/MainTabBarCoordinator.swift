@@ -11,7 +11,7 @@ protocol MainTabBarCoordinatorDelegate {
     func presentLoginViewController()
 }
 
-final class MainTabBarCoordinator: BaseCoordinator {
+final class MainTabBarCoordinator: BaseCoordinator, MainTabBarCoordinatorDelegate {
 
     var type: CoordinatorType = .mainTab
     var delegate: MainTabBarCoordinatorDelegate?
@@ -57,6 +57,7 @@ final class MainTabBarCoordinator: BaseCoordinator {
             navigationController: navigationController,
             chatTabCoordinator: chatTabCoordinator
         )
+        deepLinkCoordinator.delegate = self
         childCoordinators.append(deepLinkCoordinator)
         self.deepLinkCoordinator = deepLinkCoordinator
     }
@@ -80,4 +81,4 @@ final class MainTabBarCoordinator: BaseCoordinator {
     }
 }
 
-extension MainTabBarCoordinator: HomeTabCoordinatorDelegate, InfoTabCoordinatorDelegate, ChatTabCoordinatorDelegate  { }
+extension MainTabBarCoordinator: InfoTabCoordinatorDelegate  { }

@@ -14,8 +14,7 @@ protocol DetailCoordinatorDelegate {
 final class DetailCoordinator: BaseCoordinator, ChatCoordinatorProtocol {
     
     var type: CoordinatorType = .detailScene
-    var delegate: DetailCoordinatorDelegate?
-    var recruitItem: Recruit?
+    var delegate: MainTabBarCoordinatorDelegate?
     
     // MARK: - 이동할때 각 DetailView에 Recruit 전해줌. 다른 뷰에서 쓸 수도 있어서 옵셔널
     
@@ -31,9 +30,9 @@ final class DetailCoordinator: BaseCoordinator, ChatCoordinatorProtocol {
         removeThisChildCoordinators(coordinator: self)
     }
     
-    func pushApplicationStatusViewController() {
+    func pushApplicationStatusViewController(recruit: Recruit) {
         let viewModel = ApplicantListViewModel(coordinator: self)
-        viewModel.recruitItem = recruitItem
+        viewModel.recruitItem = recruit
         let controller = ApplicantListViewController(viewModel: viewModel)
         navigationController?.pushViewController(controller, animated: true)
     }
@@ -43,6 +42,15 @@ final class DetailCoordinator: BaseCoordinator, ChatCoordinatorProtocol {
 //        coordinator.pushChatView(channelInfo: channelInfo, isNewChat: isNewChat)
 //        childCoordinators.append(coordinator)
 //    }
+    
+    func clickSendMessageButton(channelInfo: ChannelInfo, isNewChat: Bool = false) {
+        if navigationController?.viewControllers.first(where: { $0 is ChatViewController }) != nil {
+            navigationController?.popViewController(animated: true)
+            removeThisChildCoordinators(coordinator: self)
+        } else {
+            self.pushChatView(channelInfo: channelInfo, isNewChat: isNewChat)
+        }
+    }
     
     func presentLoginViewController() {
         delegate?.presentLoginViewController()
