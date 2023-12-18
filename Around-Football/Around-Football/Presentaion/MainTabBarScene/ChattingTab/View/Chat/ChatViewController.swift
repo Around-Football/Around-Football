@@ -67,9 +67,9 @@ final class ChatViewController: MessagesViewController {
     override func viewWillDisappear(_ animated: Bool) {
         invokedViewWillDisappear.onNext(())
         //딥링크 네비게이션으로 왔을때만 네비게이션바 없애줌
-        if viewModel.coordinator == nil {
-            navigationController?.isNavigationBarHidden = true
-        }
+//        if viewModel.coordinator == nil {
+//            navigationController?.isNavigationBarHidden = true
+//        }
     }
     
     // MARK: - Helpers

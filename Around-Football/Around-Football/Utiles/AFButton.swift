@@ -73,7 +73,7 @@ final class AFSmallButton: UIButton {
     
     private func configureUI(buttonTitle: String, color: UIColor) {
         setTitle(buttonTitle, for: .normal)
-        titleLabel?.font = AFFont.text
+        titleLabel?.font = AFFont.button
         setTitleColor(AFColor.grayScale200, for: .normal)
         setTitleColor(.black, for: .selected)
         layer.cornerRadius = LayoutOptions.cornerRadious
