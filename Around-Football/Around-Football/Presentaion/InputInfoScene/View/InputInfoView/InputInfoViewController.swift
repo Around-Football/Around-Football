@@ -39,7 +39,11 @@ final class InputInfoViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        navigationItem.title = "추가정보 입력"
+        navigationItem.title = "내 정보"
+        navigationController?.navigationBar.titleTextAttributes = [
+            NSAttributedString.Key.foregroundColor: AFColor.grayScale200
+        ]
+        
         invokedViewWillAppear.onNext(()) //유저 데이터 요청
         bindUI()
         bindSubjectButton()
@@ -47,7 +51,6 @@ final class InputInfoViewController: UIViewController {
         keyboardController()
         
         inputInfoView.userNameTextField.delegate = self
-        
         inputInfoView.maleButton.addTarget(self, action: #selector(maleButtonTapped), for: .touchUpInside)
         inputInfoView.femaleButton.addTarget(self, action: #selector(femaleButtonTapped), for: .touchUpInside)
         
@@ -59,20 +62,20 @@ final class InputInfoViewController: UIViewController {
         inputInfoView.mfButton.addTarget(self, action: #selector(mfButtonTapped), for: .touchUpInside)
         inputInfoView.dfButton.addTarget(self, action: #selector(dfButtonTapped), for: .touchUpInside)
         inputInfoView.gkButton.addTarget(self, action: #selector(gkButtonTapped), for: .touchUpInside)
-        
+
         inputInfoView.nextButton.addTarget(self, action: #selector(nextButtonTapped), for: .touchUpInside)
     }
     
     // MARK: - Helpers
     
     private func bindSubjectButton() {
-        inputInfoView.regionSubject.subscribe(onNext: { [weak self] region in
+        inputInfoView.regionFilterButton.menuButtonSubject.subscribe(onNext: { [weak self] region in
             guard let self else { return }
             viewModel?.area.accept(region)
             viewModel?.updateData()
         }).disposed(by: disposeBag)
         
-        inputInfoView.ageSubject.subscribe(onNext: { [weak self] age in
+        inputInfoView.ageFilterButton.menuButtonSubject.subscribe(onNext: { [weak self] age in
             guard let self else { return }
             viewModel?.age.accept(age)
             viewModel?.updateData()
@@ -82,6 +85,7 @@ final class InputInfoViewController: UIViewController {
     private func bindNextButton() {
         viewModel?.inputUserInfo
             .map({ user in
+                //값 비어있는지 체크
                 guard
                     user.userName != "",
                     user.age != "",
@@ -96,12 +100,10 @@ final class InputInfoViewController: UIViewController {
             .bind(onNext: { [weak self] bool in
                 guard let self else { return }
                 if bool == true {
-                    inputInfoView.nextButton.setTitle("작성 완료", for: .normal)
-                    inputInfoView.nextButton.setTitleColor(.white, for: .normal)
+                    inputInfoView.nextButton.setTitle("확인", for: .normal)
                     return inputInfoView.nextButton.isEnabled = true
                 } else {
                     inputInfoView.nextButton.setTitle("모든 항목을 작성해주세요", for: .normal)
-                    inputInfoView.nextButton.setTitleColor(.gray, for: .normal)
                     return inputInfoView.nextButton.isEnabled = false
                 }
             }).disposed(by: disposeBag)
@@ -135,7 +137,7 @@ final class InputInfoViewController: UIViewController {
         
         output?.userInfo
             .observe(on: MainScheduler.instance)
-            .do(onNext: { [weak self] user in
+            .subscribe(onNext: { [weak self] user in
                 guard let self else { return }
                 switch user?.gender {
                 case "남성":
@@ -146,12 +148,11 @@ final class InputInfoViewController: UIViewController {
                     print("gender 비워져있음")
                 }
             })
-            .subscribe()
             .disposed(by: disposeBag)
         
         output?.userInfo
             .observe(on: MainScheduler.instance)
-            .do(onNext: { [weak self] user in
+            .subscribe(onNext: { [weak self] user in
                 guard let self else { return }
                 switch user?.mainUsedFeet {
                 case "오른발":
@@ -164,12 +165,11 @@ final class InputInfoViewController: UIViewController {
                     print("userFeet 비워져있음")
                 }
             })
-            .subscribe()
             .disposed(by: disposeBag)
         
         output?.userInfo
             .observe(on: MainScheduler.instance)
-            .do(onNext: { [weak self] user in
+            .subscribe(onNext: { [weak self] user in
                 guard let self else { return }
                 if let userPosition = user?.position {
                     for position in userPosition {
@@ -188,7 +188,6 @@ final class InputInfoViewController: UIViewController {
                     }
                 }
             })
-            .subscribe()
             .disposed(by: disposeBag)
     }
     
@@ -210,9 +209,11 @@ final class InputInfoViewController: UIViewController {
     @objc
     func maleButtonTapped(_ sender: UIButton) {
         sender.isSelected.toggle()
+        
         if inputInfoView.femaleButton.isSelected {
             inputInfoView.femaleButton.isSelected.toggle()
         }
+        
         if sender.isSelected {
             let gender = sender.titleLabel?.text
             viewModel?.gender.accept(gender)
@@ -226,9 +227,11 @@ final class InputInfoViewController: UIViewController {
     @objc
     func femaleButtonTapped(_ sender: UIButton) {
         sender.isSelected.toggle()
+        
         if inputInfoView.maleButton.isSelected {
             inputInfoView.maleButton.isSelected.toggle()
         }
+        
         if sender.isSelected {
             let gender = sender.titleLabel?.text
             viewModel?.gender.accept(gender)

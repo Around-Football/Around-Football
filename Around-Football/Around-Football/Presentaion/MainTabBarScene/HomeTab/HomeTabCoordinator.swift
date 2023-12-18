@@ -36,7 +36,7 @@ final class HomeTabCoordinator: BaseCoordinator, DetailCoordinatorDelegate {
     func pushToDetailView(recruitItem: Recruit) {
         detailCoordinator.recruitItem = recruitItem
         detailCoordinator.delegate = self
-        navigationController?.navigationBar.isHidden = false
+//        navigationController?.navigationBar.isHidden = false
         detailCoordinator.start(recruitItem: recruitItem)
     }
 
