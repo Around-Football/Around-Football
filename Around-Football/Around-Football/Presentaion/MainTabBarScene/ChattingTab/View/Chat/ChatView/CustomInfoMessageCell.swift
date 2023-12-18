@@ -65,7 +65,7 @@ final class CustomInfoMessageCellSizeLayout: CellSizeCalculator {
     }
     
     override func sizeForItem(at _: IndexPath) -> CGSize {
-        let width = (layout?.collectionView?.bounds.width ?? 0)
+        let width = (layout?.collectionView?.bounds.width ?? 0) - 20
         let height: CGFloat = 60
         return CGSize(width: width, height: height)
     }

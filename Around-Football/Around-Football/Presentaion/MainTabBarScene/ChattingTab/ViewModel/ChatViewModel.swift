@@ -23,6 +23,7 @@ final class ChatViewModel {
     var channel: BehaviorRelay<Channel?> = BehaviorRelay(value: nil)
     var messages: BehaviorRelay<[Message]> = BehaviorRelay(value: [])
     let channelInfo: ChannelInfo
+    var recruit: BehaviorRelay<Recruit?> = BehaviorRelay(value: nil)
     var currentUser: User?
     var withUser: User? = nil
     var isSendingPhoto: BehaviorRelay<Bool> = BehaviorRelay(value: false)
@@ -40,10 +41,10 @@ final class ChatViewModel {
         let didTapSendButton: Observable<String>
         let pickedImage: Observable<UIImage>
         let invokedViewWillAppear: Observable<Void>
-        let invokedViewWillDisappear: Observable<Void>
     }
     
     struct Output {
+        let recruitStatus: Observable<Recruit?>
     }
     
     // MARK: - Lifecycles
@@ -101,6 +102,7 @@ final class ChatViewModel {
     func removeListener() {
         chatAPI.removeChatListener()
         chatAPI.removeChatStatusListener()
+        self.messages.accept([])
     }
     
     private func fetchWithUser(by inputObserver: Observable<Void>) {
@@ -109,10 +111,27 @@ final class ChatViewModel {
             .subscribe { (owner, _) in
                 FirebaseAPI.shared.fetchUser(uid: owner.channelInfo.withUserId) { user in
                     owner.withUser = user
-                    print("withUser: \(String(describing: owner.withUser))")
                 }
             }
             .disposed(by: disposeBag)
+    }
+    
+    private func fetchRecruit(by inputObserver: Observable<Void>) -> Observable<Recruit?> {
+        return inputObserver
+            .flatMap { _ in
+                return Observable<Recruit?>.create { observe in
+                    FirebaseAPI.shared.fetchRecruit(recruitID: self.channelInfo.recruitID) { [weak self] recruit, error  in
+                        guard let self = self else { return }
+                        
+                        if let error = error {
+                            observe.onError(error)
+                        }
+                        self.recruit.accept(recruit)
+                        observe.onNext(recruit)
+                    }
+                    return Disposables.create()
+                }
+            }
     }
     
     // MARK: - Helpers
@@ -121,11 +140,10 @@ final class ChatViewModel {
         setupChatListener(by: input.invokedViewWillAppear)
         setupChatStatusListener(by: input.invokedViewWillAppear)
         fetchWithUser(by: input.invokedViewWillAppear)
+        let recruitStatus = fetchRecruit(by: input.invokedViewWillAppear)
         sendMessage(by: input.didTapSendButton)
         sendPhoto(by: input.pickedImage)
-        resetAlarmInformation(by: input.invokedViewWillAppear)
-        resetNotiMangerInformation(by: input.invokedViewWillDisappear)
-        return Output()
+        return Output(recruitStatus: recruitStatus)
     }
     
     private func sendMessage(by inputObserver: Observable<String>) {
@@ -133,15 +151,11 @@ final class ChatViewModel {
             .withUnretained(self)
             .subscribe { (owner, text) in
                 print(#function)
-                guard let currentUser = owner.currentUser,
-                      let withUser = owner.withUser,
-                      let channel = owner.channel.value else { return }
+                guard let currentUser = owner.currentUser else { return }
                 let message = Message(user: currentUser, content: text, messageType: .chat)
                 if owner.isNewChat {
                     print("isNewChat = \(owner.isNewChat)")
-                    owner.channelAPI.createChannel(channel: channel,
-                                                   owner: currentUser,
-                                                   withUser: withUser) {
+                    owner.channelAPI.createChannel(channelInfo: owner.channelInfo) {
                         owner.saveMessage(message: message) {
                             owner.isNewChat = false
                         }
@@ -160,11 +174,11 @@ final class ChatViewModel {
             .subscribe { (owner, image) in
                 guard let currentUser = owner.currentUser,
                       let withUser = owner.withUser,
-                let channel = owner.channel.value else { return }
+                      let channel = owner.channel.value else { return }
                 owner.isSendingPhoto.accept(true)
                 if owner.isNewChat {
                     print("isNewChat = \(owner.isNewChat)")
-                    owner.channelAPI.createChannel(channel: channel, owner: currentUser, withUser: withUser) {
+                    owner.channelAPI.createChannel(channelInfo: owner.channelInfo) {
                         owner.uploadImage(image: image, channel: channel)
                         owner.isNewChat = false
                     }
@@ -178,26 +192,6 @@ final class ChatViewModel {
             }
             .disposed(by: disposeBag)
         
-    }
-    
-    private func resetAlarmInformation(by inputObserver: Observable<Void>) {
-        inputObserver
-            .withUnretained(self)
-            .subscribe { (owner, _) in
-                if let currentUser = owner.currentUser {
-                    owner.channelAPI.resetAlarmNumber(uid: currentUser.id, channelId: owner.channelInfo.id)
-                    NotiManager.shared.currentChatRoomId = owner.channelInfo.id
-                }
-            }
-            .disposed(by: disposeBag)
-    }
-    
-    private func resetNotiMangerInformation(by inputObserver: Observable<Void>) {
-        inputObserver
-            .subscribe { _ in
-                NotiManager.shared.currentChatRoomId = nil
-            }
-            .disposed(by: disposeBag)
     }
     
     private func loadImageAndUpdateCells(_ messages: [Message]) {
@@ -260,14 +254,7 @@ final class ChatViewModel {
             message.downloadURL = url
             
             // Date 메시지 첨부 전송 여부 로직
-            var saveMessages = [message]
-            let dateMessage = Message(user: currentUser, content: "", messageType: .date)
-            let lastMessage = messages.value.last
-            if messages.value.isEmpty {
-                saveMessages.append(dateMessage)
-            } else if !Calendar.current.isDate(message.sentDate, equalTo: lastMessage!.sentDate, toGranularity: .day) {
-                saveMessages.append(dateMessage)
-            }
+            let saveMessages = appendDateMessageCell(message: message)
             
             self.chatAPI.save(saveMessages) { error in
                 if let error = error {
@@ -285,14 +272,7 @@ final class ChatViewModel {
     
     private func saveMessage(message: Message, completion: (() -> Void)? = nil) {
         // Date 메시지 첨부 전송 여부 로직
-        var saveMessages = [message]
-        let dateMessage = Message(user: currentUser!, content: "", messageType: .date)
-        let lastMessage = messages.value.last
-        if messages.value.isEmpty {
-            saveMessages.append(dateMessage)
-        } else if !Calendar.current.isDate(message.sentDate, equalTo: lastMessage!.sentDate, toGranularity: .day) {
-            saveMessages.append(dateMessage)
-        }
+        let saveMessages = appendDateMessageCell(message: message)
         
         chatAPI.save(saveMessages) { [weak self] error in
             if let error = error {
@@ -314,6 +294,30 @@ final class ChatViewModel {
             
             completion?()
         }
+    }
+    
+    private func appendDateMessageCell(message: Message) -> [Message] {
+        var saveMessages = [message]
+        let dateMessage = Message(user: currentUser!, content: "", messageType: .date)
+        let lastMessage = messages.value.last
+        if messages.value.isEmpty {
+            saveMessages.append(dateMessage)
+        } else if !Calendar.current.isDate(message.sentDate, equalTo: lastMessage!.sentDate, toGranularity: .day) {
+            saveMessages.append(dateMessage)
+        }
+        return saveMessages
+    }
+    
+    func resetAlarmInformation() {
+        if let currentUser = self.currentUser {
+            channelAPI.resetAlarmNumber(uid: currentUser.id, channelId: channelInfo.id)
+            NotiManager.shared.currentChatRoomId = channelInfo.id
+        }
+    }
+    
+    func showDetailRecruitView() {
+        guard let recruit = recruit.value else { return }
+        coordinator?.pushToDetailView(recruitItem: recruit)
     }
     
     func showPHPickerView(picker: UIViewController) {
