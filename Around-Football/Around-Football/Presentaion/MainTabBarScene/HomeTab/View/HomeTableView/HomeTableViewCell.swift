@@ -54,6 +54,8 @@ final class HomeTableViewCell: UITableViewCell {
         $0.text = "닉네임"
         $0.font = UIFont.systemFont(ofSize: 15, weight: .semibold)
     }
+    
+    private var fieldImage = UIImage(named: AFIcon.fieldImage)
 
     lazy var bookmarkButton = UIButton().then {
         $0.setImage(UIImage(systemName: "star", withConfiguration: symbolConfiguration)?
