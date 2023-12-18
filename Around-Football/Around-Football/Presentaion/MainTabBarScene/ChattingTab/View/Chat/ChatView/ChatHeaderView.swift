@@ -43,6 +43,10 @@ class ChatHeaderView: UIView {
         $0.font = .systemFont(ofSize: 20, weight: .bold)
     }
     
+    private let loadingView = UIActivityIndicatorView(style: .medium).then {
+        $0.startAnimating()
+    }
+    
     private lazy var recruitInfoStack = UIStackView().then {
         $0.axis = .vertical
         $0.distribution = .fillEqually
@@ -72,47 +76,41 @@ class ChatHeaderView: UIView {
         addSubviews(
         imageView,
         recruitInfoStack,
-        errorLabel
+        errorLabel,
+        loadingView
         )
-        
-        imageView.snp.makeConstraints {
-            $0.width.height.equalTo(45)
-            $0.leading.equalToSuperview().offset(20)
-            $0.centerY.equalToSuperview()
-        }
-        recruitInfoStack.snp.makeConstraints {
-            $0.leading.equalTo(imageView.snp.trailing).offset(10)
-            $0.top.equalToSuperview()
-            $0.trailing.equalToSuperview().offset(-20)
+        loadingView.snp.makeConstraints {
+            $0.center.equalToSuperview()
         }
     }
     
     func configureInfo(recruit: Recruit?) {
+        loadingView.isHidden = true
+        
         if let recruit = recruit {
-            imageView.isHidden = false
-            recruitInfoStack.isHidden = false
-            errorLabel.isHidden = true
+            imageView.snp.makeConstraints {
+                $0.width.height.equalTo(45)
+                $0.leading.equalToSuperview().offset(20)
+                $0.centerY.equalToSuperview()
+            }
+            recruitInfoStack.snp.makeConstraints {
+                $0.leading.equalTo(imageView.snp.trailing).offset(10)
+                $0.top.equalToSuperview()
+                $0.trailing.equalToSuperview().offset(-20)
+            }
+
             titleLabel.text = recruit.title
             //        self.imageView.image = recruit.image
             dateLabel.text = "일정: \(recruit.matchDateString!) \(recruit.startTime!) - \(recruit.endTime!)"
             locationLabel.text = "장소: \(recruit.fieldName)"
             typeLabel.text = "유형: \(recruit.type)"
         } else {
-            
+            errorLabel.snp.makeConstraints {
+                $0.leading.equalToSuperview().offset(20)
+                $0.trailing.equalToSuperview().offset(-20)
+                $0.centerY.equalToSuperview()
+            }
+            errorLabel.text = "게시글을 확인할 수 없습니다."
         }
-    }
-    
-    func configureErrorInfo() {
-        imageView.isHidden = true
-        recruitInfoStack.isHidden = true
-        errorLabel.isHidden = false
-        
-        errorLabel.snp.makeConstraints {
-            $0.leading.equalToSuperview().offset(20)
-            $0.trailing.equalToSuperview().offset(-20)
-            $0.centerY.equalToSuperview()
-        }
-
-        errorLabel.text = "게시글을 확인할 수 없습니다."
     }
 }

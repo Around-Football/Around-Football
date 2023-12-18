@@ -16,15 +16,19 @@ class ChatViewController: UIViewController {
     
     // MARK: - Properties
     let viewModel: ChatViewModel
-    private let tapGesture = UITapGestureRecognizer()
+    let tapGesture = UITapGestureRecognizer()
     
     // View
-    private lazy var chatHeaderView = ChatHeaderView().then {
+    lazy var chatHeaderView = ChatHeaderView().then {
         $0.layer.borderColor = UIColor.lightGray.withAlphaComponent(0.7).cgColor
         $0.layer.borderWidth = 1.0 / UIScreen.main.scale
         $0.addGestureRecognizer(tapGesture)
     }
     let messageViewController = MessageViewController()
+    
+    lazy var imageLoadingView = UIActivityIndicatorView(style: .large).then {
+        $0.center = view.center
+    }
     
     // Rx
     let disposeBag = DisposeBag()
@@ -40,6 +44,11 @@ class ChatViewController: UIViewController {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    deinit {
+        viewModel.removeListener()
+        
     }
     
     override func viewDidLoad() {
@@ -59,7 +68,6 @@ class ChatViewController: UIViewController {
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        viewModel.removeListener()
         NotiManager.shared.currentChatRoomId = nil
         
         //딥링크 네비게이션으로 왔을때만 네비게이션바 없애줌
@@ -89,6 +97,7 @@ class ChatViewController: UIViewController {
     private func configureUI() {
         addChild(messageViewController)
         view.addSubviews(
+            imageLoadingView,
             chatHeaderView,
             messageViewController.view
         )
@@ -104,6 +113,12 @@ class ChatViewController: UIViewController {
             $0.top.equalTo(chatHeaderView.snp.bottom).offset(10)
             $0.leading.trailing.bottom.equalToSuperview()
         }
+        
+        imageLoadingView.snp.makeConstraints {
+            $0.center.equalToSuperview()
+        }
+        
+        view.bringSubviewToFront(imageLoadingView)
     }
     
     private func bind() {
@@ -117,26 +132,10 @@ class ChatViewController: UIViewController {
         bindRecruitInfo(by: output.recruitStatus)
         bindRecruitInfoTapEvent()
         
+        // MARK: - Bind MessageViewController
         bindCameraBarButtonEvent()
         bindMessages()
         bindEnabledCameraBarButton()
         bindEnabledSendObjectButton()
-    }
-    
-    private func bindRecruitInfo(by observe: Observable<Recruit>) {
-        observe
-            .withUnretained(self)
-            .subscribe(onNext: { (owner, recruit) in
-                owner.chatHeaderView.configureInfo(recruit: recruit)
-            })
-            .disposed(by: disposeBag)
-    }
-    
-    private func bindRecruitInfoTapEvent() {
-        tapGesture.rx.event
-            .bind(with: self) { owner, _ in
-                owner.viewModel.showDetailRecruitView()
-            }
-            .disposed(by: disposeBag)
     }
 }
