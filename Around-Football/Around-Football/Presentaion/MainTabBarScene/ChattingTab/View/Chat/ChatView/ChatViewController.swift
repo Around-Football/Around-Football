@@ -15,16 +15,21 @@ import RxCocoa
 class ChatViewController: UIViewController {
     
     // MARK: - Properties
-    private let viewModel: ChatViewModel
-    private let disposeBag = DisposeBag()
+    let viewModel: ChatViewModel
     private let tapGesture = UITapGestureRecognizer()
     
+    // View
     private lazy var chatHeaderView = ChatHeaderView().then {
         $0.layer.borderColor = UIColor.lightGray.withAlphaComponent(0.7).cgColor
         $0.layer.borderWidth = 1.0 / UIScreen.main.scale
         $0.addGestureRecognizer(tapGesture)
     }
-    private lazy var messageViewController = MessageViewController(viewModel: viewModel)
+    let messageViewController = MessageViewController()
+    
+    // Rx
+    let disposeBag = DisposeBag()
+    private let invokedViewWillAppear = PublishSubject<Void>()
+    let pickedImage = PublishSubject<UIImage>()
     
     // MARK: - Lifecycles
     
@@ -41,17 +46,26 @@ class ChatViewController: UIViewController {
         super.viewDidLoad()
         configure()
         configureUI()
+        configureDelegate()
         bind()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        UITabBar.appearance()
         viewModel.resetAlarmInformation()
+        invokedViewWillAppear.onNext(())
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
+        viewModel.removeListener()
         NotiManager.shared.currentChatRoomId = nil
+        
+        //딥링크 네비게이션으로 왔을때만 네비게이션바 없애줌
+        if viewModel.coordinator as? DeepLinkCoordinator != nil {
+            navigationController?.isNavigationBarHidden = true
+        }
     }
     
     // MARK: - Helpers
@@ -61,7 +75,16 @@ class ChatViewController: UIViewController {
         navigationController?.navigationBar.prefersLargeTitles = false
         title = viewModel.channelInfo.withUserName
     }
-
+    
+    private func configureDelegate() {
+        messageViewController.messagesCollectionView.messagesDataSource = self
+        messageViewController.messagesCollectionView.messagesLayoutDelegate = self
+        messageViewController.messagesCollectionView.messagesDisplayDelegate = self
+        messageViewController.messagesCollectionView.messageCellDelegate = self
+        messageViewController.messagesCollectionView.register(CustomInfoMessageCell.self,
+                                                              forCellWithReuseIdentifier: CustomInfoMessageCell.cellId)
+    }
+    
     
     private func configureUI() {
         addChild(messageViewController)
@@ -84,12 +107,24 @@ class ChatViewController: UIViewController {
     }
     
     private func bind() {
-        bindRecruitInfo()
+        
+        let didTapSendButton = sendWithText(buttonEvent: messageViewController.messageInputBar.sendButton.rx.tap)
+        let input = ChatViewModel.Input(didTapSendButton: didTapSendButton,
+                                        pickedImage: pickedImage,
+                                        invokedViewWillAppear: invokedViewWillAppear)
+        let output = viewModel.transform(input)
+        // MARK: - Bind HeaderView
+        bindRecruitInfo(by: output.recruitStatus)
         bindRecruitInfoTapEvent()
+        
+        bindCameraBarButtonEvent()
+        bindMessages()
+        bindEnabledCameraBarButton()
+        bindEnabledSendObjectButton()
     }
     
-    private func bindRecruitInfo() {
-        viewModel.recruit
+    private func bindRecruitInfo(by observe: Observable<Recruit>) {
+        observe
             .withUnretained(self)
             .subscribe(onNext: { (owner, recruit) in
                 owner.chatHeaderView.configureInfo(recruit: recruit)
