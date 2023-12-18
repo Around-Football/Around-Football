@@ -180,13 +180,19 @@ final class AFRoundMenuButton: UIButton {
     
     var menuButtonSubject = PublishSubject<String?>()
     let chevronImage = UIImage(systemName: "chevron.down")?.withConfiguration(UIImage.SymbolConfiguration(pointSize: 16, weight: .regular))
-    
+    let disposeBag = DisposeBag()
     
     // MARK: - Lifecycles
     
     init(buttonTitle: String, menus: [String]) {
         super.init(frame: .zero)
         configureUI(buttonTitle: buttonTitle, menus: menus)
+        //버튼 title 설정
+        menuButtonSubject.subscribe { [weak self] title in
+            guard let self,
+                  let title else { return }
+            setTitle(title, for: .normal)
+        }.disposed(by: disposeBag)
     }
     
     required init?(coder: NSCoder) {
@@ -220,7 +226,6 @@ final class AFRoundMenuButton: UIButton {
             UIAction(title: city) { [weak self] _ in
                 guard let self else { return }
                 menuButtonSubject.onNext(city)
-                setTitle(city, for: .normal)
             }
         })
     }
