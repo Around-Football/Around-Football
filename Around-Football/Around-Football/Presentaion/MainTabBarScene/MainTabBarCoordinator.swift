@@ -15,9 +15,9 @@ final class MainTabBarCoordinator: BaseCoordinator {
 
     var type: CoordinatorType = .mainTab
     var delegate: MainTabBarCoordinatorDelegate?
-    let homeTabCoordinator = HomeTabCoordinator(navigationController: nil)
-    let mapTabCoordinator = MapTabCoordinator(navigationController: nil)
-    let chatTabCoordinator = ChatTabCoordinator(navigationController: nil)
+    lazy var homeTabCoordinator = HomeTabCoordinator(navigationController: navigationController)
+    lazy var mapTabCoordinator = MapTabCoordinator(navigationController: navigationController)
+    lazy var chatTabCoordinator = ChatTabCoordinator(navigationController: navigationController)
     lazy var infoTabCoordinator = InfoTabCoordinator(navigationController: navigationController)
     lazy var deepLinkCoordinator = DeepLinkCoordinator(navigationController: navigationController)
     
