@@ -41,8 +41,6 @@ final class MainTabBarCoordinator: BaseCoordinator {
                                  mapVC: mapViewController,
                                  chatVC: channelViewController,
                                  infoVC: infoViewController)
-        
-        //딥링크와 앱 코디네이터, 네비게이션 컨트롤러 연결
     }
 
     private func makeMainTabBarController(
@@ -57,16 +55,6 @@ final class MainTabBarCoordinator: BaseCoordinator {
         navigationController?.viewControllers = [mainTabBarController]
     }
         
-    //DeepLinkCoordinatorDelegate
-    //딥링크 관련 함수 작성
-//    func pushToChatView(channelInfo: ChannelInfo, isNewChat: Bool) {
-//        //chatTabCoordinator 사용해서 이동
-//        let viewModel = ChatViewModel(coordinator: chatTabCoordinator, channelInfo: channelInfo, isNewChat: isNewChat)
-//        let controller = ChatViewController(viewModel: viewModel)
-//        
-//        controller.viewModel.coordinator?.pushChatView(channelInfo: channelInfo, isNewChat: isNewChat)
-//    }
-    
     func pushToDetailView(recruit: Recruit) {
     }
     

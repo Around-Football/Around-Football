@@ -27,7 +27,7 @@ final class DetailViewController: UIViewController {
     private var user = try? UserService.shared.currentUser_Rx.value()
     
     private let mainImageView = UIImageView().then {
-        $0.image = UIImage(named: "AppIcon")
+        $0.image = UIImage(named: "DefaultRecruitImage")
         $0.contentMode = .scaleAspectFill
         $0.clipsToBounds = true
     }
@@ -96,6 +96,12 @@ final class DetailViewController: UIViewController {
   
       override func viewWillAppear(_ animated: Bool) {
         invokedViewWillAppear.onNext(()) //cell 실시간 데이터 반영
+        navigationController?.navigationBar.prefersLargeTitles = false
+          navigationItem.title = "용병 구해요"
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        navigationItem.title = ""
     }
     
     // MARK: - Selector
@@ -180,7 +186,6 @@ final class DetailViewController: UIViewController {
     
     private func configeUI() {
         setButtonTitle() //신청하기 버튼 세팅
-        navigationItem.title = viewModel.recruitItem?.title
         view.backgroundColor = .white
         view.addSubview(scrollView)
         scrollView.addSubview(contentView)
@@ -205,8 +210,10 @@ final class DetailViewController: UIViewController {
         }
         
         mainImageView.snp.makeConstraints { make in
-            make.top.leading.trailing.equalToSuperview()
-            make.height.equalTo(180)
+            make.top.equalToSuperview().offset(14)
+            make.leading.equalToSuperview().offset(20)
+            make.trailing.equalToSuperview().offset(-20)
+            make.height.equalTo(186)
         }
         
         groundLabel.snp.makeConstraints { make in

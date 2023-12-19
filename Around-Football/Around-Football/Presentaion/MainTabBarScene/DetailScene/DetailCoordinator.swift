@@ -31,7 +31,6 @@ final class DetailCoordinator: BaseCoordinator {
     }
         
     func clickSendMessageButton(channelInfo: ChannelInfo, isNewChat: Bool = false) {
-        print("NAVIGATION CONTROLLER IS \(String(describing: navigationController))")
         if navigationController?.viewControllers.first(where: { $0 is ChatViewController }) != nil {
             navigationController?.popViewController(animated: true)
             removeThisChildCoordinators(coordinator: self)

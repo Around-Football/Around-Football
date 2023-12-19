@@ -41,7 +41,7 @@ final class AFButton: UIButton {
     }
     
     // MARK: - Helpers
-    
+    // TODO: - 폰트?
     private func configureUI(buttonTitle: String, color: UIColor) {
         setTitle(buttonTitle, for: .normal)
         layer.cornerRadius = LayoutOptions.cornerRadious
@@ -110,7 +110,7 @@ final class AFMenuButton: UIButton {
     }
     
     // MARK: - Helpers
-    
+    // TODO: - 폰트?
     private func configureUI(buttonTitle: String, menus: [String]) {
         setTitle(buttonTitle, for: .normal)
         setTitleColor(.label, for: .normal)
