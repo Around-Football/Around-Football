@@ -183,7 +183,7 @@ extension FirebaseAPI {
             let userBookmarkList = user.bookmarkedFields
             
             REF_RECRUIT
-                .whereField("fieldID", in: userBookmarkList)
+                .whereField("fieldID", in: userBookmarkList as [Any])
                 .getDocuments { snapshot, error in
                     if error != nil {
                         print("loadBookmarkPostRx 추가 오류: \(String(describing: error?.localizedDescription))")
