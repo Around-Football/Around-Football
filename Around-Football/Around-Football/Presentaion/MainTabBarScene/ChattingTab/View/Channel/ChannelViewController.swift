@@ -50,8 +50,6 @@ final class ChannelViewController: UIViewController {
         super.init(nibName: nil, bundle: nil)
         navigationController?.navigationBar.backgroundColor = .systemBackground
         title = "채팅"
-        
-        print("\(String(describing: Auth.auth().currentUser?.uid))")
     }
     
     required init?(coder: NSCoder) {
@@ -80,7 +78,6 @@ final class ChannelViewController: UIViewController {
     func configure() {
         channelTableViewDataSource = RxTableViewSectionedReloadDataSource(configureCell: { data, tableView, indexPath, item in
             let cell = tableView.dequeueReusableCell(withIdentifier: ChannelTableViewCell.cellId, for: indexPath) as! ChannelTableViewCell
-            print("refresh collectionView: \(item.id)")
             cell.chatRoomLabel.text = item.withUserName
             cell.chatPreviewLabel.text = item.previewContent
             let alarmNumber = item.alarmNumber

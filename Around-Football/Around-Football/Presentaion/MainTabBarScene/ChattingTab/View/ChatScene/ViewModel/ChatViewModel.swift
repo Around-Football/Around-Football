@@ -154,14 +154,12 @@ final class ChatViewModel {
                 guard let currentUser = owner.currentUser else { return }
                 let message = Message(user: currentUser, content: text, messageType: .chat)
                 if owner.isNewChat {
-                    print("isNewChat = \(owner.isNewChat)")
                     owner.channelAPI.createChannel(channelInfo: owner.channelInfo) {
                         owner.saveMessage(message: message) {
                             owner.isNewChat = false
                         }
                     }
                 } else {
-                    print("isNewChat = \(owner.isNewChat)")
                     owner.saveMessage(message: message)
                 }
             }
@@ -177,7 +175,6 @@ final class ChatViewModel {
                       let channel = owner.channel.value else { return }
                 owner.isSendingPhoto.accept(true)
                 if owner.isNewChat {
-                    print("isNewChat = \(owner.isNewChat)")
                     owner.channelAPI.createChannel(channelInfo: owner.channelInfo) {
                         owner.uploadImage(image: image, channel: channel)
                         owner.isNewChat = false
