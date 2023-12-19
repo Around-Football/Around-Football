@@ -13,7 +13,7 @@ import RxSwift
 import RxCocoa
 
 class ChatViewController: UIViewController {
-    
+
     // MARK: - Properties
     let viewModel: ChatViewModel
     let tapGesture = UITapGestureRecognizer()
@@ -30,6 +30,10 @@ class ChatViewController: UIViewController {
         $0.center = view.center
     }
     
+    lazy var containerView = UIView().then {
+        $0.frame = view.bounds
+    }
+    
     // Rx
     let disposeBag = DisposeBag()
     private let invokedViewWillAppear = PublishSubject<Void>()
@@ -44,10 +48,6 @@ class ChatViewController: UIViewController {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-    
-    deinit {
-        
     }
     
     override func viewDidLoad() {
@@ -76,7 +76,10 @@ class ChatViewController: UIViewController {
     private func configure() {
         view.backgroundColor = .systemBackground
         navigationController?.navigationBar.prefersLargeTitles = false
+        navigationController?.navigationBar.backgroundColor = .systemBackground
+        navigationController?.toolbar.backgroundColor = .systemBackground
         title = viewModel.channelInfo.withUserName
+
     }
     
     private func configureDelegate() {
@@ -94,8 +97,10 @@ class ChatViewController: UIViewController {
         view.addSubviews(
             imageLoadingView,
             chatHeaderView,
-            messageViewController.view
+            containerView
         )
+        containerView.addSubview(messageViewController.view)
+        
         messageViewController.didMove(toParent: self)
         
         chatHeaderView.snp.makeConstraints {
@@ -104,7 +109,7 @@ class ChatViewController: UIViewController {
             $0.height.equalTo(100)
         }
         
-        messageViewController.view.snp.makeConstraints {
+        containerView.snp.makeConstraints {
             $0.top.equalTo(chatHeaderView.snp.bottom)
             $0.leading.trailing.bottom.equalToSuperview()
         }
