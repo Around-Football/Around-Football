@@ -29,9 +29,11 @@ final class ChannelAPI {
     }
     
     
-    func createChannel(channel: Channel, owner: User, withUser: User, completion: @escaping () -> Void) {
-        let ownerChannel = ChannelInfo(id: channel.id, withUser: withUser)
-        let withUserChannel = ChannelInfo(id: channel.id, withUser: owner)
+    func createChannel(channelInfo: ChannelInfo, completion: @escaping () -> Void) {
+        guard let ownerUser = try? UserService.shared.currentUser_Rx.value() else { return }
+        let ownerChannel = channelInfo
+        let withUserChannel = ChannelInfo(id: channelInfo.id, withUser: ownerUser, recruitID: channelInfo.recruitID)
+        let channel = Channel(id: channelInfo.id, isAvailable: true)
         DB_REF.collection("channels").document(channel.id)
             .setData(channel.representation) {  [weak self] error in
                 if let error {
@@ -43,21 +45,21 @@ final class ChannelAPI {
                     return
                 }
                 print("DEBUG - ", #function, "createChannel")
-                self.addChannelInfo(channelInfo: ownerChannel, owner: owner)
-                self.addChannelInfo(channelInfo: withUserChannel, owner: withUser)
+                self.addChannelInfo(channelInfo: ownerChannel, userID: ownerUser.id)
+                self.addChannelInfo(channelInfo: withUserChannel, userID: channelInfo.withUserId)
                 completion()
             }
     }
     
     // User가 참가하는 채팅방 목록 추가
-    private func addChannelInfo(channelInfo: ChannelInfo, owner: User) {
-        REF_USER.document(owner.id).collection("channels").document(channelInfo.id)
+    private func addChannelInfo(channelInfo: ChannelInfo, userID: String) {
+        REF_USER.document(userID).collection("channels").document(channelInfo.id)
             .setData(channelInfo.representation)
     }
     
-    func checkExistAvailableChannel(owner: User, withUser: User, completion: @escaping(Bool, String?) -> Void) {
+    func checkExistAvailableChannel(owner: User, recruitID: String, completion: @escaping(Bool, String?) -> Void) {
         REF_USER.document(owner.id).collection("channels")
-            .whereField("withUserId", isEqualTo: withUser.id)
+            .whereField("recruitID", isEqualTo: recruitID)
             .whereField("isAvailable", isEqualTo: true)
             .getDocuments { snapshot, error in
                 guard let isEmpty = snapshot?.isEmpty else {

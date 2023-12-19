@@ -7,20 +7,14 @@
 
 import UIKit
 
-protocol MainTabBarCoordinatorDelegate {
-    func presentLoginViewController()
-}
-
 final class MainTabBarCoordinator: BaseCoordinator {
 
     var type: CoordinatorType = .mainTab
-    var delegate: MainTabBarCoordinatorDelegate?
-    lazy var homeTabCoordinator = HomeTabCoordinator(navigationController: navigationController)
-    lazy var mapTabCoordinator = MapTabCoordinator(navigationController: navigationController)
-    lazy var chatTabCoordinator = ChatTabCoordinator(navigationController: navigationController)
-    lazy var infoTabCoordinator = InfoTabCoordinator(navigationController: navigationController)
-    lazy var deepLinkCoordinator = DeepLinkCoordinator(navigationController: navigationController)
-    
+    var homeTabCoordinator = HomeTabCoordinator()
+    var mapTabCoordinator = MapTabCoordinator()
+    var chatTabCoordinator = ChatTabCoordinator()
+    var infoTabCoordinator = InfoTabCoordinator()
+
     override func start() {
         showMainTabController()
     }
@@ -32,21 +26,11 @@ final class MainTabBarCoordinator: BaseCoordinator {
     private func showMainTabController() {
         navigationController?.isNavigationBarHidden = true
         // MARK: - navigationController 내부에서 새로 만들어줌
-//        let homeTabCoordinator = HomeTabCoordinator(navigationController: nil)
-//        let mapTabCoordinator = MapTabCoordinator(navigationController: nil)
-//        let chatTabCoordinator = ChatTabCoordinator(navigationController: nil)
-//        let infoTabCoordinator = InfoTabCoordinator(navigationController: self.navigationController)
         
         childCoordinators.append(homeTabCoordinator)
         childCoordinators.append(mapTabCoordinator)
         childCoordinators.append(chatTabCoordinator)
         childCoordinators.append(infoTabCoordinator)
-        childCoordinators.append(deepLinkCoordinator)
-        
-        homeTabCoordinator.delegate = self
-        infoTabCoordinator.delegate = self
-        chatTabCoordinator.delegate = self
-        deepLinkCoordinator.delegate = self
         
         let homeViewController = homeTabCoordinator.makeHomeViewController()
         let mapViewController = mapTabCoordinator.makeMapViewController()
@@ -57,8 +41,6 @@ final class MainTabBarCoordinator: BaseCoordinator {
                                  mapVC: mapViewController,
                                  chatVC: channelViewController,
                                  infoVC: infoViewController)
-        
-        //딥링크와 앱 코디네이터, 네비게이션 컨트롤러 연결
     }
 
     private func makeMainTabBarController(
@@ -72,30 +54,19 @@ final class MainTabBarCoordinator: BaseCoordinator {
                                                      pages: [homeVC, mapVC, chatVC, infoVC])
         navigationController?.viewControllers = [mainTabBarController]
     }
-    
-    // HomeTabCoordinatorDelegate
-    func presentLoginViewController() {
-        delegate?.presentLoginViewController()
-    }
-    
-    //DeepLinkCoordinatorDelegate
-    //딥링크 관련 함수 작성
-    func pushToChatView(channelInfo: ChannelInfo, isNewChat: Bool) {
-        //chatTabCoordinator 사용해서 이동
-        let viewModel = ChatViewModel(coordinator: chatTabCoordinator, channelInfo: channelInfo, isNewChat: isNewChat)
-        let controller = ChatViewController(viewModel: viewModel)
         
-        controller.viewModel.coordinator?.pushChatView(channelInfo: channelInfo, isNewChat: isNewChat)
+    func pushToDetailView(recruit: Recruit) {
     }
     
-    func pushToDetailView(recruit: Recruit) {
-        let viewModel = DetailViewModel(coordinator: homeTabCoordinator.detailCoordinator, recruitItem: recruit)
-        let controller = DetailViewController(viewModel: viewModel)
-        controller.viewModel.coordinator?.start(recruitItem: recruit)
+    func handleChatDeepLink(channelInfo: ChannelInfo) {
+        guard let mainTabController = navigationController?.viewControllers.first as? MainTabController,
+              let selectedCoordinator = childCoordinators.first(where: { $0 is ChatTabCoordinator }) as? ChatTabCoordinator,
+              let navigationController = selectedCoordinator.navigationController else { return }
+        if navigationController.viewControllers.count > 1 {
+            navigationController.viewControllers.removeSubrange(1...)
+        }
+        selectedCoordinator.deinitChildCoordinator()
+        mainTabController.selectedIndex = 2
+        selectedCoordinator.pushChatView(channelInfo: channelInfo)
     }
 }
-
-extension MainTabBarCoordinator: HomeTabCoordinatorDelegate,
-                                 InfoTabCoordinatorDelegate,
-                                 ChatTabCoordinatorDelegate,
-                                 DeepLinkCoordinatorDelegate { }

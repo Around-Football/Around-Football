@@ -16,11 +16,39 @@ import RxCocoa
 // MARK: - Binding
 
 extension ChatViewController {
+        
+    func bindRecruitInfo(by observe: Observable<Recruit?>) {
+        observe
+            .withUnretained(self)
+            .subscribe(onNext: { (owner, recruit) in
+                owner.chatHeaderView.configureInfo(recruit: recruit)
+            }) // onError가 발생한 경우 Error 뷰 나타내기(네트워크 환경 등)
+            .disposed(by: disposeBag)
+    }
+    
+    func bindRecruitInfoTapEvent() {
+        tapGesture.rx.event
+            .bind(with: self) { owner, _ in
+                owner.viewModel.showDetailRecruitView()
+            }
+            .disposed(by: disposeBag)
+    }
+
     func bindEnabledCameraBarButton() {
         viewModel.isSendingPhoto
             .withUnretained(self)
             .subscribe { (owner, isSendingPhoto) in
-                owner.messageInputBar.leftStackViewItems.forEach {
+                DispatchQueue.main.async {
+                    if isSendingPhoto {
+                        owner.imageLoadingView.startAnimating()
+                        owner.imageLoadingView.isHidden = false
+                    } else {
+                        owner.imageLoadingView.stopAnimating()
+                        owner.imageLoadingView.isHidden = true
+                    }
+                }
+                
+                owner.messageViewController.messageInputBar.leftStackViewItems.forEach {
                     guard let item = $0 as? InputBarButtonItem else { return }
                     DispatchQueue.main.async {
                         item.isEnabled = !isSendingPhoto
@@ -31,7 +59,7 @@ extension ChatViewController {
     }
     
     func bindCameraBarButtonEvent() {
-        cameraBarButtonItem.rx.tap
+        messageViewController.cameraBarButtonItem.rx.tap
             .withUnretained(self)
             .subscribe { (owner, event) in
                 var configuration = PHPickerConfiguration()
@@ -50,9 +78,9 @@ extension ChatViewController {
             .withUnretained(self)
             .subscribe { (owner, messages) in
                 DispatchQueue.main.async {
-                    owner.messagesCollectionView.reloadData()
+                    owner.messageViewController.messagesCollectionView.reloadData()
                     if owner.viewModel.messages.value.count > 0 {
-                        owner.messagesCollectionView.scrollToLastItem(animated: false)
+                        owner.messageViewController.messagesCollectionView.scrollToLastItem(animated: false)
                     }
                 }
             }
@@ -61,10 +89,10 @@ extension ChatViewController {
     
     func sendWithText(buttonEvent: ControlEvent<Void>) -> Observable<String> {
         return buttonEvent
-            .withLatestFrom(messageInputBar.inputTextView.rx.text.orEmpty)
+            .withLatestFrom(messageViewController.messageInputBar.inputTextView.rx.text.orEmpty)
             .do(onNext: { [weak self] _ in
                 print(#function)
-                self?.messageInputBar.inputTextView.text.removeAll()
+                self?.messageViewController.messageInputBar.inputTextView.text.removeAll()
             })
             .asObservable()
     }
@@ -73,12 +101,12 @@ extension ChatViewController {
         viewModel.channel
             .withUnretained(self)
             .subscribe { (owner, channel) in
-                owner.messageInputBar.leftStackViewItems.forEach {
+                owner.messageViewController.messageInputBar.leftStackViewItems.forEach {
                     guard let item = $0 as? InputBarButtonItem,
                           let channel = channel else { return }
                     DispatchQueue.main.async {
                         item.isEnabled = channel.isAvailable
-                        owner.messageInputBar.isHidden = !channel.isAvailable
+                        owner.messageViewController.messageInputBar.isHidden = !channel.isAvailable
                     }
                 }
             }
@@ -233,14 +261,11 @@ extension ChatViewController: PHPickerViewControllerDelegate {
 
 extension ChatViewController: MessageCellDelegate {
     func didTapImage(in cell: MessageCollectionViewCell) {
-        print(#function)
-        print("didTapMessage")
-        guard let indexPath = messagesCollectionView.indexPath(for: cell),
-              let messagesDataSource = messagesCollectionView.messagesDataSource else { return }
-        let message = messagesDataSource.messageForItem(at: indexPath, in: messagesCollectionView)
+        guard let indexPath = messageViewController.messagesCollectionView.indexPath(for: cell),
+              let messagesDataSource = messageViewController.messagesCollectionView.messagesDataSource else { return }
+        let message = messagesDataSource.messageForItem(at: indexPath, in: messageViewController.messagesCollectionView)
         switch message.kind {
         case .photo(let photoItem):
-            print("DEBUG - Message in a photo")
             if let image = photoItem.image {
                 // cell의 위치정보
                 let cellOriginFrame = cell.superview?.convert(cell.frame, to: nil)
@@ -248,12 +273,12 @@ extension ChatViewController: MessageCellDelegate {
                 
                 
                 // Transition 설정
-                imageTransition.setPoint(point: cellOriginPoint)
-                imageTransition.setFrame(frame: cellOriginFrame)
+                messageViewController.imageTransition.setPoint(point: cellOriginPoint)
+                messageViewController.imageTransition.setFrame(frame: cellOriginFrame)
                 
                 let imageMessageViewController = ImageMessageViewController()
                 imageMessageViewController.image = image
-                imageMessageViewController.transitioningDelegate = self
+                imageMessageViewController.transitioningDelegate = self.messageViewController
                 imageMessageViewController.modalPresentationStyle = .custom
                 
                 present(imageMessageViewController, animated: true)
@@ -262,17 +287,5 @@ extension ChatViewController: MessageCellDelegate {
             print("DEBUG - Message is not a photo")
             break
         }
-    }
-}
-
-extension ChatViewController: UIViewControllerTransitioningDelegate {
-    func animationController(forPresented presented: UIViewController,
-                             presenting: UIViewController,
-                             source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-        return imageTransition
-    }
-    
-    func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-        return DisMissAnim()
     }
 }

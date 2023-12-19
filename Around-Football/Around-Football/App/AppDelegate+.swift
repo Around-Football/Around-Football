@@ -50,7 +50,7 @@ extension AppDelegate: UNUserNotificationCenterDelegate, MessagingDelegate {
                     else { return }
                     
                     //채팅뷰로 이동
-                    mainTabBarCoordinator.deepLinkCoordinator.pushToChatView(channelInfo: channelInfo)
+                    mainTabBarCoordinator.handleChatDeepLink(channelInfo: channelInfo)
                 } catch(let error as NSError) {
                     print("DEBUG - Tap Push Notification Error", error.localizedDescription)
                 }
