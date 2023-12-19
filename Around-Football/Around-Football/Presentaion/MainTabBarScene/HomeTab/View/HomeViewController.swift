@@ -32,12 +32,14 @@ final class HomeViewController: UIViewController {
     let regionMenus: [String]  = ["모든 지역", "서울", "인천", "부산", "대구", "울산",
                             "대전", "광주", "세종특별자치시","경기", "강원특별자치도",
                             "충북", "충남", "경북", "경남", "전북", "전남", "제주특별자치도"]
-    let typeMenus: [String] = ["전체", "풋살", "축구"]
+    let typeMenus: [String] = ["모든 유형", "풋살", "축구"]
+    let genderMenus: [String] = ["성별 무관", "남", "여"]
     
     private lazy var resetButton = AFRoundSmallButton(buttonTitle: "전체 보기", color: .black)
     private lazy var regionFilterButton = AFRoundMenuButton(buttonTitle: "모든 지역", menus: regionMenus)
     private lazy var typeFilterButton = AFRoundMenuButton(buttonTitle: "매치 유형", menus: typeMenus)
     private let dateFilterButton = AFRoundMenuButton(buttonTitle: "날짜 선택", menus: [])
+    private lazy var genderFilterButton = AFRoundMenuButton(buttonTitle: "성별 선택", menus: genderMenus)
     
     private lazy var homeTableView = UITableView().then {
         $0.register(HomeTableViewCell.self, forCellReuseIdentifier: HomeTableViewCell.id)
@@ -56,7 +58,8 @@ final class HomeViewController: UIViewController {
         $0.addArrangedSubviews(resetButton,
                                datePicker,
                                regionFilterButton,
-                               typeFilterButton)
+                               typeFilterButton,
+                               genderFilterButton)
     }
     
     private lazy var datePicker = UIDatePicker().then {
