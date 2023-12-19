@@ -116,6 +116,12 @@ final class HomeViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         loadRecruitList.onNext((filterRequest))
         navigationController?.navigationBar.prefersLargeTitles = true
+        navigationItem.title = "용병 구해요"
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        navigationItem.title = ""
     }
     
     //floatingButtonSetting
@@ -303,9 +309,6 @@ final class HomeViewController: UIViewController {
     }
     
     private func configureUI() {
-        navigationItem.title = "용병 구해요"
-
-        
         view.backgroundColor = .white
         view.addSubviews(filterScrollView,
                          homeTableView,

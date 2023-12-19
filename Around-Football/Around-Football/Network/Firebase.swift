@@ -59,7 +59,6 @@ final class FirebaseAPI {
         return user
     }
     
-    
     func fetchFields(completion: @escaping(([Field]) -> Void)) {
         REF_FIELD.getDocuments { snapshot, error in
             
@@ -72,6 +71,22 @@ final class FirebaseAPI {
             let documentsData = snapshot.documents.map { $0.data() }
             
             completion(Field.convertToArray(documents: documentsData))
+        }
+    }
+    
+    func fetchRecruit(recruitID: String, completion: @escaping(Recruit?, Error?) -> Void) {
+        REF_RECRUIT.document(recruitID).getDocument { snapshot, error in
+            if let error = error {
+                completion(nil, error)
+                return
+            }
+            
+            guard let data = snapshot?.data() else {
+                completion(nil, nil)
+                return
+            }
+            let recruit = Recruit(dictionary: data)
+            completion(recruit, nil)
         }
     }
     

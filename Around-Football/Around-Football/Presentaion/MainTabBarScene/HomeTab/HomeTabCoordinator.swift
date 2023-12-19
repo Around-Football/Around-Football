@@ -8,15 +8,12 @@
 import UIKit
 
 protocol HomeTabCoordinatorDelegate {
-    func presentLoginViewController()
     func pushToChatView(channelInfo: ChannelInfo, isNewChat: Bool)
 }
 
-final class HomeTabCoordinator: BaseCoordinator, DetailCoordinatorDelegate {
-    
+final class HomeTabCoordinator: BaseCoordinator {
+
     var type: CoordinatorType = .home
-    var delegate: HomeTabCoordinatorDelegate?
-    lazy var detailCoordinator = DetailCoordinator(navigationController: navigationController)
     
     deinit {
         print("HomeTabCoordinator deinit")
@@ -35,10 +32,10 @@ final class HomeTabCoordinator: BaseCoordinator, DetailCoordinatorDelegate {
     }
     
     func pushToDetailView(recruitItem: Recruit) {
-        detailCoordinator.recruitItem = recruitItem
-        detailCoordinator.delegate = self
-//        navigationController?.navigationBar.isHidden = false
-        detailCoordinator.start(recruitItem: recruitItem)
+        let coordinator = DetailCoordinator(navigationController: navigationController)
+        childCoordinators.append(coordinator)
+        navigationController?.navigationBar.isHidden = false
+        coordinator.start(recruitItem: recruitItem)
     }
 
     func pushMapView() {
@@ -55,12 +52,11 @@ final class HomeTabCoordinator: BaseCoordinator, DetailCoordinatorDelegate {
         coordinator.navigationController?.navigationBar.isHidden = false
     }
     
-    //DetailCoordinatorDelegate
     func presentLoginViewController() {
-        delegate?.presentLoginViewController()
+        let coordinator = LoginCoordinator()
+        coordinator.start() //여기서 모달뷰로 만듬
+        childCoordinators.append(coordinator)
     }
     
-    func pushToChatView(channelInfo: ChannelInfo, isNewChat: Bool) {
-        delegate?.pushToChatView(channelInfo: channelInfo, isNewChat: isNewChat)
-    }
+    // TODO: - DetailCoordinator 해제하는 로직 구성
 }
