@@ -24,7 +24,7 @@ enum CoordinatorType {
     case chat
     case info
     case detailScene
-    case deepLink
+    case chatScene
 }
 
 protocol Coordinator: AnyObject {
@@ -32,6 +32,18 @@ protocol Coordinator: AnyObject {
     var navigationController: UINavigationController? { get set }
     
     func start() // 뷰컨트롤러 만들고 그 뷰컨으로 이동
+    func deinitCoordinator()
+}
+
+extension Coordinator {
+    // 자식 코디네이터와 코디네이터의 navigationController 해제
+    func deinitCoordinator() {
+        childCoordinators.forEach {
+            $0.navigationController = nil
+            $0.deinitCoordinator()
+        }
+        childCoordinators.removeAll()
+    }
 }
 
 // Coordinator 프로토콜 채택한 공통 BaseCoordinator 클래스
@@ -44,7 +56,7 @@ class BaseCoordinator: Coordinator {
     
     // MARK: - Init
     
-    init(navigationController: UINavigationController?) {
+    init(navigationController: UINavigationController? = nil) {
         self.navigationController = navigationController
     }
 
@@ -58,7 +70,7 @@ class BaseCoordinator: Coordinator {
     }
 }
 
-final class AppCoordinator: BaseCoordinator, LoginCoordinatorDelegate, MainTabBarCoordinatorDelegate {
+final class AppCoordinator: BaseCoordinator {
     
     var type: CoordinatorType = .app
     
@@ -68,17 +80,9 @@ final class AppCoordinator: BaseCoordinator, LoginCoordinatorDelegate, MainTabBa
     
     func showMainTabController() {
         let coordinator = MainTabBarCoordinator(navigationController: navigationController)
-        coordinator.delegate = self
         coordinator.start() // 뷰컨 생성 후 이동
         childCoordinators.append(coordinator)
     }
     
     //TODO: - 온보딩뷰 컨트롤러로 변경
-    
-    func presentLoginViewController() {
-        let coordinator = LoginCoordinator(navigationController: navigationController)
-        coordinator.delegate = self
-        coordinator.start() //여기서 모달뷰로 만듬
-        childCoordinators.append(coordinator)
-    }
 }

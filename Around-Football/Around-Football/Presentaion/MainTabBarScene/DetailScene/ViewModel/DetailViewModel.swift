@@ -74,17 +74,6 @@ final class DetailViewModel {
             } else {
                 let channelInfo = ChannelInfo(id: UUID().uuidString, withUser: recruitUser, recruitID: recruitItem.id)
                 self.coordinator?.clickSendMessageButton(channelInfo: channelInfo, isNewChat: true)
-        //       let recruitUser = recruitUser else { return }
-        // channelAPI.checkExistAvailableChannel(owner: currentUser,
-        //                                       withUser: recruitUser) { [weak self] isAvailable, channelId in
-        //     guard let self = self else { return }
-        //     print("DEBUG - ", #function, isAvailable)
-        //     if isAvailable, let channelId = channelId {
-        //         let channelInfo = ChannelInfo(id: channelId, withUser: recruitUser)
-        //         self.coordinator?.pushToChatView(channelInfo: channelInfo)
-        //     } else {
-        //         let channelInfo = ChannelInfo(id: UUID().uuidString, withUser: recruitUser)
-        //         self.coordinator?.pushToChatView(channelInfo: channelInfo, isNewChat: true)
             }
         }
     }

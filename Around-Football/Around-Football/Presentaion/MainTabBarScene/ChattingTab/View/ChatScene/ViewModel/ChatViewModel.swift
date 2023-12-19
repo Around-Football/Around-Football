@@ -17,7 +17,7 @@ final class ChatViewModel {
     
     // MARK: - Properties
     
-    weak var coordinator: ChatTabCoordinator?
+    weak var coordinator: ChatCoordinator?
     
     let disposeBag = DisposeBag()
     var channel: BehaviorRelay<Channel?> = BehaviorRelay(value: nil)
@@ -49,7 +49,7 @@ final class ChatViewModel {
     
     // MARK: - Lifecycles
     
-    init(coordinator: ChatTabCoordinator?, channelInfo: ChannelInfo, isNewChat: Bool) {
+    init(coordinator: ChatCoordinator?, channelInfo: ChannelInfo, isNewChat: Bool) {
         self.coordinator = coordinator
         self.channelInfo = channelInfo
         self.isNewChat = isNewChat

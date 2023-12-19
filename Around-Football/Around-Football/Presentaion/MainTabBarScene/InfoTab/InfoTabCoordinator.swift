@@ -7,14 +7,9 @@
 
 import UIKit
 
-protocol InfoTabCoordinatorDelegate {
-    func presentLoginViewController()
-}
-
 final class InfoTabCoordinator: BaseCoordinator {
 
     var type: CoordinatorType = .info
-    var delegate: InfoTabCoordinatorDelegate?
     
     deinit {
         print("DEBUG: InfoTabCoordinator deinit")
@@ -34,9 +29,11 @@ final class InfoTabCoordinator: BaseCoordinator {
     }
     
     func presentLoginViewController() {
-        delegate?.presentLoginViewController()
+        let coordinator = LoginCoordinator(navigationController: navigationController)
+        coordinator.start() //여기서 모달뷰로 만듬
+        childCoordinators.append(coordinator)
     }
-    
+
     func pushEditView() {
         //뷰 재사용, InputInfoCoordinator 사용
         let coordinator = InputInfoCoordinator(navigationController: navigationController)
