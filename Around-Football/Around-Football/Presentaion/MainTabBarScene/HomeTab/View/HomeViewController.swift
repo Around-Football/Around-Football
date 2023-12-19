@@ -282,6 +282,23 @@ final class HomeViewController: UIViewController {
                     typeFilterButton.isSelected = false
                 }
             }.disposed(by: disposeBag)
+        
+        genderFilterButton.menuButtonSubject
+            .observe(on: MainScheduler.instance)
+            .subscribe { [weak self] button in
+                guard let self else { return }
+                if let button {
+                    resetButton.isSelected = false
+                    genderFilterButton.isSelected = true
+                    //TODO: - gender 추가
+                    filterRequest.type = button
+                    saveFilterRequestToUserDefaults(filterRequest: filterRequest)
+                    getFilterRequestFromUserDefaults()
+                    loadRecruitList.onNext(filterRequest)
+                } else {
+                    typeFilterButton.isSelected = false
+                }
+            }.disposed(by: disposeBag)
     }
     
     private func bindUI() {
