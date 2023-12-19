@@ -101,7 +101,7 @@ class ChatHeaderView: UIView {
 
             titleLabel.text = recruit.title
             //        self.imageView.image = recruit.image
-            dateLabel.text = "일정: \(recruit.matchDateString!) \(recruit.startTime!) - \(recruit.endTime!)"
+//            dateLabel.text = "일정: \(recruit.matchDateString!) \(recruit.startTime!) - \(recruit.endTime!)"
             locationLabel.text = "장소: \(recruit.fieldName)"
             typeLabel.text = "유형: \(recruit.type)"
         } else {

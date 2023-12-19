@@ -78,6 +78,7 @@
 		66AE74FF2B1476A900D08B5C /* RxDataSources in Frameworks */ = {isa = PBXBuildFile; productRef = 66AE74FE2B1476A900D08B5C /* RxDataSources */; };
 		66AE75032B14907C00D08B5C /* Differentiator in Frameworks */ = {isa = PBXBuildFile; productRef = 66AE75022B14907C00D08B5C /* Differentiator */; };
 		66BD86E52AE646CB00B1B256 /* FieldDetailViewController+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66BD86E42AE646CB00B1B256 /* FieldDetailViewController+.swift */; };
+		66BD8DB82B3174850094C78B /* ChatCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66BD8DB72B3174850094C78B /* ChatCoordinator.swift */; };
 		66C374362B0B010800DB2C2A /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = 66C374352B0B010800DB2C2A /* FirebaseMessaging */; };
 		7929A30F2ADE4B45006ED4FA /* InputInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7929A30E2ADE4B45006ED4FA /* InputInfoViewController.swift */; };
 		7929A3112ADEAD35006ED4FA /* InputInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7929A3102ADEAD35006ED4FA /* InputInfoView.swift */; };
@@ -202,6 +203,7 @@
 		66A1CB1E2B2C13C300F3E01E /* ChatHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatHeaderView.swift; sourceTree = "<group>"; };
 		66A1CB202B302DD400F3E01E /* MessageViewController+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MessageViewController+.swift"; sourceTree = "<group>"; };
 		66BD86E42AE646CB00B1B256 /* FieldDetailViewController+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FieldDetailViewController+.swift"; sourceTree = "<group>"; };
+		66BD8DB72B3174850094C78B /* ChatCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatCoordinator.swift; sourceTree = "<group>"; };
 		7929A30E2ADE4B45006ED4FA /* InputInfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputInfoViewController.swift; sourceTree = "<group>"; };
 		7929A3102ADEAD35006ED4FA /* InputInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputInfoView.swift; sourceTree = "<group>"; };
 		7929A3122ADEB319006ED4FA /* InputInfoViewController+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "InputInfoViewController+.swift"; sourceTree = "<group>"; };
@@ -424,13 +426,14 @@
 			path = Channel;
 			sourceTree = "<group>";
 		};
-		668EE4AE2AFCBBE1007A8844 /* Chat */ = {
+		668EE4AE2AFCBBE1007A8844 /* ChatScene */ = {
 			isa = PBXGroup;
 			children = (
-				66A1CB1D2B2C128500F3E01E /* ChatView */,
-				668EE4C02B050305007A8844 /* ImageMessageViewController.swift */,
+				66BD8DB72B3174850094C78B /* ChatCoordinator.swift */,
+				66A1CB1D2B2C128500F3E01E /* View */,
+				66BD8DB92B3174920094C78B /* ViewModel */,
 			);
-			path = Chat;
+			path = ChatScene;
 			sourceTree = "<group>";
 		};
 		668EE4BB2B04E3A6007A8844 /* Frameworks */ = {
@@ -440,7 +443,7 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		66A1CB1D2B2C128500F3E01E /* ChatView */ = {
+		66A1CB1D2B2C128500F3E01E /* View */ = {
 			isa = PBXGroup;
 			children = (
 				66A1CB1B2B2C128200F3E01E /* ChatViewController.swift */,
@@ -449,8 +452,17 @@
 				7C2B1AE42AF4BCA80052EC64 /* MessageViewController.swift */,
 				66A1CB202B302DD400F3E01E /* MessageViewController+.swift */,
 				66391CAC2B20158A00DB7249 /* CustomInfoMessageCell.swift */,
+				668EE4C02B050305007A8844 /* ImageMessageViewController.swift */,
 			);
-			path = ChatView;
+			path = View;
+			sourceTree = "<group>";
+		};
+		66BD8DB92B3174920094C78B /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				7C2B1AE62AF4BCB40052EC64 /* ChatViewModel.swift */,
+			);
+			path = ViewModel;
 			sourceTree = "<group>";
 		};
 		7929A30D2ADE4AD8006ED4FA /* InputInfoView */ = {
@@ -618,7 +630,6 @@
 			isa = PBXGroup;
 			children = (
 				668EE49D2AFCABCA007A8844 /* ChannelViewModel.swift */,
-				7C2B1AE62AF4BCB40052EC64 /* ChatViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -627,7 +638,7 @@
 			isa = PBXGroup;
 			children = (
 				668EE4AD2AFCBBD8007A8844 /* Channel */,
-				668EE4AE2AFCBBE1007A8844 /* Chat */,
+				668EE4AE2AFCBBE1007A8844 /* ChatScene */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -977,6 +988,7 @@
 				667ABD672B1EBEE700142940 /* AppDelegate+.swift in Sources */,
 				7C322F122B304C6900D7897B /* AFIcon.swift in Sources */,
 				7C5F775E2AC9CE8A004CE48F /* DateCell.swift in Sources */,
+				66BD8DB82B3174850094C78B /* ChatCoordinator.swift in Sources */,
 				7C94EBD52B01BF0600A7E42A /* InfoViewModel.swift in Sources */,
 				66656FA12ADD2FB800AE1AFA /* FieldRecruitTableViewCell.swift in Sources */,
 				7C2F9FE32B25EFC200F1EF1B /* BookmarkPostViewController.swift in Sources */,
