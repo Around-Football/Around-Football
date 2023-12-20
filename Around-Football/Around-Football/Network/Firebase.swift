@@ -134,7 +134,7 @@ final class FirebaseAPI {
             
             if let date = input.date {
                 collectionRef = collectionRef
-                    .whereField("matchDate", isEqualTo: input.date)
+                    .whereField("matchDateString", isEqualTo: input.date)
             }
             
             if let region = input.region {
@@ -433,6 +433,7 @@ extension FirebaseAPI {
         gamePrice: String,
         title: String?,
         content: String?,
+        matchDateString: String?,
         matchDate: Timestamp?,
         startTime: String?,
         endTime: String?,
@@ -454,6 +455,7 @@ extension FirebaseAPI {
                     "gamePrice": gamePrice,
                     "title": title,
                     "content": content,
+                    "matchDateString": matchDateString,
                     "matchDate": matchDate,
                     "startTime": startTime,
                     "endTime": endTime,
