@@ -76,25 +76,25 @@ final class DetailViewController: UIViewController {
         $0.backgroundColor = AFColor.grayScale50
     }
     
-//    private let sendRecruitButton = AFSmallButton(buttonTitle: "신청하기", color: AFColor.secondary)
+    //    private let sendRecruitButton = AFSmallButton(buttonTitle: "신청하기", color: AFColor.secondary)
     private lazy var sendRecruitButton = UIButton().then {
         $0.setTitle("신청하기", for: .normal)
         $0.setTitleColor(.white, for: .normal)
         $0.backgroundColor = AFColor.secondary
         $0.layer.cornerRadius = 5
-//        $0.clipsToBounds = true
+        //        $0.clipsToBounds = true
         $0.addTarget(self, action: #selector(sendRecruitButtonTapped), for: .touchUpInside)
     }
-
     
-//    private lazy var sendRecruitButton = UIButton().then {
-//        $0.setTitle("신청하기", for: .normal)
-//        $0.setTitleColor(.white, for: .normal)
-//        $0.backgroundColor = .black
-//        $0.layer.cornerRadius = 5
-//        $0.clipsToBounds = true
-//        $0.addTarget(self, action: #selector(sendRecruitButtonTapped), for: .touchUpInside)
-//    }
+    
+    //    private lazy var sendRecruitButton = UIButton().then {
+    //        $0.setTitle("신청하기", for: .normal)
+    //        $0.setTitleColor(.white, for: .normal)
+    //        $0.backgroundColor = .black
+    //        $0.layer.cornerRadius = 5
+    //        $0.clipsToBounds = true
+    //        $0.addTarget(self, action: #selector(sendRecruitButtonTapped), for: .touchUpInside)
+    //    }
     
     // MARK: - Lifecycles
     
@@ -121,10 +121,19 @@ final class DetailViewController: UIViewController {
         invokedViewWillAppear.onNext(()) //cell 실시간 데이터 반영
         navigationController?.navigationBar.prefersLargeTitles = false
         navigationItem.title = "용병 구해요"
+        navigationController?.navigationBar.titleTextAttributes = [
+            NSAttributedString.Key.foregroundColor: AFColor.grayScale200
+        ]
+        navigationController?.navigationBar.tintColor = AFColor.grayScale200
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         navigationItem.title = ""
+        navigationItem.titleView?.tintColor = .black
+        navigationController?.navigationBar.titleTextAttributes = [
+            NSAttributedString.Key.foregroundColor: UIColor.black
+        ]
+        navigationController?.navigationBar.tintColor = UIColor.black
     }
     
     // MARK: - Selector
@@ -212,7 +221,7 @@ final class DetailViewController: UIViewController {
                 // TODO: - Recruit 정보 변경된거 반영 (일정)
                 dateLabel.text = recruit.matchDate.debugDescription
                 groundLabel.text = recruit.fieldName
-//                groundLabel.text = recruit.fieldAddress
+                //                groundLabel.text = recruit.fieldAddress
                 detailView.setValues(item: recruit)
             }).disposed(by: disposeBag)
         
@@ -245,7 +254,7 @@ final class DetailViewController: UIViewController {
                                 sendRecruitButton,
                                 grayDividerView,
                                 detailView
-                                )
+        )
         
         scrollView.snp.makeConstraints { make in
             make.top.bottom.equalTo(view.safeAreaLayoutGuide)
@@ -298,7 +307,8 @@ final class DetailViewController: UIViewController {
         grayDividerView.snp.makeConstraints { make in
             make.top.equalTo(detailUserInfoView.snp.bottom).offset(20)
             make.height.equalTo(1)
-            make.width.equalToSuperview()
+            make.leading.equalToSuperview().offset(20)
+            make.trailing.equalToSuperview().offset(-20)
         }
         
         detailView.snp.makeConstraints { make in
@@ -307,11 +317,11 @@ final class DetailViewController: UIViewController {
             make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
         }
         
-//        sendMessageButton.snp.makeConstraints { make in
-//            make.top.equalTo(mainImageView.snp.bottom).offset(SuperviewOffsets.topPadding)
-//            make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
-//            make.width.equalTo(100)
-//            make.height.equalTo(40)
-//        }
+        //        sendMessageButton.snp.makeConstraints { make in
+        //            make.top.equalTo(mainImageView.snp.bottom).offset(SuperviewOffsets.topPadding)
+        //            make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
+        //            make.width.equalTo(100)
+        //            make.height.equalTo(40)
+        //        }
     }
 }
