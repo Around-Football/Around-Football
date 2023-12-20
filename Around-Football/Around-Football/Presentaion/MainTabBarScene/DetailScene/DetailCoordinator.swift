@@ -15,6 +15,7 @@ final class DetailCoordinator: BaseCoordinator {
     func start(recruitItem: Recruit) {
         let viewModel = DetailViewModel(coordinator: self, recruitItem: recruitItem)
         let controller = DetailViewController(viewModel: viewModel)
+        controller.hidesBottomBarWhenPushed = true
         navigationController?.pushViewController(controller, animated: true)
     }
     

@@ -8,49 +8,35 @@
 import UIKit
 
 final class DetailView: UIView {
-
+    
     // MARK: - Properties
     
-    private var titleLabel = UILabel().then {
-        $0.font = .systemFont(ofSize: 15)
-        $0.text = "제목"
-        $0.textColor = .gray
-    }
-    
-    private var title = UILabel().then {
-        $0.font = .systemFont(ofSize: 15)
-        $0.text = "제목"
-        $0.textColor = .label
-    }
-    
     private var matchDayTitleLabel = UILabel().then {
-        $0.font = .systemFont(ofSize: 15)
         $0.text = "일시"
-        $0.textColor = .gray
+        $0.font = AFFont.titleCard
+        $0.textColor = AFColor.secondary
     }
     
     private var matchDayLabel = UILabel().then {
         $0.font = .systemFont(ofSize: 15)
+        $0.text = "일시"
         $0.textColor = .label
-        $0.numberOfLines = 0
     }
     
-    private var typeTitleLabel = UILabel().then {
-        $0.font = .systemFont(ofSize: 15)
-        $0.text = "유형"
-        $0.textColor = .gray
+    private var groundAddressTitleLabel = UILabel().then {
+        $0.text = "주소"
+        $0.font = AFFont.titleCard
+        $0.textColor = AFColor.secondary
     }
     
-    private var typeLabel = UILabel().then {
-        $0.font = .systemFont(ofSize: 15)
-        $0.textColor = .label
-        $0.numberOfLines = 0
+    private var groundAddressLabel = UILabel().then {
+        $0.text = "주소 어쩌구"
     }
     
     private var recruitingTitleLabel = UILabel().then {
-        $0.font = .systemFont(ofSize: 15)
         $0.text = "모집인원"
-        $0.textColor = .gray
+        $0.font = AFFont.titleCard
+        $0.textColor = AFColor.secondary
     }
     
     private var recruitingLabel = UILabel().then {
@@ -59,10 +45,20 @@ final class DetailView: UIView {
         $0.numberOfLines = 0
     }
     
+    private var genderTitleLabel = UILabel().then {
+        $0.text = "성별"
+        $0.font = AFFont.titleCard
+        $0.textColor = AFColor.secondary
+    }
+    
+    private var genderLabel = UILabel().then {
+        $0.numberOfLines = 0
+    }
+    
     private var gamePriceTitleLabel = UILabel().then {
-        $0.font = .systemFont(ofSize: 15)
         $0.text = "게임비"
-        $0.textColor = .gray
+        $0.font = AFFont.titleCard
+        $0.textColor = AFColor.secondary
     }
     
     private var gamePriceLabel = UILabel().then {
@@ -72,15 +68,69 @@ final class DetailView: UIView {
     }
     
     private var contentTitleLabel = UILabel().then {
-        $0.font = .systemFont(ofSize: 15)
-        $0.text = "코멘트"
-        $0.textColor = .gray
+        $0.text = "상세내용"
+        $0.font = AFFont.titleCard
+        $0.textColor = AFColor.secondary
     }
     
     private var contentLabel = UILabel().then {
         $0.font = .systemFont(ofSize: 15)
         $0.textColor = .label
         $0.numberOfLines = 0
+    }
+    
+    private lazy var matchDateStackView = UIStackView().then {
+        $0.addArrangedSubviews(matchDayTitleLabel,
+                               matchDayLabel)
+        $0.axis = .horizontal
+        $0.spacing = 43
+        $0.alignment = .center
+        $0.distribution = .fill
+    }
+    
+    private lazy var groundAddressStackView = UIStackView().then {
+        $0.addArrangedSubviews(groundAddressTitleLabel,
+                               groundAddressLabel)
+        $0.axis = .horizontal
+        $0.spacing = 43
+        $0.alignment = .center
+        $0.distribution = .fill
+    }
+    
+    private lazy var recruitingStackView = UIStackView().then {
+        $0.addArrangedSubviews(recruitingTitleLabel,
+                               recruitingLabel)
+        $0.axis = .horizontal
+        $0.spacing = 15
+        $0.alignment = .center
+        $0.distribution = .fill
+    }
+    
+    private lazy var genderStackView = UIStackView().then {
+        $0.addArrangedSubviews(genderTitleLabel,
+                               genderLabel)
+        $0.axis = .horizontal
+        $0.spacing = 43
+        $0.alignment = .center
+        $0.distribution = .fill
+    }
+    
+    private lazy var gamePriceStackView = UIStackView().then {
+        $0.addArrangedSubviews(gamePriceTitleLabel,
+                               gamePriceLabel)
+        $0.axis = .horizontal
+        $0.spacing = 29
+        $0.alignment = .center
+        $0.distribution = .fill
+    }
+    
+    private lazy var contentStackView = UIStackView().then {
+        $0.addArrangedSubviews(contentTitleLabel,
+                               contentLabel)
+        $0.axis = .horizontal
+        $0.spacing = 29
+        $0.alignment = .center
+        $0.distribution = .fill
     }
     
     // MARK: - Lifecycles
@@ -107,105 +157,50 @@ final class DetailView: UIView {
     func setValues(item: Recruit) {
         let formattedCellDate = formatMatchDate(item.matchDate?.dateValue() ?? Date())
         
-        title.text = item.title
+        matchDayLabel.text = item.title
         matchDayLabel.text = formattedCellDate
-        typeLabel.text = item.type
+        groundAddressLabel.text = item.fieldAddress
+        // TODO: - item에 추가되면 설정
+        //        genderLabel.text = item.gender
         recruitingLabel.text = "\(item.acceptedApplicantsUID.count) / \(item.recruitedPeopleCount)" + " 명"
         gamePriceLabel.text = item.gamePrice
         contentLabel.text = item.content
     }
     
     private func configureUI() {
-        addSubviews(titleLabel,
-                    title,
-                    matchDayTitleLabel,
-                    matchDayLabel,
-                    typeTitleLabel,
-                    typeLabel,
-                    recruitingTitleLabel,
-                    recruitingLabel,
-                    gamePriceTitleLabel,
-                    gamePriceLabel,
-                    contentTitleLabel,
-                    contentLabel)
-        
-        titleLabel.snp.makeConstraints { make in
-            make.top.equalToSuperview()
-            make.leading.equalToSuperview()
-            make.width.equalTo(60)
+        addSubviews(matchDateStackView,
+                    groundAddressStackView,
+                    recruitingStackView,
+                    genderStackView,
+                    gamePriceStackView,
+                    contentStackView)
+        matchDateStackView.snp.makeConstraints {
+            $0.top.leading.equalToSuperview()
         }
         
-        title.snp.makeConstraints { make in
-            make.top.equalToSuperview()
-            make.centerY.equalTo(titleLabel.snp.centerY)
-            make.leading.equalTo(titleLabel.snp.trailing).offset(SuperviewOffsets.leadingPadding)
-            make.trailing.equalToSuperview()
+        groundAddressStackView.snp.makeConstraints {
+            $0.top.equalTo(matchDateStackView.snp.bottom).offset(16)
+            $0.leading.equalToSuperview()
         }
         
-        matchDayTitleLabel.snp.makeConstraints { make in
-            make.top.equalTo(title.snp.bottom).offset(20)
-            make.leading.equalToSuperview()
-            make.width.equalTo(60)
+        recruitingStackView.snp.makeConstraints {
+            $0.top.equalTo(groundAddressStackView.snp.bottom).offset(16)
+            $0.leading.equalToSuperview()
         }
         
-        matchDayLabel.snp.makeConstraints { make in
-            make.centerY.equalTo(matchDayTitleLabel.snp.centerY)
-            make.top.equalTo(title.snp.bottom).offset(20)
-            make.leading.equalTo(matchDayTitleLabel.snp.trailing).offset(SuperviewOffsets.leadingPadding)
-            make.trailing.equalToSuperview()
+        genderStackView.snp.makeConstraints {
+            $0.top.equalTo(recruitingStackView.snp.bottom).offset(16)
+            $0.leading.equalToSuperview()
         }
         
-        typeTitleLabel.snp.makeConstraints { make in
-            make.top.equalTo(matchDayLabel.snp.bottom).offset(20)
-            make.leading.equalToSuperview()
-            make.width.equalTo(60)
+        gamePriceStackView.snp.makeConstraints {
+            $0.top.equalTo(genderStackView.snp.bottom).offset(16)
+            $0.leading.equalToSuperview()
         }
         
-        typeLabel.snp.makeConstraints { make in
-            make.centerY.equalTo(typeTitleLabel.snp.centerY)
-            make.top.equalTo(matchDayLabel.snp.bottom).offset(20)
-            make.leading.equalTo(typeTitleLabel.snp.trailing).offset(SuperviewOffsets.leadingPadding)
-            make.trailing.equalToSuperview()
-        }
-        
-        recruitingTitleLabel.snp.makeConstraints { make in
-            make.top.equalTo(typeLabel.snp.bottom).offset(20)
-            make.leading.equalToSuperview()
-            make.width.equalTo(60)
-        }
-        
-        recruitingLabel.snp.makeConstraints { make in
-            make.centerY.equalTo(recruitingTitleLabel.snp.centerY)
-            make.top.equalTo(typeLabel.snp.bottom).offset(20)
-            make.leading.equalTo(recruitingTitleLabel.snp.trailing).offset(SuperviewOffsets.leadingPadding)
-            make.trailing.equalToSuperview()
-        }
-        
-        gamePriceTitleLabel.snp.makeConstraints { make in
-            make.top.equalTo(recruitingLabel.snp.bottom).offset(20)
-            make.leading.equalToSuperview()
-            make.width.equalTo(60)
-        }
-        
-        gamePriceLabel.snp.makeConstraints { make in
-            make.centerY.equalTo(gamePriceTitleLabel.snp.centerY)
-            make.top.equalTo(recruitingLabel.snp.bottom).offset(20)
-            make.leading.equalTo(gamePriceTitleLabel.snp.trailing).offset(SuperviewOffsets.leadingPadding)
-            make.trailing.equalToSuperview()
-        }
-        
-        contentTitleLabel.snp.makeConstraints { make in
-            make.top.equalTo(gamePriceLabel.snp.bottom).offset(20)
-            make.leading.equalToSuperview()
-            make.bottom.equalToSuperview()
-            make.width.equalTo(60)
-        }
-        
-        contentLabel.snp.makeConstraints { make in
-            make.centerY.equalTo(contentTitleLabel.snp.centerY)
-            make.top.equalTo(gamePriceLabel.snp.bottom).offset(20)
-            make.leading.equalTo(contentTitleLabel.snp.trailing).offset(SuperviewOffsets.leadingPadding)
-            make.trailing.equalToSuperview()
+        contentStackView.snp.makeConstraints {
+            $0.top.equalTo(gamePriceStackView.snp.bottom).offset(16)
+            $0.leading.equalToSuperview()
         }
     }
 }
