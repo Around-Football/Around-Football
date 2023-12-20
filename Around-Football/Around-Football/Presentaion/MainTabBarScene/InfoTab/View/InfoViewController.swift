@@ -145,7 +145,7 @@ final class InfoViewController: UIViewController {
             make.top.equalTo(profileAndEditView.snp.bottom).offset(10)
             make.leading.equalToSuperview().offset((SuperviewOffsets.leadingPadding))
             make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
-            make.height.equalTo(120)
+            make.height.equalTo((UIScreen.main.bounds.width / 3) - 20)
         }
         
         infoStackView.snp.makeConstraints { make in
