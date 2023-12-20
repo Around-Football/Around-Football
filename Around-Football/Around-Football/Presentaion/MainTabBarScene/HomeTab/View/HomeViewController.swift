@@ -301,7 +301,7 @@ final class HomeViewController: UIViewController {
                     resetButton.isSelected = false
                     genderFilterButton.isSelected = true
                     //TODO: - gender 추가
-                    filterRequest.gender = button
+                    filterRequest.gender = button == "성별 무관" ? nil : button
                     saveFilterRequestToUserDefaults(filterRequest: filterRequest)
                     getFilterRequestFromUserDefaults()
                     loadRecruitList.onNext(filterRequest)
