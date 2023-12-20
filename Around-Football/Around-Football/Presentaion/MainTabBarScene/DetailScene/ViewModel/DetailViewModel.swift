@@ -56,7 +56,7 @@ final class DetailViewModel {
         inputObserver
             .flatMap { [weak self] () -> Observable<Recruit> in
                 guard let self else { return Observable.empty() }
-                return FirebaseAPI.shared.loadDetailCellApplicantRx(fieldID: recruitItem?.fieldID)
+                return FirebaseAPI.shared.loadDetailCellApplicantRx(iD: recruitItem?.id)
             }
     }
     
