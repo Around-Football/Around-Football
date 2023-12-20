@@ -33,7 +33,7 @@ final class HomeTableViewCell: UITableViewCell {
         $0.textColor = AFColor.white
         $0.font = AFFont.filterMedium
         $0.textAlignment = .center
-        $0.layer.cornerRadius = LayoutOptions.cornerRadious
+        $0.layer.cornerRadius = 4
         $0.layer.masksToBounds = true
     }
     
