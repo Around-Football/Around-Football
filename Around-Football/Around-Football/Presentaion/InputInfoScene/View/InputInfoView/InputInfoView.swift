@@ -23,19 +23,19 @@ final class InputInfoView: UIView {
     private let userAreaLabel = AFTitleSmall(title: "지역")
     
     private let userGenderLabel = AFTitleSmall(title: "성별")
-    let maleButton = AFSmallButton(buttonTitle: "남성", color: AFColor.primary)
-    let femaleButton = AFSmallButton(buttonTitle: "여성", color: AFColor.primary)
+    let maleButton = AFMediumButton(buttonTitle: "남성", color: AFColor.primary)
+    let femaleButton = AFMediumButton(buttonTitle: "여성", color: AFColor.primary)
 
     private let userMainUsedFeetLabel = AFTitleSmall(title: "주발")
-    let rightFootButton = AFSmallButton(buttonTitle: "오른발", color: AFColor.primary)
-    let leftFootButton = AFSmallButton(buttonTitle: "왼발", color: AFColor.primary)
-    let bothFeetButton = AFSmallButton(buttonTitle: "양발", color: AFColor.primary)
+    let rightFootButton = AFMediumButton(buttonTitle: "오른발", color: AFColor.primary)
+    let leftFootButton = AFMediumButton(buttonTitle: "왼발", color: AFColor.primary)
+    let bothFeetButton = AFMediumButton(buttonTitle: "양발", color: AFColor.primary)
     
     private let userPositionLabel = AFTitleSmall(title: "선호 포지션")
-    let fwButton = AFSmallButton(buttonTitle: "FW", color: AFColor.primary)
-    let mfButton = AFSmallButton(buttonTitle: "MF", color: AFColor.primary)
-    let dfButton = AFSmallButton(buttonTitle: "DF", color: AFColor.primary)
-    let gkButton = AFSmallButton(buttonTitle: "GK", color: AFColor.primary)
+    let fwButton = AFMediumButton(buttonTitle: "FW", color: AFColor.primary)
+    let mfButton = AFMediumButton(buttonTitle: "MF", color: AFColor.primary)
+    let dfButton = AFMediumButton(buttonTitle: "DF", color: AFColor.primary)
+    let gkButton = AFMediumButton(buttonTitle: "GK", color: AFColor.primary)
     
     let nextButton = AFButton(buttonTitle: "확인", color: .black)
 

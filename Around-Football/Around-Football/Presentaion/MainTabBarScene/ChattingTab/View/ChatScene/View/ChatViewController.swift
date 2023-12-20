@@ -60,7 +60,6 @@ class ChatViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        UITabBar.appearance()
         viewModel.resetAlarmInformation()
         invokedViewWillAppear.onNext(())
     }
@@ -76,8 +75,6 @@ class ChatViewController: UIViewController {
     private func configure() {
         view.backgroundColor = .systemBackground
         navigationController?.navigationBar.prefersLargeTitles = false
-        navigationController?.navigationBar.backgroundColor = .systemBackground
-        navigationController?.toolbar.backgroundColor = .systemBackground
         title = viewModel.channelInfo.withUserName
 
     }

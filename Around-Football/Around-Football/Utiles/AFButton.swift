@@ -54,9 +54,9 @@ final class AFButton: UIButton {
     }
 }
 
-// MARK: - 작은 버튼
+// MARK: - 중간 버튼
 
-final class AFSmallButton: UIButton {
+final class AFMediumButton: UIButton {
     
     // MARK: - Lifecycles
     
@@ -83,6 +83,49 @@ final class AFSmallButton: UIButton {
         setBackgroundColor(.clear, for: .normal)
     }
 }
+
+// MARK: - 작은 버튼
+
+final class AFSmallButton: UIButton {
+    
+    // MARK: - Properties
+
+    var buttonActionHandler: (() -> Void)?
+
+    // MARK: - Lifecycles
+    
+    init(buttonTitle: String, color: UIColor) {
+        super.init(frame: .zero)
+        configureUI(buttonTitle: buttonTitle, color: color)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    @objc
+    func buttonClicked() {
+        print("DEBUG: buttonClicked")
+        if let buttonActionHandler {
+            buttonActionHandler()
+        }
+    }
+
+    // MARK: - Helpers
+    
+    private func configureUI(buttonTitle: String, color: UIColor) {
+        setTitle(buttonTitle, for: .normal)
+        titleLabel?.font = AFFont.titleSmall
+        setTitleColor(color == AFColor.primary ? .black : .white, for: .normal)
+        setTitleColor(AFColor.grayScale300, for: .disabled)
+        setBackgroundColor(color, for: .normal)
+        setBackgroundColor(AFColor.grayScale100, for: .disabled)
+        layer.cornerRadius = 4
+        clipsToBounds = true
+        addTarget(self, action: #selector(buttonClicked), for: .touchUpInside)
+    }
+}
+
 
 // MARK: - MENU 버튼
 
