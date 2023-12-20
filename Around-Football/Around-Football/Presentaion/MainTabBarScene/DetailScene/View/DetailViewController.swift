@@ -82,19 +82,11 @@ final class DetailViewController: UIViewController {
         $0.setTitleColor(.white, for: .normal)
         $0.backgroundColor = AFColor.secondary
         $0.layer.cornerRadius = 5
-        //        $0.clipsToBounds = true
+        $0.clipsToBounds = true
         $0.addTarget(self, action: #selector(sendRecruitButtonTapped), for: .touchUpInside)
     }
     
     
-    //    private lazy var sendRecruitButton = UIButton().then {
-    //        $0.setTitle("신청하기", for: .normal)
-    //        $0.setTitleColor(.white, for: .normal)
-    //        $0.backgroundColor = .black
-    //        $0.layer.cornerRadius = 5
-    //        $0.clipsToBounds = true
-    //        $0.addTarget(self, action: #selector(sendRecruitButtonTapped), for: .touchUpInside)
-    //    }
     
     // MARK: - Lifecycles
     
@@ -140,6 +132,7 @@ final class DetailViewController: UIViewController {
     
     @objc
     private func sendMessageButtonTapped() {
+        print("DEBUG - TAP")
         if (try? UserService.shared.currentUser_Rx.value()) != nil {
             viewModel.checkChannelAndPushChatViewController()
         } else {
@@ -225,44 +218,47 @@ final class DetailViewController: UIViewController {
                 detailView.setValues(item: recruit)
             }).disposed(by: disposeBag)
         
-        sendRecruitButton.rx.tap
-            .bind { [weak self] _ in
-                guard let self = self else { return }
-                //TODO: -메세지 버튼 타이틀 분기처리 (작성자 or 신청자)
-                ///글쓴이면 신청현황 보기, 아니면 신청한 UID에 추가
-                print("DEBUG - TAP")
-                if user?.id == viewModel.recruitItem?.userID {
-                    viewModel.coordinator?.pushApplicationStatusViewController(recruit: viewModel.recruitItem!)
-                } else {
-                    FirebaseAPI.shared.appendPendingApplicant(fieldID: viewModel.recruitItem?.fieldID)
-                }
-            }
-            .disposed(by: disposeBag)
+        //        sendRecruitButton.rx.tap
+        //            .bind { [weak self] _ in
+        //                guard let self = self else { return }
+        //                //TODO: -메세지 버튼 타이틀 분기처리 (작성자 or 신청자)
+        //                ///글쓴이면 신청현황 보기, 아니면 신청한 UID에 추가
+        //                print("DEBUG - TAP")
+        //                if user?.id == viewModel.recruitItem?.userID {
+        //                    viewModel.coordinator?.pushApplicationStatusViewController(recruit: viewModel.recruitItem!)
+        //                } else {
+        //                    FirebaseAPI.shared.appendPendingApplicant(fieldID: viewModel.recruitItem?.fieldID)
+        //                }
+        //            }
+        //            .disposed(by: disposeBag)
     }
     
     private func configeUI() {
         setButtonTitle() // 신청하기 버튼 세팅
         setTypeLabelStyle() // type 라벨 스타일 세팅
         view.backgroundColor = .white
-        view.addSubview(scrollView)
+        view.addSubviews(scrollView,
+                         sendRecruitButton)
         scrollView.addSubview(contentView)
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+        contentView.translatesAutoresizingMaskIntoConstraints = false
         contentView.addSubviews(mainImageView,
                                 typeLabel,
                                 dateLabel,
                                 groundLabel,
                                 detailUserInfoView,
-                                sendRecruitButton,
+                                sendMessageButton,
                                 grayDividerView,
                                 detailView
         )
         
         scrollView.snp.makeConstraints { make in
-            make.top.bottom.equalTo(view.safeAreaLayoutGuide)
+            make.top.equalTo(view.safeAreaLayoutGuide)
             make.leading.trailing.equalToSuperview()
         }
         
         contentView.snp.makeConstraints { make in
-            make.top.leading.trailing.bottom.equalToSuperview()
+            make.edges.equalTo(0)
             make.width.equalToSuperview()
         }
         
@@ -297,8 +293,8 @@ final class DetailViewController: UIViewController {
             make.height.greaterThanOrEqualTo(40)
         }
         
-        sendRecruitButton.snp.makeConstraints { make in
-            make.top.equalTo(groundLabel.snp.bottom).offset(20)
+        sendMessageButton.snp.makeConstraints { make in
+            make.centerY.equalTo(detailUserInfoView.snp.centerY)
             make.trailing.equalToSuperview().offset(-20)
             make.width.equalTo(96)
             make.height.equalTo(36)
@@ -312,16 +308,18 @@ final class DetailViewController: UIViewController {
         }
         
         detailView.snp.makeConstraints { make in
-            make.top.equalTo(grayDividerView).offset(SuperviewOffsets.topPadding)
+            make.top.equalTo(grayDividerView.snp.bottom).offset(SuperviewOffsets.topPadding)
             make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
             make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
+            make.bottom.equalToSuperview()
         }
         
-        //        sendMessageButton.snp.makeConstraints { make in
-        //            make.top.equalTo(mainImageView.snp.bottom).offset(SuperviewOffsets.topPadding)
-        //            make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
-        //            make.width.equalTo(100)
-        //            make.height.equalTo(40)
-        //        }
+        sendRecruitButton.snp.makeConstraints { make in
+            make.top.equalTo(scrollView.snp.bottom).offset(16)
+            make.trailing.equalToSuperview().offset(-20)
+            make.leading.equalToSuperview().offset(20)
+            make.height.equalTo(50)
+            make.bottom.equalToSuperview().offset(-40)
+        }
     }
 }

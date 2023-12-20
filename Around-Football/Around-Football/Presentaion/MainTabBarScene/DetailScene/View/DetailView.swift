@@ -137,7 +137,7 @@ final class DetailView: UIView {
                                contentLabel)
         $0.axis = .horizontal
         $0.spacing = 15
-        $0.alignment = .center
+        $0.alignment = .top
         $0.distribution = .fill
     }
     
@@ -208,7 +208,7 @@ final class DetailView: UIView {
         
         contentStackView.snp.makeConstraints {
             $0.top.equalTo(gamePriceStackView.snp.bottom).offset(16)
-            $0.leading.equalToSuperview()
+            $0.bottom.leading.equalToSuperview()
         }
     }
 }
