@@ -12,15 +12,15 @@ final class DetailView: UIView {
     // MARK: - Properties
     
     private var matchDayTitleLabel = UILabel().then {
-        $0.text = "일시"
+        $0.text = "시간"
         $0.font = AFFont.titleCard
         $0.textColor = AFColor.secondary
     }
     
     private var matchDayLabel = UILabel().then {
-        $0.font = .systemFont(ofSize: 15)
-        $0.text = "일시"
-        $0.textColor = .label
+        $0.text = "20:00 - 22:00"
+        $0.font = AFFont.text
+        $0.textColor = AFColor.secondary
     }
     
     private var groundAddressTitleLabel = UILabel().then {
@@ -30,7 +30,9 @@ final class DetailView: UIView {
     }
     
     private var groundAddressLabel = UILabel().then {
-        $0.text = "주소 어쩌구"
+        $0.text = "경기도 안산시 단원구 고잔동 707-2"
+        $0.font = AFFont.text
+        $0.textColor = AFColor.secondary
     }
     
     private var recruitingTitleLabel = UILabel().then {
@@ -40,8 +42,9 @@ final class DetailView: UIView {
     }
     
     private var recruitingLabel = UILabel().then {
-        $0.font = .systemFont(ofSize: 15)
-        $0.textColor = .label
+        $0.text = "0/2명"
+        $0.font = AFFont.text
+        $0.textColor = AFColor.secondary
         $0.numberOfLines = 0
     }
     
@@ -52,6 +55,9 @@ final class DetailView: UIView {
     }
     
     private var genderLabel = UILabel().then {
+        $0.text = "남성"
+        $0.font = AFFont.text
+        $0.textColor = AFColor.secondary
         $0.numberOfLines = 0
     }
     
@@ -62,8 +68,9 @@ final class DetailView: UIView {
     }
     
     private var gamePriceLabel = UILabel().then {
-        $0.font = .systemFont(ofSize: 15)
-        $0.textColor = .label
+        $0.text = "10,000원"
+        $0.font = AFFont.text
+        $0.textColor = AFColor.secondary
         $0.numberOfLines = 0
     }
     
@@ -74,8 +81,9 @@ final class DetailView: UIView {
     }
     
     private var contentLabel = UILabel().then {
-        $0.font = .systemFont(ofSize: 15)
-        $0.textColor = .label
+        $0.text = "실력 상관 없습니다!"
+        $0.font = AFFont.text
+        $0.textColor = AFColor.secondary
         $0.numberOfLines = 0
     }
     
@@ -128,7 +136,7 @@ final class DetailView: UIView {
         $0.addArrangedSubviews(contentTitleLabel,
                                contentLabel)
         $0.axis = .horizontal
-        $0.spacing = 29
+        $0.spacing = 15
         $0.alignment = .center
         $0.distribution = .fill
     }
