@@ -17,6 +17,14 @@ enum FilterRequest: String {
     case date = "dateKey"
     case region = "regionKey"
     case type = "typeKey"
+    case gender = "genderKey"
+}
+
+struct RecruitFilter {
+    var date: String?
+    var region: String?
+    var type: String?
+    var gender: String?
 }
 
 final class HomeViewController: UIViewController {
@@ -24,9 +32,10 @@ final class HomeViewController: UIViewController {
     // MARK: - Properties
     
     private var viewModel: HomeViewModel
-    private var loadRecruitList = PublishSubject<(String?, String?, String?)>()
-    private var filterRequest: (date: String?, region: String?, type: String?)
-    private var disposeBag = DisposeBag()
+    private var loadRecruitList = PublishSubject<RecruitFilter>()
+//    private var filterRequest: (date: String?, region: String?, type: String?)
+    private var filterRequest: RecruitFilter = RecruitFilter()
+    private let disposeBag = DisposeBag()
     private var selectedDate: Date?
     
     let regionMenus: [String]  = ["모든 지역", "서울", "인천", "부산", "대구", "울산",
@@ -153,7 +162,7 @@ final class HomeViewController: UIViewController {
         regionFilterButton.setTitle("모든 지역", for: .normal)
         typeFilterButton.setTitle("매치 유형", for: .normal)
         
-        filterRequest = (nil, nil, nil)
+        filterRequest = RecruitFilter(date: nil, region: nil, type: nil, gender: nil)
         saveFilterRequestToUserDefaults(filterRequest: filterRequest)
         getFilterRequestFromUserDefaults()
         loadRecruitList.onNext(filterRequest)
@@ -198,10 +207,11 @@ final class HomeViewController: UIViewController {
     // MARK: - Helpers
     
     //유저디폴트 저장
-    func saveFilterRequestToUserDefaults(filterRequest: (date: String?, region: String?, type: String?)) {
+    func saveFilterRequestToUserDefaults(filterRequest: RecruitFilter) {
         UserDefaults.standard.set(filterRequest.date, forKey: FilterRequest.date.rawValue)
         UserDefaults.standard.set(filterRequest.region, forKey: FilterRequest.region.rawValue)
         UserDefaults.standard.set(filterRequest.type, forKey: FilterRequest.type.rawValue)
+        UserDefaults.standard.set(filterRequest.gender, forKey: FilterRequest.gender.rawValue)
     }
     
     //유저디폴트 값 설정
@@ -209,8 +219,8 @@ final class HomeViewController: UIViewController {
         let date = UserDefaults.standard.string(forKey: FilterRequest.date.rawValue)
         let region = UserDefaults.standard.string(forKey: FilterRequest.region.rawValue)
         let type = UserDefaults.standard.string(forKey: FilterRequest.type.rawValue)
-
-        self.filterRequest = (date: date, region: region, type: type)
+        let gender = UserDefaults.standard.string(forKey: FilterRequest.gender.rawValue)
+        self.filterRequest = RecruitFilter(date: date, region: region, type: type, gender: gender)
     }
     
     //유저 지역 정보로 필터링하고 리스트 요청
@@ -291,7 +301,7 @@ final class HomeViewController: UIViewController {
                     resetButton.isSelected = false
                     genderFilterButton.isSelected = true
                     //TODO: - gender 추가
-                    filterRequest.type = button
+                    filterRequest.gender = button
                     saveFilterRequestToUserDefaults(filterRequest: filterRequest)
                     getFilterRequestFromUserDefaults()
                     loadRecruitList.onNext(filterRequest)
