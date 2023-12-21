@@ -45,6 +45,7 @@ final class HomeTableViewCell: UITableViewCell {
     private var fieldLabel = UILabel().then {
         $0.text = "Field Text"
         $0.font = AFFont.titleSmall
+        $0.numberOfLines = 2
     }
     
     private var recruitLabel = UILabel().then {

@@ -5,6 +5,7 @@
 //  Created by 진태영 on 2023/09/27.
 //
 
+import Combine
 import UIKit
 import SwiftUI
 
@@ -26,6 +27,7 @@ struct RecruitFilter {
     var region: String?
     var type: String?
     var gender: String?
+    //    var selectedDate: [String?]
 }
 
 final class HomeViewController: UIViewController {
@@ -34,14 +36,14 @@ final class HomeViewController: UIViewController {
     
     private var viewModel: HomeViewModel
     private var loadRecruitList = PublishSubject<RecruitFilter>()
-    private var filterRequest: RecruitFilter = RecruitFilter()
+    private lazy var filterRequest: RecruitFilter = RecruitFilter()
     private let disposeBag = DisposeBag()
     private var selectedDate: Date?
-    let oneLIneCalender = UIHostingController(rootView: HCalendarView())
+    private lazy var oneLIneCalender = UIHostingController(rootView: HCalendarView()) //캘린더
     
     let regionMenus: [String]  = ["모든 지역", "서울", "인천", "부산", "대구", "울산",
-                            "대전", "광주", "세종특별자치시","경기", "강원특별자치도",
-                            "충북", "충남", "경북", "경남", "전북", "전남", "제주특별자치도"]
+                                  "대전", "광주", "세종특별자치시","경기", "강원특별자치도",
+                                  "충북", "충남", "경북", "경남", "전북", "전남", "제주특별자치도"]
     let typeMenus: [String] = ["모든 유형", "풋살", "축구"]
     let genderMenus: [String] = ["성별 무관", "남", "여"]
     
@@ -116,7 +118,7 @@ final class HomeViewController: UIViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        loadRecruitList.onNext((filterRequest))
+        loadRecruitList.onNext(filterRequest)
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.title = "용병 구해요"
     }
@@ -125,7 +127,7 @@ final class HomeViewController: UIViewController {
         super.viewWillDisappear(animated)
         navigationItem.title = ""
     }
-
+    
     // MARK: - Selectors
     
     @objc
@@ -244,7 +246,7 @@ final class HomeViewController: UIViewController {
                     print(button)
                     resetButton.isSelected = false
                     regionFilterButton.isSelected = true
-                    filterRequest.region = button
+                    filterRequest.region = button == "모든 지역" ? nil : button
                     saveFilterRequestToUserDefaults(filterRequest: filterRequest)
                     getFilterRequestFromUserDefaults()
                     loadRecruitList.onNext(filterRequest)
@@ -260,7 +262,7 @@ final class HomeViewController: UIViewController {
                 if let button {
                     resetButton.isSelected = false
                     typeFilterButton.isSelected = true
-                    filterRequest.type = button
+                    filterRequest.type = button == "모든 유형" ? nil : button
                     saveFilterRequestToUserDefaults(filterRequest: filterRequest)
                     getFilterRequestFromUserDefaults()
                     loadRecruitList.onNext(filterRequest)
@@ -292,21 +294,38 @@ final class HomeViewController: UIViewController {
         
         let output = viewModel.transform(input)
         
-        output
-            .recruitList
-            .bind(to: homeTableView.rx.items(cellIdentifier: HomeTableViewCell.id,
-                                             cellType: HomeTableViewCell.self)) { [weak self] index, item, cell in
-                guard let self else { return }
-                cell.viewModel = viewModel
-                cell.bindContents(item: item)
-                cell.configureButtonTap()
-            }.disposed(by: disposeBag)
+        oneLIneCalender.rootView.viewModel.selectedDateSubject
+            .do(onNext: { dates in
+                print("받아옴 \(dates)")
+            })
+            .subscribe()
+            .disposed(by: disposeBag)
+        
+        Observable.combineLatest(
+            output.recruitList,
+            oneLIneCalender.rootView.viewModel.selectedDateSubject.asObservable()
+        )
+        .map { (recruits, selectedDateSet) in
+            if !selectedDateSet.isEmpty {
+                return recruits.filter { recruit in
+                    selectedDateSet.contains(recruit.matchDateString)
+                }
+            }
+            return recruits
+        }
+        .bind(to: homeTableView.rx.items(cellIdentifier: HomeTableViewCell.id,
+                                         cellType: HomeTableViewCell.self)) { [weak self] index, item, cell in
+            guard let self else { return }
+            cell.viewModel = viewModel
+            cell.bindContents(item: item)
+            cell.configureButtonTap()
+        }.disposed(by: disposeBag)
         
         homeTableView.rx.modelSelected(Recruit.self)
-            .subscribe(onNext: { [weak self] selectedRecruit in
+            .subscribe { [weak self] selectedRecruit in
                 guard let self else { return }
                 handleItemSelected(selectedRecruit)
-            })
+            }
             .disposed(by: disposeBag)
     }
     
