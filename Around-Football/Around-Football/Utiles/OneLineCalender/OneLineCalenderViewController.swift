@@ -14,10 +14,14 @@ final class HCalenderViewModel {
     var selectedDateSubject = BehaviorRelay(value: Set<String>())
 }
 
+final class HCalenderObservableViewModel: ObservableObject {
+    @Published var selectedDateSet: Set<String> = []
+}
+
 struct HCalendarView: View {
-    @State var selectedDateSet: Set<String> = []
-    private let calendar = Calendar.current
+    @ObservedObject var observableViewModel = HCalenderObservableViewModel()
     let viewModel = HCalenderViewModel()
+    private let calendar = Calendar.current
     
     var body: some View {
         
@@ -45,19 +49,18 @@ struct HCalendarView: View {
                         : Color(uiColor: AFColor.secondary)
                     )
                     .frame(width: 50, height: 65)
-                    .background(selectedDateSet.contains(setDateToString(input: date))
+                    .background(observableViewModel.selectedDateSet.contains(setDateToString(input: date))
                                 ? Color(uiColor: AFColor.primary)
                                 : Color.clear)
                     .cornerRadius(30)
                     .onTapGesture {
-                        let date = setDateToString(input: date)
-                        if selectedDateSet.contains(date) {
-                            selectedDateSet.remove(date)
+                        let dateString = setDateToString(input: date)
+                        if observableViewModel.selectedDateSet.contains(dateString) {
+                            observableViewModel.selectedDateSet.remove(dateString)
                         } else {
-                            selectedDateSet.insert(date)
+                            observableViewModel.selectedDateSet.insert(dateString)
                         }
-                        viewModel.selectedDateSubject.accept(selectedDateSet)
-                        print("selectedDateSet :\(viewModel.selectedDateSubject.values)")
+                        viewModel.selectedDateSubject.accept(observableViewModel.selectedDateSet)
                     }
                 }
             }
@@ -82,7 +85,7 @@ extension HCalendarView {
         dateFormatter.locale = Locale(identifier: "ko_kr")
         dateFormatter.timeZone = TimeZone(abbreviation: "KST")
         dateFormatter.dateFormat = "yyyy년 MM월 d일" // 날짜 형식을 지정
-
+        
         let dateString = dateFormatter.string(from: input)
         return dateString
     }
