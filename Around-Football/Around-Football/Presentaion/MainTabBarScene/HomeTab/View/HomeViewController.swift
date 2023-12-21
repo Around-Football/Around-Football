@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SwiftUI
 
 import FirebaseAuth
 import RxCocoa
@@ -33,10 +34,10 @@ final class HomeViewController: UIViewController {
     
     private var viewModel: HomeViewModel
     private var loadRecruitList = PublishSubject<RecruitFilter>()
-//    private var filterRequest: (date: String?, region: String?, type: String?)
     private var filterRequest: RecruitFilter = RecruitFilter()
     private let disposeBag = DisposeBag()
     private var selectedDate: Date?
+    let oneLIneCalender = UIHostingController(rootView: HCalendarView())
     
     let regionMenus: [String]  = ["모든 지역", "서울", "인천", "부산", "대구", "울산",
                             "대전", "광주", "세종특별자치시","경기", "강원특별자치도",
@@ -315,13 +316,22 @@ final class HomeViewController: UIViewController {
     
     private func configureUI() {
         view.backgroundColor = .white
-        view.addSubviews(filterScrollView,
+        addChild(oneLIneCalender)
+        view.addSubviews(oneLIneCalender.view,
+                         filterScrollView,
                          homeTableView,
                          floatingButton)
+        oneLIneCalender.view.snp.makeConstraints { make in
+            make.top.equalTo(view.safeAreaLayoutGuide).offset(16)
+            make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
+            make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
+            make.height.equalTo(64)
+        }
+        
         filterScrollView.addSubview(optionStackView)
         
         filterScrollView.snp.makeConstraints { make in
-            make.top.equalTo(view.safeAreaLayoutGuide).offset(SuperviewOffsets.topPadding)
+            make.top.equalTo(oneLIneCalender.view.snp.bottom).offset(16)
             make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
             make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
             make.height.equalTo(32)
@@ -333,7 +343,7 @@ final class HomeViewController: UIViewController {
         }
         
         homeTableView.snp.makeConstraints { make in
-            make.top.equalTo(filterScrollView.snp.bottom).offset(10)
+            make.top.equalTo(filterScrollView.snp.bottom).offset(16)
             make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
             make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
             make.bottom.equalToSuperview()
