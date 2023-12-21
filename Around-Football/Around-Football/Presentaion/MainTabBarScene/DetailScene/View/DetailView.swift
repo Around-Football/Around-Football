@@ -11,13 +11,13 @@ final class DetailView: UIView {
     
     // MARK: - Properties
     
-    private var matchDayTitleLabel = UILabel().then {
+    private var matchTimeTitleLabel = UILabel().then {
         $0.text = "시간"
         $0.font = AFFont.titleCard
         $0.textColor = AFColor.secondary
     }
     
-    private var matchDayLabel = UILabel().then {
+    private var matchTimeLabel = UILabel().then {
         $0.text = "20:00 - 22:00"
         $0.font = AFFont.text
         $0.textColor = AFColor.secondary
@@ -88,8 +88,8 @@ final class DetailView: UIView {
     }
     
     private lazy var matchDateStackView = UIStackView().then {
-        $0.addArrangedSubviews(matchDayTitleLabel,
-                               matchDayLabel)
+        $0.addArrangedSubviews(matchTimeTitleLabel,
+                               matchTimeLabel)
         $0.axis = .horizontal
         $0.spacing = 43
         $0.alignment = .center
@@ -153,26 +153,15 @@ final class DetailView: UIView {
     }
     
     // MARK: - Helpers
-    
-    func formatMatchDate(_ date: Date) -> String {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "MM/dd (E)"
-        dateFormatter.locale = Locale(identifier: "ko_KR")
-        let formattedDate = dateFormatter.string(from: date)
-        return formattedDate
-    }
-    
-    func setValues(item: Recruit) {
-        let formattedCellDate = formatMatchDate(item.matchDate?.dateValue() ?? Date())
         
-        matchDayLabel.text = item.title
-        matchDayLabel.text = formattedCellDate
-        groundAddressLabel.text = item.fieldAddress
+    func setValues(recruit: Recruit) {
+        matchTimeLabel.text = "\(recruit.startTime ?? "00:00") - \(recruit.endTime ?? "00:00")"
+        groundAddressLabel.text = recruit.fieldAddress
         // TODO: - item에 추가되면 설정
         //        genderLabel.text = item.gender
-        recruitingLabel.text = "\(item.acceptedApplicantsUID.count) / \(item.recruitedPeopleCount)" + " 명"
-        gamePriceLabel.text = item.gamePrice
-        contentLabel.text = item.content
+        recruitingLabel.text = "\(recruit.acceptedApplicantsUID.count) / \(recruit.recruitedPeopleCount)" + " 명"
+        gamePriceLabel.text = recruit.gamePrice
+        contentLabel.text = recruit.content
     }
     
     private func configureUI() {

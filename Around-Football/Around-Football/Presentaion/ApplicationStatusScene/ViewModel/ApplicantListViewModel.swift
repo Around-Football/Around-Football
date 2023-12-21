@@ -13,25 +13,26 @@ import RxSwift
 final class ApplicantListViewModel {
     
     struct Input {
-        let loadApplicantList: Observable<String?>
-        let acceptButtonTapped: Observable<(String?, String?)>
-        let rejectButtonTapped: Observable<(String?, String?)>
+        let loadApplicantList: Observable<Void>
+        let acceptButtonTapped: Observable<(String, String)>
+        let rejectButtonTapped: Observable<(String, String)>
     }
     
     struct Output {
-        let applicantList: Observable<[String?]>
+        let applicantList: Observable<[String]>
     }
     
     // MARK: - Properties
     
     weak var coordinator: DetailCoordinator?
-    var recruitItem: Recruit?
+    var recruitItem: Recruit
     private var disposeBag = DisposeBag()
     
     // MARK: - Lifecycles
     
-    init(coordinator: DetailCoordinator?) {
+    init(coordinator: DetailCoordinator?, recruit: Recruit) {
         self.coordinator = coordinator
+        self.recruitItem = recruit
     }
     
     func transform(_ input: Input) -> Output {
@@ -46,26 +47,26 @@ final class ApplicantListViewModel {
         return output
     }
     
-    private func loadApplicationList(by inputObserver: Observable<String?>) -> Observable<[String?]> {
+    private func loadApplicationList(by inputObserver: Observable<Void>) -> Observable<[String]> {
         inputObserver
-            .flatMap { fieldID -> Observable<[String?]> in
-                let applicantListObservable = FirebaseAPI.shared.loadPendingApplicantRx(fieldID: fieldID)
+            .flatMap { _ -> Observable<[String]> in
+                let applicantListObservable = FirebaseAPI.shared.loadPendingApplicantRx(recruitID: self.recruitItem.id)
                 return applicantListObservable
             }
     }
     
-    private func loadAcceptedApplicationList(by inputObserver: Observable<(String?, String?)>) -> Observable<[String?]> {
+    private func loadAcceptedApplicationList(by inputObserver: Observable<(String, String)>) -> Observable<[String]> {
         inputObserver
-            .flatMap { (fieldID, uid) -> Observable<[String?]> in
-                let applicantListObservable = FirebaseAPI.shared.loadAcceptedApplicantRx(fieldID: fieldID, uid: uid)
+            .flatMap { (recruitID, uid) -> Observable<[String]> in
+                let applicantListObservable = FirebaseAPI.shared.loadAcceptedApplicantRx(recruitID: recruitID, uid: uid)
                 return applicantListObservable
             }
     }
     
-    private func loadRejectedApplicationList(by inputObserver: Observable<(String?, String?)>) -> Observable<[String?]> {
+    private func loadRejectedApplicationList(by inputObserver: Observable<(String, String)>) -> Observable<[String]> {
         inputObserver
-            .flatMap { (fieldID, uid) -> Observable<[String?]> in
-                let applicantListObservable = FirebaseAPI.shared.loadRejectedApplicantRx(fieldID: fieldID, uid: uid)
+            .flatMap { (recruitID, uid) -> Observable<[String]> in
+                let applicantListObservable = FirebaseAPI.shared.loadRejectedApplicantRx(recruitID: recruitID, uid: uid)
                 return applicantListObservable
             }
     }
