@@ -281,7 +281,7 @@ final class DetailViewController: UIViewController {
         
         sendRecruitButton.snp.makeConstraints { make in
             make.height.equalTo(40)
-            make.width.equalTo(264)
+            make.width.greaterThanOrEqualTo(264)
         }
     }
     
@@ -370,7 +370,6 @@ final class DetailViewController: UIViewController {
     private func bindRecruitUser() {
         viewModel.recruitUser
             .bind { [weak self] user in
-                print("bind", user.debugDescription)
                 guard let self = self,
                       let user = user else { return }
                 detailUserInfoView.setValues(user: user)
