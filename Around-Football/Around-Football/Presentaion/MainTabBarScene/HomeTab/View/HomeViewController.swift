@@ -131,12 +131,12 @@ final class HomeViewController: UIViewController {
     
     @objc
     private func resetButtonTapped() {
-//        dateFilterButton.isSelected = false
+        //        dateFilterButton.isSelected = false
         regionFilterButton.isSelected = false
         typeFilterButton.isSelected = false
         genderFilterButton.isSelected = false
         
-//        dateFilterButton.setTitle("날짜 선택", for: .normal)
+        //        dateFilterButton.setTitle("날짜 선택", for: .normal)
         regionFilterButton.setTitle("모든 지역", for: .normal)
         typeFilterButton.setTitle("매치 유형", for: .normal)
         genderFilterButton.setTitle("성별 무관", for: .normal)
@@ -145,8 +145,10 @@ final class HomeViewController: UIViewController {
         saveFilterRequestToUserDefaults(filterRequest: filterRequest)
         getFilterRequestFromUserDefaults()
         loadRecruitList.onNext(filterRequest)
+        oneLIneCalender.rootView.viewModel.selectedDateSubject.accept([])
+        oneLIneCalender.rootView.observableViewModel.selectedDateSet.removeAll()
     }
-//    
+//
 //    @objc
 //    func changeDate(_ sender: UIDatePicker) {
 //        dateFilterButton.isSelected.toggle()
@@ -294,13 +296,6 @@ final class HomeViewController: UIViewController {
         let input = HomeViewModel.Input(loadRecruitList: loadRecruitList.asObservable())
         
         let output = viewModel.transform(input)
-        
-        oneLIneCalender.rootView.viewModel.selectedDateSubject
-            .do(onNext: { dates in
-                print("받아옴 \(dates)")
-            })
-            .subscribe()
-            .disposed(by: disposeBag)
         
         Observable.combineLatest(
             output.recruitList,
