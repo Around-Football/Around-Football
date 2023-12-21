@@ -8,42 +8,46 @@
 import SwiftUI
 
 struct HCalendarView: View {
-    @State private var selectedDate = Date()
-    @State var selectedDateArr = [Date]()
-    
+    @State var selectedDateSet: Set<Date> = []
     private let calendar = Calendar.current
     
     var body: some View {
-        VStack(alignment: .center, spacing: 20) {
-            dayView
-        }
-    }
-    
-    // MARK: - 일자 표시 뷰
-    @ViewBuilder
-    private var dayView: some View {
-        let startDate = calendar.date(from: Calendar.current.dateComponents([.day], from: Date()))!
+        
+        let startDate = calendar.date(
+            from: Calendar.current.dateComponents([.year, .month, .day], from: Date())
+        ) ?? Date()
         
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 10) {
-                let components = (0...14)
-                    .map {
-                        calendar.date(byAdding: .day, value: $0, to: startDate)!
-                    }
+                let components = (0...14) .map {
+                    calendar.date(byAdding: .day, value: $0, to: startDate) ?? Date()
+                }
                 
                 ForEach(components, id: \.self) { date in
                     VStack {
                         Text("\(calendar.component(.day, from: date))")
                             .font(Font(AFFont.titleCard ?? UIFont()))
+                            .padding(.bottom, 4)
                         Text(day(from: date))
                             .font(Font(AFFont.filterDay ?? UIFont()))
-                            .foregroundColor(Color(uiColor: AFColor.secondary))
                     }
+                    .foregroundColor(
+                        day(from: date) == "토" ? Color(uiColor: AFColor.soccor)
+                        : day(from: date) == "일" ? Color(uiColor: AFColor.sunday)
+                        : Color(uiColor: AFColor.secondary)
+                    )
                     .frame(width: 50, height: 65)
-                    .background(calendar.isDate(selectedDate, equalTo: date, toGranularity: .day) ? Color(uiColor: AFColor.primary) : Color.clear)
-                    .cornerRadius(25)
+                    .background(selectedDateSet.contains(date)
+                                ? Color(uiColor: AFColor.primary)
+                                : Color.clear)
+                    .cornerRadius(30)
                     .onTapGesture {
-                        selectedDate = date
+                        if selectedDateSet.contains(date) {
+                            selectedDateSet.remove(date)
+                        } else {
+                            selectedDateSet.insert(date)
+                        }
+                        print("selectedDateSet :\(selectedDateSet)")
                     }
                 }
             }
@@ -51,11 +55,10 @@ struct HCalendarView: View {
     }
 }
 
-// MARK: - 로직
-private extension HCalendarView {
-    
-    /// 요일 추출
-    func day(from date: Date) -> String {
+
+extension HCalendarView {
+    //요일
+    private func day(from date: Date) -> String {
         let dateFormatter = DateFormatter()
         dateFormatter.locale = Locale(identifier: "ko_kr")
         dateFormatter.timeZone = TimeZone(abbreviation: "KST")
