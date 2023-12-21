@@ -90,21 +90,10 @@ final class HomeViewController: UIViewController {
         $0.addTarget(self, action: #selector(changeDate), for: .valueChanged)
     }
     
-    private lazy var floatingButton: UIButton = {
-        let button = UIButton()
-        let image = UIImage(systemName: "plus")
-        var config = UIButton.Configuration.filled()
-        config.baseBackgroundColor = .systemPink
-        config.cornerStyle = .capsule
-        config.image = image?.withConfiguration(UIImage.SymbolConfiguration(pointSize: 20,
-                                                                            weight: .medium))
-        button.configuration = config
-        button.layer.shadowRadius = 10
-        button.layer.shadowOpacity = 0.3
-        button.frame = CGRect(x: 0, y: 0, width: 50, height: 50)
-        button.addTarget(self, action: #selector(didTapFloatingButton), for: .touchUpInside)
-        return button
-    }()
+    private lazy var floatingButton = UIButton().then {
+        $0.setImage(UIImage(named: AFIcon.plusButton), for: .normal)
+        $0.addTarget(self, action: #selector(didTapFloatingButton), for: .touchUpInside)
+    }
     
     // MARK: - Lifecycles
     
@@ -134,20 +123,6 @@ final class HomeViewController: UIViewController {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         navigationItem.title = ""
-    }
-    
-    //floatingButtonSetting
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        
-        let tabBarHeight: CGFloat = self.tabBarController?.tabBar.frame.size.height ?? 120
-        
-        floatingButton.frame = CGRect(
-            x: view.frame.size.width - 70,
-            y: view.frame.size.height - (tabBarHeight * 2),
-            width: 50,
-            height: 50
-        )
     }
 
     // MARK: - Selectors
@@ -362,6 +337,11 @@ final class HomeViewController: UIViewController {
             make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
             make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
             make.bottom.equalToSuperview()
+        }
+        
+        floatingButton.snp.makeConstraints { make in
+            make.trailing.bottom.equalTo(view.safeAreaLayoutGuide).offset(-16)
+            make.height.width.equalTo(56)
         }
     }
 }

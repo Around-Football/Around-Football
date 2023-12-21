@@ -32,4 +32,7 @@ enum AFIcon {
     static let textLogo = "AFTextLogo"
     static let blackLlogo = "AFLogoBlack"
     static let greenLogo = "AFLogoGreen"
+    
+    //button
+    static let plusButton = "AFPlusButton"
 }
