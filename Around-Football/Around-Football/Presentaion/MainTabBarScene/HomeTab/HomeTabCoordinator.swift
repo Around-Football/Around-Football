@@ -53,7 +53,7 @@ final class HomeTabCoordinator: BaseCoordinator {
     }
     
     func presentLoginViewController() {
-        let coordinator = LoginCoordinator()
+        let coordinator = LoginCoordinator(navigationController: navigationController)
         coordinator.start() //여기서 모달뷰로 만듬
         childCoordinators.append(coordinator)
     }
