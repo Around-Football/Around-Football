@@ -16,9 +16,9 @@ final class ApplicantListTableViewCell: UITableViewCell {
     // MARK: - Properties
     
     static let cellID = "ApplicantListTableViewCellID"
-    var viewModel: ApplicantListViewModel?
+    var viewModel: ApplicantListViewModel
     weak var vc: ApplicantListViewController?
-    var uid: String?
+    var uid: String
 
     private var disposeBag = DisposeBag()
 
@@ -136,7 +136,9 @@ final class ApplicantListTableViewCell: UITableViewCell {
     
     // MARK: - Lifecycles
     
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+    init(style: UITableViewCell.CellStyle, reuseIdentifier: String?, viewModel: ApplicantListViewModel, uid: String) {
+        self.viewModel = viewModel
+        self.uid = uid
         super.init(style: .default, reuseIdentifier: reuseIdentifier)
         setupUI()
     }
@@ -149,14 +151,14 @@ final class ApplicantListTableViewCell: UITableViewCell {
     
     @objc
     private func acceptButtonTapped() {
-        FirebaseAPI.shared.acceptApplicants(fieldID: viewModel?.recruitItem?.fieldID ?? "", userID: uid)
-        vc?.acceptButtonTappedSubject.onNext((viewModel?.recruitItem?.fieldID, uid))
+        FirebaseAPI.shared.acceptApplicants(recruitID: viewModel.recruitItem.fieldID, userID: uid)
+        vc?.acceptButtonTappedSubject.onNext((viewModel.recruitItem.fieldID, uid))
     }
     
     @objc
     private func rejectButtonTapped() {
-        FirebaseAPI.shared.deleteApplicant(fieldID: viewModel?.recruitItem?.fieldID ?? "", userID: uid)
-        vc?.rejectButtonTappedSubject.onNext((viewModel?.recruitItem?.fieldID, uid))
+        FirebaseAPI.shared.deleteApplicant(recruitID: viewModel.recruitItem.fieldID, userID: uid)
+        vc?.rejectButtonTappedSubject.onNext((viewModel.recruitItem.fieldID, uid))
     }
     
     // MARK: - Helpers

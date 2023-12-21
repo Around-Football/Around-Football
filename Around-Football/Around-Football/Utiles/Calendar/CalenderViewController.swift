@@ -325,7 +325,7 @@ extension CalenderViewController: UICollectionViewDelegateFlowLayout, UICollecti
     }
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        
+        // FIXME: - 선택된 날짜가 현재날짜로만 등록됨 (선택된 날짜 아님)
         if let previousSelectedIndexPath = selectedIndexPath,
            let previousSelectedCell = collectionView.cellForItem(at: previousSelectedIndexPath) as? DateCell {
             previousSelectedCell.isSelected = false

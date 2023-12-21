@@ -26,18 +26,28 @@ final class FirebaseAPI {
             .setData(["id" : uid])
     }
     
-    func updateUser(_ user: User) {
-        guard let currentUserID = Auth.auth().currentUser?.uid else { return }
-        REF_USER.document(currentUserID)
-            .updateData(
-                ["userName" : user.userName,
-                 "age" : user.age,
-                 "gender" : user.gender,
-                 "area" : user.area,
-                 "mainUsedFeet" : user.mainUsedFeet,
-                 "position" : user.position,
-                 "bookmarkedFields" : user.bookmarkedFields]
-            )
+    func updateUser(_ user: User, completion: ((Error?) -> Void)? = nil) {
+//        guard let currentUserID = Auth.auth().currentUser?.uid else { return }
+        let ref = REF_USER.document(user.id)
+        updateRefData(ref: ref, data: user.representation) { error in
+            if let error = error {
+                print("DEBUG - Error", #function, error.localizedDescription)
+                completion?(error)
+                return
+            }
+            UserService.shared.currentUser_Rx.onNext(user)
+            completion?(nil)
+        }
+//        REF_USER.document(currentUserID)
+//            .updateData(
+//                ["userName" : user.userName,
+//                 "age" : user.age,
+//                 "gender" : user.gender,
+//                 "area" : user.area,
+//                 "mainUsedFeet" : user.mainUsedFeet,
+//                 "position" : user.position,
+//                 "bookmarkedRecruit" : user.bookmarkedRecruit]
+//            )
         
         UserService.shared.currentUser_Rx.onNext(user) //유저 업데이트하고 업데이트한 유저정보 보내줌
     }
@@ -180,10 +190,10 @@ extension FirebaseAPI {
             //유저불러옴
             guard let user = try? UserService.shared.currentUser_Rx.value() else { return Disposables.create() }
             
-            let userBookmarkList = user.bookmarkedFields
+            let userBookmarkList = user.bookmarkedRecruit
             
             REF_RECRUIT
-                .whereField("fieldID", in: userBookmarkList as [Any])
+                .whereField("id", in: userBookmarkList as [Any])
                 .getDocuments { snapshot, error in
                     if error != nil {
                         print("loadBookmarkPostRx 추가 오류: \(String(describing: error?.localizedDescription))")
@@ -257,34 +267,16 @@ extension FirebaseAPI {
     }
     
     //유저가 신청하기 누르면 pendingApplicationsUID 추가
-    func loadDetailCellApplicantRx(fieldID: String?) -> Observable<Recruit> {
+    func loadPendingApplicantRx(recruitID: String) -> Observable<[String]> {
         return Observable.create { observer in
-            REF_RECRUIT.document(fieldID ?? "").getDocument { snapshot, error in
-                if error != nil {
-                    print("ppendingApplicantUID 추가 오류")
-                }
-                
-                guard let data = snapshot?.data() else { return }
-                
-                observer.onNext(Recruit(dictionary: data))
-                observer.onCompleted()
-            }
-            
-            return Disposables.create()
-        }
-    }
-    
-    //유저가 신청하기 누르면 pendingApplicationsUID 추가
-    func loadPendingApplicantRx(fieldID: String?) -> Observable<[String?]> {
-        return Observable.create { observer in
-            REF_RECRUIT.document(fieldID ?? "").getDocument { snapshot, error in
+            REF_RECRUIT.document(recruitID).getDocument { snapshot, error in
                 if error != nil {
                     print("ppendingApplicantUID 추가 오류")
                 }
                 
                 guard
                     let data = snapshot?.data(),
-                    let pendingApplicants = data["pendingApplicantsUID"] as? [String?]
+                    let pendingApplicants = data["pendingApplicantsUID"] as? [String]
                 else { return }
                 
                 observer.onNext(pendingApplicants)
@@ -295,17 +287,17 @@ extension FirebaseAPI {
         }
     }
     
-    func loadAcceptedApplicantRx(fieldID: String?, uid: String?) -> Observable<[String?]> {
+    func loadAcceptedApplicantRx(recruitID: String, uid: String) -> Observable<[String]> {
         return Observable.create { observer in
-            REF_RECRUIT.document(fieldID ?? "").getDocument { snapshot, error in
+            REF_RECRUIT.document(recruitID).getDocument { snapshot, error in
                 if error != nil {
                     print("pendingApplicationsUID 추가 오류")
                 }
                 
                 guard
                     var data = snapshot?.data(),
-                    var pendingApplicants = data["pendingApplicantsUID"] as? [String?],
-                    var acceptedApplicants = data["acceptedApplicantsUID"] as? [String?]
+                    var pendingApplicants = data["pendingApplicantsUID"] as? [String],
+                    var acceptedApplicants = data["acceptedApplicantsUID"] as? [String]
                 else { return }
                 //승인한 유저 acceptedApplicantsUID 배열에 추가
                 acceptedApplicants.append(uid)
@@ -317,7 +309,7 @@ extension FirebaseAPI {
                 }
                 data.updateValue(pendingApplicants, forKey: "pendingApplicantsUID")
                 
-                REF_RECRUIT.document(fieldID ?? "").updateData(data)
+                REF_RECRUIT.document(recruitID).updateData(data)
                 
                 observer.onNext(pendingApplicants)
                 observer.onCompleted()
@@ -327,22 +319,22 @@ extension FirebaseAPI {
         }
     }
     
-    func loadRejectedApplicantRx(fieldID: String?, uid: String?) -> Observable<[String?]> {
+    func loadRejectedApplicantRx(recruitID: String, uid: String) -> Observable<[String]> {
         return Observable.create { observer in
-            REF_RECRUIT.document(fieldID ?? "").getDocument { snapshot, error in
+            REF_RECRUIT.document(recruitID).getDocument { snapshot, error in
                 if error != nil {
                     print("deleteApplicantError \(String(describing: error?.localizedDescription))")
                 }
                 
                 guard var data = snapshot?.data(),
-                      var pendingApplicants = data["pendingApplicantsUID"] as? [String?] else { return }
+                      var pendingApplicants = data["pendingApplicantsUID"] as? [String] else { return }
                 
                 pendingApplicants.removeAll(where: { userID in
                     userID == uid ? true : false
                 })
                 data.updateValue(pendingApplicants, forKey: "pendingApplicantsUID")
                 
-                REF_RECRUIT.document(fieldID ?? "").updateData(data)
+                REF_RECRUIT.document(recruitID).updateData(data)
                 
                 observer.onNext(pendingApplicants)
                 observer.onCompleted()
@@ -353,8 +345,8 @@ extension FirebaseAPI {
     }
     
     //유저 추가
-    func appendPendingApplicant(fieldID: String?) {
-        REF_RECRUIT.document(fieldID ?? "").getDocument { snapshot, error in
+    func appendPendingApplicant(recruitID: String) {
+        REF_RECRUIT.document(recruitID).getDocument { snapshot, error in
             if error != nil {
                 print("ppendingApplicantUID 추가 오류")
             }
@@ -366,13 +358,13 @@ extension FirebaseAPI {
             
             pendingApplicants.append(Auth.auth().currentUser?.uid)
             data.updateValue(pendingApplicants, forKey: "pendingApplicantsUID")
-            REF_RECRUIT.document(fieldID ?? "").updateData(data)
+            REF_RECRUIT.document(recruitID).updateData(data)
         }
     }
     
     //승인하면 배열 요소 이동
-    func acceptApplicants(fieldID: String, userID: String?) {
-        REF_RECRUIT.document(fieldID).getDocument { snapshot, error in
+    func acceptApplicants(recruitID: String, userID: String?) {
+        REF_RECRUIT.document(recruitID).getDocument { snapshot, error in
             if error != nil {
                 print("pendingApplicationsUID 추가 오류")
             }
@@ -392,13 +384,13 @@ extension FirebaseAPI {
             }
             data.updateValue(pendingApplicants, forKey: "pendingApplicantsUID")
             
-            REF_RECRUIT.document(fieldID).updateData(data)
+            REF_RECRUIT.document(recruitID).updateData(data)
         }
     }
     
     //거절하기 하면 uid 지움
-    func deleteApplicant(fieldID: String, userID: String?) {
-        REF_RECRUIT.document(fieldID).getDocument { snapshot, error in
+    func deleteApplicant(recruitID: String, userID: String?) {
+        REF_RECRUIT.document(recruitID).getDocument { snapshot, error in
             if error != nil {
                 print("deleteApplicantError \(String(describing: error?.localizedDescription))")
             }
@@ -411,7 +403,7 @@ extension FirebaseAPI {
             })
             data.updateValue(pendingApplicants, forKey: "pendingApplicantsUID")
             
-            REF_RECRUIT.document(fieldID).updateData(data)
+            REF_RECRUIT.document(recruitID).updateData(data)
         }
     }
 }

@@ -15,12 +15,12 @@ final class ApplicantListViewController: UIViewController {
     
     // MARK: Properties
     
-    var viewModel: ApplicantListViewModel?
+    var viewModel: ApplicantListViewModel
     private var disposeBag = DisposeBag()
     
-    var loadApplicantList: PublishSubject<String?> = PublishSubject()
-    let acceptButtonTappedSubject: PublishSubject<(String?, String?)> = PublishSubject()
-    let rejectButtonTappedSubject: PublishSubject<(String?, String?)> = PublishSubject()
+    private let invokedViewDidLoad = PublishSubject<Void>()
+    let acceptButtonTappedSubject = PublishSubject<(String, String)>()
+    let rejectButtonTappedSubject = PublishSubject<(String, String)>()
     
     private let tableView = UITableView().then {
         $0.register(ApplicantListTableViewCell.self, forCellReuseIdentifier: ApplicantListTableViewCell.cellID)
@@ -28,7 +28,7 @@ final class ApplicantListViewController: UIViewController {
     
     // MARK: - Lifecycles
     
-    init(viewModel: ApplicantListViewModel?) {
+    init(viewModel: ApplicantListViewModel) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
@@ -41,17 +41,17 @@ final class ApplicantListViewController: UIViewController {
         super.viewDidLoad()
         setupTableViewConstraints()
         bind()
-        loadApplicantList.onNext(viewModel?.recruitItem?.fieldID)
+        invokedViewDidLoad.onNext(())
     }
     
     func bind() {
-        let input = ApplicantListViewModel.Input(loadApplicantList: loadApplicantList.asObservable(),
+        let input = ApplicantListViewModel.Input(loadApplicantList: invokedViewDidLoad,
                                                  acceptButtonTapped: acceptButtonTappedSubject.asObservable(),
                                                  rejectButtonTapped: rejectButtonTappedSubject.asObservable())
         
-        let output = viewModel?.transform(input)
+        let output = viewModel.transform(input)
         
-        output?
+        output
             .applicantList
             .bind(to: tableView.rx.items(cellIdentifier: ApplicantListTableViewCell.cellID,
                                          cellType: ApplicantListTableViewCell.self)) { [weak self]  index, item, cell in

@@ -25,8 +25,7 @@ final class DetailCoordinator: BaseCoordinator {
     }
     
     func pushApplicationStatusViewController(recruit: Recruit) {
-        let viewModel = ApplicantListViewModel(coordinator: self)
-        viewModel.recruitItem = recruit
+        let viewModel = ApplicantListViewModel(coordinator: self, recruit: recruit)
         let controller = ApplicantListViewController(viewModel: viewModel)
         navigationController?.pushViewController(controller, animated: true)
     }

@@ -18,7 +18,6 @@ final class DetailViewController: UIViewController {
     // MARK: - Properties
     
     var viewModel: DetailViewModel
-    private var user = try? UserService.shared.currentUser_Rx.value()
     private var invokedViewWillAppear = PublishSubject<Void>()
     private var disposeBag = DisposeBag()
     
@@ -59,13 +58,26 @@ final class DetailViewController: UIViewController {
         $0.image = UIImage(systemName: "mappin.and.ellipse")
     }
     
-    private let grayDividerView = UIView().then {
+    private let contentDivider = UIView().then {
         $0.backgroundColor = AFColor.grayScale50
+    }
+    
+    private let bottomDivider = UIView().then {
+        $0.backgroundColor = AFColor.grayScale200
     }
     
     private let sendMessageButton = AFSmallButton(buttonTitle: "채팅하기", color: AFColor.primary)
     private let sendRecruitButton = AFButton(buttonTitle: "신청하기", color: AFColor.secondary)
+    private let bookMarkButton = UIButton().then {
+        $0.setImage(UIImage(named: "AFBookmark"), for: .normal)
+    }
     
+    private lazy var bottomStackView = UIStackView().then {
+        $0.addArrangedSubviews(bookMarkButton, sendRecruitButton)
+        $0.axis = .horizontal
+        $0.distribution = .equalSpacing
+        $0.alignment = .center
+    }
     
     // MARK: - Lifecycles
     
@@ -80,12 +92,8 @@ final class DetailViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        bindUI()
+        bind()
         configeUI()
-        contentView.isUserInteractionEnabled = true
-        scrollView.isUserInteractionEnabled = true
-        sendRecruitButton.isEnabled = true
-        sendRecruitButton.isUserInteractionEnabled = true
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -107,36 +115,11 @@ final class DetailViewController: UIViewController {
         navigationController?.navigationBar.tintColor = UIColor.black
     }
     
-    // MARK: - Selector
-    
-    @objc
-    private func sendMessageButtonTapped() {
-        print("DEBUG - TAP")
-        if (try? UserService.shared.currentUser_Rx.value()) != nil {
-            viewModel.checkChannelAndPushChatViewController()
-        } else {
-            viewModel.showLoginView()
-        }
-    }
-    
-    @objc
-    private func sendRecruitButtonTapped() {
-        print("DEBUG - TAP")
-        //TODO: -메세지 버튼 타이틀 분기처리 (작성자 or 신청자)
-        ///글쓴이면 신청현황 보기, 아니면 신청한 UID에 추가
-        if user?.id == viewModel.recruitItem?.userID {
-            viewModel.coordinator?.pushApplicationStatusViewController(recruit: viewModel.recruitItem!)
-        } else {
-            FirebaseAPI.shared.appendPendingApplicant(fieldID: viewModel.recruitItem?.fieldID)
-        }
-    }
-    
     // MARK: - Helper
     
     //유저에 따라 신청버튼 타이틀 설정
-    private func setButtonTitle() {
-        //글쓴이면 신청현황, 아니면 신청하기로
-        if user?.id == viewModel.recruitItem?.userID {
+    private func setButtonUI() {
+        if viewModel.isOwnRecruit() {
             let title = NSAttributedString(
                 string: "신청 현황 보기",
                 attributes: [.font: AFFont.titleSmall as Any]
@@ -144,6 +127,7 @@ final class DetailViewController: UIViewController {
             sendRecruitButton.setAttributedTitle(title, for: .normal)
             //메세지 보내기 버튼 없애기
             sendMessageButton.isHidden = true
+            bookMarkButton.isHidden = true
         } else {
             let title = NSAttributedString(
                 string: "신청하기",
@@ -152,82 +136,56 @@ final class DetailViewController: UIViewController {
             sendRecruitButton.setAttributedTitle(title, for: .normal)
             //메세지 보내기 버튼 원위치
             sendMessageButton.isHidden = false
+            bookMarkButton.isHidden = false
         }
     }
     
-    private func setTypeLabelStyle() {
-        if let item = viewModel.recruitItem {
+    private func configureTypeLabel() {
+        if let item = viewModel.getRecruit() {
             typeLabel.text = item.type
             typeLabel.backgroundColor = item.type == "축구" ? AFColor.soccor : AFColor.futsal
         }
     }
     
+    private func configureBookmarkStyle() {
+        guard let user = viewModel.getCurrentUser(),
+              let recruit = viewModel.getRecruit() else {
+            setNormalBookmarkButton()
+            return
+        }
+        
+        viewModel.isSelectedBookmark = user.bookmarkedRecruit.contains(recruit.id)
+        
+        setupBookmarkButton()
+    }
     
-    private func bindUI() {
-        let input = DetailViewModel.Input(invokedViewWillAppear: invokedViewWillAppear.asObserver())
-        
-        let output = viewModel.transform(input)
-        
-        output.recruitItem
-            .do { recruit in
-                let userRef = REF_USER.document(recruit.userID)
-                
-                userRef.getDocument(as: User.self) { [weak self] result in
-                    guard let self else { return }
-                    switch result {
-                    case .success(let user):
-                        print("readUser 성공: \(user)")
-                        detailUserInfoView.setValues(user: user)
-                    case .failure(let error):
-                        print("readUser 에러: \(error)")
-                    }
-                }
-            }
-            .subscribe()
-            .disposed(by: disposeBag)
-        
-        output
-            .recruitItem
-            .bind(onNext: { [weak self] recruit in
-                guard let self else { return }
-                // TODO: - Recruit 정보 변경된거 반영 (일정)
-                dateLabel.text = recruit.matchDate.debugDescription
-                groundLabel.text = recruit.fieldName
-                //                groundLabel.text = recruit.fieldAddress
-                detailView.setValues(item: recruit)
-            }).disposed(by: disposeBag)
-        
-        sendRecruitButton.rx.tap
-            .bind { [weak self] _ in
-                guard let self = self else { return }
-                //TODO: -메세지 버튼 타이틀 분기처리 (작성자 or 신청자)
-                ///글쓴이면 신청현황 보기, 아니면 신청한 UID에 추가
-                if user?.id == viewModel.recruitItem?.userID {
-                    viewModel.coordinator?.pushApplicationStatusViewController(recruit: viewModel.recruitItem!)
-                } else {
-                    FirebaseAPI.shared.appendPendingApplicant(fieldID: viewModel.recruitItem?.fieldID)
-                }
-            }
-            .disposed(by: disposeBag)
-        
-        sendMessageButton.rx.tap
-            .bind { [weak self] _ in
-                guard let self = self else { return }
-                if (try? UserService.shared.currentUser_Rx.value()) != nil {
-                    viewModel.checkChannelAndPushChatViewController()
-                } else {
-                    viewModel.showLoginView()
-                }
-            }
-            .disposed(by: disposeBag)
+    private func setupBookmarkButton() {
+        if viewModel.isSelectedBookmark == true {
+            setSelectedBookmarkButton()
+        } else {
+            setNormalBookmarkButton()
+        }
+    }
+    
+    func setSelectedBookmarkButton() {
+        UIView.transition(with: bookMarkButton, duration: 0.3, options: .transitionCrossDissolve) {
+            self.bookMarkButton.setImage(UIImage(named: "AFBookmarkSelect"), for: .normal)
+        }
+    }
+    
+    func setNormalBookmarkButton() {
+        UIView.transition(with: bookMarkButton, duration: 0.3, options: .transitionCrossDissolve) {
+            self.bookMarkButton.setImage(UIImage(named: "AFBookmark"), for: .normal)
+        }
     }
     
     private func configeUI() {
-        setButtonTitle() // 신청하기 버튼 세팅
-        setTypeLabelStyle() // type 라벨 스타일 세팅
+        configureTypeLabel() // type 라벨 스타일 세팅
+        configureBookmarkStyle()
         view.backgroundColor = .white
         view.addSubviews(scrollView,
-                         sendRecruitButton)
+                         bottomDivider,
+                         bottomStackView)
         scrollView.addSubview(contentView)
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         contentView.translatesAutoresizingMaskIntoConstraints = false
@@ -237,17 +195,19 @@ final class DetailViewController: UIViewController {
                                 groundLabel,
                                 detailUserInfoView,
                                 sendMessageButton,
-                                grayDividerView,
+                                contentDivider,
                                 detailView
         )
         
         scrollView.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide)
             make.leading.trailing.equalToSuperview()
+            make.bottom.equalTo(bottomDivider.snp.top)
         }
         
         contentView.snp.makeConstraints { make in
-            make.edges.equalTo(0)
+            make.top.leading.trailing.equalToSuperview()
+            make.bottom.equalToSuperview().offset(-55)
             make.width.equalToSuperview()
         }
         
@@ -289,7 +249,7 @@ final class DetailViewController: UIViewController {
             make.height.equalTo(36)
         }
         
-        grayDividerView.snp.makeConstraints { make in
+        contentDivider.snp.makeConstraints { make in
             make.top.equalTo(detailUserInfoView.snp.bottom).offset(20)
             make.height.equalTo(1)
             make.leading.equalToSuperview().offset(20)
@@ -297,18 +257,124 @@ final class DetailViewController: UIViewController {
         }
         
         detailView.snp.makeConstraints { make in
-            make.top.equalTo(grayDividerView.snp.bottom).offset(SuperviewOffsets.topPadding)
+            make.top.equalTo(contentDivider.snp.bottom).offset(SuperviewOffsets.topPadding)
             make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
             make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
             make.bottom.equalToSuperview()
         }
         
-        sendRecruitButton.snp.makeConstraints { make in
-            make.top.equalTo(scrollView.snp.bottom).offset(16)
-            make.trailing.equalToSuperview().offset(-20)
-            make.leading.equalToSuperview().offset(20)
-            make.height.equalTo(50)
-            make.bottom.equalToSuperview().offset(-40)
+        bottomDivider.snp.makeConstraints { make in
+            make.height.equalTo(0.4)
+            make.bottom.equalTo(bottomStackView.snp.top).offset(-16)
+            make.leading.trailing.equalToSuperview()
         }
+        
+        bottomStackView.snp.makeConstraints { make in
+            make.leading.equalToSuperview().offset(20)
+            make.trailing.equalToSuperview().offset(-20)
+            make.bottom.equalTo(view.safeAreaLayoutGuide).offset(-36)
+        }
+        
+        bookMarkButton.snp.makeConstraints { make in
+            make.width.height.equalTo(40)
+        }
+        
+        sendRecruitButton.snp.makeConstraints { make in
+            make.height.equalTo(40)
+            make.width.equalTo(264)
+        }
+    }
+    
+    private func bind() {
+//        let input = DetailViewModel.Input(invokedViewWillAppear: invokedViewWillAppear.asObserver())
+//        let output = viewModel.transform(input)
+        bindRecruitItem()
+        bindButton()
+        bindCurrentUser()
+        bindRecruitUser()
+    }
+    
+    private func bindRecruitItem() {
+        viewModel.recruitItem
+            .bind(onNext: { [weak self] recruit in
+                guard let self = self else { return }
+                // TODO: - Recruit 정보 변경된거 반영 (일정)
+                dateLabel.text = recruit.matchDayString
+                groundLabel.text = recruit.fieldName
+                detailView.setValues(recruit: recruit)
+            })
+            .disposed(by: disposeBag)
+    }
+    
+    private func bindButton() {
+        
+        sendRecruitButton.rx.tap
+            .bind { [weak self] _ in
+                guard let self = self,
+                      let recruit = viewModel.getRecruit() else { return }
+                //TODO: -메세지 버튼 타이틀 분기처리 (작성자 or 신청자)
+                ///글쓴이면 신청현황 보기, 아니면 신청한 UID에 추가
+                if viewModel.getCurrentUser()?.id == recruit.userID {
+                    viewModel.showApplicationStatusView(recruit: recruit)
+                } else {
+                    FirebaseAPI.shared.appendPendingApplicant(recruitID: recruit.id)
+                }
+            }
+            .disposed(by: disposeBag)
+        
+        sendMessageButton.rx.tap
+            .bind { [weak self] _ in
+                guard let self = self else { return }
+                if (try? UserService.shared.currentUser_Rx.value()) != nil {
+                    viewModel.checkChannelAndPushChatViewController()
+                } else {
+                    viewModel.showLoginView()
+                }
+            }
+            .disposed(by: disposeBag)
+        
+        bookMarkButton.rx.tap
+            .withUnretained(self)
+            .bind { (owner, _) in
+                guard owner.viewModel.getCurrentUser() != nil else {
+                    owner.viewModel.showLoginView()
+                    return
+                }
+                
+                if owner.viewModel.isSelectedBookmark == true {
+                    owner.viewModel.removeBookmark() {
+                        owner.setNormalBookmarkButton()
+                        owner.viewModel.isSelectedBookmark = false
+                    }
+                    
+                } else {
+                    owner.viewModel.addBookmark() {
+                        owner.setSelectedBookmarkButton()
+                        owner.viewModel.isSelectedBookmark = true
+                    }
+                    
+                }
+            }
+            .disposed(by: disposeBag)
+    }
+    
+    private func bindCurrentUser() {
+        viewModel.currentUser
+            .bind { [weak self] user in
+                guard let self = self else { return }
+                setButtonUI()
+            }
+            .disposed(by: disposeBag)
+    }
+    
+    private func bindRecruitUser() {
+        viewModel.recruitUser
+            .bind { [weak self] user in
+                print("bind", user.debugDescription)
+                guard let self = self,
+                      let user = user else { return }
+                detailUserInfoView.setValues(user: user)
+            }
+            .disposed(by: disposeBag)
     }
 }
