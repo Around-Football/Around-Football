@@ -55,19 +55,6 @@ final class DetailViewController: UIViewController {
         $0.font = AFFont.titleRegular
     }
     
-    private lazy var sendMessageButton = UIButton().then {
-        let title = NSAttributedString(
-            string: "메세지 보내기",
-            attributes: [.font: UIFont.systemFont(ofSize: 15, weight: .semibold)]
-        )
-        $0.setAttributedTitle(title, for: .normal)
-        $0.setTitleColor(.white, for: .normal)
-        $0.backgroundColor = .black
-        $0.layer.cornerRadius = 10
-        $0.clipsToBounds = true
-        $0.addTarget(self, action: #selector(sendMessageButtonTapped), for: .touchUpInside)
-    }
-    
     private let groundIconView = UIImageView().then {
         $0.image = UIImage(systemName: "mappin.and.ellipse")
     }
@@ -76,16 +63,8 @@ final class DetailViewController: UIViewController {
         $0.backgroundColor = AFColor.grayScale50
     }
     
-    //    private let sendRecruitButton = AFSmallButton(buttonTitle: "신청하기", color: AFColor.secondary)
-    private lazy var sendRecruitButton = UIButton().then {
-        $0.setTitle("신청하기", for: .normal)
-        $0.setTitleColor(.white, for: .normal)
-        $0.backgroundColor = AFColor.secondary
-        $0.layer.cornerRadius = 5
-        $0.clipsToBounds = true
-        $0.addTarget(self, action: #selector(sendRecruitButtonTapped), for: .touchUpInside)
-    }
-    
+    private let sendMessageButton = AFSmallButton(buttonTitle: "채팅하기", color: AFColor.primary)
+    private let sendRecruitButton = AFButton(buttonTitle: "신청하기", color: AFColor.secondary)
     
     
     // MARK: - Lifecycles
@@ -218,19 +197,29 @@ final class DetailViewController: UIViewController {
                 detailView.setValues(item: recruit)
             }).disposed(by: disposeBag)
         
-        //        sendRecruitButton.rx.tap
-        //            .bind { [weak self] _ in
-        //                guard let self = self else { return }
-        //                //TODO: -메세지 버튼 타이틀 분기처리 (작성자 or 신청자)
-        //                ///글쓴이면 신청현황 보기, 아니면 신청한 UID에 추가
-        //                print("DEBUG - TAP")
-        //                if user?.id == viewModel.recruitItem?.userID {
-        //                    viewModel.coordinator?.pushApplicationStatusViewController(recruit: viewModel.recruitItem!)
-        //                } else {
-        //                    FirebaseAPI.shared.appendPendingApplicant(fieldID: viewModel.recruitItem?.fieldID)
-        //                }
-        //            }
-        //            .disposed(by: disposeBag)
+        sendRecruitButton.rx.tap
+            .bind { [weak self] _ in
+                guard let self = self else { return }
+                //TODO: -메세지 버튼 타이틀 분기처리 (작성자 or 신청자)
+                ///글쓴이면 신청현황 보기, 아니면 신청한 UID에 추가
+                if user?.id == viewModel.recruitItem?.userID {
+                    viewModel.coordinator?.pushApplicationStatusViewController(recruit: viewModel.recruitItem!)
+                } else {
+                    FirebaseAPI.shared.appendPendingApplicant(fieldID: viewModel.recruitItem?.fieldID)
+                }
+            }
+            .disposed(by: disposeBag)
+        
+        sendMessageButton.rx.tap
+            .bind { [weak self] _ in
+                guard let self = self else { return }
+                if (try? UserService.shared.currentUser_Rx.value()) != nil {
+                    viewModel.checkChannelAndPushChatViewController()
+                } else {
+                    viewModel.showLoginView()
+                }
+            }
+            .disposed(by: disposeBag)
     }
     
     private func configeUI() {

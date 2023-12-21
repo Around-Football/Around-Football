@@ -48,7 +48,7 @@ final class AFButton: UIButton {
         clipsToBounds = true
         addTarget(self, action: #selector(buttonClicked), for: .touchUpInside)
         setBackgroundColor(color, for: .normal)
-        setTitleColor(color == AFColor.primary ? .black : .white, for: .normal)
+        setTitleColor(color == AFColor.primary ? AFColor.secondary : .white, for: .normal)
         setTitleColor(AFColor.grayScale300, for: .disabled)
         setBackgroundColor(AFColor.grayScale100, for: .disabled)
     }
@@ -75,7 +75,7 @@ final class AFMediumButton: UIButton {
         setTitle(buttonTitle, for: .normal)
         titleLabel?.font = AFFont.button
         setTitleColor(AFColor.grayScale200, for: .normal)
-        setTitleColor(.black, for: .selected)
+        setTitleColor(AFColor.secondary, for: .selected)
         layer.cornerRadius = LayoutOptions.cornerRadious
         layer.borderWidth = 1.0
         layer.borderColor = AFColor.grayScale100.cgColor
@@ -87,10 +87,6 @@ final class AFMediumButton: UIButton {
 // MARK: - 작은 버튼
 
 final class AFSmallButton: UIButton {
-    
-    // MARK: - Properties
-
-    var buttonActionHandler: (() -> Void)?
 
     // MARK: - Lifecycles
     
@@ -102,27 +98,18 @@ final class AFSmallButton: UIButton {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
-    @objc
-    func buttonClicked() {
-        print("DEBUG: buttonClicked")
-        if let buttonActionHandler {
-            buttonActionHandler()
-        }
-    }
 
     // MARK: - Helpers
     
     private func configureUI(buttonTitle: String, color: UIColor) {
         setTitle(buttonTitle, for: .normal)
         titleLabel?.font = AFFont.titleSmall
-        setTitleColor(color == AFColor.primary ? .black : .white, for: .normal)
+        setTitleColor(color == AFColor.primary ? AFColor.secondary : .white, for: .normal)
         setTitleColor(AFColor.grayScale300, for: .disabled)
         setBackgroundColor(color, for: .normal)
         setBackgroundColor(AFColor.grayScale100, for: .disabled)
         layer.cornerRadius = 4
         clipsToBounds = true
-        addTarget(self, action: #selector(buttonClicked), for: .touchUpInside)
     }
 }
 
@@ -157,7 +144,7 @@ final class AFMenuButton: UIButton {
     private func configureUI(buttonTitle: String, menus: [String]) {
         setTitle(buttonTitle, for: .normal)
         setTitleColor(.label, for: .normal)
-        tintColor = .black
+        tintColor = AFColor.secondary
         layer.cornerRadius = LayoutOptions.cornerRadious
         layer.borderWidth = 1.0
         layer.borderColor = AFColor.grayScale100.cgColor
@@ -213,7 +200,7 @@ final class AFRoundSmallButton: UIButton {
         setTitleColor(AFColor.grayScale300, for: .normal)
         setBackgroundColor(.clear, for: .normal)
         setTitleColor(.white, for: .selected)
-        setBackgroundColor(.black, for: .selected)
+        setBackgroundColor(AFColor.secondary, for: .selected)
         layer.cornerRadius = 15
         clipsToBounds = true
         layer.borderWidth = 1.0
@@ -257,7 +244,7 @@ final class AFRoundMenuButton: UIButton {
         setImage(chevronImage, for: .normal)
         setBackgroundColor(.clear, for: .normal)
         setTitleColor(.white, for: .selected)
-        setBackgroundColor(.black, for: .selected)
+        setBackgroundColor(AFColor.secondary, for: .selected)
         tintColor = AFColor.grayScale300
         layer.cornerRadius = 15
         clipsToBounds = true
