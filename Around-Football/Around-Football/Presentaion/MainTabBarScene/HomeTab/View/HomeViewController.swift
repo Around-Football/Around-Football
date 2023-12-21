@@ -23,11 +23,10 @@ enum FilterRequest: String {
 }
 
 struct RecruitFilter {
-    var date: String?
+//    var date: String?
     var region: String?
     var type: String?
     var gender: String?
-    //    var selectedDate: [String?]
 }
 
 final class HomeViewController: UIViewController {
@@ -38,7 +37,7 @@ final class HomeViewController: UIViewController {
     private var loadRecruitList = PublishSubject<RecruitFilter>()
     private lazy var filterRequest: RecruitFilter = RecruitFilter()
     private let disposeBag = DisposeBag()
-    private var selectedDate: Date?
+//    private var selectedDate: Date?
     private lazy var oneLIneCalender = UIHostingController(rootView: HCalendarView()) //캘린더
     
     let regionMenus: [String]  = ["모든 지역", "서울", "인천", "부산", "대구", "울산",
@@ -50,7 +49,7 @@ final class HomeViewController: UIViewController {
     private lazy var resetButton = AFRoundSmallButton(buttonTitle: "전체 보기", color: .black)
     private lazy var regionFilterButton = AFRoundMenuButton(buttonTitle: "모든 지역", menus: regionMenus)
     private lazy var typeFilterButton = AFRoundMenuButton(buttonTitle: "매치 유형", menus: typeMenus)
-    private let dateFilterButton = AFRoundMenuButton(buttonTitle: "날짜 선택", menus: [])
+//    private let dateFilterButton = AFRoundMenuButton(buttonTitle: "날짜 선택", menus: [])
     private lazy var genderFilterButton = AFRoundMenuButton(buttonTitle: "성별 선택", menus: genderMenus)
     
     private lazy var homeTableView = UITableView().then {
@@ -68,30 +67,30 @@ final class HomeViewController: UIViewController {
         $0.distribution = .equalSpacing
         $0.spacing = 4
         $0.addArrangedSubviews(resetButton,
-                               datePicker,
+//                               datePicker,
                                regionFilterButton,
                                typeFilterButton,
                                genderFilterButton)
     }
     
-    private lazy var datePicker = UIDatePicker().then {
-        $0.preferredDatePickerStyle = .compact
-        $0.datePickerMode = .date
-        $0.locale = Locale(identifier: "ko_KR")
-        $0.layer.cornerRadius = 15
-        $0.clipsToBounds = true
-        let emptyView = UIView()
-        emptyView.backgroundColor = .white
-        $0.addSubviews(emptyView)
-        $0.addSubview(dateFilterButton)
-        emptyView.snp.makeConstraints { make in
-            make.edges.equalToSuperview()
-        }
-        dateFilterButton.snp.makeConstraints { make in
-            make.edges.equalToSuperview()
-        }
-        $0.addTarget(self, action: #selector(changeDate), for: .valueChanged)
-    }
+//    private lazy var datePicker = UIDatePicker().then {
+//        $0.preferredDatePickerStyle = .compact
+//        $0.datePickerMode = .date
+//        $0.locale = Locale(identifier: "ko_KR")
+//        $0.layer.cornerRadius = 15
+//        $0.clipsToBounds = true
+//        let emptyView = UIView()
+//        emptyView.backgroundColor = .white
+//        $0.addSubviews(emptyView)
+//        $0.addSubview(dateFilterButton)
+//        emptyView.snp.makeConstraints { make in
+//            make.edges.equalToSuperview()
+//        }
+//        dateFilterButton.snp.makeConstraints { make in
+//            make.edges.equalToSuperview()
+//        }
+//        $0.addTarget(self, action: #selector(changeDate), for: .valueChanged)
+//    }
     
     private lazy var floatingButton = UIButton().then {
         $0.setImage(UIImage(named: AFIcon.plusButton), for: .normal)
@@ -132,41 +131,43 @@ final class HomeViewController: UIViewController {
     
     @objc
     private func resetButtonTapped() {
-        dateFilterButton.isSelected = false
+//        dateFilterButton.isSelected = false
         regionFilterButton.isSelected = false
         typeFilterButton.isSelected = false
+        genderFilterButton.isSelected = false
         
-        dateFilterButton.setTitle("날짜 선택", for: .normal)
+//        dateFilterButton.setTitle("날짜 선택", for: .normal)
         regionFilterButton.setTitle("모든 지역", for: .normal)
         typeFilterButton.setTitle("매치 유형", for: .normal)
+        genderFilterButton.setTitle("성별 무관", for: .normal)
         
-        filterRequest = RecruitFilter(date: nil, region: nil, type: nil, gender: nil)
+        filterRequest = RecruitFilter(region: nil, type: nil, gender: nil)
         saveFilterRequestToUserDefaults(filterRequest: filterRequest)
         getFilterRequestFromUserDefaults()
         loadRecruitList.onNext(filterRequest)
     }
-    
-    @objc
-    func changeDate(_ sender: UIDatePicker) {
-        dateFilterButton.isSelected.toggle()
-        selectedDate = sender.date
-        
-        let dateformatter = DateFormatter()
-        dateformatter.locale = Locale(identifier: "ko_KR")
-        dateformatter.dateFormat = "YYYY년 M월 d일"
-        let formattedDate = dateformatter.string(from: sender.date)
-        
-        let titleDateformatter = DateFormatter()
-        titleDateformatter.locale = Locale(identifier: "ko_KR")
-        titleDateformatter.dateFormat = "M월 d일"
-        let buttonTitleDate = titleDateformatter.string(from: sender.date)
-        
-        filterRequest.date = formattedDate
-        saveFilterRequestToUserDefaults(filterRequest: filterRequest)
-        getFilterRequestFromUserDefaults()
-        dateFilterButton.setTitle(buttonTitleDate, for: .normal)
-        loadRecruitList.onNext(filterRequest)
-    }
+//    
+//    @objc
+//    func changeDate(_ sender: UIDatePicker) {
+//        dateFilterButton.isSelected.toggle()
+//        selectedDate = sender.date
+//        
+//        let dateformatter = DateFormatter()
+//        dateformatter.locale = Locale(identifier: "ko_KR")
+//        dateformatter.dateFormat = "YYYY년 M월 d일"
+//        let formattedDate = dateformatter.string(from: sender.date)
+//        
+//        let titleDateformatter = DateFormatter()
+//        titleDateformatter.locale = Locale(identifier: "ko_KR")
+//        titleDateformatter.dateFormat = "M월 d일"
+//        let buttonTitleDate = titleDateformatter.string(from: sender.date)
+//        
+//        filterRequest.date = formattedDate
+//        saveFilterRequestToUserDefaults(filterRequest: filterRequest)
+//        getFilterRequestFromUserDefaults()
+//        dateFilterButton.setTitle(buttonTitleDate, for: .normal)
+//        loadRecruitList.onNext(filterRequest)
+//    }
     
     @objc
     private func didTapFloatingButton() {
@@ -186,7 +187,7 @@ final class HomeViewController: UIViewController {
     
     //유저디폴트 저장
     func saveFilterRequestToUserDefaults(filterRequest: RecruitFilter) {
-        UserDefaults.standard.set(filterRequest.date, forKey: FilterRequest.date.rawValue)
+//        UserDefaults.standard.set(filterRequest.date, forKey: FilterRequest.date.rawValue)
         UserDefaults.standard.set(filterRequest.region, forKey: FilterRequest.region.rawValue)
         UserDefaults.standard.set(filterRequest.type, forKey: FilterRequest.type.rawValue)
         UserDefaults.standard.set(filterRequest.gender, forKey: FilterRequest.gender.rawValue)
@@ -194,11 +195,11 @@ final class HomeViewController: UIViewController {
     
     //유저디폴트 값 설정
     func getFilterRequestFromUserDefaults() {
-        let date = UserDefaults.standard.string(forKey: FilterRequest.date.rawValue)
+//        let date = UserDefaults.standard.string(forKey: FilterRequest.date.rawValue)
         let region = UserDefaults.standard.string(forKey: FilterRequest.region.rawValue)
         let type = UserDefaults.standard.string(forKey: FilterRequest.type.rawValue)
         let gender = UserDefaults.standard.string(forKey: FilterRequest.gender.rawValue)
-        self.filterRequest = RecruitFilter(date: date, region: region, type: type, gender: gender)
+        self.filterRequest = RecruitFilter(region: region, type: type, gender: gender)
     }
     
     //유저 지역 정보로 필터링하고 리스트 요청
@@ -209,7 +210,7 @@ final class HomeViewController: UIViewController {
             .subscribe(onNext: { [weak self] user in
                 guard let self else { return }
                 getFilterRequestFromUserDefaults()
-                dateFilterButton.menuButtonSubject.onNext(filterRequest.date)
+//                dateFilterButton.menuButtonSubject.onNext(filterRequest.date)
                 regionFilterButton.menuButtonSubject.onNext(filterRequest.region)
                 typeFilterButton.menuButtonSubject.onNext(filterRequest.type)
             }).disposed(by: disposeBag)
@@ -222,21 +223,21 @@ final class HomeViewController: UIViewController {
             resetButton.isSelected = true
         }.disposed(by: disposeBag)
         
-        dateFilterButton.menuButtonSubject
-            .observe(on: MainScheduler.instance)
-            .subscribe { [weak self] button in
-                guard let self else { return }
-                if let button {
-                    resetButton.isSelected = false
-                    dateFilterButton.isSelected = true
-                    filterRequest.date = button
-                    saveFilterRequestToUserDefaults(filterRequest: filterRequest)
-                    getFilterRequestFromUserDefaults()
-                    loadRecruitList.onNext(filterRequest)
-                } else {
-                    dateFilterButton.isSelected = false
-                }
-            }.disposed(by: disposeBag)
+//        dateFilterButton.menuButtonSubject
+//            .observe(on: MainScheduler.instance)
+//            .subscribe { [weak self] button in
+//                guard let self else { return }
+//                if let button {
+//                    resetButton.isSelected = false
+//                    dateFilterButton.isSelected = true
+//                    filterRequest.date = button
+//                    saveFilterRequestToUserDefaults(filterRequest: filterRequest)
+//                    getFilterRequestFromUserDefaults()
+//                    loadRecruitList.onNext(filterRequest)
+//                } else {
+//                    dateFilterButton.isSelected = false
+//                }
+//            }.disposed(by: disposeBag)
         
         regionFilterButton.menuButtonSubject
             .observe(on: MainScheduler.instance)
