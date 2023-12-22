@@ -11,13 +11,13 @@ import RxSwift
 
 final class DetailViewModel {
     
-//    struct Input {
-//        let invokedViewWillAppear: Observable<Void>
-//    }
-//    
-//    struct Output {
-//        let recruitItem: Observable<Recruit>
-//    }
+    //    struct Input {
+    //        let invokedViewWillAppear: Observable<Void>
+    //    }
+    //
+    //    struct Output {
+    //        let recruitItem: Observable<Recruit>
+    //    }
     
     // MARK: - Properties
     
@@ -40,18 +40,15 @@ final class DetailViewModel {
     
     // MARK: - Helpers
     
-//    func transform(_ input: Input) -> Output {
-//        let output = Output(recruitItem: recruitItem)
-//        return output
-//    }
+    //    func transform(_ input: Input) -> Output {
+    //        let output = Output(recruitItem: recruitItem)
+    //        return output
+    //    }
     
     private func fetchUser() {
         guard let recruitUserId = getRecruit()?.userID else { return }
-        print("recruitUserId", recruitUserId)
         FirebaseAPI.shared.fetchUser(uid: recruitUserId) { [weak self] user in
-            print("self?")
             guard let self = self else { return }
-            print("user", user)
             self.recruitUser.onNext(user)
         }
     }
@@ -69,7 +66,7 @@ final class DetailViewModel {
             }
         }
     }
-        
+    
     func checkChannelAndPushChatViewController() {
         guard let currentUser = getCurrentUser(),
               let recruitUser = try? recruitUser.value(),
@@ -105,12 +102,26 @@ final class DetailViewModel {
         user.bookmarkedRecruit.removeAll { id in
             recruit.id == id
         }
-
+        
         FirebaseAPI.shared.updateUser(user) { error in
             guard error == nil else { return }
             completion()
         }
     }
+    
+    func sendRecruitApplicant() {
+        guard let recruit = getRecruit(),
+              let user = getCurrentUser() else { return }
+        FirebaseAPI.shared.appendPendingApplicant(recruitID: recruit.id, userID: user.id) { [weak self] error in
+            if let error = error {
+                print("DEBUG - Error: \(error.localizedDescription)", #function)
+                return
+            }
+            self?.fetchRecruit()
+        }
+    }
+    
+    
     
     func showLoginView() {
         coordinator?.presentLoginViewController()

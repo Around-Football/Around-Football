@@ -345,20 +345,25 @@ extension FirebaseAPI {
     }
     
     //유저 추가
-    func appendPendingApplicant(recruitID: String) {
+    func appendPendingApplicant(recruitID: String, userID: String, completion: @escaping((Error?) -> Void )) {
         REF_RECRUIT.document(recruitID).getDocument { snapshot, error in
-            if error != nil {
-                print("ppendingApplicantUID 추가 오류")
+            if let error = error {
+                completion(error)
+                return
             }
             
             guard
                 var data = snapshot?.data(),
                 var pendingApplicants = data["pendingApplicantsUID"] as? [String?]
-            else { return }
+            else {
+                completion(NSError(domain: "Parsing Error", code: -1))
+                return
+            }
             
-            pendingApplicants.append(Auth.auth().currentUser?.uid)
+            pendingApplicants.append(userID)
             data.updateValue(pendingApplicants, forKey: "pendingApplicantsUID")
-            REF_RECRUIT.document(recruitID).updateData(data)
+            let ref = REF_RECRUIT.document(recruitID)
+            self.updateRefData(ref: ref, data: data, completion: completion)
         }
     }
     

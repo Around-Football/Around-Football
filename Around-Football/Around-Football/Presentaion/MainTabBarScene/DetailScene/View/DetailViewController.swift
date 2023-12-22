@@ -124,20 +124,30 @@ final class DetailViewController: UIViewController {
                 string: "신청 현황 보기",
                 attributes: [.font: AFFont.titleSmall as Any]
             )
+            sendRecruitButton.isEnabled = true
             sendRecruitButton.setAttributedTitle(title, for: .normal)
             //메세지 보내기 버튼 없애기
             sendMessageButton.isHidden = true
             bookMarkButton.isHidden = true
         } else {
-            let title = NSAttributedString(
-                string: "신청하기",
-                attributes: [.font: AFFont.titleSmall as Any]
-            )
-            sendRecruitButton.setAttributedTitle(title, for: .normal)
-            //메세지 보내기 버튼 원위치
-            sendMessageButton.isHidden = false
-            bookMarkButton.isHidden = false
+            setSendRecruitButtonUI()
         }
+    }
+    
+    private func setSendRecruitButtonUI() {
+        guard let recruit = viewModel.getRecruit(),
+              let currentUser = viewModel.getCurrentUser() else { return }
+        let isApplicanted = recruit.pendingApplicantsUID.contains(currentUser.id)
+        let title = NSAttributedString(
+            string: isApplicanted ? "신청완료" : "신청하기",
+            attributes: [.font: AFFont.titleSmall as Any]
+        )
+        
+        sendRecruitButton.isEnabled = !isApplicanted
+        sendRecruitButton.setAttributedTitle(title, for: .normal)
+        //메세지 보내기 버튼 원위치
+        sendMessageButton.isHidden = false
+        bookMarkButton.isHidden = false
     }
     
     private func configureTypeLabel() {
@@ -298,7 +308,7 @@ final class DetailViewController: UIViewController {
         viewModel.recruitItem
             .bind(onNext: { [weak self] recruit in
                 guard let self = self else { return }
-                // TODO: - Recruit 정보 변경된거 반영 (일정)
+                setButtonUI()
                 dateLabel.text = recruit.matchDayString
                 groundLabel.text = recruit.fieldName
                 detailView.setValues(recruit: recruit)
@@ -312,12 +322,20 @@ final class DetailViewController: UIViewController {
             .bind { [weak self] _ in
                 guard let self = self,
                       let recruit = viewModel.getRecruit() else { return }
-                //TODO: -메세지 버튼 타이틀 분기처리 (작성자 or 신청자)
-                ///글쓴이면 신청현황 보기, 아니면 신청한 UID에 추가
+                
+                guard viewModel.getCurrentUser() != nil else {
+                    viewModel.showLoginView()
+                    return
+                }
+                
                 if viewModel.getCurrentUser()?.id == recruit.userID {
                     viewModel.showApplicationStatusView(recruit: recruit)
                 } else {
-                    FirebaseAPI.shared.appendPendingApplicant(recruitID: recruit.id)
+                    showPopUp(title: PopUpViewController.matchAlertTitle,
+                              message: PopUpViewController.matchAlertMessage,
+                              leftActionTitle: "취소",
+                              rightActionTitle: "신청",
+                              rightActionCompletion: viewModel.sendRecruitApplicant)
                 }
             }
             .disposed(by: disposeBag)
@@ -325,7 +343,7 @@ final class DetailViewController: UIViewController {
         sendMessageButton.rx.tap
             .bind { [weak self] _ in
                 guard let self = self else { return }
-                if (try? UserService.shared.currentUser_Rx.value()) != nil {
+                if viewModel.getCurrentUser() != nil {
                     viewModel.checkChannelAndPushChatViewController()
                 } else {
                     viewModel.showLoginView()
