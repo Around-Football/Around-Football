@@ -18,11 +18,7 @@ class PopUpViewController: UIViewController {
     private var messageText: String?
     private var attributedMessageText: NSAttributedString?
     private var contentView: UIView?
-    
-    private let visualEffectView = UIVisualEffectView().then {
-        $0.effect = UIBlurEffect(style: .dark)
-    }
-    
+        
     private lazy var containerView = UIView().then {
         $0.backgroundColor = .white
         $0.layer.cornerRadius = 8
@@ -98,13 +94,14 @@ class PopUpViewController: UIViewController {
         addSubviews()
         makeConstraints()
         self.view.alpha = 0
+        self.view.backgroundColor = .black.withAlphaComponent(0)
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         UIView.animate(withDuration: 0.5) {
             self.view.alpha = 1
-            self.visualEffectView.alpha = 1
+            self.view.backgroundColor = .black.withAlphaComponent(0.7)
         }
     }
     
@@ -138,8 +135,6 @@ class PopUpViewController: UIViewController {
     }
     
     private func setupViews() {
-        visualEffectView.frame = view.frame
-        view.addSubview(visualEffectView)
         view.addSubview(containerView)
         containerView.addSubview(containerStackView)
     }
@@ -197,4 +192,12 @@ class PopUpViewController: UIViewController {
 extension PopUpViewController {
     static let matchAlertTitle = "매치 신청 확인"
     static let matchAlertMessage = "매치 신청 이후 취소를 원하시면 작성자에게 채팅하기를 통해 문의해주세요!"
+    
+    override func dismiss(animated flag: Bool, completion: (() -> Void)? = nil) {
+        UIView.animate(withDuration: 0.5, animations: {
+            self.view.alpha = 0
+        }, completion: { _ in
+            super.dismiss(animated: false, completion: completion)
+        })
+    }
 }
