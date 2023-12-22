@@ -91,6 +91,7 @@ class PopUpViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupViews()
+        setupShadow()
         addSubviews()
         makeConstraints()
         self.view.alpha = 0
@@ -137,6 +138,16 @@ class PopUpViewController: UIViewController {
     private func setupViews() {
         view.addSubview(containerView)
         containerView.addSubview(containerStackView)
+    }
+    
+    private func setupShadow() {
+        containerView.layer.borderWidth = 1
+        containerView.layer.borderColor = UIColor.clear.cgColor
+        containerView.layer.masksToBounds = false
+        containerView.layer.shadowColor = UIColor.black.cgColor
+        containerView.layer.shadowOffset = CGSize(width: 0, height: 4)
+        containerView.layer.shadowOpacity = 0.25
+        containerView.layer.shadowRadius = 4.0
     }
     
     private func addSubviews() {
