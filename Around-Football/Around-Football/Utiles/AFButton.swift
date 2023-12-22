@@ -51,6 +51,7 @@ final class AFButton: UIButton {
         setTitleColor(color == AFColor.primary ? AFColor.secondary : .white, for: .normal)
         setTitleColor(AFColor.grayScale300, for: .disabled)
         setBackgroundColor(AFColor.grayScale100, for: .disabled)
+        titleLabel?.font = AFFont.button
     }
 }
 
@@ -267,3 +268,12 @@ final class AFRoundMenuButton: UIButton {
     }
 }
 
+extension AFButton {
+    
+    func setDisabledButtonStyle() {
+        self.isEnabled = false
+        self.tintColor = AFColor.grayScale300
+        self.backgroundColor = AFColor.grayScale100
+    }
+
+}

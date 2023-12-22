@@ -120,12 +120,9 @@ final class DetailViewController: UIViewController {
     //유저에 따라 신청버튼 타이틀 설정
     private func setButtonUI() {
         if viewModel.isOwnRecruit() {
-            let title = NSAttributedString(
-                string: "신청 현황 보기",
-                attributes: [.font: AFFont.titleSmall as Any]
-            )
+            let title = "신청 현황 보기"
             sendRecruitButton.isEnabled = true
-            sendRecruitButton.setAttributedTitle(title, for: .normal)
+            sendRecruitButton.setTitle(title, for: .normal)
             //메세지 보내기 버튼 없애기
             sendMessageButton.isHidden = true
             bookMarkButton.isHidden = true
@@ -138,13 +135,9 @@ final class DetailViewController: UIViewController {
         guard let recruit = viewModel.getRecruit(),
               let currentUser = viewModel.getCurrentUser() else { return }
         let isApplicanted = recruit.pendingApplicantsUID.contains(currentUser.id)
-        let title = NSAttributedString(
-            string: isApplicanted ? "신청완료" : "신청하기",
-            attributes: [.font: AFFont.titleSmall as Any]
-        )
-        
+        let title = isApplicanted ? "신청완료": "신청하기"
+        sendRecruitButton.setTitle(title, for: .normal)
         sendRecruitButton.isEnabled = !isApplicanted
-        sendRecruitButton.setAttributedTitle(title, for: .normal)
         //메세지 보내기 버튼 원위치
         sendMessageButton.isHidden = false
         bookMarkButton.isHidden = false
