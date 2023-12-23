@@ -23,7 +23,6 @@ enum FilterRequest: String {
 }
 
 struct RecruitFilter {
-//    var date: String?
     var region: String?
     var type: String?
     var gender: String?
@@ -131,12 +130,10 @@ final class HomeViewController: UIViewController {
     
     @objc
     private func resetButtonTapped() {
-        //        dateFilterButton.isSelected = false
         regionFilterButton.isSelected = false
         typeFilterButton.isSelected = false
         genderFilterButton.isSelected = false
         
-        //        dateFilterButton.setTitle("날짜 선택", for: .normal)
         regionFilterButton.setTitle("모든 지역", for: .normal)
         typeFilterButton.setTitle("매치 유형", for: .normal)
         genderFilterButton.setTitle("성별 무관", for: .normal)
@@ -224,22 +221,6 @@ final class HomeViewController: UIViewController {
             resetButtonTapped()
             resetButton.isSelected = true
         }.disposed(by: disposeBag)
-        
-//        dateFilterButton.menuButtonSubject
-//            .observe(on: MainScheduler.instance)
-//            .subscribe { [weak self] button in
-//                guard let self else { return }
-//                if let button {
-//                    resetButton.isSelected = false
-//                    dateFilterButton.isSelected = true
-//                    filterRequest.date = button
-//                    saveFilterRequestToUserDefaults(filterRequest: filterRequest)
-//                    getFilterRequestFromUserDefaults()
-//                    loadRecruitList.onNext(filterRequest)
-//                } else {
-//                    dateFilterButton.isSelected = false
-//                }
-//            }.disposed(by: disposeBag)
         
         regionFilterButton.menuButtonSubject
             .observe(on: MainScheduler.instance)
