@@ -29,7 +29,7 @@ final class HomeTableViewCell: UITableViewCell {
     private lazy var fieldImageView = UIImageView(image: defaultFieldImage)
     
     private var typeLabel = UILabel().then {
-        $0.text = "Field Address"
+        $0.text = "축구"
         $0.textColor = AFColor.white
         $0.font = AFFont.filterMedium
         $0.textAlignment = .center
@@ -157,8 +157,15 @@ final class HomeTableViewCell: UITableViewCell {
         //북마크 버튼 바인딩
         setBookmarkBinding(fieldID: item.fieldID)
         //UI정보 바인딩
-        typeLabel.text = item.type
-        typeLabel.backgroundColor = item.type == "축구" ? AFColor.soccor : AFColor.futsal
+
+        if item.acceptedApplicantsUID.count == item.recruitedPeopleCount {
+            typeLabel.text = "마감"
+            typeLabel.backgroundColor = AFColor.grayScale200
+        } else {
+            typeLabel.text = item.type
+            typeLabel.backgroundColor = item.type == "축구" ? AFColor.soccor : AFColor.futsal
+        }
+
         dateLabel.text = formattedCellDate
         fieldLabel.text = "\(item.fieldName)"
         recruitLabel.text = " \(item.acceptedApplicantsUID.count) / \(item.recruitedPeopleCount)명 모집"
