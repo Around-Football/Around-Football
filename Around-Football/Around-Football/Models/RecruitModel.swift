@@ -22,8 +22,8 @@ struct Recruit: Codable, Identifiable {
     var title: String
     var content: String //작성내용
     var matchDate: Timestamp //날짜만, String으로 일단 수정
-    var startTime: String? //시작시간
-    var endTime: String? // 종료시간
+    var startTime: String //시작시간
+    var endTime: String // 종료시간
     var pendingApplicantsUID: [String?] //신청한 사람들 uid
     var acceptedApplicantsUID: [String?] //승인한 사람들 uid
     var matchDayString: String {

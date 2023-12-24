@@ -85,6 +85,7 @@
 		66BD8DB82B3174850094C78B /* ChatCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66BD8DB72B3174850094C78B /* ChatCoordinator.swift */; };
 		66C374362B0B010800DB2C2A /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = 66C374352B0B010800DB2C2A /* FirebaseMessaging */; };
 		66C5AFA92B3861D200A95460 /* DetailViewController+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66C5AFA82B3861D200A95460 /* DetailViewController+.swift */; };
+		66C5AFAE2B38AC9000A95460 /* ApplicationListHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66C5AFAD2B38AC9000A95460 /* ApplicationListHeaderView.swift */; };
 		7929A30F2ADE4B45006ED4FA /* InputInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7929A30E2ADE4B45006ED4FA /* InputInfoViewController.swift */; };
 		7929A3112ADEAD35006ED4FA /* InputInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7929A3102ADEAD35006ED4FA /* InputInfoView.swift */; };
 		7929A3132ADEB319006ED4FA /* InputInfoViewController+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7929A3122ADEB319006ED4FA /* InputInfoViewController+.swift */; };
@@ -212,6 +213,7 @@
 		66BD86E42AE646CB00B1B256 /* FieldDetailViewController+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FieldDetailViewController+.swift"; sourceTree = "<group>"; };
 		66BD8DB72B3174850094C78B /* ChatCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatCoordinator.swift; sourceTree = "<group>"; };
 		66C5AFA82B3861D200A95460 /* DetailViewController+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DetailViewController+.swift"; sourceTree = "<group>"; };
+		66C5AFAD2B38AC9000A95460 /* ApplicationListHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplicationListHeaderView.swift; sourceTree = "<group>"; };
 		7929A30E2ADE4B45006ED4FA /* InputInfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputInfoViewController.swift; sourceTree = "<group>"; };
 		7929A3102ADEAD35006ED4FA /* InputInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputInfoView.swift; sourceTree = "<group>"; };
 		7929A3122ADEB319006ED4FA /* InputInfoViewController+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "InputInfoViewController+.swift"; sourceTree = "<group>"; };
@@ -793,6 +795,7 @@
 			children = (
 				7929A3172ADFECD9006ED4FA /* ApplicantListViewController.swift */,
 				7929A31C2ADFFB15006ED4FA /* ApplicationStatusViewController+.swift */,
+				66C5AFAD2B38AC9000A95460 /* ApplicationListHeaderView.swift */,
 				7929A3192ADFED07006ED4FA /* ApplicantListTableViewCell.swift */,
 			);
 			path = View;
@@ -993,6 +996,7 @@
 				66656F9D2AD9219F00AE1AFA /* FieldDetailViewController.swift in Sources */,
 				668EE4C12B050305007A8844 /* ImageMessageViewController.swift in Sources */,
 				7C0684B92B2E20A60052F9A6 /* UIButton+.swift in Sources */,
+				66C5AFAE2B38AC9000A95460 /* ApplicationListHeaderView.swift in Sources */,
 				668EE4B42AFF552F007A8844 /* ChannelAPI.swift in Sources */,
 				667ABD672B1EBEE700142940 /* AppDelegate+.swift in Sources */,
 				7C322F122B304C6900D7897B /* AFIcon.swift in Sources */,

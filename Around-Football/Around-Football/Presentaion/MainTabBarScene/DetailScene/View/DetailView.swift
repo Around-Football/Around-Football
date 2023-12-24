@@ -11,76 +11,76 @@ final class DetailView: UIView {
     
     // MARK: - Properties
     
-    private var matchTimeTitleLabel = UILabel().then {
+    private let matchTimeTitleLabel = UILabel().then {
         $0.text = "시간"
         $0.font = AFFont.titleCard
         $0.textColor = AFColor.secondary
     }
     
-    private var matchTimeLabel = UILabel().then {
+    private let matchTimeLabel = UILabel().then {
         $0.text = "20:00 - 22:00"
         $0.font = AFFont.text
         $0.textColor = AFColor.secondary
     }
     
-    private var groundAddressTitleLabel = UILabel().then {
+    private let groundAddressTitleLabel = UILabel().then {
         $0.text = "주소"
         $0.font = AFFont.titleCard
         $0.textColor = AFColor.secondary
     }
     
-    private var groundAddressLabel = UILabel().then {
+    private let groundAddressLabel = UILabel().then {
         $0.text = "경기도 안산시 단원구 고잔동 707-2"
         $0.font = AFFont.text
         $0.textColor = AFColor.secondary
     }
     
-    private var recruitingTitleLabel = UILabel().then {
+    private let recruitingTitleLabel = UILabel().then {
         $0.text = "모집인원"
         $0.font = AFFont.titleCard
         $0.textColor = AFColor.secondary
     }
     
-    private var recruitingLabel = UILabel().then {
+    private let recruitingLabel = UILabel().then {
         $0.text = "0/2명"
         $0.font = AFFont.text
         $0.textColor = AFColor.secondary
         $0.numberOfLines = 0
     }
     
-    private var genderTitleLabel = UILabel().then {
+    private let genderTitleLabel = UILabel().then {
         $0.text = "성별"
         $0.font = AFFont.titleCard
         $0.textColor = AFColor.secondary
     }
     
-    private var genderLabel = UILabel().then {
+    private let genderLabel = UILabel().then {
         $0.text = "남성"
         $0.font = AFFont.text
         $0.textColor = AFColor.secondary
         $0.numberOfLines = 0
     }
     
-    private var gamePriceTitleLabel = UILabel().then {
+    private let gamePriceTitleLabel = UILabel().then {
         $0.text = "게임비"
         $0.font = AFFont.titleCard
         $0.textColor = AFColor.secondary
     }
     
-    private var gamePriceLabel = UILabel().then {
+    private let gamePriceLabel = UILabel().then {
         $0.text = "10,000원"
         $0.font = AFFont.text
         $0.textColor = AFColor.secondary
         $0.numberOfLines = 0
     }
     
-    private var contentTitleLabel = UILabel().then {
+    private let contentTitleLabel = UILabel().then {
         $0.text = "상세내용"
         $0.font = AFFont.titleCard
         $0.textColor = AFColor.secondary
     }
     
-    private var contentLabel = UILabel().then {
+    private let contentLabel = UILabel().then {
         $0.text = "실력 상관 없습니다!"
         $0.font = AFFont.text
         $0.textColor = AFColor.secondary
@@ -155,7 +155,7 @@ final class DetailView: UIView {
     // MARK: - Helpers
         
     func setValues(recruit: Recruit) {
-        matchTimeLabel.text = "\(recruit.startTime ?? "00:00") - \(recruit.endTime ?? "00:00")"
+        matchTimeLabel.text = "\(recruit.startTime) - \(recruit.endTime)"
         groundAddressLabel.text = recruit.fieldAddress
         // TODO: - item에 추가되면 설정
         //        genderLabel.text = item.gender
