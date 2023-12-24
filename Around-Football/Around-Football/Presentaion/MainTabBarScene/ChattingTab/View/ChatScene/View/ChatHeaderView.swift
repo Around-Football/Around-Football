@@ -117,7 +117,6 @@ class ChatHeaderView: UIView {
             recruitInfoStack.snp.makeConstraints {
                 $0.leading.equalTo(imageView.snp.trailing).offset(16)
                 $0.centerY.equalToSuperview()
-//                $0.top.equalToSuperview()
             }
             
             typeLabel.snp.makeConstraints {

@@ -22,6 +22,8 @@ final class ApplicantListViewController: UIViewController {
     let acceptButtonTappedSubject = PublishSubject<(String, String)>()
     let rejectButtonTappedSubject = PublishSubject<(String, String)>()
     
+    private let headerView = ApplicationListHeaderView()
+    
     private lazy var tableView = UITableView().then {
         $0.register(ApplicantListTableViewCell.self, forCellReuseIdentifier: ApplicantListTableViewCell.cellID)
         $0.delegate = self
@@ -45,7 +47,7 @@ final class ApplicantListViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupTableViewConstraints()
+        configureUI()
 //        bind()
         invokedViewDidLoad.onNext(())
     }
@@ -72,10 +74,20 @@ final class ApplicantListViewController: UIViewController {
     
     // MARK: - Helpers
     
-    private func setupTableViewConstraints() {
-        view.addSubview(tableView)
+    private func configureUI() {
+        view.backgroundColor = .systemBackground
+        view.addSubviews(headerView,
+                         tableView)
+        headerView.snp.makeConstraints { make in
+            make.leading.equalToSuperview().offset(20)
+            make.top.equalTo(view.safeAreaLayoutGuide).offset(20)
+            make.trailing.equalToSuperview().offset(-20)
+        }
+        
         tableView.snp.makeConstraints { make in
-            make.top.leading.bottom.trailing.equalTo(view)
+            make.leading.trailing.equalToSuperview()
+            make.top.equalTo(headerView.snp.bottom)
+            make.bottom.equalTo(view.safeAreaLayoutGuide)
         }
     }
 }

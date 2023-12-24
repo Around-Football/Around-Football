@@ -346,7 +346,7 @@ extension CalenderViewController: UICollectionViewDelegateFlowLayout, UICollecti
         if let date = Int(selectedCell.dateLabel.text ?? "") { //선택한 Date 저장
             selectedDateString = "\(yearAndMonth) \(date)일"
             self.selectedDate = stringToDate(dateString: selectedDateString, timePicker: nil)
-            print("날짜 선택됨: \(self.selectedDate)")
+            print("날짜 선택됨: \(String(describing: self.selectedDate))")
             print(selectedDateString as Any)
 //            print(selectedStartDate as Any)
         }

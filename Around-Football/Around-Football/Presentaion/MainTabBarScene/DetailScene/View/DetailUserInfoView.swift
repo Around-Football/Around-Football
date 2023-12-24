@@ -82,8 +82,6 @@ final class DetailUserInfoView: UIView {
     
     // MARK: - Helpers
     
-    //TODO: - 표시할 유저정보 정하고 바인딩하기
-    
     func setValues(user: User) {
         userNameLabel.text = user.userName
         userGenderLabel.text = user.gender

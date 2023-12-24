@@ -18,7 +18,7 @@ final class DetailViewController: UIViewController {
     // MARK: - Properties
     
     var viewModel: DetailViewModel
-    private var invokedViewWillAppear = PublishSubject<Void>()
+    private let invokedViewWillAppear = PublishSubject<Void>()
     var disposeBag = DisposeBag()
     
     let detailUserInfoView = DetailUserInfoView()
@@ -32,7 +32,7 @@ final class DetailViewController: UIViewController {
         $0.clipsToBounds = true
     }
     
-    var typeLabel = UILabel().then {
+    private let typeLabel = UILabel().then {
         $0.text = "풋살"
         $0.textColor = AFColor.white
         $0.font = AFFont.text
@@ -41,21 +41,17 @@ final class DetailViewController: UIViewController {
         $0.layer.masksToBounds = true
     }
     
-    let dateLabel = UILabel().then {
+    private let dateLabel = UILabel().then {
         $0.text = "12/15(금) 20:00"
         $0.textColor = AFColor.secondary
         $0.font = AFFont.titleMedium
     }
     
-    let groundLabel = UILabel().then {
+    private let groundLabel = UILabel().then {
         $0.text = "축구장 이름"
         $0.numberOfLines = 2
         $0.textColor = AFColor.secondary
         $0.font = AFFont.titleRegular
-    }
-    
-    private let groundIconView = UIImageView().then {
-        $0.image = UIImage(systemName: "mappin.and.ellipse")
     }
     
     private let contentDivider = UIView().then {
