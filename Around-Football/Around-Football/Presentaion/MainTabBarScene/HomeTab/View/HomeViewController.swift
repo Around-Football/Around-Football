@@ -281,8 +281,9 @@ final class HomeViewController: UIViewController {
             output.recruitList,
             oneLIneCalender.rootView.viewModel.selectedDateSubject.asObservable()
         )
-        .map { (recruits, selectedDateSet) in
+        .map { [weak self] (recruits, selectedDateSet) in
             if !selectedDateSet.isEmpty {
+                self?.resetButton.isSelected = false
                 return recruits.filter { recruit in
                     selectedDateSet.contains(recruit.matchDateString)
                 }
