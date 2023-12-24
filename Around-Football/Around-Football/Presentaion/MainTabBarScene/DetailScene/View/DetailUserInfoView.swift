@@ -44,30 +44,8 @@ final class DetailUserInfoView: UIView {
         $0.textColor = AFColor.grayScale300
         $0.font = AFFont.filterRegular
     }
-    
-//    private let mainUsedFeet = UILabel().then {
-//        $0.text = "주발"
-//        $0.textColor = AFColor.grayScale300
-//        $0.font = AFFont.filterRegular
-//    }
-//    
-//    private let userPosition = UILabel().then {
-//        $0.text = "포지션"
-//        $0.textColor = AFColor.grayScale300
-//        $0.font = AFFont.filterRegular
-//        $0.numberOfLines = 1
-//    }
-    
+        
     private lazy var userDetailInfoStackView = UIStackView().then { view in
-//        let subViews = [userGenderLabel,
-//                        createHDividerView(),
-//                        userAgeLabel,
-//                        createHDividerView(),
-//                        userArea,
-//                        createHDividerView(),
-//                        mainUsedFeet,
-//                        createHDividerView(),
-//                        userPosition]
         let subViews = [userGenderLabel,
                         createHDividerView(),
                         userAgeLabel,
@@ -111,8 +89,6 @@ final class DetailUserInfoView: UIView {
         userGenderLabel.text = user.gender
         userAgeLabel.text = String(user.age)
         userArea.text = user.area
-//        mainUsedFeet.text = user.mainUsedFeet
-//        userPosition.text = user.position.map { $0 }.joined(separator: " ")
     }
     
     private func configureUI() {

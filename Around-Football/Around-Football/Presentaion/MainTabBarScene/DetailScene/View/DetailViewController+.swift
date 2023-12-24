@@ -83,10 +83,15 @@ extension DetailViewController {
                 
                 let isHiddenBookmark = (recruitStatus == .ownRecruit) ? true : false
                 
+                // 비활성화 경우는 두 가지밖에 없고, close가 아닌 경우는 비활성화 상태시 나머지 경우로 처리(비활성화 아닌 경우는 정상 색상)
+                let disabledBackground = recruitStatus == .close ? AFColor.grayScale200 : AFColor.grayScale50
+                let disabledTitleColor = recruitStatus == .close ? UIColor.white : AFColor.grayScale300
                 owner.setButtonUI(isEnabledSendButton: isEnabledSendButton,
                                   sendButtonTitle: sendButtonTitle,
                                   isHiddenMessageButton: isHiddenMessageButton,
-                                  isHiddenBookmark: isHiddenBookmark)
+                                  isHiddenBookmark: isHiddenBookmark,
+                                  disabledBackground: disabledBackground,
+                                  disabledTitleColor: disabledTitleColor)
                 owner.configureBookmarkStyle()
             }
             .disposed(by: disposeBag)

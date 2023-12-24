@@ -91,7 +91,7 @@ final class AFSmallButton: UIButton {
 
     // MARK: - Lifecycles
     
-    init(buttonTitle: String, color: UIColor) {
+    init(buttonTitle: String, color: UIColor, font: UIFont? = AFFont.titleSmall) {
         super.init(frame: .zero)
         configureUI(buttonTitle: buttonTitle, color: color)
     }
@@ -105,7 +105,7 @@ final class AFSmallButton: UIButton {
     private func configureUI(buttonTitle: String, color: UIColor) {
         setTitle(buttonTitle, for: .normal)
         titleLabel?.font = AFFont.titleSmall
-        setTitleColor(color == AFColor.primary ? AFColor.secondary : .white, for: .normal)
+        setTitleColor(color == AFColor.secondary ? .white : AFColor.secondary, for: .normal)
         setTitleColor(AFColor.grayScale300, for: .disabled)
         setBackgroundColor(color, for: .normal)
         setBackgroundColor(AFColor.grayScale100, for: .disabled)

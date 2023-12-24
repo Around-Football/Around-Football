@@ -124,11 +124,17 @@ final class DetailViewController: UIViewController {
     func setButtonUI(isEnabledSendButton: Bool,
                      sendButtonTitle: String,
                      isHiddenMessageButton: Bool,
-                     isHiddenBookmark: Bool) {
+                     isHiddenBookmark: Bool,
+                     disabledBackground: UIColor,
+                     disabledTitleColor: UIColor) {
         sendRecruitButton.isEnabled = isEnabledSendButton
         sendRecruitButton.setTitle(sendButtonTitle, for: .normal)
         sendMessageButton.isHidden = isHiddenMessageButton
         bookMarkButton.isHidden = isHiddenBookmark
+        if !isEnabledSendButton {
+            sendRecruitButton.setBackgroundColor(disabledBackground, for: .disabled)
+            sendRecruitButton.setTitleColor(disabledTitleColor, for: .disabled)
+        }
     }
     
     func configureTypeLabel() {
@@ -179,8 +185,6 @@ final class DetailViewController: UIViewController {
                          bottomDivider,
                          bottomStackView)
         scrollView.addSubview(contentView)
-        scrollView.translatesAutoresizingMaskIntoConstraints = false
-        contentView.translatesAutoresizingMaskIntoConstraints = false
         contentView.addSubviews(mainImageView,
                                 typeLabel,
                                 dateLabel,
