@@ -32,6 +32,8 @@ final class LoginViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
+    private let backgroundView = UIImageView(image: UIImage(named: AFIcon.loginBackgroundImage))
+    
     private let logoImageView = UIImageView().then {
         $0.image = UIImage(named: "App_logo")
         $0.contentMode = .scaleAspectFit
@@ -131,8 +133,13 @@ final class LoginViewController: UIViewController {
     private func configureUI() {
         
         view.backgroundColor = .white
-        view.addSubviews(logoImageView,
+        view.addSubviews(backgroundView,
+                         logoImageView,
                          loginProviderStackView)
+        
+        backgroundView.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
         
         logoImageView.snp.makeConstraints { make in
             make.centerX.equalToSuperview()

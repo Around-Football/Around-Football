@@ -35,4 +35,7 @@ enum AFIcon {
     
     //button
     static let plusButton = "AFPlusButton"
+    
+    //background
+    static let loginBackgroundImage = "AFBackground"
 }
