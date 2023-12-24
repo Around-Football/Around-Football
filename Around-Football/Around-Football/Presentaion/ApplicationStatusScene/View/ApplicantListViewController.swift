@@ -22,8 +22,14 @@ final class ApplicantListViewController: UIViewController {
     let acceptButtonTappedSubject = PublishSubject<(String, String)>()
     let rejectButtonTappedSubject = PublishSubject<(String, String)>()
     
-    private let tableView = UITableView().then {
+    private lazy var tableView = UITableView().then {
         $0.register(ApplicantListTableViewCell.self, forCellReuseIdentifier: ApplicantListTableViewCell.cellID)
+        $0.delegate = self
+        $0.dataSource = self
+        $0.separatorInset = UIEdgeInsets().with({ edge in
+            edge.left = 0
+            edge.right = 0
+        })
     }
     
     // MARK: - Lifecycles
@@ -40,28 +46,28 @@ final class ApplicantListViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupTableViewConstraints()
-        bind()
+//        bind()
         invokedViewDidLoad.onNext(())
     }
     
     func bind() {
-        let input = ApplicantListViewModel.Input(loadApplicantList: invokedViewDidLoad,
-                                                 acceptButtonTapped: acceptButtonTappedSubject.asObservable(),
-                                                 rejectButtonTapped: rejectButtonTappedSubject.asObservable())
-        
-        let output = viewModel.transform(input)
-        
-        output
-            .applicantList
-            .bind(to: tableView.rx.items(cellIdentifier: ApplicantListTableViewCell.cellID,
-                                         cellType: ApplicantListTableViewCell.self)) { [weak self]  index, item, cell in
-                guard let self else { return }
-                cell.vc = self
-                cell.viewModel = viewModel
-                cell.uid = item
-                cell.bindUI(uid: item)
-            }
-            .disposed(by: disposeBag)
+//        let input = ApplicantListViewModel.Input(loadApplicantList: invokedViewDidLoad,
+//                                                 acceptButtonTapped: acceptButtonTappedSubject.asObservable(),
+//                                                 rejectButtonTapped: rejectButtonTappedSubject.asObservable())
+//        
+//        let output = viewModel.transform(input)
+//        
+//        output
+//            .applicantList
+//            .bind(to: tableView.rx.items(cellIdentifier: ApplicantListTableViewCell.cellID,
+//                                         cellType: ApplicantListTableViewCell.self)) { [weak self]  index, item, cell in
+//                guard let self else { return }
+//                cell.vc = self
+//                cell.viewModel = viewModel
+//                cell.uid = item
+//                cell.bindUI(uid: item)
+//            }
+//            .disposed(by: disposeBag)
     }
     
     // MARK: - Helpers
