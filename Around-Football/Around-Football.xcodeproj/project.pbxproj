@@ -84,6 +84,7 @@
 		66BD86E52AE646CB00B1B256 /* FieldDetailViewController+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66BD86E42AE646CB00B1B256 /* FieldDetailViewController+.swift */; };
 		66BD8DB82B3174850094C78B /* ChatCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66BD8DB72B3174850094C78B /* ChatCoordinator.swift */; };
 		66C374362B0B010800DB2C2A /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = 66C374352B0B010800DB2C2A /* FirebaseMessaging */; };
+		66C5AFA92B3861D200A95460 /* DetailViewController+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66C5AFA82B3861D200A95460 /* DetailViewController+.swift */; };
 		7929A30F2ADE4B45006ED4FA /* InputInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7929A30E2ADE4B45006ED4FA /* InputInfoViewController.swift */; };
 		7929A3112ADEAD35006ED4FA /* InputInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7929A3102ADEAD35006ED4FA /* InputInfoView.swift */; };
 		7929A3132ADEB319006ED4FA /* InputInfoViewController+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7929A3122ADEB319006ED4FA /* InputInfoViewController+.swift */; };
@@ -210,6 +211,7 @@
 		66A1CB202B302DD400F3E01E /* MessageViewController+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MessageViewController+.swift"; sourceTree = "<group>"; };
 		66BD86E42AE646CB00B1B256 /* FieldDetailViewController+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FieldDetailViewController+.swift"; sourceTree = "<group>"; };
 		66BD8DB72B3174850094C78B /* ChatCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatCoordinator.swift; sourceTree = "<group>"; };
+		66C5AFA82B3861D200A95460 /* DetailViewController+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DetailViewController+.swift"; sourceTree = "<group>"; };
 		7929A30E2ADE4B45006ED4FA /* InputInfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputInfoViewController.swift; sourceTree = "<group>"; };
 		7929A3102ADEAD35006ED4FA /* InputInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputInfoView.swift; sourceTree = "<group>"; };
 		7929A3122ADEB319006ED4FA /* InputInfoViewController+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "InputInfoViewController+.swift"; sourceTree = "<group>"; };
@@ -718,6 +720,7 @@
 				7CB21BA22AC94D36001D0058 /* DetailViewController.swift */,
 				7C33060E2B109E780042A815 /* DetailView.swift */,
 				7CB21BA42AC94EE4001D0058 /* DetailUserInfoView.swift */,
+				66C5AFA82B3861D200A95460 /* DetailViewController+.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -1061,6 +1064,7 @@
 				661D31B42B355403006CA8FF /* UIViewController+.swift in Sources */,
 				7CC619762AD448A90085DF90 /* InfoCell.swift in Sources */,
 				66A1CB1C2B2C128200F3E01E /* ChatViewController.swift in Sources */,
+				66C5AFA92B3861D200A95460 /* DetailViewController+.swift in Sources */,
 				7C2B1AE72AF4BCB40052EC64 /* ChatViewModel.swift in Sources */,
 				668EE4B82B01A60E007A8844 /* ChannelViewController+.swift in Sources */,
 				7929A3132ADEB319006ED4FA /* InputInfoViewController+.swift in Sources */,
