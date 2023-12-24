@@ -16,7 +16,6 @@ import SnapKit
 import Then
 
 enum FilterRequest: String {
-    case date = "dateKey"
     case region = "regionKey"
     case type = "typeKey"
     case gender = "genderKey"
