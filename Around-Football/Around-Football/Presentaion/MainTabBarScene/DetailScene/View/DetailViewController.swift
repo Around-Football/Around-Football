@@ -107,7 +107,6 @@ final class DetailViewController: UIViewController {
     
     override func viewWillDisappear(_ animated: Bool) {
         navigationItem.title = ""
-        navigationItem.titleView?.tintColor = .black
         navigationController?.navigationBar.titleTextAttributes = [
             NSAttributedString.Key.foregroundColor: UIColor.black
         ]

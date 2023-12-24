@@ -25,6 +25,8 @@ final class ApplicantListViewController: UIViewController {
     private let headerView = ApplicationListHeaderView()
     
     private lazy var tableView = UITableView().then {
+        $0.layer.borderWidth = 1.0
+        $0.layer.borderColor = AFColor.grayScale50.cgColor
         $0.register(ApplicantListTableViewCell.self, forCellReuseIdentifier: ApplicantListTableViewCell.cellID)
         $0.delegate = self
         $0.dataSource = self
@@ -52,6 +54,22 @@ final class ApplicantListViewController: UIViewController {
         invokedViewDidLoad.onNext(())
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        navigationController?.navigationBar.prefersLargeTitles = false
+        navigationItem.title = "신청 현황"
+        navigationController?.navigationBar.titleTextAttributes = [
+            NSAttributedString.Key.foregroundColor: AFColor.grayScale200
+        ]
+        navigationController?.navigationBar.tintColor = AFColor.grayScale200
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        navigationController?.navigationBar.titleTextAttributes = [
+            NSAttributedString.Key.foregroundColor: UIColor.black
+        ]
+        navigationController?.navigationBar.tintColor = UIColor.black
+    }
+    
     func bind() {
 //        let input = ApplicantListViewModel.Input(loadApplicantList: invokedViewDidLoad,
 //                                                 acceptButtonTapped: acceptButtonTappedSubject.asObservable(),
@@ -73,7 +91,7 @@ final class ApplicantListViewController: UIViewController {
     }
     
     // MARK: - Helpers
-    
+        
     private func configureUI() {
         view.backgroundColor = .systemBackground
         view.addSubviews(headerView,
@@ -85,9 +103,10 @@ final class ApplicantListViewController: UIViewController {
         }
         
         tableView.snp.makeConstraints { make in
+            make.top.equalTo(headerView.snp.bottom).offset(20)
             make.leading.trailing.equalToSuperview()
-            make.top.equalTo(headerView.snp.bottom)
-            make.bottom.equalTo(view.safeAreaLayoutGuide)
+//            make.bottom.equalTo(view.safeAreaLayoutGuide)
+            make.bottom.equalToSuperview()
         }
     }
 }
