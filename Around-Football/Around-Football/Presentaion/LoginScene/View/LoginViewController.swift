@@ -22,16 +22,7 @@ final class LoginViewController: UIViewController {
     
     private var viewModel: LoginViewModel?
     private var disposeBag = DisposeBag()
-    
-    init(viewModel: LoginViewModel?) {
-        self.viewModel = viewModel
-        super.init(nibName: nil, bundle: nil)
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
+    private let smallLogo = UIImageView(image: UIImage(named: AFIcon.smallLogo))
     private let backgroundView = UIImageView(image: UIImage(named: AFIcon.loginBackgroundImage))
     
     private let logoImageView = UIImageView().then {
@@ -39,55 +30,59 @@ final class LoginViewController: UIViewController {
         $0.contentMode = .scaleAspectFit
     }
     
-    private lazy var kakaoLoginButton = UIButton().then {
-        let image = UIImage(named: "KakaoLogin")
-        let imageView = UIImageView(image: image)
-        imageView.contentMode = .scaleAspectFit
-        $0.addSubview(imageView)
-        imageView.snp.makeConstraints { make in
-            make.edges.equalToSuperview()
-        }
-        $0.addTarget(self, action: #selector(kakaoLoginButtonTapped), for: .touchUpInside)
+    private let loginMent = UILabel().then {
+        $0.text = "내 주변 빠른 용병 찾기"
+        $0.font = AFFont.titleRegular
+        $0.textColor = AFColor.secondary
     }
     
     private lazy var appleLoginButton = UIButton().then {
-        let image = UIImage(named: "AppleLogin")
-        let imageView = UIImageView(image: image)
-        imageView.contentMode = .scaleAspectFit
-        $0.addSubview(imageView)
-        imageView.snp.makeConstraints { make in
-            make.edges.equalToSuperview()
-        }
+        $0.setImage(UIImage(named: AFIcon.appleLogin), for: .normal)
         $0.addTarget(self, action: #selector(appleLoginButtonTapped), for: .touchUpInside)
     }
     
     private lazy var googleLoginButton = UIButton().then {
-        let image = UIImage(named: "GoogleLogin")
-        let imageView = UIImageView(image: image)
-        imageView.contentMode = .scaleAspectFit
-        $0.addSubview(imageView)
-        imageView.snp.makeConstraints { make in
-            make.edges.equalToSuperview()
-        }
+        $0.setImage(UIImage(named: AFIcon.googleLogin), for: .normal)
         $0.addTarget(self, action: #selector(googleLoginButtonTapped), for: .touchUpInside)
     }
     
+    private lazy var kakaoLoginButton = UIButton().then {
+        $0.setImage(UIImage(named: AFIcon.kakaoLogin), for: .normal)
+        $0.addTarget(self, action: #selector(kakaoLoginButtonTapped), for: .touchUpInside)
+    }
+    
     private lazy var loginProviderStackView = UIStackView().then {
-        $0.axis = .horizontal
+        $0.axis = .vertical
         $0.distribution = .fillEqually
         $0.alignment = .center
-        $0.spacing = 20
-        $0.addArrangedSubviews(googleLoginButton,
-                               kakaoLoginButton,
-                               appleLoginButton)
+        $0.spacing = 15
+        $0.addArrangedSubviews(appleLoginButton,
+                               googleLoginButton,
+                               kakaoLoginButton)
+    }
+    
+    private lazy var closeButton = UIButton(type: .custom).then {
+        let image = UIImage(named: AFIcon.closeButton)
+        image?.withTintColor(AFColor.grayScale200, renderingMode: .alwaysTemplate)
+        $0.setImage(image, for: .normal)
+        $0.addTarget(self, action: #selector(closeButtonTapped), for: .touchUpInside)
     }
     
     // MARK: - Lifecycles
+    
+    init(viewModel: LoginViewModel?) {
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         configureUI()
         bindInputUserData()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
     
     // MARK: - Selectors
@@ -105,6 +100,11 @@ final class LoginViewController: UIViewController {
     @objc
     func appleLoginButtonTapped() {
         UserService.shared.appleSignIn()
+    }
+    
+    @objc
+    func closeButtonTapped() {
+        dismiss(animated: true)
     }
     
     // MARK: - Helpers
@@ -131,28 +131,43 @@ final class LoginViewController: UIViewController {
     }
     
     private func configureUI() {
-        
+        navigationItem.leftBarButtonItem = UIBarButtonItem(customView: closeButton)
         view.backgroundColor = .white
         view.addSubviews(backgroundView,
+                         smallLogo,
                          logoImageView,
+                         loginMent,
                          loginProviderStackView)
         
         backgroundView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
         
+        smallLogo.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            make.top.equalToSuperview().offset(125)
+            make.width.equalTo(40)
+            make.height.equalTo(50)
+        }
+        
         logoImageView.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.centerY.equalToSuperview().offset(-50)
-            make.width.equalToSuperview().multipliedBy(0.8)
+            make.top.equalTo(smallLogo.snp.bottom).offset(40)
+            make.leading.equalToSuperview().offset(58)
+            make.trailing.equalToSuperview().offset(-58)
+        }
+        
+        loginMent.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            make.top.equalTo(logoImageView.snp.bottom).offset(18)
         }
         
         loginProviderStackView.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.top.equalTo(logoImageView.snp.bottom).offset(50)
-            make.leading.equalToSuperview().offset(50)
-            make.trailing.equalToSuperview().offset(-50)
-            make.height.equalTo(60)
+            make.top.equalTo(loginMent.snp.bottom).offset(80)
+            make.leading.equalToSuperview().offset(20)
+            make.trailing.equalToSuperview().offset(-20)
+            make.height.equalTo(180)
         }
     }
 }
