@@ -11,13 +11,29 @@ import RxSwift
 
 final class DetailViewModel {
     
-    //    struct Input {
-    //        let invokedViewWillAppear: Observable<Void>
-    //    }
-    //
-    //    struct Output {
-    //        let recruitItem: Observable<Recruit>
-    //    }
+    enum RecruitStatus {
+        case close
+        case applied
+        case ownRecruit
+        case availableRecruit
+
+        var statusDescription: String {
+            switch self {
+            case .applied: return "신청 완료"
+            case .close: return "신청 마감"
+            case .availableRecruit: return "신청하기"
+            case .ownRecruit: return "신청 현황 보기"
+            }
+        }
+    }
+    
+        struct Input {
+            let invokedViewWillAppear: Observable<Void>
+        }
+    
+        struct Output {
+            let recruitStatus: Observable<(RecruitStatus)>
+        }
     
     // MARK: - Properties
     
@@ -25,9 +41,9 @@ final class DetailViewModel {
     private let channelAPI = ChannelAPI()
     let currentUser = UserService.shared.currentUser_Rx
     weak var coordinator: DetailCoordinator?
-    let recruitItem: BehaviorSubject<Recruit>
+    private let recruitItem: BehaviorSubject<Recruit>
     var recruitUser: BehaviorSubject<User?> = BehaviorSubject(value: nil)
-    var isSelectedBookmark: Bool?
+    var isSelectedBookmark: Bool = false
     
     // MARK: - Lifecycles
     
@@ -38,12 +54,7 @@ final class DetailViewModel {
         fetchRecruit()
     }
     
-    // MARK: - Helpers
-    
-    //    func transform(_ input: Input) -> Output {
-    //        let output = Output(recruitItem: recruitItem)
-    //        return output
-    //    }
+    // MARK: - API
     
     private func fetchUser() {
         guard let recruitUserId = getRecruit()?.userID else { return }
@@ -53,7 +64,7 @@ final class DetailViewModel {
         }
     }
     
-    func fetchRecruit() {
+    private func fetchRecruit() {
         guard let recruit = getRecruit() else { return }
         FirebaseAPI.shared.fetchRecruit(recruitID: recruit.id) { [weak self] recruit, error in
             guard let self = self else { return }
@@ -92,6 +103,7 @@ final class DetailViewModel {
         
         FirebaseAPI.shared.updateUser(user) { error in
             guard error == nil else { return }
+            self.isSelectedBookmark = true
             completion()
         }
     }
@@ -105,6 +117,8 @@ final class DetailViewModel {
         
         FirebaseAPI.shared.updateUser(user) { error in
             guard error == nil else { return }
+            self.isSelectedBookmark = false
+
             completion()
         }
     }
@@ -121,20 +135,32 @@ final class DetailViewModel {
         }
     }
     
+    // MARK: - Helpers
     
-    
-    func showLoginView() {
-        coordinator?.presentLoginViewController()
+    func transform(_ input: Input) -> Output {
+        let recruitStatus = emitButtonStyleCalculator(by: input.invokedViewWillAppear)
+        let output = Output(recruitStatus: recruitStatus)
+        return output
     }
     
-    func showApplicationStatusView(recruit: Recruit) {
-        coordinator?.pushApplicationStatusViewController(recruit: recruit)
-    }
-    
-    func isOwnRecruit() -> Bool {
-        guard let currentUser = try? currentUser.value(),
-              let recruit = try? recruitItem.value() else  { return false }
-        return currentUser.id == recruit.userID ? true : false
+    private func emitButtonStyleCalculator(by inputObserver: Observable<Void>) -> Observable<RecruitStatus> {
+        return Observable.combineLatest(inputObserver, currentUser, recruitItem)
+            .withUnretained(self)
+            .flatMapLatest { (owner, observers) -> Observable<RecruitStatus> in
+                guard let currentUser = observers.1,
+                      let recruitItem = owner.getRecruit() else { return Observable.just(.availableRecruit) }
+                if recruitItem.pendingApplicantsUID.contains(currentUser.id) {
+                    return Observable.just(.applied)
+                }
+                
+                if recruitItem.acceptedApplicantsUID.count == recruitItem.recruitedPeopleCount {
+                    return Observable.just(.close)
+                }
+                
+                if currentUser.id == recruitItem.userID { return Observable.just(.ownRecruit) }
+                
+                return Observable.just(.availableRecruit)
+            }
     }
     
     func getCurrentUser() -> User? {
@@ -143,6 +169,16 @@ final class DetailViewModel {
     
     func getRecruit() -> Recruit? {
         return try? recruitItem.value()
+    }
+    
+    // MARK: - Coordinator
+    func showLoginView() {
+        coordinator?.presentLoginViewController()
+    }
+    
+    func showApplicationStatusView() {
+        guard let recruit = getRecruit() else { return }
+        coordinator?.pushApplicationStatusViewController(recruit: recruit)
     }
 }
 

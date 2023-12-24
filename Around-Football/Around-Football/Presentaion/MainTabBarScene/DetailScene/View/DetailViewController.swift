@@ -19,10 +19,10 @@ final class DetailViewController: UIViewController {
     
     var viewModel: DetailViewModel
     private var invokedViewWillAppear = PublishSubject<Void>()
-    private var disposeBag = DisposeBag()
+    var disposeBag = DisposeBag()
     
-    private let detailUserInfoView = DetailUserInfoView()
-    private let detailView = DetailView()
+    let detailUserInfoView = DetailUserInfoView()
+    let detailView = DetailView()
     private let scrollView = UIScrollView()
     private let contentView = UIView()
     
@@ -32,7 +32,7 @@ final class DetailViewController: UIViewController {
         $0.clipsToBounds = true
     }
     
-    private var typeLabel = UILabel().then {
+    var typeLabel = UILabel().then {
         $0.text = "풋살"
         $0.textColor = AFColor.white
         $0.font = AFFont.text
@@ -41,13 +41,13 @@ final class DetailViewController: UIViewController {
         $0.layer.masksToBounds = true
     }
     
-    private let dateLabel = UILabel().then {
+    let dateLabel = UILabel().then {
         $0.text = "12/15(금) 20:00"
         $0.textColor = AFColor.secondary
         $0.font = AFFont.titleMedium
     }
     
-    private let groundLabel = UILabel().then {
+    let groundLabel = UILabel().then {
         $0.text = "축구장 이름"
         $0.numberOfLines = 2
         $0.textColor = AFColor.secondary
@@ -66,9 +66,9 @@ final class DetailViewController: UIViewController {
         $0.backgroundColor = AFColor.grayScale200
     }
     
-    private let sendMessageButton = AFSmallButton(buttonTitle: "채팅하기", color: AFColor.primary)
-    private let sendRecruitButton = AFButton(buttonTitle: "신청하기", color: AFColor.secondary)
-    private let bookMarkButton = UIButton().then {
+    let sendMessageButton = AFSmallButton(buttonTitle: "채팅하기", color: AFColor.secondary)
+    let sendRecruitButton = AFButton(buttonTitle: "신청하기", color: AFColor.primary)
+    let bookMarkButton = UIButton().then {
         $0.setImage(UIImage(named: "AFBookmark"), for: .normal)
     }
     
@@ -93,6 +93,9 @@ final class DetailViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         bind()
+        configureTypeLabel() // type 라벨 스타일 세팅
+        configureBookmarkStyle()
+        configureRecruitInfo()
         configeUI()
     }
     
@@ -118,39 +121,31 @@ final class DetailViewController: UIViewController {
     // MARK: - Helper
     
     //유저에 따라 신청버튼 타이틀 설정
-    private func setButtonUI() {
-        if viewModel.isOwnRecruit() {
-            let title = "신청 현황 보기"
-            sendRecruitButton.isEnabled = true
-            sendRecruitButton.setTitle(title, for: .normal)
-            //메세지 보내기 버튼 없애기
-            sendMessageButton.isHidden = true
-            bookMarkButton.isHidden = true
-        } else {
-            setSendRecruitButtonUI()
-        }
+    func setButtonUI(isEnabledSendButton: Bool,
+                     sendButtonTitle: String,
+                     isHiddenMessageButton: Bool,
+                     isHiddenBookmark: Bool) {
+        sendRecruitButton.isEnabled = isEnabledSendButton
+        sendRecruitButton.setTitle(sendButtonTitle, for: .normal)
+        sendMessageButton.isHidden = isHiddenMessageButton
+        bookMarkButton.isHidden = isHiddenBookmark
     }
     
-    private func setSendRecruitButtonUI() {
-        guard let recruit = viewModel.getRecruit(),
-              let currentUser = viewModel.getCurrentUser() else { return }
-        let isApplicanted = recruit.pendingApplicantsUID.contains(currentUser.id)
-        let title = isApplicanted ? "신청완료": "신청하기"
-        sendRecruitButton.setTitle(title, for: .normal)
-        sendRecruitButton.isEnabled = !isApplicanted
-        //메세지 보내기 버튼 원위치
-        sendMessageButton.isHidden = false
-        bookMarkButton.isHidden = false
-    }
-    
-    private func configureTypeLabel() {
+    func configureTypeLabel() {
         if let item = viewModel.getRecruit() {
             typeLabel.text = item.type
             typeLabel.backgroundColor = item.type == "축구" ? AFColor.soccor : AFColor.futsal
         }
     }
     
-    private func configureBookmarkStyle() {
+    private func configureRecruitInfo() {
+        guard let recruit = viewModel.getRecruit() else { return }
+        dateLabel.text = recruit.matchDayString
+        groundLabel.text = recruit.fieldName
+        detailView.setValues(recruit: recruit)
+    }
+    
+    func configureBookmarkStyle() {
         guard let user = viewModel.getCurrentUser(),
               let recruit = viewModel.getRecruit() else {
             setNormalBookmarkButton()
@@ -159,10 +154,6 @@ final class DetailViewController: UIViewController {
         
         viewModel.isSelectedBookmark = user.bookmarkedRecruit.contains(recruit.id)
         
-        setupBookmarkButton()
-    }
-    
-    private func setupBookmarkButton() {
         if viewModel.isSelectedBookmark == true {
             setSelectedBookmarkButton()
         } else {
@@ -170,21 +161,19 @@ final class DetailViewController: UIViewController {
         }
     }
     
-    func setSelectedBookmarkButton() {
+    private func setSelectedBookmarkButton() {
         UIView.transition(with: bookMarkButton, duration: 0.3, options: .transitionCrossDissolve) {
             self.bookMarkButton.setImage(UIImage(named: "AFBookmarkSelect"), for: .normal)
         }
     }
     
-    func setNormalBookmarkButton() {
+    private func setNormalBookmarkButton() {
         UIView.transition(with: bookMarkButton, duration: 0.3, options: .transitionCrossDissolve) {
             self.bookMarkButton.setImage(UIImage(named: "AFBookmark"), for: .normal)
         }
     }
     
     private func configeUI() {
-        configureTypeLabel() // type 라벨 스타일 세팅
-        configureBookmarkStyle()
         view.backgroundColor = .white
         view.addSubviews(scrollView,
                          bottomDivider,
@@ -289,102 +278,10 @@ final class DetailViewController: UIViewController {
     }
     
     private func bind() {
-//        let input = DetailViewModel.Input(invokedViewWillAppear: invokedViewWillAppear.asObserver())
-//        let output = viewModel.transform(input)
-        bindRecruitItem()
-        bindButton()
-        bindCurrentUser()
+        let input = DetailViewModel.Input(invokedViewWillAppear: invokedViewWillAppear)
+        let output = viewModel.transform(input)
+        bindButtonAction()
         bindRecruitUser()
-    }
-    
-    private func bindRecruitItem() {
-        viewModel.recruitItem
-            .bind(onNext: { [weak self] recruit in
-                guard let self = self else { return }
-                setButtonUI()
-                dateLabel.text = recruit.matchDayString
-                groundLabel.text = recruit.fieldName
-                detailView.setValues(recruit: recruit)
-            })
-            .disposed(by: disposeBag)
-    }
-    
-    private func bindButton() {
-        
-        sendRecruitButton.rx.tap
-            .bind { [weak self] _ in
-                guard let self = self,
-                      let recruit = viewModel.getRecruit() else { return }
-                
-                guard viewModel.getCurrentUser() != nil else {
-                    viewModel.showLoginView()
-                    return
-                }
-                
-                if viewModel.getCurrentUser()?.id == recruit.userID {
-                    viewModel.showApplicationStatusView(recruit: recruit)
-                } else {
-                    showPopUp(title: PopUpViewController.matchAlertTitle,
-                              message: PopUpViewController.matchAlertMessage,
-                              leftActionTitle: "취소",
-                              rightActionTitle: "신청",
-                              rightActionCompletion: viewModel.sendRecruitApplicant)
-                }
-            }
-            .disposed(by: disposeBag)
-        
-        sendMessageButton.rx.tap
-            .bind { [weak self] _ in
-                guard let self = self else { return }
-                if viewModel.getCurrentUser() != nil {
-                    viewModel.checkChannelAndPushChatViewController()
-                } else {
-                    viewModel.showLoginView()
-                }
-            }
-            .disposed(by: disposeBag)
-        
-        bookMarkButton.rx.tap
-            .withUnretained(self)
-            .bind { (owner, _) in
-                guard owner.viewModel.getCurrentUser() != nil else {
-                    owner.viewModel.showLoginView()
-                    return
-                }
-                
-                if owner.viewModel.isSelectedBookmark == true {
-                    owner.viewModel.removeBookmark() {
-                        owner.setNormalBookmarkButton()
-                        owner.viewModel.isSelectedBookmark = false
-                    }
-                    
-                } else {
-                    owner.viewModel.addBookmark() {
-                        owner.setSelectedBookmarkButton()
-                        owner.viewModel.isSelectedBookmark = true
-                    }
-                    
-                }
-            }
-            .disposed(by: disposeBag)
-    }
-    
-    private func bindCurrentUser() {
-        viewModel.currentUser
-            .bind { [weak self] user in
-                guard let self = self else { return }
-                setButtonUI()
-            }
-            .disposed(by: disposeBag)
-    }
-    
-    private func bindRecruitUser() {
-        viewModel.recruitUser
-            .bind { [weak self] user in
-                guard let self = self,
-                      let user = user else { return }
-                detailUserInfoView.setValues(user: user)
-            }
-            .disposed(by: disposeBag)
+        bindButtonStyle(by: output.recruitStatus)
     }
 }
