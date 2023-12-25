@@ -44,13 +44,27 @@ final class DetailUserInfoView: UIView {
         $0.textColor = AFColor.grayScale300
         $0.font = AFFont.filterRegular
     }
+    
+    private let userFoot = UILabel().then {
+        $0.text = ""
+        $0.textColor = AFColor.grayScale300
+        $0.font = AFFont.filterRegular
+    }
+    
+    private let userPosition = UILabel().then {
+        $0.text = ""
+        $0.textColor = AFColor.grayScale300
+        $0.font = AFFont.filterRegular
+    }
         
     private lazy var userDetailInfoStackView = UIStackView().then { view in
         let subViews = [userGenderLabel,
                         createHDividerView(),
                         userAgeLabel,
                         createHDividerView(),
-                        userArea]
+                        userFoot,
+                        createHDividerView(),
+                        userPosition]
         view.axis = .horizontal
         view.spacing = 5
         view.distribution = .fill
@@ -82,11 +96,20 @@ final class DetailUserInfoView: UIView {
     
     // MARK: - Helpers
     
-    func setValues(user: User) {
-        userNameLabel.text = user.userName
-        userGenderLabel.text = user.gender
-        userAgeLabel.text = String(user.age)
-        userArea.text = user.area
+    func setValues(user: User?, isSettingView: Bool = false) {
+        if user == nil {
+            userNameLabel.text = "로그인 해주세요"
+        } else {
+            userNameLabel.text = user?.userName
+            userGenderLabel.text = user?.gender
+            userAgeLabel.text = String(user?.age ?? "")
+            userArea.text = user?.area
+        }
+
+        if isSettingView {
+            userFoot.text = user?.mainUsedFeet
+            userPosition.text = user?.position.joined(separator: " ")
+        }
     }
     
     private func configureUI() {
