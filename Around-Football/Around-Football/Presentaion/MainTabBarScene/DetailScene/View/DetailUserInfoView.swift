@@ -78,7 +78,7 @@ final class DetailUserInfoView: UIView {
         $0.addArrangedSubviews(userNameLabel,
                                userDetailInfoStackView)
         $0.axis = .vertical
-        $0.spacing = 4
+        $0.spacing = 8
         $0.distribution = .fill
         $0.alignment = .leading
     }
@@ -99,7 +99,9 @@ final class DetailUserInfoView: UIView {
     func setValues(user: User?, isSettingView: Bool = false) {
         if user == nil {
             userNameLabel.text = "로그인 해주세요"
+            userDetailInfoStackView.isHidden = true
         } else {
+            userDetailInfoStackView.isHidden = false
             userNameLabel.text = user?.userName
             userGenderLabel.text = user?.gender
             userAgeLabel.text = String(user?.age ?? "")
@@ -125,7 +127,7 @@ final class DetailUserInfoView: UIView {
         
         userStackView.snp.makeConstraints { make in
             make.centerY.equalToSuperview()
-            make.leading.equalTo(profileImageView.snp.trailing).offset(10)
+            make.leading.equalTo(profileImageView.snp.trailing).offset(14)
         }
     }
     
