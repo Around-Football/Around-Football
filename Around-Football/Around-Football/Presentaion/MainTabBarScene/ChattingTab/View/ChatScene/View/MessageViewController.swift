@@ -17,10 +17,11 @@ import RxCocoa
 
 
 final class MessageViewController: MessagesViewController {
+    
     // MARK: - Properties
     
     let imageTransition = ImageTransition()
-    
+
     lazy var cameraBarButtonItem = InputBarButtonItem(type: .system).then {
         $0.tintColor = .black
         $0.image = UIImage(systemName: "camera")
@@ -45,21 +46,15 @@ final class MessageViewController: MessagesViewController {
         addCameraBarButtonToMessageInputBar()
     }
     
-    // override func viewWillAppear(_ animated: Bool) {
-    //     super.viewWillAppear(animated)
-    //     UITabBar.appearance()
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        addKeyboardNotifications()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+    }
 
-    //     invokedViewWillAppear.onNext(())
-    // }
-    
-    // override func viewWillDisappear(_ animated: Bool) {
-    //     invokedViewWillDisappear.onNext(())
-        //딥링크 네비게이션으로 왔을때만 네비게이션바 없애줌
-//        if viewModel.coordinator == nil {
-//            navigationController?.isNavigationBarHidden = true
-//        }
-    // }
-    
     // MARK: - Helpers
     
     private func configure() {
@@ -89,5 +84,4 @@ final class MessageViewController: MessagesViewController {
         messageInputBar.setLeftStackViewWidthConstant(to: 50, animated: false)
         messageInputBar.setStackViewItems([cameraBarButtonItem], forStack: .left, animated: false)
     }
-    
 }

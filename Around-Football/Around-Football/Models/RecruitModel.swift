@@ -21,12 +21,20 @@ struct Recruit: Codable, Identifiable {
     var gamePrice: String // 무료도 있을 수 있으니
     var title: String
     var content: String //작성내용
+    var matchDate: Timestamp //날짜만, String으로 일단 수정
+    var startTime: String //시작시간
+    var endTime: String // 종료시간
     var matchDateString: String //쿼리용 String
-    var matchDate: Timestamp? //cell에 표시용
-    var startTime: String? //시작시간
-    var endTime: String? // 종료시간
     var pendingApplicantsUID: [String?] //신청한 사람들 uid
     var acceptedApplicantsUID: [String?] //승인한 사람들 uid
+    var matchDayString: String {
+        let date = matchDate.dateValue()
+        let dateFormatter = DateFormatter()
+        dateFormatter.locale = Locale(identifier: "ko_KR")
+        dateFormatter.dateFormat = "MM/dd (E)"
+
+        return dateFormatter.string(from: date)
+    }
     
     static func convertToArray(documents: [[String: Any]]) -> [Recruit] {
         var array: [Recruit] = []

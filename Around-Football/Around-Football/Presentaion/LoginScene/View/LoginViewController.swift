@@ -110,24 +110,26 @@ final class LoginViewController: UIViewController {
     // MARK: - Helpers
     
     private func bindInputUserData() {
-        UserService.shared.checkUserInfoExist.subscribe(onNext: { [weak self] bool in
-            guard let self else { return }
-            if bool == true {
-                do {
-                    let name = try UserService.shared.currentUser_Rx.value()?.userName
-                    if name == nil || name == "" {
-                        print("유저 네임 없음. input뷰로 이동")
-                        viewModel?.coordinator?.pushInputInfoViewController()
-                    } else {
-                        print("유저 네임 있음. 로그인 완료")
-                        viewModel?.coordinator?.loginDone()
+        UserService.shared.checkUserInfoExist
+            .take(1)
+            .subscribe(onNext: { [weak self] bool in
+                guard let self else { return }
+                if bool == true {
+                    do {
+                        let name = try UserService.shared.currentUser_Rx.value()?.userName
+                        if name == nil || name == "" {
+                            print("유저 네임 없음. input뷰로 이동")
+                            viewModel?.coordinator?.pushInputInfoViewController()
+                        } else {
+                            print("유저 네임 있음. 로그인 완료")
+                            viewModel?.coordinator?.loginDone()
+                        }
+                    } catch {
+                        print("로그인 오류")
                     }
-                } catch {
-                    print("로그인 오류")
                 }
-            }
-        })
-        .disposed(by: disposeBag)
+            })
+            .disposed(by: disposeBag)
     }
     
     private func configureUI() {

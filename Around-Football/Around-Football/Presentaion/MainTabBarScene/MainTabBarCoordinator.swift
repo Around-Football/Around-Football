@@ -7,6 +7,8 @@
 
 import UIKit
 
+import RxSwift
+
 final class MainTabBarCoordinator: BaseCoordinator {
 
     var type: CoordinatorType = .mainTab
@@ -14,7 +16,8 @@ final class MainTabBarCoordinator: BaseCoordinator {
     var mapTabCoordinator = MapTabCoordinator()
     var chatTabCoordinator = ChatTabCoordinator()
     var infoTabCoordinator = InfoTabCoordinator()
-
+    let disposeBag = DisposeBag()
+    
     override func start() {
         showMainTabController()
     }
@@ -62,11 +65,19 @@ final class MainTabBarCoordinator: BaseCoordinator {
         guard let mainTabController = navigationController?.viewControllers.first as? MainTabController,
               let selectedCoordinator = childCoordinators.first(where: { $0 is ChatTabCoordinator }) as? ChatTabCoordinator,
               let navigationController = selectedCoordinator.navigationController else { return }
+            
         if navigationController.viewControllers.count > 1 {
             navigationController.viewControllers.removeSubrange(1...)
         }
         selectedCoordinator.deinitChildCoordinator()
         mainTabController.selectedIndex = 2
-        selectedCoordinator.pushChatView(channelInfo: channelInfo)
+        UserService.shared.currentUser_Rx
+            .compactMap { $0 }
+            .take(1)
+            .bind { _ in
+                selectedCoordinator.pushChatView(channelInfo: channelInfo)
+            }
+            .disposed(by: disposeBag)
+        
     }
 }

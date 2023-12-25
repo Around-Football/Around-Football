@@ -13,7 +13,7 @@ import RxSwift
 import RxCocoa
 
 class ChatViewController: UIViewController {
-    
+
     // MARK: - Properties
     let viewModel: ChatViewModel
     let tapGesture = UITapGestureRecognizer()
@@ -28,6 +28,10 @@ class ChatViewController: UIViewController {
     
     lazy var imageLoadingView = UIActivityIndicatorView(style: .large).then {
         $0.center = view.center
+    }
+    
+    lazy var containerView = UIView().then {
+        $0.frame = view.bounds
     }
     
     // Rx
@@ -46,10 +50,6 @@ class ChatViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
-    deinit {
-        
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         configure()
@@ -60,7 +60,6 @@ class ChatViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        UITabBar.appearance()
         viewModel.resetAlarmInformation()
         invokedViewWillAppear.onNext(())
     }
@@ -77,6 +76,7 @@ class ChatViewController: UIViewController {
         view.backgroundColor = .systemBackground
         navigationController?.navigationBar.prefersLargeTitles = false
         title = viewModel.channelInfo.withUserName
+
     }
     
     private func configureDelegate() {
@@ -94,8 +94,10 @@ class ChatViewController: UIViewController {
         view.addSubviews(
             imageLoadingView,
             chatHeaderView,
-            messageViewController.view
+            containerView
         )
+        containerView.addSubview(messageViewController.view)
+        
         messageViewController.didMove(toParent: self)
         
         chatHeaderView.snp.makeConstraints {
@@ -104,7 +106,7 @@ class ChatViewController: UIViewController {
             $0.height.equalTo(100)
         }
         
-        messageViewController.view.snp.makeConstraints {
+        containerView.snp.makeConstraints {
             $0.top.equalTo(chatHeaderView.snp.bottom)
             $0.leading.trailing.bottom.equalToSuperview()
         }

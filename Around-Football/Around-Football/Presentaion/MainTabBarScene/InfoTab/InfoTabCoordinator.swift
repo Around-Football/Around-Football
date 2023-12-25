@@ -47,7 +47,7 @@ final class InfoTabCoordinator: BaseCoordinator {
     
     // MARK: - 관심 글, 작성 글 ,신청 글 이동
     
-    func pushDetailCell(recruitItem: Recruit?) {
+    func pushDetailCell(recruitItem: Recruit) {
         let viewModel = DetailViewModel(coordinator: nil, recruitItem: recruitItem)
         let vc = DetailViewController(viewModel: viewModel)
         navigationController?.pushViewController(vc, animated: true)

@@ -15,6 +15,7 @@ final class DetailCoordinator: BaseCoordinator {
     func start(recruitItem: Recruit) {
         let viewModel = DetailViewModel(coordinator: self, recruitItem: recruitItem)
         let controller = DetailViewController(viewModel: viewModel)
+        controller.hidesBottomBarWhenPushed = true
         navigationController?.pushViewController(controller, animated: true)
     }
     
@@ -24,8 +25,7 @@ final class DetailCoordinator: BaseCoordinator {
     }
     
     func pushApplicationStatusViewController(recruit: Recruit) {
-        let viewModel = ApplicantListViewModel(coordinator: self)
-        viewModel.recruitItem = recruit
+        let viewModel = ApplicantListViewModel(coordinator: self, recruit: recruit)
         let controller = ApplicantListViewController(viewModel: viewModel)
         navigationController?.pushViewController(controller, animated: true)
     }
@@ -42,7 +42,7 @@ final class DetailCoordinator: BaseCoordinator {
     }
     
     func presentLoginViewController() {
-        let coordinator = LoginCoordinator()
+        let coordinator = LoginCoordinator(navigationController: navigationController)
         coordinator.start() //여기서 모달뷰로 만듬
         childCoordinators.append(coordinator)
     }

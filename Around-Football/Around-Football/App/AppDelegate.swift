@@ -41,7 +41,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         UITabBar.appearance().scrollEdgeAppearance = appearance
         //네비게이션 탭바 색상 검정색으로
         UINavigationBar.appearance().tintColor = .label
-        
+        UINavigationBar.appearance().titleTextAttributes = [NSAttributedString.Key.font: AFFont.titleCard as Any]
+
         return true
     }
     
