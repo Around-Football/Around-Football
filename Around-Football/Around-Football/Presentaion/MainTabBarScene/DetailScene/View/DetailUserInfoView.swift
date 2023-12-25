@@ -85,7 +85,7 @@ final class DetailUserInfoView: UIView {
     func setValues(user: User) {
         userNameLabel.text = user.userName
         userGenderLabel.text = user.gender
-        userAgeLabel.text = String(user.age) + "세"
+        userAgeLabel.text = String(user.age)
         userArea.text = user.area
     }
     
