@@ -33,6 +33,4 @@ final class FieldDetailViewModel {
             completion(recruits)
         }
     }
-    
-    
 }

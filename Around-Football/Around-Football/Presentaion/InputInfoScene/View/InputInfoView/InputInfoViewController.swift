@@ -43,7 +43,7 @@ final class InputInfoViewController: UIViewController {
         
         invokedViewWillAppear.onNext(()) //유저 데이터 요청
         bindUI()
-        bindRegionButton()
+        bindSubjectButton()
         bindNextButton()
         keyboardController()
         
@@ -80,8 +80,7 @@ final class InputInfoViewController: UIViewController {
     private func bindSubjectButton() {
         inputInfoView.regionFilterButton.menuButtonSubject.subscribe(onNext: { [weak self] region in
             guard let self else { return }
-            let area = region
-            viewModel?.area.accept(area)
+            viewModel?.area.accept(region)
             viewModel?.updateData()
         }).disposed(by: disposeBag)
         
@@ -105,7 +104,7 @@ final class InputInfoViewController: UIViewController {
                     !user.position.isEmpty
                 else { return false }
                 
-                return false
+                return true
             })
             .bind(onNext: { [weak self] bool in
                 guard let self else { return }
@@ -115,10 +114,6 @@ final class InputInfoViewController: UIViewController {
                 } else {
                     inputInfoView.nextButton.setTitle("모든 항목을 작성해주세요", for: .normal)
                     return inputInfoView.nextButton.isEnabled = false
-                } else {
-                    inputInfoView.nextButton.setTitle("작성 완료", for: .normal)
-                    inputInfoView.nextButton.setTitleColor(.white, for: .normal)
-                    return inputInfoView.nextButton.isEnabled = true
                 }
             }).disposed(by: disposeBag)
     }
@@ -137,14 +132,14 @@ final class InputInfoViewController: UIViewController {
         
         output?.userInfo
             .map { user in
-                String(user?.age ?? 0)
+                user?.age == "" ? "나이 선택" : user?.age
             }
-            .bind(to: inputInfoView.userAgeTextField.rx.text)
+            .bind(to: inputInfoView.ageFilterButton.rx.title())
             .disposed(by: disposeBag)
         
         output?.userInfo
             .map { user in
-                user?.area
+                user?.area == "" ? "지역 선택" : user?.area
             }
             .bind(to: inputInfoView.regionFilterButton.rx.title())
             .disposed(by: disposeBag)
@@ -386,16 +381,5 @@ final class InputInfoViewController: UIViewController {
             viewModel?.position.accept(Array(positionSet))
             viewModel?.updateData()
         }
-    }
-    
-    //TODO: - Keyboard 함수 Utiles로 정리
-    private func keyboardController() {
-        //화면 탭해서 키보드 내리기
-        let tapGesture = UITapGestureRecognizer(
-            target: self,
-            action: #selector(dismissKeyboard)
-        )
-        tapGesture.cancelsTouchesInView = false
-        view.addGestureRecognizer(tapGesture)
     }
 }

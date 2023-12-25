@@ -7,18 +7,7 @@
 
 import UIKit
 
-extension ApplicationStatusViewController: UITableViewDataSource {
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 5     // 임시값
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "ApplicationStatusTableViewCell", for: indexPath) as! ApplicationStatusTableViewCell
-       
-        cell.selectionStyle = .none
-        return cell
-    }
-}
+//TODO: - 파일 삭제
 
 extension ApplicantListViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
