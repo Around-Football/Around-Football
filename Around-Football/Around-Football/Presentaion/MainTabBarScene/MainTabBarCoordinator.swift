@@ -7,14 +7,16 @@
 
 import UIKit
 
-protocol MainTabBarCoordinatorDelegate {
-    func presentLoginViewController()
-}
+import RxSwift
 
 final class MainTabBarCoordinator: BaseCoordinator {
 
     var type: CoordinatorType = .mainTab
-    var delegate: MainTabBarCoordinatorDelegate?
+    var homeTabCoordinator = HomeTabCoordinator()
+    var mapTabCoordinator = MapTabCoordinator()
+    var chatTabCoordinator = ChatTabCoordinator()
+    var infoTabCoordinator = InfoTabCoordinator()
+    let disposeBag = DisposeBag()
     
     override func start() {
         showMainTabController()
@@ -27,19 +29,11 @@ final class MainTabBarCoordinator: BaseCoordinator {
     private func showMainTabController() {
         navigationController?.isNavigationBarHidden = true
         // MARK: - navigationController 내부에서 새로 만들어줌
-        let homeTabCoordinator = HomeTabCoordinator(navigationController: nil)
-        let mapTabCoordinator = MapTabCoordinator(navigationController: nil)
-        let chatTabCoordinator = ChatTabCoordinator(navigationController: nil)
-        let infoTabCoordinator = InfoTabCoordinator(navigationController: nil)
         
         childCoordinators.append(homeTabCoordinator)
         childCoordinators.append(mapTabCoordinator)
         childCoordinators.append(chatTabCoordinator)
         childCoordinators.append(infoTabCoordinator)
-        
-        homeTabCoordinator.delegate = self
-        infoTabCoordinator.delegate = self
-        chatTabCoordinator.delegate = self
         
         let homeViewController = homeTabCoordinator.makeHomeViewController()
         let mapViewController = mapTabCoordinator.makeMapViewController()
@@ -63,11 +57,27 @@ final class MainTabBarCoordinator: BaseCoordinator {
                                                      pages: [homeVC, mapVC, chatVC, infoVC])
         navigationController?.viewControllers = [mainTabBarController]
     }
+        
+    func pushToDetailView(recruit: Recruit) {
+    }
     
-    // HomeTabCoordinatorDelegate
-    func presentLoginViewController() {
-        delegate?.presentLoginViewController()
+    func handleChatDeepLink(channelInfo: ChannelInfo) {
+        guard let mainTabController = navigationController?.viewControllers.first as? MainTabController,
+              let selectedCoordinator = childCoordinators.first(where: { $0 is ChatTabCoordinator }) as? ChatTabCoordinator,
+              let navigationController = selectedCoordinator.navigationController else { return }
+            
+        if navigationController.viewControllers.count > 1 {
+            navigationController.viewControllers.removeSubrange(1...)
+        }
+        selectedCoordinator.deinitChildCoordinator()
+        mainTabController.selectedIndex = 2
+        UserService.shared.currentUser_Rx
+            .compactMap { $0 }
+            .take(1)
+            .bind { _ in
+                selectedCoordinator.pushChatView(channelInfo: channelInfo)
+            }
+            .disposed(by: disposeBag)
+        
     }
 }
-
-extension MainTabBarCoordinator: HomeTabCoordinatorDelegate, InfoTabCoordinatorDelegate, ChatTabCoordinatorDelegate  { }

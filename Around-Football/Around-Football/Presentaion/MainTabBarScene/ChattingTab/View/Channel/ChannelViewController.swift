@@ -22,11 +22,14 @@ final class ChannelViewController: UIViewController {
     let disposeBag = DisposeBag()
     
     private let invokedViewWillAppear = PublishSubject<Void>()
+    let invokedDeleteChannel = PublishSubject<IndexPath>()
     
     lazy var channelTableView = UITableView().then {
         $0.register(ChannelTableViewCell.self, forCellReuseIdentifier: ChannelTableViewCell.cellId)
         $0.delegate = self
     }
+    
+    let deleteChannelAlert = UIAlertController(title: .deleteChannel, message: .deleteChannel, preferredStyle: .alert)
     
     var channelTableViewDataSource: RxTableViewSectionedReloadDataSource<ChannelSectionModel>!
     
@@ -47,10 +50,6 @@ final class ChannelViewController: UIViewController {
         super.init(nibName: nil, bundle: nil)
         navigationController?.navigationBar.backgroundColor = .systemBackground
         title = "채팅"
-        
-        
-        print("\(String(describing: Auth.auth().currentUser?.uid))")
-        
     }
     
     required init?(coder: NSCoder) {
@@ -75,13 +74,11 @@ final class ChannelViewController: UIViewController {
         invokedViewWillAppear.onNext(())
     }
     
-    
     // MARK: - Helpers
     
     func configure() {
         channelTableViewDataSource = RxTableViewSectionedReloadDataSource(configureCell: { data, tableView, indexPath, item in
             let cell = tableView.dequeueReusableCell(withIdentifier: ChannelTableViewCell.cellId, for: indexPath) as! ChannelTableViewCell
-            print("refresh collectionView: \(item.id)")
             cell.chatRoomLabel.text = item.withUserName
             cell.chatPreviewLabel.text = item.previewContent
             let alarmNumber = item.alarmNumber
@@ -96,7 +93,7 @@ final class ChannelViewController: UIViewController {
         
         channelTableViewDataSource?.canEditRowAtIndexPath = { dataSource, index in return true }
     }
-    
+        
     func configureUI() {
         view.backgroundColor = .systemBackground
         
@@ -116,7 +113,8 @@ final class ChannelViewController: UIViewController {
     func bind() {
         let input = ChannelViewModel.Input(
             invokedViewWillAppear: invokedViewWillAppear,
-            selectedChannel: channelTableView.rx.itemSelected.asObservable()
+            selectedChannel: channelTableView.rx.itemSelected.asObservable(),
+            invokedDeleteChannel: invokedDeleteChannel
         )
         
         let output = viewModel.transform(input)

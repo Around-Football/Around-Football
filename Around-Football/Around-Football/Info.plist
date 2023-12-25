@@ -13,6 +13,8 @@
 			</array>
 		</dict>
 	</array>
+	<key>FirebaseAppDelegateProxyEnabled</key>
+	<string>NO</string>
 	<key>GIDClientID</key>
 	<string>236320604181-1ac4qjplnqv4pjtl44d16r45s59m93ln.apps.googleusercontent.com</string>
 	<key>KAKAO_APP_KEY</key>
@@ -21,6 +23,14 @@
 	<array>
 		<string>kakaokompassauth</string>
 		<string>kakaolink</string>
+	</array>
+	<key>UIAppFonts</key>
+	<array>
+		<string>Pretendard-Regular.otf</string>
+		<string>Pretendard-Bold.otf</string>
+		<string>Pretendard-Light.otf</string>
+		<string>Pretendard-Medium.otf</string>
+		<string>Pretendard-SemiBold.otf</string>
 	</array>
 	<key>UIApplicationSceneManifest</key>
 	<dict>

@@ -21,38 +21,20 @@ struct Recruit: Codable, Identifiable {
     var gamePrice: String // 무료도 있을 수 있으니
     var title: String
     var content: String //작성내용
-    var matchDateString: String? //날짜만, String으로 일단 수정
-    var startTime: String? //시작시간
-    var endTime: String? // 종료시간
-    
-    // MARK: - 신청자 UID 보관할 collection 관련 함수
-    
-    //신청자 서브컬렉션 추가
-    var applicantsCollectionRef: CollectionReference {
-        return Firestore.firestore().collection("Recruit").document(fieldID).collection("applicants")
-    }
+    var matchDate: Timestamp //날짜만, String으로 일단 수정
+    var startTime: String //시작시간
+    var endTime: String // 종료시간
+    var matchDateString: String //쿼리용 String
+    var pendingApplicantsUID: [String?] //신청한 사람들 uid
+    var acceptedApplicantsUID: [String?] //승인한 사람들 uid
+    var matchDayString: String {
+        let date = matchDate.dateValue()
+        let dateFormatter = DateFormatter()
+        dateFormatter.locale = Locale(identifier: "ko_KR")
+        dateFormatter.dateFormat = "MM/dd (E)"
 
-    //서브콜렉션에 신청자 추가
-    func apply(withUserID userID: String?) {
-        applicantsCollectionRef.addDocument(data: ["userID": userID])
+        return dateFormatter.string(from: date)
     }
-
-    //서브콜렉션에서 신청자 제거
-    func removeApplicant(withUserID userID: String) {
-        let query = applicantsCollectionRef.whereField("userID", isEqualTo: userID)
-        query.getDocuments { (snapshot, error) in
-            if let error = error {
-                print("Error removing applicant: \(error)")
-            } else {
-                guard let documents = snapshot?.documents else { return }
-                for document in documents {
-                    document.reference.delete()
-                }
-            }
-        }
-    }
-    
-    //TODO: -신청한 용병 데이터 어떻게 보여줄건지
     
     static func convertToArray(documents: [[String: Any]]) -> [Recruit] {
         var array: [Recruit] = []
@@ -78,6 +60,7 @@ struct Recruit: Codable, Identifiable {
         self.title = dictionary["title"] as? String ?? ""
         self.content = dictionary["content"] as? String ?? ""
         self.matchDateString = dictionary["matchDateString"] as? String ?? ""
+        self.matchDate = dictionary["matchDate"] as? Timestamp ?? Timestamp()
         self.startTime = dictionary["startTime"] as? String ?? ""
         self.endTime = dictionary["endTime"] as? String ?? ""
     }

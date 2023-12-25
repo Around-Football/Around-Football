@@ -7,14 +7,9 @@
 
 import UIKit
 
-protocol ChatTabCoordinatorDelegate {
-    func presentLoginViewController()
-}
-
 final class ChatTabCoordinator: BaseCoordinator {
     
     var type: CoordinatorType = .chat
-    var delegate: ChatTabCoordinatorDelegate?
     
     deinit {
         print("DEBUG: ChatTabCoordinator deinit")
@@ -24,7 +19,6 @@ final class ChatTabCoordinator: BaseCoordinator {
         let channelViewModel = ChannelViewModel(coordinator: self)
         let channelViewController = ChannelViewController(viewModel: channelViewModel)
         navigationController = UINavigationController(rootViewController: channelViewController)
-        navigationController?.navigationBar.isHidden = false
         
         guard let navigationController = navigationController else {
             return UINavigationController()
@@ -32,23 +26,29 @@ final class ChatTabCoordinator: BaseCoordinator {
 
         return navigationController
     }
-      
-    func presentLoginViewController() {
-        delegate?.presentLoginViewController()
-    }
     
-    func presentPHPickerView(picker: UIViewController) {
-        navigationController?.present(picker, animated: true)
-    }
-    
+    //메세지 관련
     func pushChatView(channelInfo: ChannelInfo, isNewChat: Bool = false) {
-        let viewModel = ChatViewModel(coordinator: self, channelInfo: channelInfo, isNewChat: isNewChat)
-        let controller = ChatViewController(viewModel: viewModel)
-        controller.hidesBottomBarWhenPushed = true
-        navigationController?.pushViewController(controller, animated: true)
+        let coordinator = ChatCoordinator(navigationController: navigationController)
+        childCoordinators.append(coordinator)
+        coordinator.start(channelInfo: channelInfo, isNewChat: isNewChat)
     }
     
+    func presentDeleteAlertController(alert: UIAlertController) {
+        navigationController?.present(alert, animated: true)
+    }
+    
+    func presentLoginViewController() {
+        let coordinator = LoginCoordinator(navigationController: navigationController)
+        coordinator.start() //여기서 모달뷰로 만듬
+        childCoordinators.append(coordinator)
+    }
+
     func popCurrnetPage() {
         navigationController?.popViewController(animated: true)
+    }
+    
+    func deinitChildCoordinator() {
+        super.deinitCoordinator()
     }
 }

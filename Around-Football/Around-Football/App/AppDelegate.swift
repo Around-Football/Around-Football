@@ -11,6 +11,7 @@ import Firebase
 import FirebaseAuth
 import FirebaseCore
 import FirebaseFirestore
+import FirebaseMessaging
 import GoogleSignIn
 import KakaoSDKAuth
 import KakaoSDKCommon
@@ -19,13 +20,16 @@ import RxSwift
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
-    
+
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         
         //Firebase 구성
         FirebaseApp.configure()
         //kakao 초기화
         KakaoSDK.initSDK(appKey: "d120f29f71b1903d6e9191768dbdfdb2")
+        
+        setupFCM(application)
+        let _ = UserService.shared
         
         // MARK: - TabBar Background Color Issue
         
@@ -37,7 +41,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         UITabBar.appearance().scrollEdgeAppearance = appearance
         //네비게이션 탭바 색상 검정색으로
         UINavigationBar.appearance().tintColor = .label
-        
+        UINavigationBar.appearance().titleTextAttributes = [NSAttributedString.Key.font: AFFont.titleCard as Any]
+
         return true
     }
     
@@ -61,5 +66,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Called when the user discards a scene session.
         // If any sessions were discarded while the application was not running, this will be called shortly after application:didFinishLaunchingWithOptions.
         // Use this method to release any resources that were specific to the discarded scenes, as they will not return.
+    }
+    
+    private func setupFCM(_ application: UIApplication) {
+        Messaging.messaging().delegate = self
+        UNUserNotificationCenter.current().delegate = self
+        UNUserNotificationCenter.current().requestAuthorization(options: [.sound, .alert, .badge]) { isAgree, error in
+            if isAgree { print("DEBUG - Notification 알림 허용") }
+        }
+        application.registerForRemoteNotifications()
     }
 }

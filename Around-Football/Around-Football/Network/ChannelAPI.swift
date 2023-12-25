@@ -19,10 +19,21 @@ final class ChannelAPI {
         return REF_USER.document(uid).collection("channels")
     }()
     
+    func fetchChannelInfo(channelId: String) async throws -> ChannelInfo? {
+        guard let uid = Auth.auth().currentUser?.uid else { return nil }
+        guard let data = try? await REF_USER.document(uid).collection("channels").document(channelId)
+            .getDocument().data() else { return nil }
+        let channelInfo = ChannelInfo(data)
+        
+        return channelInfo
+    }
     
-    func createChannel(channel: Channel, owner: User, withUser: User, completion: @escaping () -> Void) {
-        let ownerChannel = ChannelInfo(id: channel.id, withUser: withUser)
-        let withUserChannel = ChannelInfo(id: channel.id, withUser: owner)
+    
+    func createChannel(channelInfo: ChannelInfo, completion: @escaping () -> Void) {
+        guard let ownerUser = try? UserService.shared.currentUser_Rx.value() else { return }
+        let ownerChannel = channelInfo
+        let withUserChannel = ChannelInfo(id: channelInfo.id, withUser: ownerUser, recruitID: channelInfo.recruitID)
+        let channel = Channel(id: channelInfo.id, isAvailable: true)
         DB_REF.collection("channels").document(channel.id)
             .setData(channel.representation) {  [weak self] error in
                 if let error {
@@ -34,21 +45,21 @@ final class ChannelAPI {
                     return
                 }
                 print("DEBUG - ", #function, "createChannel")
-                self.addChannelInfo(channelInfo: ownerChannel, owner: owner)
-                self.addChannelInfo(channelInfo: withUserChannel, owner: withUser)
+                self.addChannelInfo(channelInfo: ownerChannel, userID: ownerUser.id)
+                self.addChannelInfo(channelInfo: withUserChannel, userID: channelInfo.withUserId)
                 completion()
             }
     }
     
     // User가 참가하는 채팅방 목록 추가
-    private func addChannelInfo(channelInfo: ChannelInfo, owner: User) {
-        REF_USER.document(owner.id).collection("channels").document(channelInfo.id)
+    private func addChannelInfo(channelInfo: ChannelInfo, userID: String) {
+        REF_USER.document(userID).collection("channels").document(channelInfo.id)
             .setData(channelInfo.representation)
     }
     
-    func checkExistAvailableChannel(owner: User, withUser: User, completion: @escaping(Bool, String?) -> Void) {
+    func checkExistAvailableChannel(owner: User, recruitID: String, completion: @escaping(Bool, String?) -> Void) {
         REF_USER.document(owner.id).collection("channels")
-            .whereField("withUserId", isEqualTo: withUser.id)
+            .whereField("recruitID", isEqualTo: recruitID)
             .whereField("isAvailable", isEqualTo: true)
             .getDocuments { snapshot, error in
                 guard let isEmpty = snapshot?.isEmpty else {
@@ -69,7 +80,6 @@ final class ChannelAPI {
                   let channelListener = self.channelListener else { return Disposables.create() }
             
             self.listener = channelListener.addSnapshotListener({ snapshot, error in
-                print("listen snapshot")
                 guard let document = snapshot?.documentChanges else {
                     observer.onError(error ?? NSError(domain: "", code: -1))
                     return
@@ -84,6 +94,7 @@ final class ChannelAPI {
         }
     }
     
+    /// 채팅 정보 업데이트
     func updateChannelInfo(owner: User, withUser: User, channelId: String, message: Message) {
         var contentMessage: String {
             switch message.kind {
@@ -110,17 +121,25 @@ final class ChannelAPI {
         let withUserRef = REF_USER.document(withUser.id).collection("channels").document(channelId)
         updateRefData(ref: ownerRef, data: updateCurrentUserData)
         updateRefData(ref: withUserRef, data: updateWithUserData)
+    }
+    
+    func updateDeleteChannelInfo(withUserId: String, channelId: String) {
+        let updateDeleteInfo = [
+            "isAvailable": false
+        ]
         
+        let withUserRef = REF_USER.document(withUserId).collection("channels").document(channelId)
+        let channelRef = REF_CHANNELS.document(channelId)
+        updateRefData(ref: withUserRef, data: updateDeleteInfo)
+        updateRefData(ref: channelRef, data: updateDeleteInfo)
     }
     
     func resetAlarmNumber(uid: String, channelId: String) {
         let ref = REF_USER.document(uid).collection("channels").document(channelId)
         let data = ["alarmNumber": 0]
         updateRefData(ref: ref, data: data)
-        
     }
     
-    // TODO: - Firebase 공통 API에 넣어버리기
     private func updateRefData(ref: DocumentReference, data: [String: Any]) {
         ref.updateData(data) { error in
             if let error = error {
@@ -129,6 +148,14 @@ final class ChannelAPI {
             }
             print("DEBUG - Document successfully updated", ref.path)
         }
+    }
+    
+    func deleteChannelInfo(uid: String, channelId: String) {
+        REF_USER.document(uid).collection("channels").document(channelId).delete()
+    }
+    
+    func deleteChannel(channelId: String) {
+        REF_CHANNELS.document(channelId).updateData(["deleteDate": Date()])
     }
     
     func removeListener() {

@@ -39,10 +39,11 @@ final class GroundTitleView: UIView {
         button.setTitle("장소를 검색해주세요.", for: .normal)
         button.setImage(image?.withTintColor(UIColor.systemGray, renderingMode: .alwaysOriginal),
                         for: .normal)
+        
         // 버튼 스타일 설정
         button.setTitleColor(.systemGray, for: .normal)
-        button.layer.cornerRadius = LayoutOptions.cornerRadious // 버튼의 모서리를 둥글게 만듭니다.
-        
+        button.layer.cornerRadius = LayoutOptions.cornerRadious
+        button.titleLabel?.textAlignment = .left
         button.translatesAutoresizingMaskIntoConstraints = false
         button.backgroundColor = .systemGray6
         return button
@@ -72,6 +73,7 @@ final class GroundTitleView: UIView {
         searchFieldButton.snp.makeConstraints { make in
             make.top.equalTo(groundTitleLabel.snp.bottom).offset(5)
             make.leading.equalToSuperview()
+            make.width.equalToSuperview()
             make.bottom.equalToSuperview().offset(10)
         }
     }
