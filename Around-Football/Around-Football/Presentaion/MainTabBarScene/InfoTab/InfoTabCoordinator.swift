@@ -19,7 +19,6 @@ final class InfoTabCoordinator: BaseCoordinator {
         let infoViewModel = InfoViewModel(coordinator: self)
         let infoViewController = InfoViewController(viewModel: infoViewModel)
         navigationController = UINavigationController(rootViewController: infoViewController)
-        navigationController?.navigationBar.prefersLargeTitles = false
         
         guard let navigationController = navigationController else {
             return UINavigationController()

@@ -5,7 +5,9 @@
 //  Created by 진태영 on 2023/09/27.
 //
 
+import Combine
 import UIKit
+import SwiftUI
 
 import FirebaseAuth
 import RxCocoa
@@ -14,9 +16,15 @@ import SnapKit
 import Then
 
 enum FilterRequest: String {
-    case date = "dateKey"
     case region = "regionKey"
     case type = "typeKey"
+    case gender = "genderKey"
+}
+
+struct RecruitFilter {
+    var region: String?
+    var type: String?
+    var gender: String?
 }
 
 final class HomeViewController: UIViewController {
@@ -24,10 +32,11 @@ final class HomeViewController: UIViewController {
     // MARK: - Properties
     
     private var viewModel: HomeViewModel
-    private var loadRecruitList = PublishSubject<(String?, String?, String?)>()
-    private var filterRequest: (date: String?, region: String?, type: String?)
-    private var disposeBag = DisposeBag()
-    private var selectedDate: Date?
+    private var loadRecruitList = PublishSubject<RecruitFilter>()
+    private lazy var filterRequest: RecruitFilter = RecruitFilter()
+    private let disposeBag = DisposeBag()
+//    private var selectedDate: Date?
+    private lazy var oneLIneCalender = UIHostingController(rootView: HCalendarView()) //캘린더
     
     let regionMenus: [String]  = ["모든 지역", "서울", "인천", "부산", "대구", "울산",
                                   "대전", "광주", "세종특별자치시","경기", "강원특별자치도",
@@ -60,45 +69,35 @@ final class HomeViewController: UIViewController {
         $0.distribution = .equalSpacing
         $0.spacing = 4
         $0.addArrangedSubviews(resetButton,
-                               datePicker,
+//                               datePicker,
                                regionFilterButton,
-                               typeFilterButton)
+                               typeFilterButton,
+                               genderFilterButton)
     }
     
-    private lazy var datePicker = UIDatePicker().then {
-        $0.preferredDatePickerStyle = .compact
-        $0.datePickerMode = .date
-        $0.locale = Locale(identifier: "ko_KR")
-        $0.layer.cornerRadius = 15
-        $0.clipsToBounds = true
-        let emptyView = UIView()
-        emptyView.backgroundColor = .white
-        $0.addSubviews(emptyView)
-        $0.addSubview(dateFilterButton)
-        emptyView.snp.makeConstraints { make in
-            make.edges.equalToSuperview()
-        }
-        dateFilterButton.snp.makeConstraints { make in
-            make.edges.equalToSuperview()
-        }
-        $0.addTarget(self, action: #selector(changeDate), for: .valueChanged)
-    }
+//    private lazy var datePicker = UIDatePicker().then {
+//        $0.preferredDatePickerStyle = .compact
+//        $0.datePickerMode = .date
+//        $0.locale = Locale(identifier: "ko_KR")
+//        $0.layer.cornerRadius = 15
+//        $0.clipsToBounds = true
+//        let emptyView = UIView()
+//        emptyView.backgroundColor = .white
+//        $0.addSubviews(emptyView)
+//        $0.addSubview(dateFilterButton)
+//        emptyView.snp.makeConstraints { make in
+//            make.edges.equalToSuperview()
+//        }
+//        dateFilterButton.snp.makeConstraints { make in
+//            make.edges.equalToSuperview()
+//        }
+//        $0.addTarget(self, action: #selector(changeDate), for: .valueChanged)
+//    }
     
-    private lazy var floatingButton: UIButton = {
-        let button = UIButton()
-        let image = UIImage(systemName: "plus")
-        var config = UIButton.Configuration.filled()
-        config.baseBackgroundColor = .systemPink
-        config.cornerStyle = .capsule
-        config.image = image?.withConfiguration(UIImage.SymbolConfiguration(pointSize: 20,
-                                                                            weight: .medium))
-        button.configuration = config
-        button.layer.shadowRadius = 10
-        button.layer.shadowOpacity = 0.3
-        button.frame = CGRect(x: 0, y: 0, width: 50, height: 50)
-        button.addTarget(self, action: #selector(didTapFloatingButton), for: .touchUpInside)
-        return button
-    }()
+    private lazy var floatingButton = UIButton().then {
+        $0.setImage(UIImage(named: AFIcon.plusButton), for: .normal)
+        $0.addTarget(self, action: #selector(didTapFloatingButton), for: .touchUpInside)
+    }
     
     // MARK: - Lifecycles
     
@@ -120,7 +119,7 @@ final class HomeViewController: UIViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        loadRecruitList.onNext((filterRequest))
+        loadRecruitList.onNext(filterRequest)
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.title = "용병 구해요"
     }
@@ -130,59 +129,47 @@ final class HomeViewController: UIViewController {
         navigationItem.title = ""
     }
     
-    //floatingButtonSetting
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        
-        let tabBarHeight: CGFloat = self.tabBarController?.tabBar.frame.size.height ?? 120
-        
-        floatingButton.frame = CGRect(
-            x: view.frame.size.width - 70,
-            y: view.frame.size.height - (tabBarHeight * 2),
-            width: 50,
-            height: 50
-        )
-    }
-
     // MARK: - Selectors
     
     @objc
     private func resetButtonTapped() {
-        dateFilterButton.isSelected = false
         regionFilterButton.isSelected = false
         typeFilterButton.isSelected = false
+        genderFilterButton.isSelected = false
         
-        dateFilterButton.setTitle("날짜 선택", for: .normal)
         regionFilterButton.setTitle("모든 지역", for: .normal)
         typeFilterButton.setTitle("매치 유형", for: .normal)
+        genderFilterButton.setTitle("성별 무관", for: .normal)
         
-        filterRequest = (nil, nil, nil)
+        filterRequest = RecruitFilter(region: nil, type: nil, gender: nil)
         saveFilterRequestToUserDefaults(filterRequest: filterRequest)
         getFilterRequestFromUserDefaults()
         loadRecruitList.onNext(filterRequest)
+        oneLIneCalender.rootView.viewModel.selectedDateSubject.accept([])
+        oneLIneCalender.rootView.observableViewModel.selectedDateSet.removeAll()
     }
-    
-    @objc
-    func changeDate(_ sender: UIDatePicker) {
-        dateFilterButton.isSelected.toggle()
-        selectedDate = sender.date
-        
-        let dateformatter = DateFormatter()
-        dateformatter.locale = Locale(identifier: "ko_KR")
-        dateformatter.dateFormat = "YYYY년 M월 d일"
-        let formattedDate = dateformatter.string(from: sender.date)
-        
-        let titleDateformatter = DateFormatter()
-        titleDateformatter.locale = Locale(identifier: "ko_KR")
-        titleDateformatter.dateFormat = "M월 d일"
-        let buttonTitleDate = titleDateformatter.string(from: sender.date)
-        
-        filterRequest.date = formattedDate
-        saveFilterRequestToUserDefaults(filterRequest: filterRequest)
-        getFilterRequestFromUserDefaults()
-        dateFilterButton.setTitle(buttonTitleDate, for: .normal)
-        loadRecruitList.onNext(filterRequest)
-    }
+//
+//    @objc
+//    func changeDate(_ sender: UIDatePicker) {
+//        dateFilterButton.isSelected.toggle()
+//        selectedDate = sender.date
+//        
+//        let dateformatter = DateFormatter()
+//        dateformatter.locale = Locale(identifier: "ko_KR")
+//        dateformatter.dateFormat = "YYYY년 M월 d일"
+//        let formattedDate = dateformatter.string(from: sender.date)
+//        
+//        let titleDateformatter = DateFormatter()
+//        titleDateformatter.locale = Locale(identifier: "ko_KR")
+//        titleDateformatter.dateFormat = "M월 d일"
+//        let buttonTitleDate = titleDateformatter.string(from: sender.date)
+//        
+//        filterRequest.date = formattedDate
+//        saveFilterRequestToUserDefaults(filterRequest: filterRequest)
+//        getFilterRequestFromUserDefaults()
+//        dateFilterButton.setTitle(buttonTitleDate, for: .normal)
+//        loadRecruitList.onNext(filterRequest)
+//    }
     
     @objc
     private func didTapFloatingButton() {
@@ -201,19 +188,20 @@ final class HomeViewController: UIViewController {
     // MARK: - Helpers
     
     //유저디폴트 저장
-    func saveFilterRequestToUserDefaults(filterRequest: (date: String?, region: String?, type: String?)) {
-        UserDefaults.standard.set(filterRequest.date, forKey: FilterRequest.date.rawValue)
+    func saveFilterRequestToUserDefaults(filterRequest: RecruitFilter) {
+//        UserDefaults.standard.set(filterRequest.date, forKey: FilterRequest.date.rawValue)
         UserDefaults.standard.set(filterRequest.region, forKey: FilterRequest.region.rawValue)
         UserDefaults.standard.set(filterRequest.type, forKey: FilterRequest.type.rawValue)
+        UserDefaults.standard.set(filterRequest.gender, forKey: FilterRequest.gender.rawValue)
     }
     
     //유저디폴트 값 설정
     func getFilterRequestFromUserDefaults() {
-        let date = UserDefaults.standard.string(forKey: FilterRequest.date.rawValue)
+//        let date = UserDefaults.standard.string(forKey: FilterRequest.date.rawValue)
         let region = UserDefaults.standard.string(forKey: FilterRequest.region.rawValue)
         let type = UserDefaults.standard.string(forKey: FilterRequest.type.rawValue)
-
-        self.filterRequest = (date: date, region: region, type: type)
+        let gender = UserDefaults.standard.string(forKey: FilterRequest.gender.rawValue)
+        self.filterRequest = RecruitFilter(region: region, type: type, gender: gender)
     }
     
     //유저 지역 정보로 필터링하고 리스트 요청
@@ -224,7 +212,7 @@ final class HomeViewController: UIViewController {
             .subscribe(onNext: { [weak self] user in
                 guard let self else { return }
                 getFilterRequestFromUserDefaults()
-                dateFilterButton.menuButtonSubject.onNext(filterRequest.date)
+//                dateFilterButton.menuButtonSubject.onNext(filterRequest.date)
                 regionFilterButton.menuButtonSubject.onNext(filterRequest.region)
                 typeFilterButton.menuButtonSubject.onNext(filterRequest.type)
             }).disposed(by: disposeBag)
@@ -237,22 +225,6 @@ final class HomeViewController: UIViewController {
             resetButton.isSelected = true
         }.disposed(by: disposeBag)
         
-        dateFilterButton.menuButtonSubject
-            .observe(on: MainScheduler.instance)
-            .subscribe { [weak self] button in
-                guard let self else { return }
-                if let button {
-                    resetButton.isSelected = false
-                    dateFilterButton.isSelected = true
-                    filterRequest.date = button
-                    saveFilterRequestToUserDefaults(filterRequest: filterRequest)
-                    getFilterRequestFromUserDefaults()
-                    loadRecruitList.onNext(filterRequest)
-                } else {
-                    dateFilterButton.isSelected = false
-                }
-            }.disposed(by: disposeBag)
-        
         regionFilterButton.menuButtonSubject
             .observe(on: MainScheduler.instance)
             .subscribe { [weak self] button in
@@ -261,7 +233,7 @@ final class HomeViewController: UIViewController {
                     print(button)
                     resetButton.isSelected = false
                     regionFilterButton.isSelected = true
-                    filterRequest.region = button
+                    filterRequest.region = button == "모든 지역" ? nil : button
                     saveFilterRequestToUserDefaults(filterRequest: filterRequest)
                     getFilterRequestFromUserDefaults()
                     loadRecruitList.onNext(filterRequest)
@@ -277,7 +249,24 @@ final class HomeViewController: UIViewController {
                 if let button {
                     resetButton.isSelected = false
                     typeFilterButton.isSelected = true
-                    filterRequest.type = button
+                    filterRequest.type = button == "모든 유형" ? nil : button
+                    saveFilterRequestToUserDefaults(filterRequest: filterRequest)
+                    getFilterRequestFromUserDefaults()
+                    loadRecruitList.onNext(filterRequest)
+                } else {
+                    typeFilterButton.isSelected = false
+                }
+            }.disposed(by: disposeBag)
+        
+        genderFilterButton.menuButtonSubject
+            .observe(on: MainScheduler.instance)
+            .subscribe { [weak self] button in
+                guard let self else { return }
+                if let button {
+                    resetButton.isSelected = false
+                    genderFilterButton.isSelected = true
+                    //TODO: - gender 추가
+                    filterRequest.gender = button == "성별 무관" ? nil : button
                     saveFilterRequestToUserDefaults(filterRequest: filterRequest)
                     getFilterRequestFromUserDefaults()
                     loadRecruitList.onNext(filterRequest)
@@ -292,21 +281,32 @@ final class HomeViewController: UIViewController {
         
         let output = viewModel.transform(input)
         
-        output
-            .recruitList
-            .bind(to: homeTableView.rx.items(cellIdentifier: HomeTableViewCell.id,
-                                             cellType: HomeTableViewCell.self)) { [weak self] index, item, cell in
-                guard let self else { return }
-                cell.viewModel = viewModel
-                cell.bindContents(item: item)
-                cell.configureButtonTap()
-            }.disposed(by: disposeBag)
+        Observable.combineLatest(
+            output.recruitList,
+            oneLIneCalender.rootView.viewModel.selectedDateSubject.asObservable()
+        )
+        .map { [weak self] (recruits, selectedDateSet) in
+            if !selectedDateSet.isEmpty {
+                self?.resetButton.isSelected = false
+                return recruits.filter { recruit in
+                    selectedDateSet.contains(recruit.matchDateString)
+                }
+            }
+            return recruits
+        }
+        .bind(to: homeTableView.rx.items(cellIdentifier: HomeTableViewCell.id,
+                                         cellType: HomeTableViewCell.self)) { [weak self] index, item, cell in
+            guard let self else { return }
+            cell.viewModel = viewModel
+            cell.bindContents(item: item)
+            cell.configureButtonTap()
+        }.disposed(by: disposeBag)
         
         homeTableView.rx.modelSelected(Recruit.self)
-            .subscribe(onNext: { [weak self] selectedRecruit in
+            .subscribe { [weak self] selectedRecruit in
                 guard let self else { return }
                 handleItemSelected(selectedRecruit)
-            })
+            }
             .disposed(by: disposeBag)
     }
     
@@ -316,13 +316,22 @@ final class HomeViewController: UIViewController {
     
     private func configureUI() {
         view.backgroundColor = .white
-        view.addSubviews(filterScrollView,
+        addChild(oneLIneCalender)
+        view.addSubviews(oneLIneCalender.view,
+                         filterScrollView,
                          homeTableView,
                          floatingButton)
+        oneLIneCalender.view.snp.makeConstraints { make in
+            make.top.equalTo(view.safeAreaLayoutGuide).offset(16)
+            make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
+            make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
+            make.height.equalTo(64)
+        }
+        
         filterScrollView.addSubview(optionStackView)
         
         filterScrollView.snp.makeConstraints { make in
-            make.top.equalTo(view.safeAreaLayoutGuide).offset(SuperviewOffsets.topPadding)
+            make.top.equalTo(oneLIneCalender.view.snp.bottom).offset(16)
             make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
             make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
             make.height.equalTo(32)
@@ -338,6 +347,11 @@ final class HomeViewController: UIViewController {
             make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
             make.trailing.equalToSuperview()
             make.bottom.equalToSuperview()
+        }
+        
+        floatingButton.snp.makeConstraints { make in
+            make.trailing.bottom.equalTo(view.safeAreaLayoutGuide).offset(-16)
+            make.height.width.equalTo(56)
         }
     }
 }
