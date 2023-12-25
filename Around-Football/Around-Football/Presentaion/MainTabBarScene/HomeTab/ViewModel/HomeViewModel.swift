@@ -51,9 +51,9 @@ final class HomeViewModel {
     func addBookmark(uid: String, fieldID: String?) {
         FirebaseAPI.shared.fetchUser(uid: uid) { user in
             var user = user
-            var bookmark = user.bookmarkedFields
+            var bookmark = user.bookmarkedRecruit
             bookmark.append(fieldID)
-            user.bookmarkedFields = bookmark
+            user.bookmarkedRecruit = bookmark
             FirebaseAPI.shared.updateUser(user)
         }
     }
@@ -61,11 +61,11 @@ final class HomeViewModel {
     func removeBookmark(uid: String, fieldID: String?) {
         FirebaseAPI.shared.fetchUser(uid: uid) { user in
             var user = user
-            var bookmark = user.bookmarkedFields
+            var bookmark = user.bookmarkedRecruit
             bookmark.removeAll { fID in
                 fieldID == fID
             }
-            user.bookmarkedFields = bookmark
+            user.bookmarkedRecruit = bookmark
             FirebaseAPI.shared.updateUser(user)
         }
     }

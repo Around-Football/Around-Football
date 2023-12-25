@@ -325,7 +325,7 @@ extension CalenderViewController: UICollectionViewDelegateFlowLayout, UICollecti
     }
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        
+        // FIXME: - 선택된 날짜가 현재날짜로만 등록됨 (선택된 날짜 아님)
         if let previousSelectedIndexPath = selectedIndexPath,
            let previousSelectedCell = collectionView.cellForItem(at: previousSelectedIndexPath) as? DateCell {
             previousSelectedCell.isSelected = false
@@ -346,7 +346,7 @@ extension CalenderViewController: UICollectionViewDelegateFlowLayout, UICollecti
         if let date = Int(selectedCell.dateLabel.text ?? "") { //선택한 Date 저장
             selectedDateString = "\(yearAndMonth) \(date)일"
             self.selectedDate = stringToDate(dateString: selectedDateString, timePicker: nil)
-            print("날짜 선택됨: \(self.selectedDate)")
+            print("날짜 선택됨: \(String(describing: self.selectedDate))")
             print(selectedDateString as Any)
 //            print(selectedStartDate as Any)
         }

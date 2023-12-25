@@ -17,56 +17,40 @@ final class DetailUserInfoView: UIView {
     private let profileImageView = UIImageView().then {
         $0.image = UIImage(named: "AppIcon")
         $0.contentMode = .scaleAspectFill
-        $0.layer.cornerRadius = 25
+        $0.layer.cornerRadius = 20
         $0.clipsToBounds = true
     }
     
     private let userNameLabel = UILabel().then {
         $0.text = "유저 이름"
-        $0.font = .systemFont(ofSize: 20, weight: .bold)
+        $0.textColor = AFColor.secondary
+        $0.font = AFFont.titleSmall
     }
     
     private let userGenderLabel = UILabel().then {
         $0.text = "성별"
-        $0.textColor = .gray
-        $0.font = .systemFont(ofSize: 12)
+        $0.textColor = AFColor.grayScale300
+        $0.font = AFFont.filterRegular
     }
     
     private let userAgeLabel = UILabel().then {
         $0.text = "나이"
-        $0.textColor = .gray
-        $0.font = .systemFont(ofSize: 12)
+        $0.textColor = AFColor.grayScale300
+        $0.font = AFFont.filterRegular
     }
     
     private let userArea = UILabel().then {
         $0.text = "지역"
-        $0.textColor = .gray
-        $0.font = .systemFont(ofSize: 12)
+        $0.textColor = AFColor.grayScale300
+        $0.font = AFFont.filterRegular
     }
-    
-    private let mainUsedFeet = UILabel().then {
-        $0.text = "주발"
-        $0.textColor = .gray
-        $0.font = .systemFont(ofSize: 12)
-    }
-    
-    private let userPosition = UILabel().then {
-        $0.text = "포지션"
-        $0.textColor = .gray
-        $0.font = .systemFont(ofSize: 12)
-    }
-    
+        
     private lazy var userDetailInfoStackView = UIStackView().then { view in
         let subViews = [userGenderLabel,
-                        createDotView(),
+                        createHDividerView(),
                         userAgeLabel,
-                        createDotView(),
-                        userArea,
-                        createDotView(),
-                        mainUsedFeet,
-                        createDotView(),
-                        userPosition]
-        
+                        createHDividerView(),
+                        userArea]
         view.axis = .horizontal
         view.spacing = 5
         view.distribution = .fill
@@ -76,6 +60,15 @@ final class DetailUserInfoView: UIView {
         }
     }
     
+    private lazy var userStackView = UIStackView().then {
+        $0.addArrangedSubviews(userNameLabel,
+                               userDetailInfoStackView)
+        $0.axis = .vertical
+        $0.spacing = 4
+        $0.distribution = .fill
+        $0.alignment = .leading
+    }
+
     // MARK: - Lifecycles
     
     override init(frame: CGRect) {
@@ -89,47 +82,37 @@ final class DetailUserInfoView: UIView {
     
     // MARK: - Helpers
     
-    //TODO: - 표시할 유저정보 정하고 바인딩하기
-    
     func setValues(user: User) {
         userNameLabel.text = user.userName
         userGenderLabel.text = user.gender
         userAgeLabel.text = String(user.age)
         userArea.text = user.area
-        mainUsedFeet.text = user.mainUsedFeet
-        userPosition.text = user.position.map { $0 }.joined(separator: ", ")
     }
     
     private func configureUI() {
         addSubviews(profileImageView,
-                    userNameLabel,
-                    userDetailInfoStackView)
+                    userStackView)
         
         profileImageView.snp.makeConstraints { make in
-            make.top.leading.equalToSuperview().offset(SuperviewOffsets.topPadding)
-            make.bottom.equalToSuperview().offset(SuperviewOffsets.bottomPadding)
+            make.leading.equalToSuperview()
             make.centerY.equalToSuperview()
-            make.height.equalTo(50)
-            make.width.equalTo(50)
+            make.height.equalTo(40)
+            make.width.equalTo(40)
         }
         
-        userNameLabel.snp.makeConstraints { make in
-            make.top.equalToSuperview().offset(SuperviewOffsets.topPadding)
-            make.leading.equalTo(profileImageView.snp.trailing).offset(SuperviewOffsets.leadingPadding)
-        }
-        
-        userDetailInfoStackView.snp.makeConstraints { make in
-            make.top.equalTo(userNameLabel.snp.bottom).offset(5)
-            make.leading.equalTo(profileImageView.snp.trailing).offset(SuperviewOffsets.leadingPadding)
-            make.bottom.equalToSuperview().offset(SuperviewOffsets.bottomPadding)
+        userStackView.snp.makeConstraints { make in
+            make.centerY.equalToSuperview()
+            make.leading.equalTo(profileImageView.snp.trailing).offset(10)
         }
     }
     
-    private func createDotView() -> UILabel {
-        return UILabel().then {
-            $0.text = "•"
-            $0.textColor = .gray
-            $0.font = .systemFont(ofSize: 10)
+    private func createHDividerView() -> UIView {
+        return UIView().then {
+            $0.backgroundColor = AFColor.grayScale300
+            $0.snp.makeConstraints { make in
+                make.width.equalTo(0.6)
+                make.height.equalTo(10)
+            }
         }
     }
 }

@@ -149,7 +149,7 @@ final class HomeTableViewCell: UITableViewCell {
     }
     
     func bindContents(item: Recruit) {
-        guard let date = item.matchDate?.dateValue() else { return }
+        let date = item.matchDate.dateValue()
         let formattedCellDate = formatMatchDate(date)
         
         //cell에 사용할 id 세팅
@@ -186,7 +186,7 @@ final class HomeTableViewCell: UITableViewCell {
             .subscribe(onNext: { [weak self] user in
                 guard let self else { return }
                 self.user = user
-                isSelectedButton = user?.bookmarkedFields.filter { $0 == fieldID }.count != 0
+                isSelectedButton = user?.bookmarkedRecruit.filter { $0 == fieldID }.count != 0
                 ? true : false
                 setupBookmarkButton()
             }).disposed(by: disposeBag)
