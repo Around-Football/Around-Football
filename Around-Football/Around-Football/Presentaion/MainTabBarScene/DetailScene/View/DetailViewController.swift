@@ -17,63 +17,62 @@ final class DetailViewController: UIViewController {
     
     // MARK: - Properties
     
-    private var viewModel: DetailViewModel
-    private var invokedViewWillAppear = PublishSubject<Void>()
-    private var disposeBag = DisposeBag()
-    private let detailUserInfoView = DetailUserInfoView()
-    private let detailView = DetailView()
+    var viewModel: DetailViewModel
+    private let invokedViewWillAppear = PublishSubject<Void>()
+    var disposeBag = DisposeBag()
+    
+    let detailUserInfoView = DetailUserInfoView()
+    let detailView = DetailView()
     private let scrollView = UIScrollView()
     private let contentView = UIView()
     
     private let mainImageView = UIImageView().then {
-        $0.image = UIImage(named: "AppIcon")
+        $0.image = UIImage(named: "DefaultRecruitImage")
         $0.contentMode = .scaleAspectFill
         $0.clipsToBounds = true
     }
     
+    private let typeLabel = UILabel().then {
+        $0.text = "풋살"
+        $0.textColor = AFColor.white
+        $0.font = AFFont.text
+        $0.textAlignment = .center
+        $0.layer.cornerRadius = 4
+        $0.layer.masksToBounds = true
+    }
+    
+    private let dateLabel = UILabel().then {
+        $0.text = "12/15(금) 20:00"
+        $0.textColor = AFColor.secondary
+        $0.font = AFFont.titleMedium
+    }
+    
     private let groundLabel = UILabel().then {
         $0.text = "축구장 이름"
-        $0.font = .systemFont(ofSize: 20, weight: .bold)
+        $0.numberOfLines = 2
+        $0.textColor = AFColor.secondary
+        $0.font = AFFont.titleRegular
     }
     
-    private let groundAddressLabel = UILabel().then {
-        $0.text = "축구장 주소"
-        $0.textColor = .gray
-        $0.font = .systemFont(ofSize: 10)
+    private let contentDivider = UIView().then {
+        $0.backgroundColor = AFColor.grayScale50
     }
     
-    private lazy var applyButton = UIButton().then {
-        let title = NSAttributedString(
-            string: "신청하기",
-            attributes: [.font: UIFont.systemFont(ofSize: 15, weight: .semibold)]
-        )
-        $0.setAttributedTitle(title, for: .normal)
-        $0.setTitleColor(.white, for: .normal)
-        $0.backgroundColor = .black
-        $0.layer.cornerRadius = 10
-        $0.clipsToBounds = true
-        $0.addTarget(self, action: #selector(clickedApplyButton), for: .touchUpInside)
+    private let bottomDivider = UIView().then {
+        $0.backgroundColor = AFColor.grayScale200
     }
     
-    private let groundIconView = UIImageView().then {
-        $0.image = UIImage(systemName: "mappin.and.ellipse")
+    let sendMessageButton = AFSmallButton(buttonTitle: "채팅하기", color: AFColor.secondary)
+    let sendRecruitButton = AFButton(buttonTitle: "신청하기", color: AFColor.primary)
+    let bookMarkButton = UIButton().then {
+        $0.setImage(UIImage(named: "AFBookmark"), for: .normal)
     }
     
-    private let grayLineView1 = UIView().then {
-        $0.backgroundColor = .secondarySystemBackground
-    }
-    
-    private let grayLineView2 = UIView().then {
-        $0.backgroundColor = .secondarySystemBackground
-    }
-    
-    private lazy var sendMessageButton = UIButton().then {
-        $0.setTitle("메세지 보내기", for: .normal)
-        $0.setTitleColor(.white, for: .normal)
-        $0.backgroundColor = .black
-        $0.layer.cornerRadius = 5
-        $0.clipsToBounds = true
-        $0.addTarget(self, action: #selector(clickedMessage), for: .touchUpInside)
+    private lazy var bottomStackView = UIStackView().then {
+        $0.addArrangedSubviews(bookMarkButton, sendRecruitButton)
+        $0.axis = .horizontal
+        $0.distribution = .equalSpacing
+        $0.alignment = .center
     }
     
     // MARK: - Lifecycles
@@ -89,162 +88,199 @@ final class DetailViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        bind()
+        configureTypeLabel() // type 라벨 스타일 세팅
+        configureBookmarkStyle()
+        configureRecruitInfo()
         configeUI()
-        bindUI()
-        invokedViewWillAppear.onNext(())
     }
     
-    // MARK: - Selector
-    
-    @objc
-    private func clickedMessage() {
-        viewModel.checkChannel()
+    override func viewWillAppear(_ animated: Bool) {
+        invokedViewWillAppear.onNext(()) //cell 실시간 데이터 반영
+        navigationController?.navigationBar.prefersLargeTitles = false
+        navigationItem.title = "용병 구해요"
+        navigationController?.navigationBar.titleTextAttributes = [
+            NSAttributedString.Key.foregroundColor: AFColor.grayScale200
+        ]
+        navigationController?.navigationBar.tintColor = AFColor.grayScale200
     }
     
-    @objc
-    private func clickedApplyButton() {
-        //TODO: -메세지 버튼 타이틀 분기처리 (작성자 or 신청자)
-        ///글쓴이면 신청현황 보기, 아니면 신청한 UID에 추가
-        if Auth.auth().currentUser?.uid == viewModel.recruitItem?.userID {
-            viewModel.coordinator?.pushApplicationStatusViewController()
-        } else {
-            viewModel.recruitItem?.apply(withUserID: Auth.auth().currentUser?.uid)
-        }
+    override func viewWillDisappear(_ animated: Bool) {
+        navigationItem.title = ""
+        navigationController?.navigationBar.titleTextAttributes = [
+            NSAttributedString.Key.foregroundColor: UIColor.black
+        ]
+        navigationController?.navigationBar.tintColor = UIColor.black
     }
     
     // MARK: - Helper
     
-    private func setButtonTitle() {
-        //글쓴이면 신청현황, 아니면 신청하기로
-        if Auth.auth().currentUser?.uid == viewModel.recruitItem?.userID {
-            let title = NSAttributedString(
-                string: "신청 현황",
-                attributes: [.font: UIFont.systemFont(ofSize: 15, weight: .semibold)]
-            )
-            applyButton.setAttributedTitle(title, for: .normal)
-        } else {
-            let title = NSAttributedString(
-                string: "신청 하기",
-                attributes: [.font: UIFont.systemFont(ofSize: 15, weight: .semibold)]
-            )
-            applyButton.setAttributedTitle(title, for: .normal)
+    //유저에 따라 신청버튼 타이틀 설정
+    func setButtonUI(isEnabledSendButton: Bool,
+                     sendButtonTitle: String,
+                     isHiddenMessageButton: Bool,
+                     isHiddenBookmark: Bool,
+                     disabledBackground: UIColor,
+                     disabledTitleColor: UIColor) {
+        sendRecruitButton.isEnabled = isEnabledSendButton
+        sendRecruitButton.setTitle(sendButtonTitle, for: .normal)
+        sendMessageButton.isHidden = isHiddenMessageButton
+        bookMarkButton.isHidden = isHiddenBookmark
+        if !isEnabledSendButton {
+            sendRecruitButton.setBackgroundColor(disabledBackground, for: .disabled)
+            sendRecruitButton.setTitleColor(disabledTitleColor, for: .disabled)
         }
     }
     
-    private func bindUI() {
-        let input = DetailViewModel.Input(invokedViewWillAppear: invokedViewWillAppear.asObserver())
-        
-        let output = viewModel.transform(input)
-        
-        output.recruitItem
-            .do { recruit in
-            let userRef = REF_USER.document(recruit.userID)
-            
-            userRef.getDocument(as: User.self) { [weak self] result in
-                guard let self else { return }
-                switch result {
-                case .success(let user):
-                    print("readUser성공: \(user)")
-                    detailUserInfoView.setValues(user: user)
-                case .failure(let error):
-                    print("Error decoding user: \(error)")
-                }
-            }
+    func configureTypeLabel() {
+        if let item = viewModel.getRecruit() {
+            typeLabel.text = item.type
+            typeLabel.backgroundColor = item.type == "축구" ? AFColor.soccor : AFColor.futsal
         }
-        .subscribe()
-        .disposed(by: disposeBag)
+    }
+    
+    private func configureRecruitInfo() {
+        guard let recruit = viewModel.getRecruit() else { return }
+        dateLabel.text = recruit.matchDayString
+        groundLabel.text = recruit.fieldName
+        detailView.setValues(recruit: recruit)
+    }
+    
+    func configureBookmarkStyle() {
+        guard let user = viewModel.getCurrentUser(),
+              let recruit = viewModel.getRecruit() else {
+            setNormalBookmarkButton()
+            return
+        }
         
-        output
-            .recruitItem
-            .do(onNext: { [weak self] item in
-                guard let self else { return }
-                groundLabel.text = item.fieldName
-                groundAddressLabel.text = item.fieldAddress
-                detailView.setValues(item: item)
-            })
-            .subscribe()
-            .disposed(by: disposeBag)
+        viewModel.isSelectedBookmark = user.bookmarkedRecruit.contains(recruit.id)
+        
+        if viewModel.isSelectedBookmark == true {
+            setSelectedBookmarkButton()
+        } else {
+            setNormalBookmarkButton()
+        }
+    }
+    
+    private func setSelectedBookmarkButton() {
+        UIView.transition(with: bookMarkButton, duration: 0.3, options: .transitionCrossDissolve) {
+            self.bookMarkButton.setImage(UIImage(named: "AFBookmarkSelect"), for: .normal)
+        }
+    }
+    
+    private func setNormalBookmarkButton() {
+        UIView.transition(with: bookMarkButton, duration: 0.3, options: .transitionCrossDissolve) {
+            self.bookMarkButton.setImage(UIImage(named: "AFBookmark"), for: .normal)
+        }
     }
     
     private func configeUI() {
-        setButtonTitle() //신청하기 버튼 세팅
-        navigationItem.title = viewModel.recruitItem?.title
         view.backgroundColor = .white
-        view.addSubview(scrollView)
+        view.addSubviews(scrollView,
+                         bottomDivider,
+                         bottomStackView)
         scrollView.addSubview(contentView)
         contentView.addSubviews(mainImageView,
+                                typeLabel,
+                                dateLabel,
                                 groundLabel,
-                                groundAddressLabel,
-                                applyButton,
-                                grayLineView1,
                                 detailUserInfoView,
-                                grayLineView2,
-                                detailView,
-                                sendMessageButton)
+                                sendMessageButton,
+                                contentDivider,
+                                detailView
+        )
         
         scrollView.snp.makeConstraints { make in
-            make.top.bottom.equalTo(view.safeAreaLayoutGuide)
+            make.top.equalTo(view.safeAreaLayoutGuide)
             make.leading.trailing.equalToSuperview()
+            make.bottom.equalTo(bottomDivider.snp.top)
         }
         
         contentView.snp.makeConstraints { make in
-            make.top.leading.trailing.bottom.equalToSuperview()
+            make.top.leading.trailing.equalToSuperview()
+            make.bottom.equalToSuperview().offset(-55)
             make.width.equalToSuperview()
         }
         
         mainImageView.snp.makeConstraints { make in
-            make.top.leading.trailing.equalToSuperview()
-            make.height.equalTo(180)
+            make.top.equalToSuperview().offset(14)
+            make.leading.equalToSuperview().offset(20)
+            make.trailing.equalToSuperview().offset(-20)
+            make.height.equalTo(186)
+        }
+        
+        typeLabel.snp.makeConstraints { make in
+            make.top.equalTo(mainImageView.snp.bottom).offset(20)
+            make.leading.equalToSuperview().offset(20)
+            make.width.equalTo(51)
+            make.height.equalTo(26)
+        }
+        
+        dateLabel.snp.makeConstraints { make in
+            make.top.equalTo(mainImageView.snp.bottom).offset(20)
+            make.leading.equalTo(typeLabel.snp.trailing).offset(12)
         }
         
         groundLabel.snp.makeConstraints { make in
-            make.top.equalTo(mainImageView.snp.bottom).offset(SuperviewOffsets.topPadding)
-            make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
-        }
-        
-        groundAddressLabel.snp.makeConstraints { make in
-            make.top.equalTo(groundLabel.snp.bottom)
-            make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
-            make.bottom.equalTo(grayLineView1.snp.top).offset(SuperviewOffsets.bottomPadding)
-        }
-        
-        applyButton.snp.makeConstraints { make in
-            make.top.equalTo(mainImageView.snp.bottom).offset(SuperviewOffsets.topPadding)
-            make.bottom.equalTo(grayLineView1.snp.top).offset(SuperviewOffsets.bottomPadding)
-            make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
-            make.width.equalTo(70)
-            make.height.equalTo(45)
-        }
-        
-        grayLineView1.snp.makeConstraints { make in
-            make.top.equalTo(groundAddressLabel.snp.bottom).offset(SuperviewOffsets.topPadding)
-            make.height.equalTo(1)
-            make.width.equalToSuperview()
+            make.top.equalTo(dateLabel.snp.bottom).offset(12)
+            make.leading.equalToSuperview().offset(20)
         }
         
         detailUserInfoView.snp.makeConstraints { make in
-            make.top.equalTo(grayLineView1.snp.bottom)
-            make.leading.trailing.equalToSuperview()
-        }
-        
-        grayLineView2.snp.makeConstraints { make in
-            make.top.equalTo(detailUserInfoView.snp.bottom)
-            make.height.equalTo(1)
-            make.width.equalToSuperview()
-        }
-        
-        detailView.snp.makeConstraints { make in
-            make.top.equalTo(grayLineView2).offset(SuperviewOffsets.topPadding)
-            make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
-            make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
-            make.bottom.equalTo(sendMessageButton.snp.top).offset(SuperviewOffsets.bottomPadding)
+            make.top.equalTo(groundLabel.snp.bottom).offset(20)
+            make.leading.equalToSuperview().offset(20)
+            make.trailing.equalToSuperview().offset(-20)
+            make.height.greaterThanOrEqualTo(40)
         }
         
         sendMessageButton.snp.makeConstraints { make in
+            make.centerY.equalTo(detailUserInfoView.snp.centerY)
+            make.trailing.equalToSuperview().offset(-20)
+            make.width.equalTo(96)
+            make.height.equalTo(36)
+        }
+        
+        contentDivider.snp.makeConstraints { make in
+            make.top.equalTo(detailUserInfoView.snp.bottom).offset(20)
+            make.height.equalTo(1)
+            make.leading.equalToSuperview().offset(20)
+            make.trailing.equalToSuperview().offset(-20)
+        }
+        
+        detailView.snp.makeConstraints { make in
+            make.top.equalTo(contentDivider.snp.bottom).offset(SuperviewOffsets.topPadding)
             make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
             make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
-            make.bottom.equalToSuperview().offset(SuperviewOffsets.bottomPadding).priority(.required)
-            make.height.equalTo(50)
+            make.bottom.equalToSuperview()
         }
+        
+        bottomDivider.snp.makeConstraints { make in
+            make.height.equalTo(0.4)
+            make.bottom.equalTo(bottomStackView.snp.top).offset(-16)
+            make.leading.trailing.equalToSuperview()
+        }
+        
+        bottomStackView.snp.makeConstraints { make in
+            make.leading.equalToSuperview().offset(20)
+            make.trailing.equalToSuperview().offset(-20)
+            make.bottom.equalTo(view.safeAreaLayoutGuide).offset(-36)
+        }
+        
+        bookMarkButton.snp.makeConstraints { make in
+            make.width.height.equalTo(40)
+        }
+        
+        sendRecruitButton.snp.makeConstraints { make in
+            make.height.equalTo(40)
+            make.width.greaterThanOrEqualTo(264)
+        }
+    }
+    
+    private func bind() {
+        let input = DetailViewModel.Input(invokedViewWillAppear: invokedViewWillAppear)
+        let output = viewModel.transform(input)
+        bindButtonAction()
+        bindRecruitUser()
+        bindButtonStyle(by: output.recruitStatus)
     }
 }

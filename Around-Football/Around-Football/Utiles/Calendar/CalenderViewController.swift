@@ -7,6 +7,8 @@
 
 import UIKit
 
+//TODO: - 달력 바꾸기
+
 final class CalenderViewController: UIViewController {
     
     // MARK: - Properties
@@ -18,6 +20,7 @@ final class CalenderViewController: UIViewController {
     private var days: [String] = []
     private var selectedIndexPath: IndexPath? //캘린더 선택cell
     var selectedDateString: String? //캘린더에서 선택한 날짜 String
+    var selectedDate: Date? //파베에 올리는 Date타입
     lazy var startTimeString: String = setSelectedTime(input: startTimePicker.date)
     lazy var endTimeString: String = setSelectedTime(input: endTimePicker.date)
 
@@ -245,35 +248,35 @@ extension CalenderViewController {
     }
     
 //    //선택한 날짜와 시간 selectedDate에 반영
-//    private func stringToDate(dateString: String?, timePicker: UIDatePicker?) { //예시 날짜 문자열 "2023년 10월 24일"
-//        let dateFormatter = DateFormatter()
-//        dateFormatter.dateFormat = "yyyy년 MM월 dd일" //캘린더에서 선택한 날짜
-//        
-//        guard
-//            let dateString = dateString,
-//            let date = dateFormatter.date(from: dateString),
-//            let timePicker = timePicker
-//        else {
-//            return
-//        }
-//        
-//        //picker에서 선택한 시간 반영
-//        let selectedTime = timePicker.date
-//        let calendar = Calendar.current
-//        let dateComponents = calendar.dateComponents([.year, .month, .day], from: date)
-//        let timeComponents = calendar.dateComponents([.hour, .minute], from: selectedTime)
-//
-//        var combinedComponents = DateComponents()
-//        combinedComponents.year = dateComponents.year
-//        combinedComponents.month = dateComponents.month
-//        combinedComponents.day = dateComponents.day
-//        combinedComponents.hour = timeComponents.hour
-//        combinedComponents.minute = timeComponents.minute
-//
-//        guard let resultDate = calendar.date(from: combinedComponents) else { return }
-//        print("선택된 날짜와 시간은 \(resultDate)입니다")
-//        selectedStartDate = resultDate
-//    }
+    private func stringToDate(dateString: String?, timePicker: UIDatePicker?) -> Date { //예시 날짜 문자열 "2023년 10월 24일"
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy년 MM월 dd일" //캘린더에서 선택한 날짜
+        
+        guard
+            let dateString = dateString,
+            let date = dateFormatter.date(from: dateString),
+            let timePicker = timePicker
+        else {
+            return Date()
+        }
+        
+        //picker에서 선택한 시간 반영
+        let selectedTime = timePicker.date
+        let calendar = Calendar.current
+        let dateComponents = calendar.dateComponents([.year, .month, .day], from: date)
+        let timeComponents = calendar.dateComponents([.hour, .minute], from: selectedTime)
+
+        var combinedComponents = DateComponents()
+        combinedComponents.year = dateComponents.year
+        combinedComponents.month = dateComponents.month
+        combinedComponents.day = dateComponents.day
+        combinedComponents.hour = timeComponents.hour
+        combinedComponents.minute = timeComponents.minute
+
+        guard let resultDate = calendar.date(from: combinedComponents) else { return Date() }
+        print("선택된 날짜와 시간은 \(resultDate)입니다")
+        return resultDate
+    }
     
     private func updateDays() {
         days.removeAll()
@@ -322,7 +325,7 @@ extension CalenderViewController: UICollectionViewDelegateFlowLayout, UICollecti
     }
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        
+        // FIXME: - 선택된 날짜가 현재날짜로만 등록됨 (선택된 날짜 아님)
         if let previousSelectedIndexPath = selectedIndexPath,
            let previousSelectedCell = collectionView.cellForItem(at: previousSelectedIndexPath) as? DateCell {
             previousSelectedCell.isSelected = false
@@ -342,11 +345,12 @@ extension CalenderViewController: UICollectionViewDelegateFlowLayout, UICollecti
         
         if let date = Int(selectedCell.dateLabel.text ?? "") { //선택한 Date 저장
             selectedDateString = "\(yearAndMonth) \(date)일"
-//            stringToDate(dateString: selectedDateString, timePicker: nil)
+            self.selectedDate = stringToDate(dateString: selectedDateString, timePicker: nil)
+            print("날짜 선택됨: \(String(describing: self.selectedDate))")
             print(selectedDateString as Any)
 //            print(selectedStartDate as Any)
         }
-        
+        print("string: \(selectedDateString), date: \(selectedDate)")
         // 선택한 셀의 indexPath를 저장
         selectedIndexPath = indexPath
     }

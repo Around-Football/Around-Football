@@ -7,6 +7,8 @@
 
 import UIKit
 
+import Firebase
+import RxCocoa
 import RxSwift
 import RxCocoa
 import SnapKit
@@ -128,7 +130,7 @@ final class InviteViewController: UIViewController {
         $0.textAlignment = .left
     }
     
-    private lazy var addButton = AFButton(frame: .zero, buttonTitle: "등록하기")
+    private lazy var addButton = AFButton(buttonTitle: "등록하기", color: AFColor.primary)
     
     // MARK: - Lifecycles
     
@@ -233,6 +235,67 @@ final class InviteViewController: UIViewController {
             .disposed(by: disposeBag)
     }
     
+    func areFieldsEmptyObservable() -> Observable<Bool> {
+        
+        let fieldObservables = [
+            viewModel.fieldName.asObservable(),
+            viewModel.type.asObservable(),
+            viewModel.gamePrice.asObservable(),
+            viewModel.contentTitle.asObservable(),
+            viewModel.content.asObservable(),
+        ]
+        
+        return Observable
+            .combineLatest(fieldObservables)
+            .map { fields in
+                return fields.filter { $0 == nil || $0 == "" }.count == 0 ? true : false
+            }
+    }
+    
+    private func setAddButton() {
+        
+        searchViewModel.dataSubject
+            .subscribe(onNext: { [weak self] place in
+                guard let self else { return }
+                viewModel.fieldName.accept(place.name)
+                viewModel.fieldAddress.accept(place.address)
+                let region = String(place.address.split(separator: " ").first ?? "")
+                viewModel.region.accept(region)
+            })
+            .disposed(by: disposeBag)
+        
+        //TODO: - 다 입력했을때 버튼 활성화되도록 수정
+        
+        areFieldsEmptyObservable()
+            .bind(onNext: { [weak self] bool in
+            guard let self else { return }
+            if bool == true {
+                addButton.setTitle("작성 완료", for: .normal)
+                addButton.setTitleColor(.white, for: .normal)
+                addButton.isEnabled = true
+            } else {
+                addButton.setTitle("모든 항목을 작성해주세요", for: .normal)
+                addButton.setTitleColor(.gray, for: .normal)
+                addButton.isEnabled = false
+            }
+        }).disposed(by: disposeBag)
+        
+        addButton.buttonActionHandler = { [weak self] in
+            guard let self else { return }
+            //현재 값 뷰모델에 전달
+            viewModel.peopleCount.accept(peopleView.count)
+            viewModel.contentTitle.accept(titleTextField.text)
+            viewModel.content.accept(contentTextView.text)
+            viewModel.matchDateString.accept(calenderViewController.selectedDateString)
+            viewModel.matchDate.accept(Timestamp(date: calenderViewController.selectedDate ?? Date()))
+            viewModel.startTime.accept(calenderViewController.startTimeString)
+            viewModel.endTime.accept(calenderViewController.endTimeString)
+            //올리기 함수
+            viewModel.createRecruitFieldData()
+            viewModel.coordinator.popInviteViewController()
+        }
+    }
+    
     private func keyboardController() {
         //키보드 올리기
         NotificationCenter.default.addObserver(
@@ -292,14 +355,16 @@ final class InviteViewController: UIViewController {
         placeView.snp.makeConstraints { make in
             make.top.equalTo(contentView.snp.top)
             make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
-            make.width.equalTo(UIScreen.main.bounds.width * 2/3)
+            make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
+//            make.width.equalToSuperview()
             make.height.equalTo(50)
         }
         
         peopleView.snp.makeConstraints { make in
-            make.top.equalTo(contentView.snp.top)
+            make.top.equalTo(placeView.snp.bottom)
+            make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
             make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
-            make.width.equalTo(UIScreen.main.bounds.width * 1/3)
+//            make.width.equalTo(UIScreen.main.bounds.width * 1/3)
             make.height.equalTo(50)
         }
         

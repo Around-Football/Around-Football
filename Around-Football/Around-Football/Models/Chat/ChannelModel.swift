@@ -17,7 +17,7 @@ struct Channel: ChannelProtocol {
     var representation: [String: Any] {
         let rep = [
             "id": id,
-            "isAvailbale": isAvailable
+            "isAvailable": isAvailable
         ] as [String: Any]
         return rep
     }
@@ -29,8 +29,8 @@ struct Channel: ChannelProtocol {
     
     init?(_ dictionary: [String: Any]) {
         guard let id = dictionary["id"] as? String,
-              let isAvailbale = dictionary["isAvailbale"] as? Bool else { return nil }
+              let isAvailable = dictionary["isAvailable"] as? Bool else { return nil }
         self.id = id
-        self.isAvailable = isAvailbale
+        self.isAvailable = isAvailable
     }
 }

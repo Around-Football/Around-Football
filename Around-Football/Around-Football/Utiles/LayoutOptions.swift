@@ -8,17 +8,17 @@
 import UIKit
 
 enum LayoutOptions {
-    static let cornerRadious: CGFloat = 5
+    static let cornerRadious: CGFloat = 8
     static let shadowCornerRadious: CGFloat = 5
     static let shadowOpacity: Float = 0.3
     static let titleSize: CGFloat = 15
 }
 
 enum SuperviewOffsets {
-    static let topPadding: Float = 20
+    static let topPadding: Float = 24
     static let leadingPadding: Float = 20
     static let trailingPadding: Float = -20
-    static let bottomPadding: Float = -20
+    static let bottomPadding: Float = -24
 }
 
 extension UIColor {
@@ -27,4 +27,12 @@ extension UIColor {
     static var primary = UIColor(red: 91/255, green: 156/255, blue: 203/255, alpha: 1)
     /// 연한 회색
     static var incomingMessageBackground = UIColor(red: 98/255, green: 98/255, blue: 98/255, alpha: 1)
+    
+    /// Convert color to image
+    func image(_ size: CGSize = CGSize(width: 1, height: 1)) -> UIImage {
+        return UIGraphicsImageRenderer(size: size).image { rendererContext in
+            self.setFill()
+            rendererContext.fill(CGRect(origin: .zero, size: size))
+        }
+    }
 }

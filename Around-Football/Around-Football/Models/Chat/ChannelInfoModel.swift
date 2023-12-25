@@ -15,6 +15,7 @@ struct ChannelInfo: ChannelProtocol {
     let withUserName: String
     let recentDate: Date
     let previewContent: String
+    let recruitID: String
     let alarmNumber: Int
     let isAvailable: Bool
     var representation: [String: Any] {
@@ -25,6 +26,7 @@ struct ChannelInfo: ChannelProtocol {
             "recentDate": recentDate,
             "alarmNumber": alarmNumber,
             "previewContent": previewContent,
+            "recruitID": recruitID,
             "isAvailable": isAvailable
         ] as [String: Any]
         
@@ -32,12 +34,13 @@ struct ChannelInfo: ChannelProtocol {
     }
     
     // Create ChannelInfo Init
-    init(id: String, withUser: User) {
+    init(id: String, withUser: User, recruitID: String) {
         self.id = id
         self.withUserId = withUser.id
         self.withUserName = withUser.userName
         self.recentDate = Date()
         self.previewContent = ""
+        self.recruitID = recruitID
         self.alarmNumber = 0
         self.isAvailable = true
     }
@@ -50,6 +53,7 @@ struct ChannelInfo: ChannelProtocol {
               let withUserName = dictionary["withUserName"] as? String,
               let recentDate = dictionary["recentDate"] as? Timestamp,
               let previewContent = dictionary["previewContent"] as? String,
+              let recruitID = dictionary["recruitID"] as? String,
               let alarmNumber = dictionary["alarmNumber"] as? Int,
               let isAvailable = dictionary["isAvailable"] as? Bool else { return nil }
         
@@ -59,6 +63,7 @@ struct ChannelInfo: ChannelProtocol {
         self.withUserId = withUserId
         self.withUserName = withUserName
         self.previewContent = previewContent
+        self.recruitID = recruitID
         self.alarmNumber = alarmNumber
         self.isAvailable = isAvailable
     }

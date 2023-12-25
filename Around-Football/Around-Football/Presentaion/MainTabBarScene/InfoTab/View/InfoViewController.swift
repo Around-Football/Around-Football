@@ -17,8 +17,8 @@ final class InfoViewController: UIViewController {
     
     private var viewModel: InfoViewModel
     private var disposeBag = DisposeBag()
-    private let profileAndEditView = ProfileAndEditView()
     
+    private let profileAndEditView = ProfileAndEditView()
     private let iconAndImage: [(icon: String, title: String)] = [
         (icon: "heart", title: "관심 글"),
         (icon: "doc.text", title: "작성 글"),
@@ -129,7 +129,8 @@ final class InfoViewController: UIViewController {
     
     private func configureUI() {
         view.backgroundColor = .white
-        navigationItem.title = "프로필"
+        navigationController?.navigationBar.prefersLargeTitles = true
+        navigationItem.title = "내 정보"
         
         view.addSubviews(profileAndEditView,
                          infoCollectionView,
@@ -147,7 +148,7 @@ final class InfoViewController: UIViewController {
             make.top.equalTo(profileAndEditView.snp.bottom).offset(10)
             make.leading.equalToSuperview().offset((SuperviewOffsets.leadingPadding))
             make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
-            make.height.equalTo(240)
+            make.height.equalTo((UIScreen.main.bounds.width / 3) - 20)
         }
         
         infoStackView.snp.makeConstraints { make in

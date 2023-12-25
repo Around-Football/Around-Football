@@ -15,13 +15,34 @@ final class InputInfoView: UIView {
 
     // MARK: - Properties
     
-    //버튼으로 지역 누르면 보내줌
-    let regionSubject = PublishSubject<String?>()
-    
-    private lazy var mainScrollView = UIScrollView().then {
-        $0.backgroundColor = .systemBackground
-    }
+    private lazy var mainScrollView = UIScrollView()
     private let contentView = UIView()
+    
+    private let userNameLabel = AFTitleSmall(title: "이름")
+    private let userAgeLabel = AFTitleSmall(title: "나이")
+    private let userAreaLabel = AFTitleSmall(title: "지역")
+    
+    private let userGenderLabel = AFTitleSmall(title: "성별")
+    let maleButton = AFMediumButton(buttonTitle: "남성", color: AFColor.primary)
+    let femaleButton = AFMediumButton(buttonTitle: "여성", color: AFColor.primary)
+
+    private let userMainUsedFeetLabel = AFTitleSmall(title: "주발")
+    let rightFootButton = AFMediumButton(buttonTitle: "오른발", color: AFColor.primary)
+    let leftFootButton = AFMediumButton(buttonTitle: "왼발", color: AFColor.primary)
+    let bothFeetButton = AFMediumButton(buttonTitle: "양발", color: AFColor.primary)
+    
+    private let userPositionLabel = AFTitleSmall(title: "선호 포지션")
+    let fwButton = AFMediumButton(buttonTitle: "FW", color: AFColor.primary)
+    let mfButton = AFMediumButton(buttonTitle: "MF", color: AFColor.primary)
+    let dfButton = AFMediumButton(buttonTitle: "DF", color: AFColor.primary)
+    let gkButton = AFMediumButton(buttonTitle: "GK", color: AFColor.primary)
+    
+    let nextButton = AFButton(buttonTitle: "확인", color: .black)
+
+    private let titleLabel = UILabel().then {
+        $0.text = "추가 정보를 작성해주세요"
+        $0.font = AFFont.titleMedium
+    }
     
     // 이름
     private lazy var userNameStackView = UIStackView().then{
@@ -31,43 +52,52 @@ final class InputInfoView: UIView {
         $0.spacing = 10
         $0.addArrangedSubviews(userNameLabel,
                                userNameTextField)
+        userNameTextField.snp.makeConstraints { make in
+            make.height.equalTo(48)
+        }
         userNameTextField.makeSideAutoLayout()
-    }
-    
-    private let userNameLabel = UILabel().then {
-        $0.text = "이름"
-        $0.font = .boldSystemFont(ofSize: 16)
     }
     
     let userNameTextField = UITextField().then {
         $0.layer.cornerRadius = LayoutOptions.cornerRadious
         $0.placeholder = "이름을 입력해주세요"
         $0.borderStyle = .roundedRect
-        $0.font = .systemFont(ofSize: 15)
+        $0.layer.borderColor = AFColor.grayScale100.cgColor
+        $0.font = AFFont.text
     }
     
     // 나이
+    let ageMenus: [String]  = ["10대", "20대", "30대", "40대", "50대 이상"]
+    lazy var ageFilterButton = AFMenuButton(buttonTitle: "나이 선택", menus: ageMenus)
     private lazy var userAgeStackView = UIStackView().then {
         $0.axis = .vertical
         $0.distribution = .fill
         $0.alignment = .leading
         $0.spacing = 10
         $0.addArrangedSubviews(userAgeLabel,
-                               userAgeTextField)
-        userAgeTextField.makeSideAutoLayout()
+                               ageFilterButton)
+        ageFilterButton.snp.makeConstraints { make in
+            make.width.equalToSuperview()
+            make.height.equalTo(48)
+        }
     }
-    
-    private let userAgeLabel = UILabel().then{
-        $0.text = "나이"
-        $0.font = .boldSystemFont(ofSize: 16)
-    }
-    
-    let userAgeTextField = UITextField().then {
-        $0.layer.cornerRadius = LayoutOptions.cornerRadious
-        $0.placeholder = "나이를 입력해주세요"
-        $0.borderStyle = .roundedRect
-        $0.font = .systemFont(ofSize: 15)
-        $0.keyboardType = .numberPad
+
+    // 지역
+    let regionMenus: [String]  = ["서울", "인천", "부산", "대구", "울산", "대전", "광주",
+                                  "세종특별자치시", "경기", "강원특별자치도", "충북", "충남",
+                                  "경북", "경남", "전북", "전남", "제주특별자치도"]
+    lazy var regionFilterButton = AFMenuButton(buttonTitle: "지역 선택", menus: regionMenus)
+    private lazy var userRegionStackView = UIStackView().then{
+        $0.axis = .vertical
+        $0.distribution = .fill
+        $0.alignment = .leading
+        $0.spacing = 10
+        $0.addArrangedSubviews(userAreaLabel,
+                               regionFilterButton)
+        regionFilterButton.snp.makeConstraints { make in
+            make.width.equalToSuperview()
+            make.height.equalTo(48)
+        }
     }
     
     // 성별
@@ -75,85 +105,34 @@ final class InputInfoView: UIView {
         $0.axis = .vertical
         $0.distribution = .fill
         $0.alignment = .leading
-        $0.spacing = 10
-        $0.addArrangedSubviews(userDetailSexLabel,
-                               userDetailSexButtonStackView)
-        userDetailSexButtonStackView.snp.makeConstraints {
-            $0.leading.equalToSuperview()
-        }
+        $0.spacing = 8
+        $0.addArrangedSubviews(userGenderLabel,
+                               userGenderButtonStackView)
     }
-    
-    private let userDetailSexLabel = UILabel().then{
-        $0.text = "성별"
-        $0.font = .boldSystemFont(ofSize: 16)
-    }
-    
-    private lazy var userDetailSexButtonStackView = UIStackView().then{
-        $0.axis = .horizontal
-        $0.spacing = 10
-        $0.addArrangedSubviews(maleButton,
-                               femaleButton)
-    }
-    
-    let maleButton = UIButton().then{
-        $0.setTitle("남성", for: .normal)
-        $0.titleLabel?.font = .systemFont(ofSize: 15)
-        $0.setTitleColor(.black, for: .normal)
-        $0.setImage(UIImage(systemName: "circle"), for: .normal)
-        $0.setImage(UIImage(systemName: "checkmark.circle.fill"), for: .selected)
-    }
-    
-    let femaleButton = UIButton().then{
-        $0.setTitle("여성", for: .normal)
-        $0.titleLabel?.font = .systemFont(ofSize: 15)
-        $0.setTitleColor(.black, for: .normal)
-        $0.setImage(UIImage(systemName: "circle"), for: .normal)
-        $0.setImage(UIImage(systemName: "checkmark.circle.fill"), for: .selected)
-    }
-    
-    // 지역
-    private lazy var userAreaStackView = UIStackView().then{
+
+    private lazy var userGenderButtonStackView = UIStackView().then {
+        let emptyView = UIView()
         $0.axis = .horizontal
         $0.distribution = .fillEqually
-        $0.alignment = .center
-        $0.spacing = 100
-        $0.addArrangedSubviews(userAreaLabel,
-                               regionFilterButton)
-    }
-    
-    private let userAreaLabel = UILabel().then{
-        $0.text = "지역"
-        $0.font = .boldSystemFont(ofSize: 16)
-    }
-    
-    lazy var regionFilterButton: UIButton = {
-        var config = UIButton.Configuration.plain()
-        config.imagePadding = 10
-        
-        let button = UIButton(configuration: config).then {
-            let image = UIImage(systemName: "chevron.down")
-            $0.setTitle("지역 선택", for: .normal)
-            $0.setTitleColor(.label, for: .normal)
-            $0.setImage(image?.withTintColor(UIColor.systemGray, renderingMode: .alwaysOriginal),
-                        for: .normal)
-            $0.layer.cornerRadius = LayoutOptions.cornerRadious
-            $0.layer.borderWidth = 1.0
-            $0.layer.borderColor = UIColor.systemGray.cgColor
-            $0.showsMenuAsPrimaryAction = true
+        $0.spacing = 8
+        $0.addArrangedSubviews(maleButton,
+                               femaleButton,
+                               emptyView)
+        maleButton.snp.makeConstraints { make in
+            make.width.equalTo(UIScreen.main.bounds.width / 3)
+            make.height.equalTo(40)
         }
         
-        let menus: [String]  = ["전체", "서울", "인천", "부산", "대구", "울산", "대전", "광주", "세종특별자치시", "경기", "강원특별자치도", "충북", "충남", "경북", "경남", "전북", "전남", "제주특별자치도"]
+        femaleButton.snp.makeConstraints { make in
+            make.width.equalTo(UIScreen.main.bounds.width / 3)
+            make.height.equalTo(40)
+        }
         
-        button.menu = UIMenu(children: menus.map { city in
-            UIAction(title: city) { [weak self] _ in
-                guard let self else { return }
-                regionSubject.onNext(city)
-                button.setTitle(city, for: .normal)
-            }
-        })
-        
-        return button
-    }()
+        emptyView.snp.makeConstraints { make in
+            make.width.equalTo(UIScreen.main.bounds.width / 3)
+            make.height.equalTo(40)
+        }
+    }
     
     // 주발
     private lazy var userMainUsedFeetStackView = UIStackView().then {
@@ -163,51 +142,31 @@ final class InputInfoView: UIView {
         $0.spacing = 10
         $0.addArrangedSubviews(userMainUsedFeetLabel,
                                userMainUsedFeetButtonStackView)
-        userMainUsedFeetButtonStackView.snp.makeConstraints {
-            $0.leading.equalToSuperview()
-        }
-    }
-    
-    private let userMainUsedFeetLabel = UILabel().then{
-        $0.text = "주발"
-        $0.font = .boldSystemFont(ofSize: 16)
     }
     
     private lazy var userMainUsedFeetButtonStackView = UIStackView().then {
         $0.axis = .horizontal
-        $0.distribution = .fill
+        $0.distribution = .fillEqually
         $0.alignment = .leading
         $0.spacing = 10
         $0.addArrangedSubviews(rightFootButton,
                                leftFootButton,
                                bothFeetButton)
-    }
-    
-    let rightFootButton = UIButton().then {
-        $0.setTitle("오른발", for: .normal)
-        $0.titleLabel?.font = .systemFont(ofSize: 15)
-        $0.setTitleColor(.black, for: .normal)
-        $0.setImage(UIImage(systemName: "square"), for: .normal)
-        $0.setImage(UIImage(systemName: "checkmark.square.fill"), for: .selected)
         
-    }
-    
-    let leftFootButton = UIButton().then {
-        $0.setTitle("왼발", for: .normal)
-        $0.titleLabel?.font = .systemFont(ofSize: 15)
-        $0.setTitleColor(.black, for: .normal)
+        rightFootButton.snp.makeConstraints { make in
+            make.width.equalTo(UIScreen.main.bounds.width / 3)
+            make.height.equalTo(40)
+        }
         
-        $0.setImage(UIImage(systemName: "square"), for: .normal)
-        $0.setImage(UIImage(systemName: "checkmark.square.fill"), for: .selected)
+        leftFootButton.snp.makeConstraints { make in
+            make.width.equalTo(UIScreen.main.bounds.width / 3)
+            make.height.equalTo(40)
+        }
         
-    }
-    
-    let bothFeetButton = UIButton().then {
-        $0.setTitle("양발", for: .normal)
-        $0.titleLabel?.font = .systemFont(ofSize: 15)
-        $0.setTitleColor(.black, for: .normal)
-        $0.setImage(UIImage(systemName: "square"), for: .normal)
-        $0.setImage(UIImage(systemName: "checkmark.square.fill"), for: .selected)
+        bothFeetButton.snp.makeConstraints { make in
+            make.width.equalTo(UIScreen.main.bounds.width / 3)
+            make.height.equalTo(40)
+        }
     }
     
     // 포지션
@@ -215,72 +174,40 @@ final class InputInfoView: UIView {
         $0.axis = .vertical
         $0.distribution = .fill
         $0.alignment = .leading
-        $0.spacing = 10
+        $0.spacing = 8
         $0.addArrangedSubviews(userPositionLabel,
                                userPositionButtonStackView)
-        userPositionButtonStackView.snp.makeConstraints {
-            $0.leading.equalToSuperview()
-        }
-    }
-    
-    private let userPositionLabel = UILabel().then{
-        $0.text = "선호 포지션(복수선택 가능)"
-        $0.font = .boldSystemFont(ofSize: 16)
     }
     
     private lazy var userPositionButtonStackView = UIStackView().then {
         $0.axis = .horizontal
-        $0.distribution = .fill
+        $0.distribution = .fillEqually
         $0.alignment = .leading
-        $0.spacing = 10
+        $0.spacing = 8
         $0.addArrangedSubviews(fwButton,
                                mfButton,
                                dfButton,
                                gkButton)
-    }
-    
-    let fwButton = UIButton().then {
-        $0.setTitle("FW", for: .normal)
-        $0.titleLabel?.font = .systemFont(ofSize: 15)
-        $0.setTitleColor(.black, for: .normal)
-        $0.setImage(UIImage(systemName: "square"), for: .normal)
-        $0.setImage(UIImage(systemName: "checkmark.square.fill"), for: .selected)
         
-    }
-    
-    let mfButton = UIButton().then {
-        $0.setTitle("MF", for: .normal)
-        $0.titleLabel?.font = .systemFont(ofSize: 15)
-        $0.setTitleColor(.black, for: .normal)
-        $0.setImage(UIImage(systemName: "square"), for: .normal)
-        $0.setImage(UIImage(systemName: "checkmark.square.fill"), for: .selected)
+        fwButton.snp.makeConstraints { make in
+            make.width.equalTo(UIScreen.main.bounds.width / 4)
+            make.height.equalTo(40)
+        }
         
-    }
-    
-    let dfButton = UIButton().then {
-        $0.setTitle("DF", for: .normal)
-        $0.titleLabel?.font = .systemFont(ofSize: 15)
-        $0.setTitleColor(.black, for: .normal)
-        $0.setImage(UIImage(systemName: "square"), for: .normal)
-        $0.setImage(UIImage(systemName: "checkmark.square.fill"), for: .selected)
+        mfButton.snp.makeConstraints { make in
+            make.width.equalTo(UIScreen.main.bounds.width / 4)
+            make.height.equalTo(40)
+        }
         
-    }
-    
-    let gkButton = UIButton().then {
-        $0.setTitle("GK", for: .normal)
-        $0.titleLabel?.font = .systemFont(ofSize: 15)
-        $0.setTitleColor(.black, for: .normal)
-        $0.setImage(UIImage(systemName: "square"), for: .normal)
-        $0.setImage(UIImage(systemName: "checkmark.square.fill"), for: .selected)
-    }
-    
-    // 다음 버튼
-    let nextButton = UIButton().then {
-        $0.setTitle("완료", for: .normal)
-        $0.backgroundColor = .black
-        $0.setTitleColor(.white, for: .normal)
-        $0.layer.cornerRadius = LayoutOptions.cornerRadious
-        $0.clipsToBounds = true
+        dfButton.snp.makeConstraints { make in
+            make.width.equalTo(UIScreen.main.bounds.width / 4)
+            make.height.equalTo(40)
+        }
+        
+        gkButton.snp.makeConstraints { make in
+            make.width.equalTo(UIScreen.main.bounds.width / 4)
+            make.height.equalTo(40)
+        }
     }
     
     // MARK: - Lifecycles
@@ -300,28 +227,33 @@ final class InputInfoView: UIView {
     private func setupUI() {
         addSubviews(mainScrollView)
         mainScrollView.addSubview(contentView)
-        contentView.addSubviews(userNameStackView,
+        contentView.addSubviews(titleLabel,
+                                userNameStackView,
                                 userAgeStackView,
                                 userGenderStackView,
-                                userAreaStackView,
+                                userRegionStackView,
                                 userMainUsedFeetStackView,
                                 userPositionStackView,
                                 nextButton)
         
         mainScrollView.snp.makeConstraints { make in
-            make.top.equalTo(safeAreaLayoutGuide)
-            make.bottom.equalTo(safeAreaLayoutGuide)
-            make.leading.equalToSuperview()
-            make.trailing.equalToSuperview()
+            make.top.bottom.equalTo(safeAreaLayoutGuide)
+            make.leading.trailing.equalToSuperview()
         }
         
         contentView.snp.makeConstraints { make in
-            make.width.equalTo(mainScrollView.snp.width)
-            make.height.equalTo(mainScrollView.snp.height)
+            make.top.leading.trailing.bottom.equalToSuperview()
+            make.width.equalToSuperview()
+        }
+        
+        titleLabel.snp.makeConstraints { make in
+            make.top.equalToSuperview()
+            make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
         }
         
         userNameStackView.snp.makeConstraints { make in
-            make.top.leading.equalToSuperview().offset(SuperviewOffsets.topPadding)
+            make.top.equalTo(titleLabel.snp.bottom).offset(32)
+            make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
             make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
             make.bottom.equalTo(userAgeStackView.snp.top).offset(SuperviewOffsets.bottomPadding)
         }
@@ -329,43 +261,50 @@ final class InputInfoView: UIView {
         userAgeStackView.snp.makeConstraints { make in
             make.top.equalTo(userNameStackView.snp.bottom).offset(SuperviewOffsets.topPadding)
             make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
+            make.trailing.equalTo(userRegionStackView.snp.leading).offset(-10)
+            make.bottom.equalTo(userGenderStackView.snp.top).offset(SuperviewOffsets.bottomPadding)
+            make.width.equalTo(userRegionStackView.snp.width)
+        }
+        
+        userRegionStackView.snp.makeConstraints { make in
+            make.top.equalTo(userNameStackView.snp.bottom).offset(SuperviewOffsets.topPadding)
+            make.leading.equalTo(userAgeStackView.snp.trailing).offset(10)
             make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
             make.bottom.equalTo(userGenderStackView.snp.top).offset(SuperviewOffsets.bottomPadding)
+            make.width.equalTo(userAgeStackView.snp.width)
         }
         
         userGenderStackView.snp.makeConstraints { make in
-            make.top.equalTo(userAgeStackView.snp.bottom).offset(SuperviewOffsets.topPadding)
-            make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
-            make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
-            make.bottom.equalTo(userAreaStackView.snp.top).offset(SuperviewOffsets.bottomPadding)
-        }
-        
-        userAreaStackView.snp.makeConstraints { make in
-            make.top.equalTo(userGenderStackView.snp.bottom).offset(SuperviewOffsets.topPadding)
+            make.top.equalTo(userRegionStackView.snp.bottom).offset(SuperviewOffsets.topPadding)
             make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
             make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
             make.bottom.equalTo(userMainUsedFeetStackView.snp.top).offset(SuperviewOffsets.bottomPadding)
+            make.height.equalTo(65)
         }
         
         userMainUsedFeetStackView.snp.makeConstraints { make in
-            make.top.equalTo(userAreaStackView.snp.bottom).offset(SuperviewOffsets.topPadding)
+            make.top.equalTo(userRegionStackView.snp.bottom).offset(SuperviewOffsets.topPadding)
             make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
             make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
             make.bottom.equalTo(userPositionStackView.snp.top).offset(SuperviewOffsets.bottomPadding)
+            make.height.equalTo(65)
         }
         
         userPositionStackView.snp.makeConstraints { make in
             make.top.equalTo(userMainUsedFeetStackView.snp.bottom).offset(SuperviewOffsets.topPadding)
             make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
             make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
+            make.height.equalTo(65)
         }
         
+        //TODO: - 아래 고정하기
+        
         nextButton.snp.makeConstraints { make in
-            make.top.equalTo(userPositionStackView.snp.bottom).offset(SuperviewOffsets.topPadding)
+            make.top.equalTo(userPositionStackView.snp.bottom).offset(70)
             make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
             make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
-            make.bottom.equalToSuperview().offset(SuperviewOffsets.bottomPadding).priority(.required)
-            make.height.equalTo(50)
+            make.bottom.equalTo(contentView.snp.bottom).offset(SuperviewOffsets.bottomPadding).priority(.required)
+            make.height.equalTo(55)
         }
     }
 }

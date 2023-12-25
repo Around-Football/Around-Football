@@ -26,6 +26,7 @@ final class ChannelViewModel {
     struct Input {
         let invokedViewWillAppear: Observable<Void>
         let selectedChannel: Observable<IndexPath>
+        let invokedDeleteChannel: Observable<IndexPath>
     }
     
     struct Output {
@@ -51,17 +52,12 @@ final class ChannelViewModel {
                     owner.channelAPI.subscribe()
                         .asObservable()
                         .subscribe(onNext: { result in
-                            print("channels")
-                            print(result)
                             owner.updateCell(to: result)
                         }, onError: { error in
                             print("DEBUG - setupListener Error: \(error.localizedDescription)")
                             
                         })
                         .disposed(by: owner.disposeBag)
-                } else {
-                    print("nochannels")
-                    
                 }
             })
             .disposed(by: disposeBag)
@@ -74,19 +70,16 @@ final class ChannelViewModel {
         data.forEach { channel, documentChangeType in
             switch documentChangeType {
             case .added:
-                print("added")
                 guard currentChannels.contains(channel) == false else { return }
                 currentChannels.append(channel)
                 currentChannels.sort()
                 
             case .modified:
-                print("Modified")
                 guard let index = currentChannels.firstIndex(of: channel) else { return }
                 currentChannels[index] = channel
-                print(currentChannels[index].previewContent)
+                currentChannels.sort()
                 
             case .removed:
-                print("removed")
                 guard let index = currentChannels.firstIndex(of: channel) else { return }
                 currentChannels.remove(at: index)
             }
@@ -96,9 +89,9 @@ final class ChannelViewModel {
     
     func transform(_ input: Input) -> Output {
         setupListener(currentUser: self.currentUser.asObservable())
+        deleteChannelInfo(by: input.invokedDeleteChannel)
         let isShowing = configureShowingLoginView(by: input.invokedViewWillAppear)
         let navigateTo = emitSelectedChannelInfo(by: input.selectedChannel)
-        
         return Output(isShowing: isShowing, navigateTo: navigateTo)
     }
     
@@ -108,7 +101,7 @@ final class ChannelViewModel {
             .flatMap { [weak self] _ -> Observable<Bool> in
                 guard let self else { return .just(true) }
                 do {
-                    if let user = try currentUser.value() {
+                    if let _ = try currentUser.value() {
                         return .just(false)
                     }
                     return .just(true)
@@ -126,6 +119,28 @@ final class ChannelViewModel {
             }
     }
     
+    private func deleteChannelInfo(by inputObserver: Observable<IndexPath>) {
+        inputObserver
+            .withUnretained(self)
+            .subscribe(onNext: { (owner, indexPath) in
+                guard let currentUser = try? owner.currentUser.value() else { return }
+                let channelInfo = owner.channels.value[indexPath.row]
+                let channelId = channelInfo.id
+                let withUserId = channelInfo.withUserId
+                owner.channelAPI.deleteChannelInfo(uid: currentUser.id, channelId: channelId)
+                if channelInfo.isAvailable {
+                    owner.channelAPI.updateDeleteChannelInfo(withUserId: withUserId, channelId: channelId)
+                    
+                    let deleteChannelMessage = Message(user: currentUser, content: "", messageType: .inform)
+                    ChatAPI.shared.save([deleteChannelMessage], channelId: channelId)
+                } else {
+                    owner.channelAPI.deleteChannel(channelId: channelId)
+                }
+            })
+            .disposed(by: disposeBag)
+        
+    }
+    
     
     func showChatView(channelInfo: ChannelInfo) {
         coordinator?.pushChatView(channelInfo: channelInfo)
@@ -133,6 +148,10 @@ final class ChannelViewModel {
     
     func showLoginView() {
         coordinator?.presentLoginViewController()
+    }
+    
+    func showDeleteAlertView(alert: UIAlertController) {
+        coordinator?.presentDeleteAlertController(alert: alert)
     }
     
     func removeListner() {
