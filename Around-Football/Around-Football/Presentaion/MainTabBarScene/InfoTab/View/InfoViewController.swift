@@ -97,6 +97,24 @@ final class InfoViewController: UIViewController {
             cell.setValues(title: item)
         }.disposed(by: disposeBag)
         
+        infoTableView.rx.modelSelected(String.self)
+            .subscribe { [weak self] cellTitle in
+                guard let self else { return }
+                
+                switch cellTitle {
+                case "내 정보 수정":
+                    viewModel.coordinator?.pushEditView()
+                case "관심 글":
+                    viewModel.coordinator?.pushBookmarkPostViewController()
+                case "신청 글":
+                    viewModel.coordinator?.pushWrittenPostViewController()
+                case "작성 글":
+                    viewModel.coordinator?.pushApplicationPostViewController()
+                default:
+                    print("DEBUG: cell없음")
+                }
+            }.disposed(by: disposeBag)
+        
     }
     
     private func bindLogoutButton() {
