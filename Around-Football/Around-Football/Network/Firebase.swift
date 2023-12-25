@@ -127,27 +127,29 @@ final class FirebaseAPI {
     // MARK: - RxAlamofire
     
     //HomeList
-    func readRecruitRx(input: (
-        date: String?,
-        region: String?,
-        type: String?)
+    func readRecruitRx(input: RecruitFilter
     ) -> Observable<[Recruit]> {
         return Observable.create { observer in
             var collectionRef: Query = REF_RECRUIT
             
-            if let date = input.date {
-                collectionRef = collectionRef
-                    .whereField("matchDateString", isEqualTo: date)
-            }
+//            if let date = input.date {
+//                collectionRef = collectionRef
+//                    .whereField("matchDateString", isEqualTo: input.date)
+//            }
             
             if let region = input.region {
                 collectionRef = collectionRef
-                    .whereField("region", isEqualTo: region)
+                    .whereField("region", isEqualTo: input.region)
             }
             
             if let type = input.type {
                 collectionRef = collectionRef
-                    .whereField("type", isEqualTo: type)
+                    .whereField("type", isEqualTo: input.type)
+            }
+            
+            if let gender = input.gender {
+                collectionRef = collectionRef
+                    .whereField("gender", isEqualTo: input.gender)
             }
             
             collectionRef.getDocuments { snapshot, error in
@@ -257,9 +259,9 @@ extension FirebaseAPI {
     }
     
     //유저가 신청하기 누르면 pendingApplicationsUID 추가
-    func loadDetailCellApplicantRx(fieldID: String?) -> Observable<Recruit> {
+    func loadDetailCellApplicantRx(iD: String?) -> Observable<Recruit> {
         return Observable.create { observer in
-            REF_RECRUIT.document(fieldID ?? "").getDocument { snapshot, error in
+            REF_RECRUIT.document(iD ?? "").getDocument { snapshot, error in
                 if error != nil {
                     print("ppendingApplicantUID 추가 오류")
                 }
@@ -431,6 +433,7 @@ extension FirebaseAPI {
         gamePrice: String,
         title: String?,
         content: String?,
+        matchDateString: String?,
         matchDate: Timestamp?,
         startTime: String?,
         endTime: String?,
@@ -452,6 +455,7 @@ extension FirebaseAPI {
                     "gamePrice": gamePrice,
                     "title": title,
                     "content": content,
+                    "matchDateString": matchDateString,
                     "matchDate": matchDate,
                     "startTime": startTime,
                     "endTime": endTime,
