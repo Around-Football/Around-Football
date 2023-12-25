@@ -324,7 +324,7 @@ final class HomeViewController: UIViewController {
         oneLIneCalender.view.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide).offset(16)
             make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
-            make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
+            make.trailing.equalToSuperview()
             make.height.equalTo(64)
         }
         
