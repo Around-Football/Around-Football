@@ -12,7 +12,7 @@ import RxSwift
 final class HomeViewModel {
     
     struct Input {
-        let loadRecruitList: Observable<RecruitFilter>
+        let loadRecruitList: Observable<(String?, String?, String?)>
     }
     
     struct Output {
@@ -38,10 +38,10 @@ final class HomeViewModel {
         return output
     }
     
-    private func loadRecruitList(by inputObserver: Observable<RecruitFilter>) -> Observable<[Recruit]> {
+    private func loadRecruitList(by inputObserver: Observable<(String?, String?, String?)>) -> Observable<[Recruit]> {
         inputObserver
-            .flatMap { input -> Observable<[Recruit]> in
-                let recruitObservable = FirebaseAPI.shared.readRecruitRx(input: input)
+            .flatMap { inputTuple -> Observable<[Recruit]> in
+                let recruitObservable = FirebaseAPI.shared.readRecruitRx(input: inputTuple)
                 return recruitObservable
             }
     }

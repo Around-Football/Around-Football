@@ -80,14 +80,14 @@ class PeopleCountView: UIView {
         }
         
         peopleCountLabel.snp.makeConstraints { make in
-            make.top.equalToSuperview()
+            make.top.equalTo(peopleCountTitleLabel.snp.bottom).offset(5)
             make.centerX.equalToSuperview()
             make.bottom.equalToSuperview().offset(10)
         }
         
         minusButton.snp.makeConstraints { make in
             make.top.equalTo(peopleCountTitleLabel.snp.bottom).offset(5)
-            make.leading.equalTo(peopleCountTitleLabel.snp.trailing)
+            make.leading.equalToSuperview()
             make.trailing.equalTo(peopleCountLabel.snp.leading).offset(-10)
             make.bottom.equalToSuperview().offset(10)
             make.width.height.equalTo(35)
