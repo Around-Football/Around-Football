@@ -18,7 +18,7 @@ final class GroundTitleView: UIView {
     private let address = UITextView()
     private let groundTitleLabel = UILabel().then {
         $0.text = "장소"
-        $0.font = .systemFont(ofSize: 15, weight: .bold)
+        $0.font = AFFont.titleCard
     }
     
     private var buttonConfig: UIButton.Configuration {
@@ -28,24 +28,22 @@ final class GroundTitleView: UIView {
                                                        bottom: 10,
                                                        trailing: 10)
         config.imagePadding = 5
+        config.titleAlignment = .leading
         return config
     }
     
     lazy var searchFieldButton: UIButton = {
-        
         let button = UIButton(configuration: buttonConfig)
         let image = UIImage(systemName: "magnifyingglass")
-        // 버튼 타이틀과 이미지 설정
         button.setTitle("장소를 검색해주세요.", for: .normal)
-        button.setImage(image?.withTintColor(UIColor.systemGray, renderingMode: .alwaysOriginal),
-                        for: .normal)
-        
-        // 버튼 스타일 설정
+        button.setImage(image?.withTintColor(UIColor.systemGray, renderingMode: .alwaysOriginal),for: .normal)
         button.setTitleColor(.systemGray, for: .normal)
         button.layer.cornerRadius = LayoutOptions.cornerRadious
-        button.titleLabel?.textAlignment = .left
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.backgroundColor = .systemGray6
+        button.backgroundColor = .white
+        button.layer.borderWidth = 1
+        button.layer.borderColor = AFColor.grayScale200.cgColor
+        button.contentHorizontalAlignment = .leading
         return button
     }()
     
@@ -74,7 +72,7 @@ final class GroundTitleView: UIView {
             make.top.equalTo(groundTitleLabel.snp.bottom).offset(5)
             make.leading.equalToSuperview()
             make.width.equalToSuperview()
-            make.bottom.equalToSuperview().offset(10)
+            make.bottom.equalToSuperview().offset(-10)
         }
     }
 }
