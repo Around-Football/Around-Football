@@ -7,8 +7,8 @@
 
 import UIKit
 
-import RxCocoa
 import RxSwift
+import RxCocoa
 import Then
 import SnapKit
 
@@ -16,14 +16,7 @@ final class HomeTableViewCell: UITableViewCell {
     
     // MARK: - Properties
     
-    static let id: String = "HomeTableViewCellID"
-    var viewModel: HomeViewModel?
-    private var user = try? UserService.shared.currentUser_Rx.value()
-    private var disposeBag = DisposeBag()
-    private var fieldID: String?
-    private var isSelectedButton: Bool?
-
-    private let symbolConfiguration = UIImage.SymbolConfiguration(pointSize: 25, weight: .medium)
+    static let id: String = "HomeTableViewCell"
     
     private let defaultFieldImage = UIImage(named: AFIcon.fieldImage)
     private lazy var fieldImageView = UIImageView(image: defaultFieldImage)
@@ -79,21 +72,6 @@ final class HomeTableViewCell: UITableViewCell {
         $0.text = "닉네임"
         $0.font = UIFont.systemFont(ofSize: 15, weight: .semibold)
     }
-
-    lazy var bookmarkButton = UIButton().then {
-        $0.setImage(UIImage(systemName: "star", withConfiguration: symbolConfiguration)?
-            .withTintColor(.label, renderingMode: .alwaysOriginal), for: .normal)
-    }
-    
-    func setSelectedBookmarkButton() {
-        bookmarkButton.setImage(UIImage(systemName: "star.fill", withConfiguration: symbolConfiguration)?
-            .withTintColor(.systemYellow, renderingMode: .alwaysOriginal), for: .normal)
-    }
-    
-    func setNormalBookmarkButton() {
-        bookmarkButton.setImage(UIImage(systemName: "star", withConfiguration: symbolConfiguration)?
-            .withTintColor(.label, renderingMode: .alwaysOriginal), for: .normal)
-    }
     
     // MARK: - Lifecycles
     
@@ -106,39 +84,7 @@ final class HomeTableViewCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    override func prepareForReuse() {
-        super.prepareForReuse()
-        disposeBag = DisposeBag() // 셀이 재사용될 때 disposeBag 초기화
-    }
-    
     // MARK: - Helpers
-    //버튼 탭
-    func configureButtonTap() {
-        guard let user = user else { return }
-        
-        bookmarkButton.rx.tap
-            .map { [weak self] in
-                guard let self else { return false }
-                if isSelectedButton == true {
-                    //북마크 해제 메서드
-                    setNormalBookmarkButton()
-                    //북마크 삭제
-                    viewModel?.removeBookmark(uid: user.id, fieldID: fieldID)
-                    return false
-                } else {
-                    //북마크 추가 메서드
-                    setSelectedBookmarkButton()
-                    //북마크 추가
-                    viewModel?.addBookmark(uid: user.id, fieldID: fieldID)
-                    return true
-                }
-            }
-            .subscribe(onNext: { [weak self] bool in
-                guard let self else { return }
-                isSelectedButton = bool
-            })
-            .disposed(by: disposeBag)
-    }
     
     func formatMatchDate(_ date: Date) -> String {
         let dateFormatter = DateFormatter()

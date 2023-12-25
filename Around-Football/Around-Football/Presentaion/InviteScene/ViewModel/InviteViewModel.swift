@@ -38,20 +38,21 @@ final class InviteViewModel {
     
     init(coordinator: InviteCoordinator) {
         self.coordinator = coordinator
-        setUser()
     }
     
-    private func setUser() {
-        UserService.shared.currentUser_Rx.subscribe(onNext: { [weak self] user in
-            guard let self else { return }
-            self.user = user
-            self.id = user?.id
-            self.userName = user?.userName
-        })
-        .disposed(by: disposeBag)
-    }
-    
-    func createRecruitFieldData() {
+    func createRecruitFieldData(user: User?,
+                                fieldID: String,
+                                fieldName: String,
+                                fieldAddress: String,
+                                region: String,
+                                type: String?,
+                                recruitedPeopleCount: Int,
+                                gamePrice: String,
+                                title: String?,
+                                content: String?,
+                                matchDateString: String?,
+                                startTime: String?,
+                                endTime: String?) {
         // MARK: - 테스트용 임시 데이터 파베에 올림
         FirebaseAPI.shared.createRecruitFieldData(user: user,
                                                   fieldID: fieldID,

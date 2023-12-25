@@ -63,8 +63,6 @@ struct Recruit: Codable, Identifiable {
         self.matchDate = dictionary["matchDate"] as? Timestamp ?? Timestamp()
         self.startTime = dictionary["startTime"] as? String ?? ""
         self.endTime = dictionary["endTime"] as? String ?? ""
-        self.pendingApplicantsUID = dictionary["pendingApplicantsUID"] as? [String?] ?? []
-        self.acceptedApplicantsUID = dictionary["acceptedApplicantsUID"] as? [String?] ?? []
     }
 }
 
