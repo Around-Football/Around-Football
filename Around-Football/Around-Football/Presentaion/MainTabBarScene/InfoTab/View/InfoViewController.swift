@@ -18,7 +18,8 @@ final class InfoViewController: UIViewController {
     private var viewModel: InfoViewModel
     private var disposeBag = DisposeBag()
     
-    private let profileAndEditView = ProfileAndEditView()
+    private let detailUserInfoView = DetailUserInfoView()
+
     private let iconAndImage: [(icon: String, title: String)] = [
         (icon: "star", title: "관심 글"),
         (icon: "doc.text", title: "작성 글"),
@@ -69,9 +70,10 @@ final class InfoViewController: UIViewController {
         super.viewDidLoad()
         configureUI()
         configureStackView()
-        bindButtonActionHandler()
+//        bindButtonActionHandler()
         bindUserInfo()
         bindLogoutButton()
+
     }
     
     // MARK: - Selectors
@@ -99,11 +101,7 @@ final class InfoViewController: UIViewController {
     private func bindUserInfo() {
         UserService.shared.currentUser_Rx.bind { [weak self] user in
             guard let self else { return }
-            if user == nil {
-                profileAndEditView.userName.text = "로그인 해주세요"
-            } else {
-                profileAndEditView.userName.text = user?.userName
-            }
+            detailUserInfoView.setValues(user: user, isSettingView: true)
         }.disposed(by: disposeBag)
     }
     
@@ -130,20 +128,21 @@ final class InfoViewController: UIViewController {
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.title = "내 정보"
         
-        view.addSubviews(profileAndEditView,
+        view.addSubviews(detailUserInfoView,
                          infoCollectionView,
                          infoStackView)
         
         view.addSubview(logoutButton)
         
-        profileAndEditView.snp.makeConstraints { make in
-            make.top.equalTo(view.safeAreaLayoutGuide)
+        detailUserInfoView.snp.makeConstraints { make in
+            make.top.equalTo(view.safeAreaLayoutGuide).offset(16)
             make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
             make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
+            make.height.equalTo(64)
         }
         
         infoCollectionView.snp.makeConstraints { make in
-            make.top.equalTo(profileAndEditView.snp.bottom).offset(10)
+            make.top.equalTo(detailUserInfoView.snp.bottom).offset(10)
             make.leading.equalToSuperview().offset((SuperviewOffsets.leadingPadding))
             make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
             make.height.equalTo((UIScreen.main.bounds.width / 3) - 20)
@@ -163,38 +162,38 @@ final class InfoViewController: UIViewController {
         }
     }
     
-    private func bindButtonActionHandler() {
-        profileAndEditView.editButtonActionHandler = { [weak self] in
-            guard let self else { return }
-            
-            UserService.shared.currentUser_Rx
-                .take(1) //버튼 누를때만 요청하도록 1번만! 아니면 연동되서 값 바뀔때마다 실행됨
-                .subscribe(onNext: { [weak self] user in
-                    guard let self else { return }
-                    if user?.id == nil {
-                        viewModel.coordinator?.presentLoginViewController()
-                    } else {
-                        viewModel.coordinator?.pushEditView()
-                    }
-                }).disposed(by: disposeBag)
-        }
-        
-        profileAndEditView.settingButtonActionHandler = { [weak self] in
-            guard let self else { return }
-            
-            UserService.shared.currentUser_Rx
-                .take(1)
-                .subscribe(onNext: { [weak self] user in
-                    guard let self else { return }
-                    if user?.id == nil {
-                        viewModel.coordinator?.presentLoginViewController()
-                    } else {
-                        viewModel.coordinator?.pushEditView()
-                    }
-                })
-                .disposed(by: disposeBag)
-        }
-    }
+//    private func bindButtonActionHandler() {
+//        profileAndEditView.editButtonActionHandler = { [weak self] in
+//            guard let self else { return }
+//            
+//            UserService.shared.currentUser_Rx
+//                .take(1) //버튼 누를때만 요청하도록 1번만! 아니면 연동되서 값 바뀔때마다 실행됨
+//                .subscribe(onNext: { [weak self] user in
+//                    guard let self else { return }
+//                    if user?.id == nil {
+//                        viewModel.coordinator?.presentLoginViewController()
+//                    } else {
+//                        viewModel.coordinator?.pushEditView()
+//                    }
+//                }).disposed(by: disposeBag)
+//        }
+//        
+//        profileAndEditView.settingButtonActionHandler = { [weak self] in
+//            guard let self else { return }
+//            
+//            UserService.shared.currentUser_Rx
+//                .take(1)
+//                .subscribe(onNext: { [weak self] user in
+//                    guard let self else { return }
+//                    if user?.id == nil {
+//                        viewModel.coordinator?.presentLoginViewController()
+//                    } else {
+//                        viewModel.coordinator?.pushEditView()
+//                    }
+//                })
+//                .disposed(by: disposeBag)
+//        }
+//    }
 }
 
 //TODO: -Rx 리팩토링
