@@ -22,24 +22,24 @@ class PeopleCountView: UIView {
     }
     
     private let peopleCountTitleLabel = UILabel().then {
-        $0.text = "인원"
-        $0.font = .systemFont(ofSize: 15, weight: .bold)
+        $0.text = "모집인원"
+        $0.font = AFFont.titleCard
     }
     
     private lazy var peopleCountLabel = UILabel().then {
         $0.text = "\(count) 명"
         $0.textAlignment = .center
-        $0.font = .systemFont(ofSize: 15)
+        $0.font = AFFont.text?.withSize(16)
     }
     
     private lazy var minusButton = UIButton().then {
-        $0.setImage(UIImage(systemName: "minus.circle"), for: .normal)
+        $0.setImage(UIImage(named: AFIcon.minus), for: .normal)
         $0.tintColor = .label
         $0.addTarget(self, action: #selector(minusCount), for: .touchUpInside)
     }
     
     private lazy var plusButton = UIButton().then {
-        $0.setImage(UIImage(systemName: "plus.circle"), for: .normal)
+        $0.setImage(UIImage(named: AFIcon.plus), for: .normal)
         $0.tintColor = .label
         $0.addTarget(self, action: #selector(plusCount), for: .touchUpInside)
     }
@@ -76,28 +76,31 @@ class PeopleCountView: UIView {
                     plusButton)
         
         peopleCountTitleLabel.snp.makeConstraints { make in
-            make.top.leading.equalToSuperview()
+            make.top.leading.bottom.equalToSuperview()
+            make.trailing.equalTo(minusButton.snp.leading)
+            make.width.equalTo(UIScreen.main.bounds.width * 3/4)
         }
         
         peopleCountLabel.snp.makeConstraints { make in
             make.top.equalToSuperview()
-            make.centerX.equalToSuperview()
-            make.bottom.equalToSuperview().offset(10)
+            make.leading.equalTo(minusButton.snp.trailing)
+            make.bottom.equalToSuperview()
+            make.width.equalTo(UIScreen.main.bounds.width * 1/12)
         }
         
         minusButton.snp.makeConstraints { make in
-            make.top.equalTo(peopleCountTitleLabel.snp.bottom).offset(5)
+            make.top.equalToSuperview()
             make.leading.equalTo(peopleCountTitleLabel.snp.trailing)
-            make.trailing.equalTo(peopleCountLabel.snp.leading).offset(-10)
-            make.bottom.equalToSuperview().offset(10)
-            make.width.height.equalTo(35)
+            make.bottom.equalToSuperview()
+            make.width.equalTo(UIScreen.main.bounds.width * 1/12)
         }
         
         plusButton.snp.makeConstraints { make in
-            make.top.equalTo(peopleCountTitleLabel.snp.bottom).offset(5)
+            make.top.equalToSuperview()
+            make.leading.equalTo(peopleCountLabel.snp.trailing)
             make.trailing.equalToSuperview()
-            make.bottom.equalToSuperview().offset(10)
-            make.width.height.equalTo(35)
+            make.bottom.equalToSuperview()
+            make.width.equalTo(UIScreen.main.bounds.width * 1/12)
         }
     }
 }
