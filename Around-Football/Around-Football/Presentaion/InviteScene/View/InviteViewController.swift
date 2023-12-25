@@ -174,9 +174,6 @@ final class InviteViewController: UIViewController {
             viewModel.gamePrice.asObservable(),
             viewModel.contentTitle.asObservable(),
             viewModel.content.asObservable(),
-//            viewModel.matchDateString.asObservable(),
-//            viewModel.startTime.asObservable(),
-//            viewModel.endTime.asObservable()
         ]
         
         return Observable
@@ -288,14 +285,16 @@ final class InviteViewController: UIViewController {
         placeView.snp.makeConstraints { make in
             make.top.equalTo(contentView.snp.top)
             make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
-            make.width.equalTo(UIScreen.main.bounds.width * 2/3)
+            make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
+//            make.width.equalToSuperview()
             make.height.equalTo(50)
         }
         
         peopleView.snp.makeConstraints { make in
-            make.top.equalTo(contentView.snp.top)
+            make.top.equalTo(placeView.snp.bottom)
+            make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
             make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
-            make.width.equalTo(UIScreen.main.bounds.width * 1/3)
+//            make.width.equalTo(UIScreen.main.bounds.width * 1/3)
             make.height.equalTo(50)
         }
         
