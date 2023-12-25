@@ -180,6 +180,10 @@ final class DetailViewModel {
         guard let recruit = getRecruit() else { return }
         coordinator?.pushApplicationStatusViewController(recruit: recruit)
     }
+    
+    private func pushChatViewController() {
+        
+    }
 }
 
 

@@ -10,7 +10,7 @@ import Foundation
 struct User: Codable {
     var id: String
     var userName: String
-    var age: String
+    var age: Int
     var gender: String
     var area: String
     var mainUsedFeet: String
@@ -47,7 +47,7 @@ struct User: Codable {
     init(dictionary: [String: Any]) {
         self.id = dictionary["id"] as? String ?? UUID().uuidString
         self.userName = dictionary["userName"] as? String ?? ""
-        self.age = dictionary["age"] as? String ?? ""
+        self.age = dictionary["age"] as? Int ?? Int()
         self.gender = dictionary["gender"] as? String ?? ""
         self.area = dictionary["area"] as? String ?? ""
         self.mainUsedFeet = dictionary["mainUsedFeet"] as? String ?? ""
