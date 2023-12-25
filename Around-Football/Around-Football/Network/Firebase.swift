@@ -142,11 +142,6 @@ final class FirebaseAPI {
         return Observable.create { observer in
             var collectionRef: Query = REF_RECRUIT
             
-//            if let date = input.date {
-//                collectionRef = collectionRef
-//                    .whereField("matchDateString", isEqualTo: input.date)
-//            }
-            
             if let region = input.region {
                 collectionRef = collectionRef
                     .whereField("region", isEqualTo: input.region)
