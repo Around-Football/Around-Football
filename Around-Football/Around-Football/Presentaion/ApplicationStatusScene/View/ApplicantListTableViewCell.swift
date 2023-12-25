@@ -7,8 +7,9 @@
 
 import UIKit
 
-import Then
+import RxSwift
 import SnapKit
+import Then
 
 final class ApplicantListTableViewCell: UITableViewCell {
     
@@ -83,7 +84,7 @@ final class ApplicantListTableViewCell: UITableViewCell {
         $0.textColor = AFColor.grayScale300
     }
     
-    private let userDetailSexLabel = UILabel().then {
+    private let userGenderLabel = UILabel().then {
         $0.text = "성별"
         $0.font = AFFont.filterRegular
         $0.textColor = AFColor.grayScale300

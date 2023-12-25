@@ -10,10 +10,10 @@ import UIKit
 import SwiftUI
 
 import FirebaseAuth
-import RxSwift
 import RxCocoa
-import Then
+import RxSwift
 import SnapKit
+import Then
 
 enum FilterRequest: String {
     case region = "regionKey"
@@ -310,11 +310,11 @@ final class HomeViewController: UIViewController {
             .disposed(by: disposeBag)
     }
     
-    func handleItemSelected(_ item: Recruit) {
+    private func handleItemSelected(_ item: Recruit) {
         viewModel.coordinator?.pushToDetailView(recruitItem: item)
     }
     
-    func configureUI() {
+    private func configureUI() {
         view.backgroundColor = .white
         addChild(oneLIneCalender)
         view.addSubviews(oneLIneCalender.view,

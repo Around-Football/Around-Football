@@ -140,7 +140,7 @@ final class FirebaseAPI {
     func readRecruitRx(input: RecruitFilter
     ) -> Observable<[Recruit]> {
         return Observable.create { observer in
-            var collectionRef: Query = Firestore.firestore().collection("Recruit")
+            var collectionRef: Query = REF_RECRUIT
             
 //            if let date = input.date {
 //                collectionRef = collectionRef
@@ -434,6 +434,8 @@ extension FirebaseAPI {
         matchDate: Timestamp?,
         startTime: String?,
         endTime: String?,
+        pendingApplicantsUID: [String?],
+        acceptedApplicantsUID: [String?],
         completion: @escaping (Error?) -> Void
     ) {
         guard let user else { return }
@@ -453,8 +455,9 @@ extension FirebaseAPI {
                     "matchDateString": matchDateString,
                     "matchDate": matchDate,
                     "startTime": startTime,
-                    "endTime": endTime
-        ] as [String : Any]
+                    "endTime": endTime,
+                    "pendingApplicantsUID": pendingApplicantsUID,
+                    "acceptedApplicantsUID": acceptedApplicantsUID] as [String : Any]
         
         REF_RECRUIT
             .document(id)
@@ -482,28 +485,28 @@ extension FirebaseAPI {
     }
 }
 
-func saveFieldJsonData<T: Encodable>(data:T) {
-    let jsonEncoder = JSONEncoder()
-    
-    do {
-        let encodedData = try jsonEncoder.encode(data)
-        print(String(data: encodedData, encoding: .utf8)!)
-        
-        guard let documentDirectoryUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else { return }
-        let fileURL = documentDirectoryUrl.appendingPathComponent("FieldMock.json")
-        print("DEBUG: FILEURL - \(fileURL.description)")
-        
-        do {
-            try encodedData.write(to: fileURL)
-            
-            print("Save File")
-        }
-        catch let error as NSError {
-            print(error)
-        }
-        
-        
-    } catch {
-        print(error)
-    }
-}
+//func saveFieldJsonData<T: Encodable>(data:T) {
+//    let jsonEncoder = JSONEncoder()
+//
+//    do {
+//        let encodedData = try jsonEncoder.encode(data)
+//        print(String(data: encodedData, encoding: .utf8)!)
+//
+//        guard let documentDirectoryUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else { return }
+//        let fileURL = documentDirectoryUrl.appendingPathComponent("FieldMock.json")
+//        print("DEBUG: FILEURL - \(fileURL.description)")
+//
+//        do {
+//            try encodedData.write(to: fileURL)
+//
+//            print("Save File")
+//        }
+//        catch let error as NSError {
+//            print(error)
+//        }
+//
+//
+//    } catch {
+//        print(error)
+//    }
+//}

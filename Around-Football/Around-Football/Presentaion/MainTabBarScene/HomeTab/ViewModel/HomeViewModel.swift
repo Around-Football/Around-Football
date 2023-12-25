@@ -21,9 +21,9 @@ final class HomeViewModel {
     
     // MARK: - Properties
     
-    private let disposeBag = DisposeBag()
     weak var coordinator: HomeTabCoordinator?
-    
+    private let disposeBag = DisposeBag()
+
     // MARK: - Lifecycles
     
     init(coordinator: HomeTabCoordinator) {
