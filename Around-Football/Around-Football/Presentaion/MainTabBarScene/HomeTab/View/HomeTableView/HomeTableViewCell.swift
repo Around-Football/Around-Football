@@ -29,11 +29,11 @@ final class HomeTableViewCell: UITableViewCell {
     private lazy var fieldImageView = UIImageView(image: defaultFieldImage)
     
     private var typeLabel = UILabel().then {
-        $0.text = "축구"
+        $0.text = "Field Address"
         $0.textColor = AFColor.white
         $0.font = AFFont.filterMedium
         $0.textAlignment = .center
-        $0.layer.cornerRadius = 4
+        $0.layer.cornerRadius = LayoutOptions.cornerRadious
         $0.layer.masksToBounds = true
     }
     
@@ -45,21 +45,10 @@ final class HomeTableViewCell: UITableViewCell {
     private var fieldLabel = UILabel().then {
         $0.text = "Field Text"
         $0.font = AFFont.titleSmall
-        $0.numberOfLines = 2
     }
     
     private var recruitLabel = UILabel().then {
         $0.text = "2/2명 모집"
-        $0.font = AFFont.filterRegular
-        $0.textColor = AFColor.grayScale300
-    }
-    
-    private let line = UIView().then {
-        $0.backgroundColor = AFColor.grayScale300
-    }
-    
-    private var genderLabel = UILabel().then {
-        $0.text = "성별 무관"
         $0.font = AFFont.filterRegular
         $0.textColor = AFColor.grayScale300
     }
@@ -157,21 +146,11 @@ final class HomeTableViewCell: UITableViewCell {
         //북마크 버튼 바인딩
         setBookmarkBinding(fieldID: item.fieldID)
         //UI정보 바인딩
-
-        if item.acceptedApplicantsUID.count == item.recruitedPeopleCount {
-            typeLabel.text = "마감"
-            typeLabel.backgroundColor = AFColor.grayScale200
-        } else {
-            typeLabel.text = item.type
-            typeLabel.backgroundColor = item.type == "축구" ? AFColor.soccor : AFColor.futsal
-        }
-
+        typeLabel.text = item.type
+        typeLabel.backgroundColor = item.type == "축구" ? AFColor.soccor : AFColor.futsal
         dateLabel.text = formattedCellDate
         fieldLabel.text = "\(item.fieldName)"
         recruitLabel.text = " \(item.acceptedApplicantsUID.count) / \(item.recruitedPeopleCount)명 모집"
-        
-        //TODO: - 성별 input 추가되면 바인딩하기
-//        genderLabel.text = ""
         
         // MARK: - 예전 디자인 코드
         titleLabel.text = item.title
@@ -208,8 +187,8 @@ final class HomeTableViewCell: UITableViewCell {
                                 dateLabel,
                                 typeLabel,
                                 recruitLabel,
-                                line,
-                                genderLabel)
+                                userNameLabel,
+                                bookmarkButton)
     
         fieldImageView.snp.makeConstraints { make in
             make.width.height.equalTo(80)
@@ -240,19 +219,6 @@ final class HomeTableViewCell: UITableViewCell {
         recruitLabel.snp.makeConstraints { make in
             make.top.equalTo(fieldLabel.snp.bottom).offset(8)
             make.leading.equalTo(typeLabel.snp.leading)
-        }
-        
-        line.snp.makeConstraints { make in
-            make.centerY.equalTo(recruitLabel.snp.centerY)
-            make.height.equalTo(recruitLabel.snp.height)
-            make.width.equalTo(1)
-            make.leading.equalTo(recruitLabel.snp.trailing).offset(8)
-        }
-        
-        genderLabel.snp.makeConstraints { make in
-            make.centerY.equalTo(recruitLabel.snp.centerY)
-            make.height.equalTo(recruitLabel.snp.height)
-            make.leading.equalTo(line.snp.trailing).offset(8)
         }
         
         // MARK: - 예전 디자인 코드

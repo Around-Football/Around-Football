@@ -24,7 +24,6 @@ struct Recruit: Codable, Identifiable {
     var matchDate: Timestamp //날짜만, String으로 일단 수정
     var startTime: String //시작시간
     var endTime: String // 종료시간
-    var matchDateString: String //쿼리용 String
     var pendingApplicantsUID: [String?] //신청한 사람들 uid
     var acceptedApplicantsUID: [String?] //승인한 사람들 uid
     var matchDayString: String {
@@ -59,7 +58,6 @@ struct Recruit: Codable, Identifiable {
         self.gamePrice = dictionary["gamePrice"] as? String ?? ""
         self.title = dictionary["title"] as? String ?? ""
         self.content = dictionary["content"] as? String ?? ""
-        self.matchDateString = dictionary["matchDateString"] as? String ?? ""
         self.matchDate = dictionary["matchDate"] as? Timestamp ?? Timestamp()
         self.startTime = dictionary["startTime"] as? String ?? ""
         self.endTime = dictionary["endTime"] as? String ?? ""

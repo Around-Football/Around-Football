@@ -137,29 +137,27 @@ final class FirebaseAPI {
     // MARK: - RxAlamofire
     
     //HomeList
-    func readRecruitRx(input: RecruitFilter
+    func readRecruitRx(input: (
+        date: String?,
+        region: String?,
+        type: String?)
     ) -> Observable<[Recruit]> {
         return Observable.create { observer in
             var collectionRef: Query = REF_RECRUIT
             
-//            if let date = input.date {
-//                collectionRef = collectionRef
-//                    .whereField("matchDateString", isEqualTo: input.date)
-//            }
+            if let date = input.date {
+                collectionRef = collectionRef
+                    .whereField("matchDateString", isEqualTo: date)
+            }
             
             if let region = input.region {
                 collectionRef = collectionRef
-                    .whereField("region", isEqualTo: input.region)
+                    .whereField("region", isEqualTo: region)
             }
             
             if let type = input.type {
                 collectionRef = collectionRef
-                    .whereField("type", isEqualTo: input.type)
-            }
-            
-            if let gender = input.gender {
-                collectionRef = collectionRef
-                    .whereField("gender", isEqualTo: input.gender)
+                    .whereField("type", isEqualTo: type)
             }
             
             collectionRef.getDocuments { snapshot, error in
@@ -430,7 +428,6 @@ extension FirebaseAPI {
         gamePrice: String,
         title: String?,
         content: String?,
-        matchDateString: String?,
         matchDate: Timestamp?,
         startTime: String?,
         endTime: String?,
@@ -452,7 +449,6 @@ extension FirebaseAPI {
                     "gamePrice": gamePrice,
                     "title": title,
                     "content": content,
-                    "matchDateString": matchDateString,
                     "matchDate": matchDate,
                     "startTime": startTime,
                     "endTime": endTime,
