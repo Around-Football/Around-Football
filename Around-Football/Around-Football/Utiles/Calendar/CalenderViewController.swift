@@ -350,7 +350,7 @@ extension CalenderViewController: UICollectionViewDelegateFlowLayout, UICollecti
             print(selectedDateString as Any)
 //            print(selectedStartDate as Any)
         }
-        print("string: \(selectedDateString), date: \(selectedDate)")
+        
         // 선택한 셀의 indexPath를 저장
         selectedIndexPath = indexPath
     }
