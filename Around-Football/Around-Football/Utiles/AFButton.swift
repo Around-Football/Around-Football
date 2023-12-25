@@ -104,7 +104,7 @@ final class AFSmallButton: UIButton {
     
     private func configureUI(buttonTitle: String, color: UIColor) {
         setTitle(buttonTitle, for: .normal)
-        titleLabel?.font = AFFont.titleSmall
+        titleLabel?.font = AFFont.filterMedium
         setTitleColor(color == AFColor.secondary ? .white : AFColor.secondary, for: .normal)
         setTitleColor(AFColor.grayScale300, for: .disabled)
         setBackgroundColor(color, for: .normal)
@@ -216,7 +216,7 @@ final class AFRoundSmallButton: UIButton {
 final class AFRoundMenuButton: UIButton {
     
     var menuButtonSubject = PublishSubject<String?>()
-    let chevronImage = UIImage(systemName: "chevron.down")?.withConfiguration(UIImage.SymbolConfiguration(pointSize: 16, weight: .regular))
+    let chevronImage = UIImage(systemName: "chevron.down")?.withConfiguration(UIImage.SymbolConfiguration(pointSize: 12, weight: .light))
     let disposeBag = DisposeBag()
     
     // MARK: - Lifecycles

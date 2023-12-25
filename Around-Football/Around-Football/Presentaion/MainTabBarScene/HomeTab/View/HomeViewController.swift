@@ -42,16 +42,20 @@ final class HomeViewController: UIViewController {
                                   "대전", "광주", "세종특별자치시","경기", "강원특별자치도",
                                   "충북", "충남", "경북", "경남", "전북", "전남", "제주특별자치도"]
     let typeMenus: [String] = ["모든 유형", "풋살", "축구"]
-    let genderMenus: [String] = ["성별 무관", "남", "여"]
+    let genderMenus: [String] = ["성별 무관", "남성", "여성"]
     
     private lazy var resetButton = AFRoundSmallButton(buttonTitle: "전체 보기", color: .black)
     private lazy var regionFilterButton = AFRoundMenuButton(buttonTitle: "모든 지역", menus: regionMenus)
     private lazy var typeFilterButton = AFRoundMenuButton(buttonTitle: "매치 유형", menus: typeMenus)
 //    private let dateFilterButton = AFRoundMenuButton(buttonTitle: "날짜 선택", menus: [])
-    private lazy var genderFilterButton = AFRoundMenuButton(buttonTitle: "성별 선택", menus: genderMenus)
+    private lazy var genderFilterButton = AFRoundMenuButton(buttonTitle: "성별", menus: genderMenus)
     
     private lazy var homeTableView = UITableView().then {
         $0.register(HomeTableViewCell.self, forCellReuseIdentifier: HomeTableViewCell.id)
+        $0.separatorInset = UIEdgeInsets().with({ edge in
+            edge.left = 0
+            edge.right = 20
+        })
     }
     
     private lazy var filterScrollView = UIScrollView().then {
@@ -339,9 +343,9 @@ final class HomeViewController: UIViewController {
         }
         
         homeTableView.snp.makeConstraints { make in
-            make.top.equalTo(filterScrollView.snp.bottom).offset(16)
+            make.top.equalTo(filterScrollView.snp.bottom).offset(10)
             make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
-            make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
+            make.trailing.equalToSuperview()
             make.bottom.equalToSuperview()
         }
         
