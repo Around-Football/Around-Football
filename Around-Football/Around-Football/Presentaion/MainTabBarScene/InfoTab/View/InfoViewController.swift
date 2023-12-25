@@ -17,8 +17,8 @@ final class InfoViewController: UIViewController {
     
     private var viewModel: InfoViewModel
     private var disposeBag = DisposeBag()
-    private let profileAndEditView = ProfileAndEditView()
     
+    private let profileAndEditView = ProfileAndEditView()
     private let iconAndImage: [(icon: String, title: String)] = [
         (icon: "star", title: "관심 글"),
         (icon: "doc.text", title: "작성 글"),
@@ -127,7 +127,8 @@ final class InfoViewController: UIViewController {
     
     private func configureUI() {
         view.backgroundColor = .white
-        navigationItem.title = "프로필"
+        navigationController?.navigationBar.prefersLargeTitles = true
+        navigationItem.title = "내 정보"
         
         view.addSubviews(profileAndEditView,
                          infoCollectionView,
