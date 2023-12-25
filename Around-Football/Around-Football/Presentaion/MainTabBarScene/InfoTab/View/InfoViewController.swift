@@ -17,36 +17,34 @@ final class InfoViewController: UIViewController {
     
     private var viewModel: InfoViewModel
     private var disposeBag = DisposeBag()
-    
     private let detailUserInfoView = DetailUserInfoView()
-
-    private let iconAndImage: [(icon: String, title: String)] = [
-        (icon: "star", title: "관심 글"),
-        (icon: "doc.text", title: "작성 글"),
-        (icon: "ellipsis.message", title: "신청 글"),
-    ]
     
-    private lazy var infoCollectionView: UICollectionView = {
-        let layout = UICollectionViewFlowLayout()
-        layout.minimumLineSpacing = 10
-        layout.minimumInteritemSpacing = 10
-        let cv = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        cv.delegate = self
-        cv.dataSource = self
-        cv.register(InfoCell.self, forCellWithReuseIdentifier: InfoCell.cellID)
-        return cv
-    }()
+    private lazy var infoTableView = UITableView().then {
+        $0.register(InfoCell.self, forCellReuseIdentifier: InfoCell.cellID)
+        $0.isScrollEnabled = false
+        $0.showsVerticalScrollIndicator = false
+        $0.showsVerticalScrollIndicator = false
+        $0.separatorInset = UIEdgeInsets().with({ edge in
+            edge.left = 0
+            edge.right = 0
+        })
+    }
     
-    private let infoStackView = UIStackView().then {
-        $0.axis = .vertical
-        $0.distribution = .fillEqually
-        $0.layer.cornerRadius = 10
-        $0.layer.borderColor = UIColor.gray.cgColor
-        $0.layer.borderWidth = 1.0
-        $0.addArrangedSubview(InfoArrangedView())
-        $0.addArrangedSubview(InfoArrangedView())
-        $0.addArrangedSubview(InfoArrangedView())
-        $0.addArrangedSubview(InfoArrangedView())
+    private let lineView = UIView().then {
+        $0.backgroundColor = AFColor.grayScale50
+    }
+    
+    private let lineView2 = UIView().then {
+        $0.backgroundColor = AFColor.grayScale50
+    }
+    
+    private lazy var settingButton = UIButton().then {
+        let imageConfig = UIImage.SymbolConfiguration(pointSize: 20, weight: .regular)
+        let image = UIImage(systemName: "gear", withConfiguration: imageConfig)
+        $0.setImage(image, for: .normal)
+        $0.tintColor = .label
+        $0.addTarget(self, action: #selector(settingButtonTapped), for: .touchUpInside)
+        $0.contentMode = .scaleAspectFill
     }
     
     private lazy var logoutButton = UIButton().then {
@@ -69,14 +67,19 @@ final class InfoViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         configureUI()
-        configureStackView()
-//        bindButtonActionHandler()
         bindUserInfo()
+        bindTableView()
         bindLogoutButton()
 
     }
     
     // MARK: - Selectors
+    
+    @objc
+    private func settingButtonTapped() {
+        print("DEBUG: settingButtonTapped")
+        viewModel.coordinator?.pushSettingView()
+    }
     
     @objc
     func logoutButtonTapped() {
@@ -86,6 +89,15 @@ final class InfoViewController: UIViewController {
     }
     
     // MARK: - Helpers
+    
+    private func bindTableView() {
+        let menus = Observable.just(viewModel.menus)
+        
+        menus.bind(to: infoTableView.rx.items(cellIdentifier: InfoCell.cellID, cellType: InfoCell.self)) { index, item, cell in
+            cell.setValues(title: item)
+        }.disposed(by: disposeBag)
+        
+    }
     
     private func bindLogoutButton() {
         UserService.shared.currentUser_Rx.bind { [weak self] user in
@@ -105,34 +117,22 @@ final class InfoViewController: UIViewController {
         }.disposed(by: disposeBag)
     }
     
-    private func configureStackView() {
-        UserService.shared.currentUser_Rx
-            .bind { [weak self] user in
-                guard
-                    let self,
-                    let user,
-                    let views = infoStackView.arrangedSubviews as? [InfoArrangedView],
-                    let contents = [String(user.age), user.area, user.mainUsedFeet, user.position.joined(separator: ", ")] as? [String]
-                else { return }
-                
-                let titles = ["성별", "지역", "주발", "포지션"]
-            
-            (0..<titles.count).forEach {
-                views[$0].setValues(name: titles[$0], content: contents[$0])
-            }
-        }.disposed(by: disposeBag)
-    }
-    
     private func configureUI() {
         view.backgroundColor = .white
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.title = "내 정보"
         
-        view.addSubviews(detailUserInfoView,
-                         infoCollectionView,
-                         infoStackView)
+        view.addSubviews(settingButton,
+                         detailUserInfoView,
+                         lineView,
+                         infoTableView,
+                         lineView2)
         
         view.addSubview(logoutButton)
+        
+        settingButton.snp.makeConstraints { make in
+            make.trailing.equalToSuperview().offset(-12)
+        }
         
         detailUserInfoView.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide).offset(16)
@@ -141,103 +141,28 @@ final class InfoViewController: UIViewController {
             make.height.equalTo(64)
         }
         
-        infoCollectionView.snp.makeConstraints { make in
-            make.top.equalTo(detailUserInfoView.snp.bottom).offset(10)
-            make.leading.equalToSuperview().offset((SuperviewOffsets.leadingPadding))
-            make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
-            make.height.equalTo((UIScreen.main.bounds.width / 3) - 20)
+        lineView.snp.makeConstraints { make in
+            make.top.equalTo(detailUserInfoView.snp.bottom)
+            make.width.equalToSuperview()
+            make.height.equalTo(4)
         }
         
-        infoStackView.snp.makeConstraints { make in
-            make.top.equalTo(infoCollectionView.snp.bottom).offset(10)
-            make.leading.equalToSuperview().offset((SuperviewOffsets.leadingPadding))
-            make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
-            make.height.equalTo(150)
+        infoTableView.snp.makeConstraints { make in
+            make.top.equalTo(lineView.snp.bottom)
+            make.leading.trailing.equalToSuperview()
+            make.height.equalTo(256)
+        }
+        
+        lineView2.snp.makeConstraints { make in
+            make.top.equalTo(infoTableView.snp.bottom)
+            make.width.equalToSuperview()
+            make.height.equalTo(4)
         }
         
         logoutButton.snp.makeConstraints { make in
-            make.top.equalTo(infoStackView.snp.bottom).offset(20)
             make.leading.equalToSuperview().offset(50)
             make.trailing.equalToSuperview().offset(-50)
-        }
-    }
-    
-//    private func bindButtonActionHandler() {
-//        profileAndEditView.editButtonActionHandler = { [weak self] in
-//            guard let self else { return }
-//            
-//            UserService.shared.currentUser_Rx
-//                .take(1) //버튼 누를때만 요청하도록 1번만! 아니면 연동되서 값 바뀔때마다 실행됨
-//                .subscribe(onNext: { [weak self] user in
-//                    guard let self else { return }
-//                    if user?.id == nil {
-//                        viewModel.coordinator?.presentLoginViewController()
-//                    } else {
-//                        viewModel.coordinator?.pushEditView()
-//                    }
-//                }).disposed(by: disposeBag)
-//        }
-//        
-//        profileAndEditView.settingButtonActionHandler = { [weak self] in
-//            guard let self else { return }
-//            
-//            UserService.shared.currentUser_Rx
-//                .take(1)
-//                .subscribe(onNext: { [weak self] user in
-//                    guard let self else { return }
-//                    if user?.id == nil {
-//                        viewModel.coordinator?.presentLoginViewController()
-//                    } else {
-//                        viewModel.coordinator?.pushEditView()
-//                    }
-//                })
-//                .disposed(by: disposeBag)
-//        }
-//    }
-}
-
-//TODO: -Rx 리팩토링
-
-extension InfoViewController: UICollectionViewDelegateFlowLayout, UICollectionViewDataSource {
-    
-    func collectionView(_ collectionView: UICollectionView,
-                        layout collectionViewLayout: UICollectionViewLayout,
-                        sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let width = (UIScreen.main.bounds.width / 3) - 20
-        return CGSize(width: width, height: width)
-    }
-    
-    func collectionView(_ collectionView: UICollectionView,
-                        numberOfItemsInSection section: Int) -> Int {
-        iconAndImage.count
-    }
-    
-    func collectionView(_ collectionView: UICollectionView,
-                        cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(
-            withReuseIdentifier: InfoCell.cellID,
-            for: indexPath
-        ) as? InfoCell else {
-            return UICollectionViewCell()
-        }
-
-        cell.setValues(icon: iconAndImage[indexPath.item].icon,
-                       title: iconAndImage[indexPath.item].title)
-        return cell
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        
-        let title = iconAndImage[indexPath.item].title
-        switch title {
-        case _ where "관심 글" == title:
-            viewModel.coordinator?.pushBookmarkPostViewController()
-        case _ where "작성 글" == title:
-            viewModel.coordinator?.pushWrittenPostViewController()
-        case _ where "신청 글" == title:
-            viewModel.coordinator?.pushApplicationPostViewController()
-        default:
-            print("cell 없음")
+            make.bottom.equalTo(view.safeAreaLayoutGuide).offset(-50)
         }
     }
 }
