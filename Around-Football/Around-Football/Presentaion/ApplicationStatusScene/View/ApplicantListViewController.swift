@@ -63,6 +63,8 @@ final class ApplicantListViewController: UIViewController {
             NSAttributedString.Key.foregroundColor: AFColor.grayScale200
         ]
         navigationController?.navigationBar.tintColor = AFColor.grayScale200
+        
+        viewModel.removeChildCoordinator()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -132,6 +134,7 @@ final class ApplicantListViewController: UIViewController {
             cell.sendMessageButton.rx.tap
                 .bind { _ in
                     print("TAP MESSAGE \(user.userName)")
+                    self.viewModel.checkChannelAndPushChatViewController(user: user)
                 }
                 .disposed(by: self.disposeBag)
         }

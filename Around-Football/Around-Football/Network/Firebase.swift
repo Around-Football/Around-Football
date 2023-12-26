@@ -152,17 +152,17 @@ final class FirebaseAPI {
             
             if let region = input.region {
                 collectionRef = collectionRef
-                    .whereField("region", isEqualTo: input.region as Any)
+                    .whereField("region", isEqualTo: region)
             }
             
             if let type = input.type {
                 collectionRef = collectionRef
-                    .whereField("type", isEqualTo: input.type as Any)
+                    .whereField("type", isEqualTo: type)
             }
             
             if let gender = input.gender {
                 collectionRef = collectionRef
-                    .whereField("gender", isEqualTo: input.gender as Any)
+                    .whereField("gender", isEqualTo: gender)
             }
             
             collectionRef.getDocuments { snapshot, error in
@@ -477,7 +477,7 @@ extension FirebaseAPI {
                     return
                 }
                 
-                let documentsData = snapshot.documents.map { $0.data() }
+                _ = snapshot.documents.map { $0.data() }
             }
     }
 }

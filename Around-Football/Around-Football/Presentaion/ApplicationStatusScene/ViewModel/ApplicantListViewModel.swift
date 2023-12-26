@@ -39,7 +39,7 @@ final class ApplicantListViewModel {
     weak var coordinator: DetailCoordinator?
     var recruitItem: BehaviorSubject<Recruit>
     private var disposeBag = DisposeBag()
-    var isLoading = BehaviorSubject(value: true)
+    private let channelAPI = ChannelAPI.shared
     
     // MARK: - Lifecycles
     
@@ -97,6 +97,10 @@ final class ApplicantListViewModel {
         return try! recruitItem.value()
     }
     
+    func getCurrentUser() -> User {
+        return try! UserService.shared.currentUser_Rx.value()!
+    }
+    
     func emitApplicantStatusCalculator(uid: String) -> ApplicantStatus {
         let recruit = getRecruit()
         
@@ -121,5 +125,26 @@ final class ApplicantListViewModel {
             guard let self = self else { return }
             self.fetchRecruit()
         }
+    }
+    
+    func checkChannelAndPushChatViewController(user: User) {
+        let currentUser = getCurrentUser()
+        let recruit = getRecruit()
+        channelAPI.checkExistAvailableChannel(owner: currentUser,
+                                              recruitID: recruit.id) { [weak self] isAvailable, channelId in
+            guard let self = self else { return }
+            print("DEBUG - ", #function, isAvailable)
+            if isAvailable, let channelId = channelId {
+                let channelInfo = ChannelInfo(id: channelId, withUser: user, recruitID: recruit.id)
+                self.coordinator?.clickSendMessageButton(channelInfo: channelInfo)
+            } else {
+                let channelInfo = ChannelInfo(id: UUID().uuidString, withUser: user, recruitID: recruit.id)
+                self.coordinator?.clickSendMessageButton(channelInfo: channelInfo, isNewChat: true)
+            }
+        }
+    }
+    
+    func removeChildCoordinator() {
+        coordinator?.removeChatCoordinator()
     }
 }
