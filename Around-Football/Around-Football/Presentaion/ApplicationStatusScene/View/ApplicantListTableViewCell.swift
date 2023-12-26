@@ -159,29 +159,14 @@ final class ApplicantListTableViewCell: UITableViewCell {
     }
     
     func setButtonStyle(status: ApplicantStatus) {
-        let isEnabledAcceptButton = status == .availaleAccept ? true : false
-        let acceptButtonTitle = status.statusDescription
-        
-        // 비활성화 경우는 두 가지밖에 없고, close가 아닌 경우는 비활성화 상태시 나머지 경우로 처리(비활성화 아닌 경우는 정상 색상)
-        let disabledBackground = status == .close ? .white : AFColor.grayScale200
-        let disabledTitleColor = status == .close ? AFColor.grayScale200 : .white
-        let borderWidth: CGFloat = status == .accepted ? 0 : 1
-        let borderColor = status == .close ? AFColor.grayScale100 : AFColor.secondary
-        setButtonUI(isEnable: isEnabledAcceptButton, title: acceptButtonTitle, disabledBackground: disabledBackground, disabledTitleColor: disabledTitleColor, borderWidth: borderWidth, borderColor: borderColor)
-    }
-    
-    private func setButtonUI(isEnable: Bool,
-                             title: String,
-                             disabledBackground: UIColor,
-                             disabledTitleColor: UIColor,
-                             borderWidth: CGFloat,
-                             borderColor: UIColor) {
-        acceptButton.isEnabled = isEnable
-        acceptButton.setTitle(title, for: .normal)
-        acceptButton.setBackgroundColor(disabledBackground, for: .disabled)
-        acceptButton.setTitleColor(disabledTitleColor, for: .disabled)
-        acceptButton.layer.borderWidth = borderWidth
-        acceptButton.layer.borderColor = borderColor.cgColor
+        acceptButton.isEnabled = status == .close ? false : true
+        acceptButton.setTitle(status.statusDescription, for: .normal)
+        acceptButton.setTitleColor(status == .accepted ? .white : AFColor.secondary, for: .normal)
+        acceptButton.setBackgroundColor(status == .accepted ? AFColor.grayScale200 : .white, for: .normal)
+        acceptButton.setBackgroundColor(status == .close ? .white : AFColor.grayScale200, for: .disabled)
+        acceptButton.setTitleColor(status == .close ? AFColor.grayScale200 : .white, for: .disabled)
+        acceptButton.layer.borderWidth = status == .accepted ? 0 : 1
+        acceptButton.layer.borderColor = status == .close ? AFColor.grayScale100.cgColor : AFColor.secondary.cgColor
     }
     
     private func configureUI() {

@@ -20,8 +20,8 @@ final class ApplicantListViewModel {
         var statusDescription: String {
             switch self {
             case .close: return "마감"
-            case .accepted: return "완료"
-            case .availaleAccept: return "수락"
+            case .accepted: return "취소하기"
+            case .availaleAccept: return "수락하기"
             }
         }
     }
@@ -118,6 +118,18 @@ final class ApplicantListViewModel {
     func acceptApplicantion(uid: String) {
         let recruit = getRecruit()
         FirebaseAPI.shared.acceptApplicants(recruitID: recruit.id, userID: uid) { [weak self] error in
+            if let error = error {
+                print("DEBUG - Error: \(error.localizedDescription)", #function)
+                return
+            }
+            guard let self = self else { return }
+            self.fetchRecruit()
+        }
+    }
+    
+    func cancelApplicantion(uid: String) {
+        let recruit = getRecruit()
+        FirebaseAPI.shared.cancelApplicants(recruitID: recruit.id, userID: uid) { [weak self] error in
             if let error = error {
                 print("DEBUG - Error: \(error.localizedDescription)", #function)
                 return

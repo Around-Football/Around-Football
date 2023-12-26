@@ -33,6 +33,13 @@ final class ApplicantListViewController: UIViewController {
         })
     }
     
+    private let defaultTextLabel = UILabel().then {
+        $0.text = "아직 신청자가 없어요!"
+        $0.font = AFFont.text
+        $0.textColor = AFColor.grayScale100
+        $0.textAlignment = .center
+    }
+    
     let loadingView = UIActivityIndicatorView(style: .medium).then {
         $0.startAnimating()
     }
@@ -80,6 +87,7 @@ final class ApplicantListViewController: UIViewController {
         view.backgroundColor = .systemBackground
         view.addSubviews(headerView,
                          tableView,
+                         defaultTextLabel,
                          loadingView)
         
         headerView.snp.makeConstraints { make in
@@ -92,6 +100,13 @@ final class ApplicantListViewController: UIViewController {
             make.top.equalTo(headerView.snp.bottom).offset(20)
             make.leading.trailing.equalToSuperview()
             make.bottom.equalToSuperview()
+        }
+        
+        defaultTextLabel.snp.makeConstraints { make in
+            make.top.equalTo(headerView.snp.bottom).offset(20)
+            make.leading.equalToSuperview().offset(20)
+            make.trailing.equalToSuperview().offset(-20)
+            make.bottom.equalTo(tableView.snp.centerY)
         }
         
         loadingView.snp.makeConstraints { make in
@@ -112,6 +127,7 @@ final class ApplicantListViewController: UIViewController {
             .withUnretained(self)
             .subscribe(onNext: { (owner, recruit) in
                 self.headerView.configure(recruit: recruit)
+                if !recruit.pendingApplicantsUID.isEmpty { owner.defaultTextLabel.isHidden = true }
             })
             .disposed(by: disposeBag)
     }
@@ -122,18 +138,21 @@ final class ApplicantListViewController: UIViewController {
                                          cellType: ApplicantListTableViewCell.self))
         { [weak self] index, user, cell in
             guard let self = self else { return }
+            let applicantStatus = self.viewModel.emitApplicantStatusCalculator(uid: user.id)
             cell.configure(user: user)
-            cell.setButtonStyle(status: self.viewModel.emitApplicantStatusCalculator(uid: user.id))
+            cell.setButtonStyle(status: applicantStatus)
             cell.acceptButton.rx.tap
                 .bind { _ in
-                    print("TAP ACCEPT \(user.userName)")
-                    self.viewModel.acceptApplicantion(uid: user.id)
+                    if applicantStatus == .accepted {
+                        self.viewModel.cancelApplicantion(uid: user.id)
+                    } else {
+                        self.viewModel.acceptApplicantion(uid: user.id)
+                    }
                 }
                 .disposed(by: self.disposeBag)
             
             cell.sendMessageButton.rx.tap
                 .bind { _ in
-                    print("TAP MESSAGE \(user.userName)")
                     self.viewModel.checkChannelAndPushChatViewController(user: user)
                 }
                 .disposed(by: self.disposeBag)
