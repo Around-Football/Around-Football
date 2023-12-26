@@ -19,6 +19,7 @@ final class GroundTitleView: UIView {
     private let groundTitleLabel = UILabel().then {
         $0.text = "장소"
         $0.font = AFFont.titleCard
+        $0.sizeToFit()
     }
     
     private var buttonConfig: UIButton.Configuration {
@@ -65,7 +66,8 @@ final class GroundTitleView: UIView {
         addSubviews(groundTitleLabel, searchFieldButton)
         
         groundTitleLabel.snp.makeConstraints { make in
-            make.top.leading.equalToSuperview()
+            make.top.leading.trailing.equalToSuperview()
+            make.height.equalTo(30)
         }
         
         searchFieldButton.snp.makeConstraints { make in
