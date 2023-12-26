@@ -110,7 +110,7 @@ final class DetailUserInfoView: UIView {
 
         if isSettingView {
             userFoot.text = user?.mainUsedFeet
-            userPosition.text = user?.position.joined(separator: " ")
+            userPosition.text = user?.position.joined(separator: " • ")
         }
     }
     

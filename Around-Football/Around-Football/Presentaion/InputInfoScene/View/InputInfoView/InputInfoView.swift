@@ -108,6 +108,10 @@ final class InputInfoView: UIView {
         $0.spacing = 8
         $0.addArrangedSubviews(userGenderLabel,
                                userGenderButtonStackView)
+        
+        userGenderButtonStackView.snp.makeConstraints { make in
+            make.width.equalToSuperview()
+        }
     }
 
     private lazy var userGenderButtonStackView = UIStackView().then {
@@ -118,18 +122,16 @@ final class InputInfoView: UIView {
         $0.addArrangedSubviews(maleButton,
                                femaleButton,
                                emptyView)
+        
         maleButton.snp.makeConstraints { make in
-            make.width.equalTo(UIScreen.main.bounds.width / 3)
             make.height.equalTo(40)
         }
         
         femaleButton.snp.makeConstraints { make in
-            make.width.equalTo(UIScreen.main.bounds.width / 3)
             make.height.equalTo(40)
         }
         
         emptyView.snp.makeConstraints { make in
-            make.width.equalTo(UIScreen.main.bounds.width / 3)
             make.height.equalTo(40)
         }
     }
@@ -142,6 +144,10 @@ final class InputInfoView: UIView {
         $0.spacing = 10
         $0.addArrangedSubviews(userMainUsedFeetLabel,
                                userMainUsedFeetButtonStackView)
+        
+        userMainUsedFeetButtonStackView.snp.makeConstraints { make in
+            make.width.equalToSuperview()
+        }
     }
     
     private lazy var userMainUsedFeetButtonStackView = UIStackView().then {
@@ -154,17 +160,14 @@ final class InputInfoView: UIView {
                                bothFeetButton)
         
         rightFootButton.snp.makeConstraints { make in
-            make.width.equalTo(UIScreen.main.bounds.width / 3)
             make.height.equalTo(40)
         }
         
         leftFootButton.snp.makeConstraints { make in
-            make.width.equalTo(UIScreen.main.bounds.width / 3)
             make.height.equalTo(40)
         }
         
         bothFeetButton.snp.makeConstraints { make in
-            make.width.equalTo(UIScreen.main.bounds.width / 3)
             make.height.equalTo(40)
         }
     }
@@ -177,35 +180,36 @@ final class InputInfoView: UIView {
         $0.spacing = 8
         $0.addArrangedSubviews(userPositionLabel,
                                userPositionButtonStackView)
+        
+        userPositionButtonStackView.snp.makeConstraints { make in
+            make.width.equalToSuperview()
+            make.height.equalTo(40)
+        }
     }
     
     private lazy var userPositionButtonStackView = UIStackView().then {
         $0.axis = .horizontal
         $0.distribution = .fillEqually
         $0.alignment = .leading
-        $0.spacing = 8
+        $0.spacing = 7
         $0.addArrangedSubviews(fwButton,
                                mfButton,
                                dfButton,
                                gkButton)
         
         fwButton.snp.makeConstraints { make in
-            make.width.equalTo(UIScreen.main.bounds.width / 4)
             make.height.equalTo(40)
         }
         
         mfButton.snp.makeConstraints { make in
-            make.width.equalTo(UIScreen.main.bounds.width / 4)
             make.height.equalTo(40)
         }
         
         dfButton.snp.makeConstraints { make in
-            make.width.equalTo(UIScreen.main.bounds.width / 4)
             make.height.equalTo(40)
         }
         
         gkButton.snp.makeConstraints { make in
-            make.width.equalTo(UIScreen.main.bounds.width / 4)
             make.height.equalTo(40)
         }
     }
@@ -283,7 +287,7 @@ final class InputInfoView: UIView {
         }
         
         userMainUsedFeetStackView.snp.makeConstraints { make in
-            make.top.equalTo(userRegionStackView.snp.bottom).offset(SuperviewOffsets.topPadding)
+//            make.top.equalTo(userRegionStackView.snp.bottom).offset(SuperviewOffsets.topPadding)
             make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
             make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
             make.bottom.equalTo(userPositionStackView.snp.top).offset(SuperviewOffsets.bottomPadding)
@@ -303,7 +307,8 @@ final class InputInfoView: UIView {
             make.top.equalTo(userPositionStackView.snp.bottom).offset(70)
             make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
             make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
-            make.bottom.equalTo(contentView.snp.bottom).offset(SuperviewOffsets.bottomPadding).priority(.required)
+            make.bottom.equalTo(contentView.snp.bottom).offset(SuperviewOffsets.bottomPadding)
+//            make.bottom.equalTo(safeAreaLayoutGuide).offset(SuperviewOffsets.bottomPadding)
             make.height.equalTo(55)
         }
     }

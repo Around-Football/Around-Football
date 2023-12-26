@@ -22,8 +22,6 @@ final class InfoViewController: UIViewController {
     private lazy var infoTableView = UITableView().then {
         $0.register(InfoCell.self, forCellReuseIdentifier: InfoCell.cellID)
         $0.isScrollEnabled = false
-        $0.showsVerticalScrollIndicator = false
-        $0.showsVerticalScrollIndicator = false
         $0.separatorInset = UIEdgeInsets().with({ edge in
             edge.left = 0
             edge.right = 0
@@ -93,7 +91,8 @@ final class InfoViewController: UIViewController {
     private func bindTableView() {
         let menus = Observable.just(viewModel.menus)
         
-        menus.bind(to: infoTableView.rx.items(cellIdentifier: InfoCell.cellID, cellType: InfoCell.self)) { index, item, cell in
+        menus.bind(to: infoTableView.rx.items(cellIdentifier: InfoCell.cellID,
+                                              cellType: InfoCell.self)) { index, item, cell in
             cell.setValues(title: item)
         }.disposed(by: disposeBag)
         
@@ -140,17 +139,12 @@ final class InfoViewController: UIViewController {
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.title = "내 정보"
         
-        view.addSubviews(settingButton,
-                         detailUserInfoView,
+        view.addSubviews(detailUserInfoView,
                          lineView,
                          infoTableView,
                          lineView2)
         
         view.addSubview(logoutButton)
-        
-        settingButton.snp.makeConstraints { make in
-            make.trailing.equalToSuperview().offset(-12)
-        }
         
         detailUserInfoView.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide).offset(16)
