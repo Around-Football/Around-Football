@@ -27,7 +27,9 @@ final class InviteViewController: UIViewController {
     let contentView = UIView()
     private let placeView = GroundTitleView()
     private let peopleView = PeopleCountView()
-    
+    private let divider = UIView().then {
+        $0.backgroundColor = AFColor.grayScale50
+    }
     private lazy var scrollView = UIScrollView().then {
         $0.showsVerticalScrollIndicator = false
     }
@@ -379,7 +381,6 @@ final class InviteViewController: UIViewController {
         view.backgroundColor = .white
         navigationItem.title = "용병 구하기"
         
-//        addChild(calenderViewController)
         view.addSubview(scrollView)
         scrollView.addSubview(contentView)
         
@@ -387,6 +388,7 @@ final class InviteViewController: UIViewController {
                                 dateTitleLabel,
                                 datePicker,
                                 peopleView,
+                                divider,
                                 timeTitleLabel,
                                 startTimePicker,
                                 timePickerSeperator,
@@ -416,14 +418,13 @@ final class InviteViewController: UIViewController {
             make.top.equalTo(contentView.snp.top)
             make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
             make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
-            make.height.equalTo(100)
         }
         
         dateTitleLabel.snp.makeConstraints { make in
             make.top.equalTo(placeView.snp.bottom)
             make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
             make.bottom.equalTo(peopleView.snp.top)
-            make.width.equalTo(UIScreen.main.bounds.width * 3/4)
+            make.width.lessThanOrEqualTo(UIScreen.main.bounds.width * 3/4)
         }
         
         datePicker.snp.makeConstraints { make in
@@ -439,34 +440,36 @@ final class InviteViewController: UIViewController {
             make.top.equalTo(dateTitleLabel.snp.bottom)
             make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
             make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
+            make.bottom.equalTo(divider.snp.top).offset(-12)
             make.height.equalTo(50)
+        }
+        
+        divider.snp.makeConstraints { make in
+            make.height.equalTo(2)
+            make.leading.trailing.equalToSuperview()
+            make.bottom.equalTo(timeTitleLabel.snp.top).offset(-20)
         }
         
         timeTitleLabel.snp.makeConstraints { make in
             make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
-            make.top.equalTo(peopleView.snp.bottom)
-            make.bottom.equalTo(typeLabel.snp.top)
             make.centerY.equalTo(startTimePicker)
             make.width.equalTo(UIScreen.main.bounds.width * 1/3)
         }
         
         startTimePicker.snp.makeConstraints { make in
             make.leading.equalTo(timeTitleLabel.snp.trailing)
-            make.top.equalTo(peopleView.snp.bottom)
             make.height.equalTo(datePicker.snp.height)
             make.width.equalTo(datePicker.snp.width)
         }
         
         timePickerSeperator.snp.makeConstraints { make in
-            make.top.equalTo(peopleView.snp.bottom)
             make.leading.equalTo(startTimePicker.snp.trailing).offset(10)
             make.trailing.equalTo(endTimePicker.snp.leading).offset(-10)
             make.bottom.equalTo(timeTitleLabel)
         }
         
         endTimePicker.snp.makeConstraints { make in
-            
-            make.top.equalTo(peopleView.snp.bottom)
+            make.top.bottom.equalTo(startTimePicker)
             make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
             make.height.equalTo(datePicker.snp.height)
             make.width.equalTo(datePicker.snp.width)
