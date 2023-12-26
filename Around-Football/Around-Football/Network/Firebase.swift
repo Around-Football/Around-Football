@@ -18,14 +18,6 @@ final class FirebaseAPI {
     
     private init() { }
     
-    func createUser(_ result: AuthDataResult) {
-        
-        let uid = result.user.uid
-        
-        REF_USER.document(uid)
-            .setData(["id" : uid])
-    }
-    
     func updateUser(_ user: User, completion: ((Error?) -> Void)? = nil) {
 //        guard let currentUserID = Auth.auth().currentUser?.uid else { return }
         let ref = REF_USER.document(user.id)
@@ -38,16 +30,6 @@ final class FirebaseAPI {
             UserService.shared.currentUser_Rx.onNext(user)
             completion?(nil)
         }
-//        REF_USER.document(currentUserID)
-//            .updateData(
-//                ["userName" : user.userName,
-//                 "age" : user.age,
-//                 "gender" : user.gender,
-//                 "area" : user.area,
-//                 "mainUsedFeet" : user.mainUsedFeet,
-//                 "position" : user.position,
-//                 "bookmarkedRecruit" : user.bookmarkedRecruit]
-//            )
         
         UserService.shared.currentUser_Rx.onNext(user) //유저 업데이트하고 업데이트한 유저정보 보내줌
     }
@@ -67,6 +49,27 @@ final class FirebaseAPI {
         
         let user = User(dictionary: result.data()!)
         return user
+    }
+    
+    func fetchUsersRx(uids: [String]) -> Observable<[User]> {
+        return Observable.create { [ weak self ] observe in
+            guard let self = self else { return Disposables.create() }
+            Task {
+                do {
+                    var users: [User] = []
+                    for uid in uids {
+                        let user = try await self.fetchUser(uid: uid)
+                        users.append(user)
+                    }
+                    observe.onNext(users)
+                    observe.onCompleted()
+                } catch let error as NSError {
+                    print("DEBUG - Error: \(error.localizedDescription)")
+                    return
+                }
+            }
+            return Disposables.create()
+        }
     }
     
     func fetchFields(completion: @escaping(([Field]) -> Void)) {
@@ -149,17 +152,17 @@ final class FirebaseAPI {
             
             if let region = input.region {
                 collectionRef = collectionRef
-                    .whereField("region", isEqualTo: input.region)
+                    .whereField("region", isEqualTo: input.region as Any)
             }
             
             if let type = input.type {
                 collectionRef = collectionRef
-                    .whereField("type", isEqualTo: input.type)
+                    .whereField("type", isEqualTo: input.type as Any)
             }
             
             if let gender = input.gender {
                 collectionRef = collectionRef
-                    .whereField("gender", isEqualTo: input.gender)
+                    .whereField("gender", isEqualTo: input.gender as Any)
             }
             
             collectionRef.getDocuments { snapshot, error in
@@ -484,29 +487,3 @@ extension FirebaseAPI {
             }
     }
 }
-
-//func saveFieldJsonData<T: Encodable>(data:T) {
-//    let jsonEncoder = JSONEncoder()
-//
-//    do {
-//        let encodedData = try jsonEncoder.encode(data)
-//        print(String(data: encodedData, encoding: .utf8)!)
-//
-//        guard let documentDirectoryUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else { return }
-//        let fileURL = documentDirectoryUrl.appendingPathComponent("FieldMock.json")
-//        print("DEBUG: FILEURL - \(fileURL.description)")
-//
-//        do {
-//            try encodedData.write(to: fileURL)
-//
-//            print("Save File")
-//        }
-//        catch let error as NSError {
-//            print(error)
-//        }
-//
-//
-//    } catch {
-//        print(error)
-//    }
-//}

@@ -13,22 +13,19 @@ import Then
 
 final class ApplicantListTableViewCell: UITableViewCell {
     
+    typealias ApplicantStatus = ApplicantListViewModel.ApplicantStatus
+    
     // MARK: - Properties
     
     static let cellID = "ApplicantListTableViewCellID"
-    //    var viewModel: ApplicantListViewModel
-    //    weak var vc: ApplicantListViewController?
-    //    var uid: String
     
     private var disposeBag = DisposeBag()
     
     private lazy var containerStackView = UIStackView().then {
         $0.addArrangedSubviews(userProfileInfoStackView,
-//                               spacerView,
                                buttonStackView)
         $0.axis = .horizontal
         $0.distribution = .equalCentering
-//        $0.setCustomSpacing(CGFloat.greatestFiniteMagnitude, after: userProfileInfoStackView)
     }
     
     private let spacerView = UIView()
@@ -139,8 +136,6 @@ final class ApplicantListTableViewCell: UITableViewCell {
     // MARK: - Lifecycles
     
     init(style: UITableViewCell.CellStyle, reuseIdentifier: String?, viewModel: ApplicantListViewModel, uid: String) {
-        //        self.viewModel = viewModel
-        //        self.uid = uid
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         configureUI()
     }
@@ -148,29 +143,14 @@ final class ApplicantListTableViewCell: UITableViewCell {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         configureUI()
     }
-    
-    // MARK: - Selectors
-    
-    @objc
-    private func acceptButtonTapped() {
-        //        FirebaseAPI.shared.acceptApplicants(recruitID: viewModel.recruitItem.fieldID, userID: uid)
-        //        vc?.acceptButtonTappedSubject.onNext((viewModel.recruitItem.fieldID, uid))
-    }
-    
-    @objc
-    private func rejectButtonTapped() {
-        //        FirebaseAPI.shared.deleteApplicant(recruitID: viewModel.recruitItem.fieldID, userID: uid)
-        //        vc?.rejectButtonTappedSubject.onNext((viewModel.recruitItem.fieldID, uid))
-    }
-    
+            
     // MARK: - Helpers
     
-    func bindUI(uid: String?) {
-    }
     func configure(user: User) {
         userNameLabel.text = user.userName
         userGenderLabel.text = user.gender
@@ -178,6 +158,32 @@ final class ApplicantListTableViewCell: UITableViewCell {
         userAreaLabel.text = user.area
         userMainUsedFeetLabel.text = user.mainUsedFeet
         userPositionLabel.text = user.position.map { $0 }.joined(separator: " ")
+    }
+    
+    func setButtonStyle(status: ApplicantStatus) {
+        let isEnabledAcceptButton = status == .availaleAccept ? true : false
+        let acceptButtonTitle = status.statusDescription
+        
+        // 비활성화 경우는 두 가지밖에 없고, close가 아닌 경우는 비활성화 상태시 나머지 경우로 처리(비활성화 아닌 경우는 정상 색상)
+        let disabledBackground = status == .close ? .white : AFColor.grayScale200
+        let disabledTitleColor = status == .close ? AFColor.grayScale200 : .white
+        let borderWidth: CGFloat = status == .accepted ? 0 : 1
+        let borderColor = status == .close ? AFColor.grayScale100 : AFColor.secondary
+        setButtonUI(isEnable: isEnabledAcceptButton, title: acceptButtonTitle, disabledBackground: disabledBackground, disabledTitleColor: disabledTitleColor, borderWidth: borderWidth, borderColor: borderColor)
+    }
+    
+    private func setButtonUI(isEnable: Bool,
+                             title: String,
+                             disabledBackground: UIColor,
+                             disabledTitleColor: UIColor,
+                             borderWidth: CGFloat,
+                             borderColor: UIColor) {
+        acceptButton.isEnabled = isEnable
+        acceptButton.setTitle(title, for: .normal)
+        acceptButton.setBackgroundColor(disabledBackground, for: .disabled)
+        acceptButton.setTitleColor(disabledTitleColor, for: .disabled)
+        acceptButton.layer.borderWidth = borderWidth
+        acceptButton.layer.borderColor = borderColor.cgColor
     }
     
     private func configureUI() {
@@ -189,22 +195,12 @@ final class ApplicantListTableViewCell: UITableViewCell {
             make.leading.equalToSuperview().offset(20)
             make.trailing.equalToSuperview().offset(-20)
         }
-        
-//        userProfileInfoStackView.snp.makeConstraints { make in
-//            make.top.leading.bottom.equalToSuperview()
-//        }
-        
+                
         profileImage.snp.makeConstraints { make in
             make.height.equalTo(48)
             make.width.equalTo(48)
-//            make.centerY.equalToSuperview()
         }
-        
-//        buttonStackView.snp.makeConstraints { make in
-//            make.trailing.equalToSuperview()
-//            make.centerY.equalToSuperview()
-//        }
-        
+                
         sendMessageButton.snp.makeConstraints { make in
             make.height.equalTo(32)
             make.width.equalTo(72)
