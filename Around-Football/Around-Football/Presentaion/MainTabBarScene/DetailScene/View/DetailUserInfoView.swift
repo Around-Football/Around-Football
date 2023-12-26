@@ -61,7 +61,23 @@ final class DetailUserInfoView: UIView {
         let subViews = [userGenderLabel,
                         createHDividerView(),
                         userAgeLabel,
-                        createHDividerView(),
+                        userDetailInfoSettingViewStackView]
+        view.axis = .horizontal
+        view.spacing = 5
+        view.distribution = .fill
+        
+        subViews.forEach { label in
+            view.addArrangedSubview(label)
+        }
+        
+//        userDetailInfoSettingViewStackView.snp.makeConstraints { make in
+//            make.centerY.equalTo(userStackView.snp.centerY)
+//            make.leading.equalTo(userStackView.snp.trailing).offset(5)
+//        }
+    }
+    
+    private lazy var userDetailInfoSettingViewStackView = UIStackView().then { view in
+        let subViews = [createHDividerView(),
                         userFoot,
                         createHDividerView(),
                         userPosition]
@@ -102,6 +118,7 @@ final class DetailUserInfoView: UIView {
             userDetailInfoStackView.isHidden = true
         } else {
             userDetailInfoStackView.isHidden = false
+            userDetailInfoSettingViewStackView.isHidden = true
             userNameLabel.text = user?.userName
             userGenderLabel.text = user?.gender
             userAgeLabel.text = String(user?.age ?? "")
@@ -111,6 +128,7 @@ final class DetailUserInfoView: UIView {
         if isSettingView {
             userFoot.text = user?.mainUsedFeet
             userPosition.text = user?.position.joined(separator: " • ")
+            userDetailInfoSettingViewStackView.isHidden = false
         }
     }
     
