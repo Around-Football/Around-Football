@@ -51,7 +51,7 @@ final class InfoCell: UITableViewCell {
             make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
             make.bottom.equalToSuperview().offset(-20)
             make.centerY.equalToSuperview()
-            make.width.height.equalTo(24)
+//            make.width.height.equalTo(24)
         }
     }
 }
