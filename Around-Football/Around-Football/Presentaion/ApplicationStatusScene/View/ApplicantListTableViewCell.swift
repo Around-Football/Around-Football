@@ -28,8 +28,6 @@ final class ApplicantListTableViewCell: UITableViewCell {
         $0.distribution = .equalCentering
     }
     
-    private let spacerView = UIView()
-    
     private lazy var userProfileInfoStackView = UIStackView().then {
         $0.addArrangedSubviews(profileImage,
                                userInfoStackView)
@@ -191,9 +189,10 @@ final class ApplicantListTableViewCell: UITableViewCell {
         contentView.addSubview(containerStackView)
         
         containerStackView.snp.makeConstraints { make in
-            make.centerY.equalToSuperview()
+            make.top.equalToSuperview().offset(20)
             make.leading.equalToSuperview().offset(20)
             make.trailing.equalToSuperview().offset(-20)
+            make.bottom.equalToSuperview().offset(-20)
         }
                 
         profileImage.snp.makeConstraints { make in

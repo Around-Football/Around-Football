@@ -373,28 +373,22 @@ extension FirebaseAPI {
     }
     
     //승인하면 배열 요소 이동
-    func acceptApplicants(recruitID: String, userID: String?) {
-        REF_RECRUIT.document(recruitID).getDocument { snapshot, error in
+    func acceptApplicants(recruitID: String, userID: String, completion: @escaping((Error?) -> Void)) {
+        REF_RECRUIT.document(recruitID).getDocument { [weak self] snapshot, error in
             if error != nil {
                 print("pendingApplicationsUID 추가 오류")
             }
             
-            guard
+            guard let self = self,
                 var data = snapshot?.data(),
-                var pendingApplicants = data["pendingApplicantsUID"] as? [String?],
                 var acceptedApplicants = data["acceptedApplicantsUID"] as? [String?]
             else { return }
             //승인한 유저 acceptedApplicantsUID 배열에 추가
             acceptedApplicants.append(userID)
             data.updateValue(acceptedApplicants, forKey: "acceptedApplicantsUID")
             
-            //승인한 유저 pendingApplicantsUID 배열에서 제거
-            pendingApplicants.removeAll { str in
-                str == userID ? true : false
-            }
-            data.updateValue(pendingApplicants, forKey: "pendingApplicantsUID")
-            
-            REF_RECRUIT.document(recruitID).updateData(data)
+            let ref = REF_RECRUIT.document(recruitID)
+            self.updateRefData(ref: ref, data: data, completion: completion)
         }
     }
     

@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class ApplicationListHeaderView: UIView {
+final class ApplicantListHeaderView: UIView {
     
     // MARK: - Properties
     

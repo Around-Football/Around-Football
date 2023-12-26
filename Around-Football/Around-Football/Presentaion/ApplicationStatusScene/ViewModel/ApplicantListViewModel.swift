@@ -39,6 +39,7 @@ final class ApplicantListViewModel {
     weak var coordinator: DetailCoordinator?
     var recruitItem: BehaviorSubject<Recruit>
     private var disposeBag = DisposeBag()
+    var isLoading = BehaviorSubject(value: true)
     
     // MARK: - Lifecycles
     
@@ -46,6 +47,8 @@ final class ApplicantListViewModel {
         self.coordinator = coordinator
         self.recruitItem = BehaviorSubject(value: recruit)
     }
+    
+    // MARK: - Bind
     
     func transform(_ input: Input) -> Output {
         let users = fetchUsers(by: input.invokedViewDidLoad)
@@ -56,7 +59,7 @@ final class ApplicantListViewModel {
         return output
     }
     
-    func fetchRecruit() {
+    private func fetchRecruit() {
         let recruit = getRecruit()
         FirebaseAPI.shared.fetchRecruit(recruitID: recruit.id) { [weak self] recruit, error in
             guard let self = self else { return }
@@ -88,6 +91,8 @@ final class ApplicantListViewModel {
             }
     }
     
+    // MARK: - Helpers
+    
     func getRecruit() -> Recruit {
         return try! recruitItem.value()
     }
@@ -106,27 +111,15 @@ final class ApplicantListViewModel {
         return .availaleAccept
     }
     
-//    private func loadApplicationList(by inputObserver: Observable<Void>) -> Observable<[String]> {
-//        inputObserver
-//            .flatMap { _ -> Observable<[String]> in
-//                let applicantListObservable = FirebaseAPI.shared.loadPendingApplicantRx(recruitID: self.recruitItem.id)
-//                return applicantListObservable
-//            }
-//    }
-//    
-//    private func loadAcceptedApplicationList(by inputObserver: Observable<(String, String)>) -> Observable<[String]> {
-//        inputObserver
-//            .flatMap { (recruitID, uid) -> Observable<[String]> in
-//                let applicantListObservable = FirebaseAPI.shared.loadAcceptedApplicantRx(recruitID: recruitID, uid: uid)
-//                return applicantListObservable
-//            }
-//    }
-//    
-//    private func loadRejectedApplicationList(by inputObserver: Observable<(String, String)>) -> Observable<[String]> {
-//        inputObserver
-//            .flatMap { (recruitID, uid) -> Observable<[String]> in
-//                let applicantListObservable = FirebaseAPI.shared.loadRejectedApplicantRx(recruitID: recruitID, uid: uid)
-//                return applicantListObservable
-//            }
-//    }
+    func acceptApplicantion(uid: String) {
+        let recruit = getRecruit()
+        FirebaseAPI.shared.acceptApplicants(recruitID: recruit.id, userID: uid) { [weak self] error in
+            if let error = error {
+                print("DEBUG - Error: \(error.localizedDescription)", #function)
+                return
+            }
+            guard let self = self else { return }
+            self.fetchRecruit()
+        }
+    }
 }
