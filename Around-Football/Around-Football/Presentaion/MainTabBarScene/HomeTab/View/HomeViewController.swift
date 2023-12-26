@@ -268,13 +268,23 @@ final class HomeViewController: UIViewController {
     
     private func configureUI() {
         view.backgroundColor = .white
+        //네비게이션바 타이틀 크기 설정
+        navigationController?.navigationBar.largeTitleTextAttributes = [
+            NSAttributedString.Key.font: AFFont.titleMedium ?? UIFont()
+        ]
+        navigationController?.navigationBar.largeTitleTextAttributes?[NSAttributedString.Key.paragraphStyle] = {
+            let style = NSMutableParagraphStyle()
+            style.firstLineHeadIndent = 5
+            return style
+        }()
+        
         addChild(oneLIneCalender)
         view.addSubviews(oneLIneCalender.view,
                          filterScrollView,
                          homeTableView,
                          floatingButton)
         oneLIneCalender.view.snp.makeConstraints { make in
-            make.top.equalTo(view.safeAreaLayoutGuide).offset(16)
+            make.top.equalTo(view.safeAreaLayoutGuide).offset(5)
             make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
             make.trailing.equalToSuperview()
             make.height.equalTo(64)
