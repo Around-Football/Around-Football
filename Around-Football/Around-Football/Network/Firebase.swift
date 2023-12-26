@@ -186,11 +186,10 @@ extension FirebaseAPI {
         return Observable.create { observer in
             //유저불러옴
             guard let user = try? UserService.shared.currentUser_Rx.value() else { return Disposables.create() }
-            
-            let userBookmarkList = user.bookmarkedRecruit
+            guard user.bookmarkedRecruit.count != 0 else { return Disposables.create() }
             
             REF_RECRUIT
-                .whereField("id", in: userBookmarkList as [Any])
+                .whereField("id", in: user.bookmarkedRecruit as [Any])
                 .getDocuments { snapshot, error in
                     if error != nil {
                         print("loadBookmarkPostRx 추가 오류: \(String(describing: error?.localizedDescription))")
