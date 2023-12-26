@@ -259,38 +259,34 @@ final class InputInfoView: UIView {
             make.top.equalTo(titleLabel.snp.bottom).offset(32)
             make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
             make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
-            make.bottom.equalTo(userAgeStackView.snp.top).offset(SuperviewOffsets.bottomPadding)
         }
         
         userAgeStackView.snp.makeConstraints { make in
             make.top.equalTo(userNameStackView.snp.bottom).offset(SuperviewOffsets.topPadding)
             make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
             make.trailing.equalTo(userRegionStackView.snp.leading).offset(-10)
-            make.bottom.equalTo(userGenderStackView.snp.top).offset(SuperviewOffsets.bottomPadding)
             make.width.equalTo(userRegionStackView.snp.width)
         }
         
         userRegionStackView.snp.makeConstraints { make in
-            make.top.equalTo(userNameStackView.snp.bottom).offset(SuperviewOffsets.topPadding)
+            make.centerY.equalTo(userAgeStackView.snp.centerY)
             make.leading.equalTo(userAgeStackView.snp.trailing).offset(10)
             make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
-            make.bottom.equalTo(userGenderStackView.snp.top).offset(SuperviewOffsets.bottomPadding)
             make.width.equalTo(userAgeStackView.snp.width)
+            make.height.equalTo(userAgeStackView.snp.height)
         }
         
         userGenderStackView.snp.makeConstraints { make in
-            make.top.equalTo(userRegionStackView.snp.bottom).offset(SuperviewOffsets.topPadding)
+            make.top.equalTo(userAgeStackView.snp.bottom).offset(SuperviewOffsets.topPadding)
             make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
             make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
-            make.bottom.equalTo(userMainUsedFeetStackView.snp.top).offset(SuperviewOffsets.bottomPadding)
             make.height.equalTo(65)
         }
         
         userMainUsedFeetStackView.snp.makeConstraints { make in
-//            make.top.equalTo(userRegionStackView.snp.bottom).offset(SuperviewOffsets.topPadding)
+            make.top.equalTo(userGenderStackView.snp.bottom).offset(SuperviewOffsets.topPadding)
             make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
             make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
-            make.bottom.equalTo(userPositionStackView.snp.top).offset(SuperviewOffsets.bottomPadding)
             make.height.equalTo(65)
         }
         
@@ -308,7 +304,6 @@ final class InputInfoView: UIView {
             make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
             make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
             make.bottom.equalTo(contentView.snp.bottom).offset(SuperviewOffsets.bottomPadding)
-//            make.bottom.equalTo(safeAreaLayoutGuide).offset(SuperviewOffsets.bottomPadding)
             make.height.equalTo(55)
         }
     }
