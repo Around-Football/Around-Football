@@ -144,8 +144,10 @@ final class ApplicantListViewController: UIViewController {
             cell.acceptButton.rx.tap
                 .bind { _ in
                     if applicantStatus == .accepted {
+                        self.loadingView.startAnimating()
                         self.viewModel.cancelApplicantion(uid: user.id)
                     } else {
+                        self.loadingView.startAnimating()
                         self.viewModel.acceptApplicantion(uid: user.id)
                     }
                 }

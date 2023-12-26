@@ -125,7 +125,7 @@ final class ApplicantListTableViewCell: UITableViewCell {
     let sendMessageButton = AFSmallButton(buttonTitle: "채팅하기",
                                           color: AFColor.secondary,
                                           font: AFFont.filterMedium)
-    let acceptButton = AFSmallButton(buttonTitle: "수락", color: .white, font: AFFont.filterMedium).then {
+    let acceptButton = AFSmallButton(buttonTitle: "수락하기", color: .white, font: AFFont.filterMedium).then {
         $0.layer.borderWidth = 1
         $0.layer.borderColor = AFColor.secondary.cgColor
     }
