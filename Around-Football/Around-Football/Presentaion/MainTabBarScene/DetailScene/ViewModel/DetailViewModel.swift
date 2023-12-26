@@ -38,7 +38,7 @@ final class DetailViewModel {
     // MARK: - Properties
     
     private let disposeBag = DisposeBag()
-    private let channelAPI = ChannelAPI()
+    private let channelAPI = ChannelAPI.shared
     private let currentUser = UserService.shared.currentUser_Rx
     private weak var coordinator: DetailCoordinator?
     let recruitItem: BehaviorSubject<Recruit>
