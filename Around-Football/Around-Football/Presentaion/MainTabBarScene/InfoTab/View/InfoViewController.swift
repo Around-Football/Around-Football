@@ -18,6 +18,7 @@ final class InfoViewController: UIViewController {
     private var viewModel: InfoViewModel
     private var disposeBag = DisposeBag()
     private let detailUserInfoView = DetailUserInfoView()
+    private let infoHeaderView = InfoHeaderView()
     
     private lazy var infoTableView = UITableView().then {
         $0.register(InfoCell.self, forCellReuseIdentifier: InfoCell.cellID)
@@ -34,15 +35,6 @@ final class InfoViewController: UIViewController {
     
     private let lineView2 = UIView().then {
         $0.backgroundColor = AFColor.grayScale50
-    }
-    
-    private lazy var settingButton = UIButton().then {
-        let imageConfig = UIImage.SymbolConfiguration(pointSize: 20, weight: .regular)
-        let image = UIImage(systemName: "gear", withConfiguration: imageConfig)
-        $0.setImage(image, for: .normal)
-        $0.tintColor = .label
-        $0.addTarget(self, action: #selector(settingButtonTapped), for: .touchUpInside)
-        $0.contentMode = .scaleAspectFill
     }
     
     private lazy var logoutButton = UIButton().then {
@@ -68,16 +60,10 @@ final class InfoViewController: UIViewController {
         bindUserInfo()
         bindTableView()
         bindLogoutButton()
-
+        configureSettingButton()
     }
     
     // MARK: - Selectors
-    
-    @objc
-    private func settingButtonTapped() {
-        print("DEBUG: settingButtonTapped")
-        viewModel.coordinator?.pushSettingView()
-    }
     
     @objc
     func logoutButtonTapped() {
@@ -87,6 +73,13 @@ final class InfoViewController: UIViewController {
     }
     
     // MARK: - Helpers
+    
+    private func configureSettingButton() {
+        infoHeaderView.settingButtonActionHandler = { [weak self] in
+            guard let self else { return }
+            viewModel.coordinator?.pushSettingView()
+        }
+    }
     
     private func bindTableView() {
         let menus = Observable.just(viewModel.menus)
@@ -136,18 +129,24 @@ final class InfoViewController: UIViewController {
     
     private func configureUI() {
         view.backgroundColor = .white
-        navigationController?.navigationBar.prefersLargeTitles = true
-        navigationItem.title = "내 정보"
+//        navigationController?.navigationBar.prefersLargeTitles = true
+//        navigationItem.title = "내 정보"
         
-        view.addSubviews(detailUserInfoView,
+        view.addSubviews(infoHeaderView,
+                         detailUserInfoView,
                          lineView,
                          infoTableView,
                          lineView2)
         
         view.addSubview(logoutButton)
         
+        infoHeaderView.snp.makeConstraints { make in
+            make.top.equalTo(view.safeAreaLayoutGuide)
+            make.width.equalToSuperview()
+        }
+        
         detailUserInfoView.snp.makeConstraints { make in
-            make.top.equalTo(view.safeAreaLayoutGuide).offset(16)
+            make.top.equalTo(infoHeaderView.snp.bottom)
             make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
             make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
             make.height.equalTo(64)

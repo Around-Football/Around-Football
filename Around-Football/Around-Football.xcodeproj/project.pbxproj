@@ -127,6 +127,7 @@
 		7C5F77602AC9DA08004CE48F /* GroundTitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C5F775F2AC9DA08004CE48F /* GroundTitleView.swift */; };
 		7C5F77622AC9DB7B004CE48F /* PeopleCountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C5F77612AC9DB7B004CE48F /* PeopleCountView.swift */; };
 		7C5F77642AC9E180004CE48F /* UIView+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C5F77632AC9E180004CE48F /* UIView+.swift */; };
+		7C732C782B3A69760007CF00 /* InfoHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C732C772B3A69760007CF00 /* InfoHeaderView.swift */; };
 		7C88C1A72B2D9F0200FB7385 /* Pretendard-Light.otf in Resources */ = {isa = PBXBuildFile; fileRef = 7C88C1A22B2D9F0100FB7385 /* Pretendard-Light.otf */; };
 		7C88C1A82B2D9F0200FB7385 /* Pretendard-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 7C88C1A32B2D9F0100FB7385 /* Pretendard-Bold.otf */; };
 		7C88C1AA2B2D9F0200FB7385 /* Pretendard-SemiBold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 7C88C1A52B2D9F0100FB7385 /* Pretendard-SemiBold.otf */; };
@@ -251,6 +252,7 @@
 		7C5F775F2AC9DA08004CE48F /* GroundTitleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroundTitleView.swift; sourceTree = "<group>"; };
 		7C5F77612AC9DB7B004CE48F /* PeopleCountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeopleCountView.swift; sourceTree = "<group>"; };
 		7C5F77632AC9E180004CE48F /* UIView+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+.swift"; sourceTree = "<group>"; };
+		7C732C772B3A69760007CF00 /* InfoHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoHeaderView.swift; sourceTree = "<group>"; };
 		7C78830C2ADE54970028D555 /* Around-Football.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Around-Football.entitlements"; sourceTree = "<group>"; };
 		7C88C1A22B2D9F0100FB7385 /* Pretendard-Light.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Pretendard-Light.otf"; sourceTree = "<group>"; };
 		7C88C1A32B2D9F0100FB7385 /* Pretendard-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Pretendard-Bold.otf"; sourceTree = "<group>"; };
@@ -666,6 +668,7 @@
 			isa = PBXGroup;
 			children = (
 				669674922AC3E9DF0067FD48 /* InfoViewController.swift */,
+				7C732C772B3A69760007CF00 /* InfoHeaderView.swift */,
 				7CC619732AD433760085DF90 /* ProfileAndEditView.swift */,
 				7CC619752AD448A90085DF90 /* InfoCell.swift */,
 				7CC619772AD460D80085DF90 /* InfoArrangedView.swift */,
@@ -1020,6 +1023,7 @@
 				7C2F9FE32B25EFC200F1EF1B /* BookmarkPostViewController.swift in Sources */,
 				7CB21BA32AC94D36001D0058 /* DetailViewController.swift in Sources */,
 				7929A3182ADFECD9006ED4FA /* ApplicantListViewController.swift in Sources */,
+				7C732C782B3A69760007CF00 /* InfoHeaderView.swift in Sources */,
 				7C5F77622AC9DB7B004CE48F /* PeopleCountView.swift in Sources */,
 				27058ED12B06814F00C107F9 /* SearchCoordinator.swift in Sources */,
 				274C22112AD6D6EF005469E6 /* HomeTableViewCell.swift in Sources */,
