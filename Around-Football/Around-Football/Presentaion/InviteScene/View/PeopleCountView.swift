@@ -78,7 +78,7 @@ class PeopleCountView: UIView {
         peopleCountTitleLabel.snp.makeConstraints { make in
             make.top.leading.bottom.equalToSuperview()
             make.trailing.equalTo(minusButton.snp.leading)
-            make.width.equalTo(UIScreen.main.bounds.width * 3/4)
+            make.width.lessThanOrEqualTo(UIScreen.main.bounds.width * 3/4)
         }
         
         peopleCountLabel.snp.makeConstraints { make in
