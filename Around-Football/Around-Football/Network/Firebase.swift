@@ -19,7 +19,6 @@ final class FirebaseAPI {
     private init() { }
     
     func updateUser(_ user: User, completion: ((Error?) -> Void)? = nil) {
-//        guard let currentUserID = Auth.auth().currentUser?.uid else { return }
         let ref = REF_USER.document(user.id)
         updateRefData(ref: ref, data: user.representation) { error in
             if let error = error {
@@ -270,85 +269,7 @@ extension FirebaseAPI {
             return Disposables.create()
         }
     }
-    
-    //유저가 신청하기 누르면 pendingApplicationsUID 추가
-    func loadPendingApplicantRx(recruitID: String) -> Observable<[String]> {
-        return Observable.create { observer in
-            REF_RECRUIT.document(recruitID).getDocument { snapshot, error in
-                if error != nil {
-                    print("ppendingApplicantUID 추가 오류")
-                }
-                
-                guard
-                    let data = snapshot?.data(),
-                    let pendingApplicants = data["pendingApplicantsUID"] as? [String]
-                else { return }
-                
-                observer.onNext(pendingApplicants)
-                observer.onCompleted()
-            }
-            
-            return Disposables.create()
-        }
-    }
-    
-    func loadAcceptedApplicantRx(recruitID: String, uid: String) -> Observable<[String]> {
-        return Observable.create { observer in
-            REF_RECRUIT.document(recruitID).getDocument { snapshot, error in
-                if error != nil {
-                    print("pendingApplicationsUID 추가 오류")
-                }
-                
-                guard
-                    var data = snapshot?.data(),
-                    var pendingApplicants = data["pendingApplicantsUID"] as? [String],
-                    var acceptedApplicants = data["acceptedApplicantsUID"] as? [String]
-                else { return }
-                //승인한 유저 acceptedApplicantsUID 배열에 추가
-                acceptedApplicants.append(uid)
-                data.updateValue(acceptedApplicants, forKey: "acceptedApplicantsUID")
-                
-                //승인한 유저 pendingApplicantsUID 배열에서 제거
-                pendingApplicants.removeAll { str in
-                    str == uid ? true : false
-                }
-                data.updateValue(pendingApplicants, forKey: "pendingApplicantsUID")
-                
-                REF_RECRUIT.document(recruitID).updateData(data)
-                
-                observer.onNext(pendingApplicants)
-                observer.onCompleted()
-            }
-            
-            return Disposables.create()
-        }
-    }
-    
-    func loadRejectedApplicantRx(recruitID: String, uid: String) -> Observable<[String]> {
-        return Observable.create { observer in
-            REF_RECRUIT.document(recruitID).getDocument { snapshot, error in
-                if error != nil {
-                    print("deleteApplicantError \(String(describing: error?.localizedDescription))")
-                }
-                
-                guard var data = snapshot?.data(),
-                      var pendingApplicants = data["pendingApplicantsUID"] as? [String] else { return }
-                
-                pendingApplicants.removeAll(where: { userID in
-                    userID == uid ? true : false
-                })
-                data.updateValue(pendingApplicants, forKey: "pendingApplicantsUID")
-                
-                REF_RECRUIT.document(recruitID).updateData(data)
-                
-                observer.onNext(pendingApplicants)
-                observer.onCompleted()
-            }
-            
-            return Disposables.create()
-        }
-    }
-    
+
     //유저 추가
     func appendPendingApplicant(recruitID: String, userID: String, completion: @escaping((Error?) -> Void )) {
         REF_RECRUIT.document(recruitID).getDocument { snapshot, error in
@@ -375,13 +296,14 @@ extension FirebaseAPI {
     //승인하면 배열 요소 이동
     func acceptApplicants(recruitID: String, userID: String, completion: @escaping((Error?) -> Void)) {
         REF_RECRUIT.document(recruitID).getDocument { [weak self] snapshot, error in
-            if error != nil {
-                print("pendingApplicationsUID 추가 오류")
+            if let error = error {
+                completion(error)
+                return
             }
             
             guard let self = self,
                 var data = snapshot?.data(),
-                var acceptedApplicants = data["acceptedApplicantsUID"] as? [String?]
+                var acceptedApplicants = data["acceptedApplicantsUID"] as? [String]
             else { return }
             //승인한 유저 acceptedApplicantsUID 배열에 추가
             acceptedApplicants.append(userID)
@@ -392,22 +314,19 @@ extension FirebaseAPI {
         }
     }
     
-    //거절하기 하면 uid 지움
-    func deleteApplicant(recruitID: String, userID: String?) {
-        REF_RECRUIT.document(recruitID).getDocument { snapshot, error in
-            if error != nil {
-                print("deleteApplicantError \(String(describing: error?.localizedDescription))")
+    func cancelApplicants(recruitID: String, userID: String, completion: @escaping((Error?) -> Void)) {
+        REF_RECRUIT.document(recruitID).getDocument { [weak self] snapshot, error in
+            if let error = error {
+                completion(error)
+                return
             }
             
             guard var data = snapshot?.data(),
-                  var pendingApplicants = data["pendingApplicantsUID"] as? [String?] else { return }
-            
-            pendingApplicants.removeAll(where: { uid in
-                uid == userID ? true : false
-            })
-            data.updateValue(pendingApplicants, forKey: "pendingApplicantsUID")
-            
-            REF_RECRUIT.document(recruitID).updateData(data)
+                  var acceptedApplicants = data["acceptedApplicantsUID"] as? [String] else { return }
+            acceptedApplicants.removeAll(where: { $0 == userID })
+            data.updateValue(acceptedApplicants, forKey: "acceptedApplicantsUID")
+            let ref = REF_RECRUIT.document(recruitID)
+            self?.updateRefData(ref: ref, data: data, completion: completion)
         }
     }
 }
