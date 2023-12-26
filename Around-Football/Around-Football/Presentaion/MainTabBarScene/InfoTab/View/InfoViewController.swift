@@ -98,9 +98,9 @@ final class InfoViewController: UIViewController {
                     viewModel.coordinator?.pushEditView()
                 case "관심 글":
                     viewModel.coordinator?.pushBookmarkPostViewController()
-                case "신청 글":
-                    viewModel.coordinator?.pushWrittenPostViewController()
                 case "작성 글":
+                    viewModel.coordinator?.pushWrittenPostViewController()
+                case "신청 글":
                     viewModel.coordinator?.pushApplicationPostViewController()
                 default:
                     print("DEBUG: cell없음")

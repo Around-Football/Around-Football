@@ -19,6 +19,12 @@ final class BookmarkPostViewController: UIViewController {
     var viewModel: InfoPostViewModel
     private let loadBookmarkPost: PublishSubject<Void> = PublishSubject()
     private let disposeBag = DisposeBag()
+    
+    private let emptyLabel = UILabel().then {
+        $0.text = "아직 관심 글이 없습니다.\n관심 글을 등록해주세요."
+        $0.numberOfLines = 2
+        $0.font = AFFont.titleMedium
+    }
 
     private var bookmarkTableView = UITableView().then {
         $0.register(HomeTableViewCell.self, forCellReuseIdentifier: HomeTableViewCell.id)
@@ -37,7 +43,6 @@ final class BookmarkPostViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .red
         configureUI()
         bindUI()
         loadBookmarkPost.onNext(())
@@ -50,6 +55,11 @@ final class BookmarkPostViewController: UIViewController {
         
         output
             .bookmarkList
+            .observe(on: MainScheduler.instance)
+            .do(onNext: { [weak self] recruits in
+                guard let self else { return }
+                emptyLabel.isHidden = true
+            })
             .bind(to: bookmarkTableView.rx.items(cellIdentifier: HomeTableViewCell.id,
                                              cellType: HomeTableViewCell.self)) { index, item, cell in
                 cell.bindContents(item: item)
@@ -70,9 +80,18 @@ final class BookmarkPostViewController: UIViewController {
     
     private func configureUI() {
         title = "관심 글"
+        view.backgroundColor = .white
+        
         view.addSubview(bookmarkTableView)
+        bookmarkTableView.addSubview(emptyLabel)
+        
         bookmarkTableView.snp.makeConstraints { make in
-            make.edges.equalToSuperview()
+            make.top.bottom.equalTo(view.safeAreaLayoutGuide)
+            make.leading.trailing.equalToSuperview()
+        }
+        
+        emptyLabel.snp.makeConstraints { make in
+            make.center.equalToSuperview()
         }
     }
 }
