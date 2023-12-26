@@ -13,7 +13,7 @@ final class ApplicantListHeaderView: UIView {
     
     private let typeLabel = UILabel().then {
         $0.text = "풋살"
-        $0.backgroundColor = $0.text == "축구" ? AFColor.soccor : AFColor.futsal
+//        $0.backgroundColor = $0.text == "축구" ? AFColor.soccor : AFColor.futsal
         $0.textColor = AFColor.white
         $0.font = AFFont.text
         $0.textAlignment = .center
@@ -58,11 +58,10 @@ final class ApplicantListHeaderView: UIView {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     // MARK: - Helpers
     
     func configure(recruit: Recruit) {
-        typeLabel.text = recruit.type
         dateLabel.text = "\(recruit.matchDayString) \(recruit.startTime)"
         groundLabel.text = recruit.fieldName
         recruitingLabel.text = "\(recruit.acceptedApplicantsUID.count) / \(recruit.recruitedPeopleCount)"
@@ -104,7 +103,12 @@ final class ApplicantListHeaderView: UIView {
     }
     
     private func configureTypeLabel(recruit: Recruit) {
-        typeLabel.text = recruit.type
-        typeLabel.backgroundColor = recruit.type == "축구" ? AFColor.soccor : AFColor.futsal
+        if recruit.acceptedApplicantsUID.count == recruit.recruitedPeopleCount {
+            typeLabel.text = "마감"
+            typeLabel.backgroundColor = AFColor.grayScale200
+        } else {
+            typeLabel.text = recruit.type
+            typeLabel.backgroundColor = recruit.type == "축구" ? AFColor.soccor : AFColor.futsal
+        }
     }
 }
