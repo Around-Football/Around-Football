@@ -25,8 +25,8 @@ struct Recruit: Codable, Identifiable {
     var startTime: String //시작시간
     var endTime: String // 종료시간
     var matchDateString: String //쿼리용 String
-    var pendingApplicantsUID: [String?] //신청한 사람들 uid
-    var acceptedApplicantsUID: [String?] //승인한 사람들 uid
+    var pendingApplicantsUID: [String] //신청한 사람들 uid
+    var acceptedApplicantsUID: [String] //승인한 사람들 uid
     var matchDayString: String {
         let date = matchDate.dateValue()
         let dateFormatter = DateFormatter()
@@ -63,8 +63,8 @@ struct Recruit: Codable, Identifiable {
         self.matchDate = dictionary["matchDate"] as? Timestamp ?? Timestamp()
         self.startTime = dictionary["startTime"] as? String ?? ""
         self.endTime = dictionary["endTime"] as? String ?? ""
-        self.pendingApplicantsUID = dictionary["pendingApplicantsUID"] as? [String?] ?? []
-        self.acceptedApplicantsUID = dictionary["acceptedApplicantsUID"] as? [String?] ?? []
+        self.pendingApplicantsUID = dictionary["pendingApplicantsUID"] as? [String] ?? []
+        self.acceptedApplicantsUID = dictionary["acceptedApplicantsUID"] as? [String] ?? []
     }
 }
 

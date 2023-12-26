@@ -19,8 +19,6 @@ final class ApplicantListViewController: UIViewController {
     private var disposeBag = DisposeBag()
     
     private let invokedViewDidLoad = PublishSubject<Void>()
-    let acceptButtonTappedSubject = PublishSubject<(String, String)>()
-    let rejectButtonTappedSubject = PublishSubject<(String, String)>()
     
     private let headerView = ApplicationListHeaderView()
     
@@ -29,7 +27,7 @@ final class ApplicantListViewController: UIViewController {
         $0.layer.borderColor = AFColor.grayScale50.cgColor
         $0.register(ApplicantListTableViewCell.self, forCellReuseIdentifier: ApplicantListTableViewCell.cellID)
         $0.delegate = self
-        $0.dataSource = self
+//        $0.dataSource = self
         $0.separatorInset = UIEdgeInsets().with({ edge in
             edge.left = 0
             edge.right = 0
@@ -50,7 +48,7 @@ final class ApplicantListViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         configureUI()
-//        bind()
+        bind()
         invokedViewDidLoad.onNext(())
     }
     
@@ -71,23 +69,41 @@ final class ApplicantListViewController: UIViewController {
     }
     
     func bind() {
-//        let input = ApplicantListViewModel.Input(loadApplicantList: invokedViewDidLoad,
-//                                                 acceptButtonTapped: acceptButtonTappedSubject.asObservable(),
-//                                                 rejectButtonTapped: rejectButtonTappedSubject.asObservable())
-//        
-//        let output = viewModel.transform(input)
-//        
-//        output
-//            .applicantList
-//            .bind(to: tableView.rx.items(cellIdentifier: ApplicantListTableViewCell.cellID,
-//                                         cellType: ApplicantListTableViewCell.self)) { [weak self]  index, item, cell in
-//                guard let self else { return }
-//                cell.vc = self
-//                cell.viewModel = viewModel
-//                cell.uid = item
-//                cell.bindUI(uid: item)
-//            }
-//            .disposed(by: disposeBag)
+        let input = ApplicantListViewModel.Input(invokedViewDidLoad: invokedViewDidLoad)
+        let output = viewModel.transform(input)
+        
+        bindRecruit()
+        bindTableView(in: output.userList)
+    }
+    
+    func bindRecruit() {
+        viewModel.recruitItem
+            .withUnretained(self)
+            .subscribe(onNext: { (owner, recruit) in
+                self.headerView.configure(recruit: recruit)
+            })
+            .disposed(by: disposeBag)
+    }
+    
+    func bindTableView(in observe: Observable<[User]>) {
+        observe
+            .bind(to: tableView.rx.items(cellIdentifier: ApplicantListTableViewCell.cellID,
+                                         cellType: ApplicantListTableViewCell.self)) { [weak self] index, user, cell in
+                guard let self = self else { return }
+                cell.configure(user: user)
+                cell.setButtonStyle(status: viewModel.emitApplicantStatusCalculator(uid: user.id))
+                cell.acceptButton.rx.tap
+                    .bind { _ in
+                        print("TAP")
+                    }
+                    .disposed(by: disposeBag)
+                cell.sendMessageButton.rx.tap
+                    .bind { _ in
+                        print("TAP")
+                    }
+                    .disposed(by: disposeBag)
+            }
+                                         .disposed(by: disposeBag)
     }
     
     // MARK: - Helpers
