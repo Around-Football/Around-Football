@@ -52,32 +52,34 @@ class ChatViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        configure()
         configureUI()
         configureDelegate()
         bind()
+        navigationItem.backButtonTitle = ""
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         viewModel.resetAlarmInformation()
         invokedViewWillAppear.onNext(())
+        navigationController?.navigationBar.prefersLargeTitles = false
+        navigationController?.navigationBar.titleTextAttributes = [
+            NSAttributedString.Key.foregroundColor: AFColor.grayScale200
+        ]
+        navigationController?.navigationBar.tintColor = AFColor.grayScale200
+        title = viewModel.channelInfo.withUserName
     }
     
     override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
+        navigationController?.navigationBar.titleTextAttributes = [
+            NSAttributedString.Key.foregroundColor: UIColor.black
+        ]
+        navigationController?.navigationBar.tintColor = UIColor.black
         NotiManager.shared.currentChatRoomId = nil
         viewModel.removeListener()
     }
     
     // MARK: - Helpers
-    
-    private func configure() {
-        view.backgroundColor = .systemBackground
-        navigationController?.navigationBar.prefersLargeTitles = false
-        title = viewModel.channelInfo.withUserName
-
-    }
     
     private func configureDelegate() {
         messageViewController.messagesCollectionView.messagesDataSource = self
@@ -90,6 +92,7 @@ class ChatViewController: UIViewController {
     
     
     private func configureUI() {
+        view.backgroundColor = .systemBackground
         addChild(messageViewController)
         view.addSubviews(
             imageLoadingView,
