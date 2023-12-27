@@ -40,7 +40,7 @@ extension InviteViewController: UITextFieldDelegate {
 
         if text.isEmpty {
             titlePlaceHolderLabel.isHidden = false
-            viewModel.contentTitle.accept(nil)
+            viewModel.contentTitle.accept("")
         } else {
             titlePlaceHolderLabel.isHidden = true
             viewModel.contentTitle.accept(text)
@@ -54,7 +54,7 @@ extension InviteViewController: UITextViewDelegate {
     func textViewDidChange(_ textView: UITextView) {
         if textView.text.isEmpty {
             contentPlaceHolderLabel.isHidden = false
-            viewModel.content.accept(nil)
+            viewModel.content.accept("")
         } else {
             contentPlaceHolderLabel.isHidden = true
             viewModel.content.accept(textView.text)
