@@ -101,13 +101,9 @@ extension ChatViewController {
         viewModel.channel
             .withUnretained(self)
             .subscribe { (owner, channel) in
-                owner.messageViewController.messageInputBar.leftStackViewItems.forEach {
-                    guard let item = $0 as? InputBarButtonItem,
-                          let channel = channel else { return }
-                    DispatchQueue.main.async {
-                        item.isEnabled = channel.isAvailable
-                        owner.messageViewController.messageInputBar.isHidden = !channel.isAvailable
-                    }
+                DispatchQueue.main.async {
+                    owner.messageViewController.messageInputBar.isUserInteractionEnabled = false
+                    owner.messageViewController.messageInputBar.inputTextView.placeholder = "채팅을 보낼 수 없습니다."
                 }
             }
             .disposed(by: disposeBag)

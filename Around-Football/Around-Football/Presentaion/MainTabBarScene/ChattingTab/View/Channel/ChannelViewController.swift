@@ -48,8 +48,7 @@ final class ChannelViewController: UIViewController {
         self.viewModel = viewModel
         
         super.init(nibName: nil, bundle: nil)
-        navigationController?.navigationBar.backgroundColor = .systemBackground
-        title = "채팅"
+        navigationController?.navigationBar.backgroundColor = .white
     }
     
     required init?(coder: NSCoder) {
@@ -70,9 +69,11 @@ final class ChannelViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        navigationController?.navigationBar.prefersLargeTitles = true
         invokedViewWillAppear.onNext(())
+        title = "채팅"
     }
-    
+        
     // MARK: - Helpers
     
     func configure() {

@@ -93,6 +93,7 @@ final class DetailViewController: UIViewController {
         configureBookmarkStyle()
         configureRecruitInfo()
         configeUI()
+        navigationItem.backButtonTitle = ""
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -106,7 +107,6 @@ final class DetailViewController: UIViewController {
     }
     
     override func viewWillDisappear(_ animated: Bool) {
-        navigationItem.title = ""
         navigationController?.navigationBar.titleTextAttributes = [
             NSAttributedString.Key.foregroundColor: UIColor.black
         ]

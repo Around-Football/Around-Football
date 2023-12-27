@@ -100,8 +100,8 @@ final class ChannelAPI {
             switch message.kind {
             case .photo(_):
                 return "사진"
-            case .text(let content):
-                return content
+            case .attributedText(let content):
+                return content.string
             default: return ""
             }
         }
