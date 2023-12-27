@@ -87,7 +87,8 @@ final class BookmarkPostViewController: UIViewController {
         
         bookmarkTableView.snp.makeConstraints { make in
             make.top.bottom.equalTo(view.safeAreaLayoutGuide)
-            make.leading.trailing.equalToSuperview()
+            make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
+            make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
         }
         
         emptyLabel.snp.makeConstraints { make in
