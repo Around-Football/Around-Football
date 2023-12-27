@@ -37,12 +37,6 @@ final class InfoViewController: UIViewController {
         $0.backgroundColor = AFColor.grayScale50
     }
     
-    private lazy var logoutButton = UIButton().then {
-        $0.setTitle("로그아웃", for: .normal)
-        $0.setTitleColor(.black, for: .normal)
-        $0.addTarget(self, action: #selector(logoutButtonTapped), for: .touchUpInside)
-    }
-    
     // MARK: - Lifecycles
     
     init(viewModel: InfoViewModel) {
@@ -59,7 +53,6 @@ final class InfoViewController: UIViewController {
         configureUI()
         bindUserInfo()
         bindTableView()
-        bindLogoutButton()
         configureSettingButton()
     }
     
@@ -77,6 +70,10 @@ final class InfoViewController: UIViewController {
     private func configureSettingButton() {
         infoHeaderView.settingButtonActionHandler = { [weak self] in
             guard let self else { return }
+            guard let user = try? UserService.shared.currentUser_Rx.value() else {
+                viewModel.coordinator?.presentLoginViewController()
+                return
+            }
             viewModel.coordinator?.pushSettingView()
         }
     }
@@ -90,39 +87,31 @@ final class InfoViewController: UIViewController {
             cell.setValues(title: item)
         }.disposed(by: disposeBag)
         
-        infoTableView.rx.modelSelected(String.self)
-            .subscribe { [weak self] cellTitle in
-                guard let self else { return }
+        infoTableView.rx.itemSelected
+            .subscribe(onNext: { [weak self] indexPath in
+                guard let self = self else { return }
                 guard let user = try? UserService.shared.currentUser_Rx.value() else {
-                    viewModel.coordinator?.presentLoginViewController()
+                    self.viewModel.coordinator?.presentLoginViewController()
                     return
                 }
-                
-                switch cellTitle {
-                case "내 정보 수정":
-                    viewModel.coordinator?.pushEditView()
-                case "관심 글":
-                    viewModel.coordinator?.pushBookmarkPostViewController()
-                case "작성 글":
-                    viewModel.coordinator?.pushWrittenPostViewController()
-                case "신청 글":
-                    viewModel.coordinator?.pushApplicationPostViewController()
+
+                switch indexPath.row {
+                case 0:
+                    self.viewModel.coordinator?.pushEditView()
+                case 1:
+                    self.viewModel.coordinator?.pushBookmarkPostViewController()
+                case 2:
+                    self.viewModel.coordinator?.pushWrittenPostViewController()
+                case 3:
+                    self.viewModel.coordinator?.pushApplicationPostViewController()
                 default:
-                    print("DEBUG: SettingCell없음")
-                    return
+                    print("DEBUG: SettingCell 없음")
                 }
-            }.disposed(by: disposeBag)
-    }
-    
-    private func bindLogoutButton() {
-        UserService.shared.currentUser_Rx.bind { [weak self] user in
-            guard let self else { return }
-            if user?.id == nil {
-                logoutButton.setTitle("로그인", for: .normal)
-            } else {
-                logoutButton.setTitle("로그아웃", for: .normal)
-            }
-        }.disposed(by: disposeBag)
+
+                // 선택 효과 해제
+                infoTableView.deselectRow(at: indexPath, animated: true)
+            })
+            .disposed(by: disposeBag)
     }
     
     private func bindUserInfo() {
@@ -140,8 +129,6 @@ final class InfoViewController: UIViewController {
                          lineView,
                          infoTableView,
                          lineView2)
-        
-        view.addSubview(logoutButton)
         
         infoHeaderView.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide)
@@ -171,12 +158,6 @@ final class InfoViewController: UIViewController {
             make.top.equalTo(infoTableView.snp.bottom)
             make.width.equalToSuperview()
             make.height.equalTo(4)
-        }
-        
-        logoutButton.snp.makeConstraints { make in
-            make.leading.equalToSuperview().offset(50)
-            make.trailing.equalToSuperview().offset(-50)
-            make.bottom.equalTo(view.safeAreaLayoutGuide).offset(-50)
         }
     }
 }
