@@ -50,6 +50,31 @@ final class SettingViewController: UIViewController {
                                                 cellType: InfoCell.self)) { index, item, cell in
                 cell.setValues(title: item)
             }.disposed(by: disposeBag)
+        
+//        ["알림 설정", "1:1 문의", "약관 및 정책", "로그아웃", "탈퇴"]
+        settingTableView.rx.itemSelected
+            .subscribe { [weak self] indexPath in
+                guard let self else { return }
+                
+                switch indexPath.row {
+                case 0:
+                    print("알림 설정 뷰로")
+                case 1:
+                    print("1:1 문의 뷰로")
+                case 2:
+                    print("약관 및 정책 뷰로")
+                case 3:
+                    print("로그아웃 alert")
+                    UserService.shared.logout()
+                case 4:
+                    print("탈퇴 alert")
+                default:
+                    print("SettingCell없음")
+                    return
+                }
+                
+                settingTableView.deselectRow(at: indexPath, animated: true)
+            }.disposed(by: disposeBag)
     }
     
     private func configureUI() {
