@@ -143,7 +143,7 @@ final class InviteViewController: UIViewController {
     
     @objc
     func segmentedControlValueChanged(_ sender: UISegmentedControl) {
-        viewModel.type.accept(sender.titleForSegment(at: sender.selectedSegmentIndex))
+        viewModel.type.accept(sender.titleForSegment(at: sender.selectedSegmentIndex)!)
     }
     
     @objc
@@ -215,9 +215,9 @@ final class InviteViewController: UIViewController {
             guard let self else { return }
             //현재 값 뷰모델에 전달
             viewModel.peopleCount.accept(peopleView.count)
-            viewModel.contentTitle.accept(titleTextField.text)
+            viewModel.contentTitle.accept(titleTextField.text ?? "")
             viewModel.content.accept(contentTextView.text)
-            viewModel.matchDateString.accept(calenderViewController.selectedDateString)
+            viewModel.matchDateString.accept(calenderViewController.selectedDateString ?? "")
             viewModel.matchDate.accept(Timestamp(date: calenderViewController.selectedDate ?? Date()))
             viewModel.startTime.accept(calenderViewController.startTimeString)
             viewModel.endTime.accept(calenderViewController.endTimeString)
