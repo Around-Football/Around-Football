@@ -59,7 +59,11 @@ final class WrittenPostViewController: UIViewController {
             .observe(on: MainScheduler.instance)
             .do(onNext: { [weak self] recruits in
                 guard let self else { return }
-                emptyLabel.isHidden = true
+                if recruits.isEmpty {
+                    emptyLabel.isHidden = false
+                } else {
+                    emptyLabel.isHidden = true
+                }
             })
             .bind(to: writtenPostTableView.rx.items(cellIdentifier: HomeTableViewCell.id,
                                              cellType: HomeTableViewCell.self)) { index, item, cell in
@@ -88,7 +92,8 @@ final class WrittenPostViewController: UIViewController {
         
         writtenPostTableView.snp.makeConstraints { make in
             make.top.bottom.equalTo(view.safeAreaLayoutGuide)
-            make.leading.trailing.equalToSuperview()
+            make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
+            make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
         }
         
         emptyLabel.snp.makeConstraints { make in
