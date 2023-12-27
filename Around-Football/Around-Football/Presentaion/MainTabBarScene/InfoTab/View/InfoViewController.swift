@@ -82,9 +82,10 @@ final class InfoViewController: UIViewController {
     }
     
     private func bindTableView() {
-        let menus = Observable.just(viewModel.menus)
         
-        menus.bind(to: infoTableView.rx.items(cellIdentifier: InfoCell.cellID,
+        viewModel
+            .menusObservable
+            .bind(to: infoTableView.rx.items(cellIdentifier: InfoCell.cellID,
                                               cellType: InfoCell.self)) { index, item, cell in
             cell.setValues(title: item)
         }.disposed(by: disposeBag)
@@ -111,7 +112,6 @@ final class InfoViewController: UIViewController {
                     return
                 }
             }.disposed(by: disposeBag)
-        
     }
     
     private func bindLogoutButton() {
