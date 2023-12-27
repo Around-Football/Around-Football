@@ -35,6 +35,27 @@ struct Recruit: Codable, Identifiable {
 
         return dateFormatter.string(from: date)
     }
+    var representation: [String: Any] {
+        let rep = ["id": id,
+                   "userID": userID,
+                   "userName": userName,
+                   "fieldID": fieldID,
+                   "fieldName": fieldName,
+                   "fieldAddress": fieldAddress,
+                   "region": region,
+                   "type": type,
+                   "recruitedPeopleCount": recruitedPeopleCount,
+                   "gamePrice": gamePrice,
+                   "title": title,
+                   "content": content,
+                   "matchDateString": matchDateString,
+                   "matchDate": matchDate,
+                   "startTime": startTime,
+                   "endTime": endTime,
+                   "pendingApplicantsUID": pendingApplicantsUID,
+                   "acceptedApplicantsUID": acceptedApplicantsUID] as [String : Any]
+        return rep
+    }
     
     static func convertToArray(documents: [[String: Any]]) -> [Recruit] {
         var array: [Recruit] = []
@@ -46,6 +67,29 @@ struct Recruit: Codable, Identifiable {
         return array
     }
     
+    // create new recruit
+    init(userID: String, userName: String, fieldID: String, fieldName: String, fieldAddress: String, region: String, type: String, recruitedPeopleCount: Int, gamePrice: String, title: String, content: String, matchDate: Timestamp, startTime: String, endTime: String, matchDateString: String, pendingApplicantsUID: [String], acceptedApplicantsUID: [String]) {
+        self.id = UUID().uuidString
+        self.userID = userID
+        self.userName = userName
+        self.fieldID = fieldID
+        self.fieldName = fieldName
+        self.fieldAddress = fieldAddress
+        self.region = region
+        self.type = type
+        self.recruitedPeopleCount = recruitedPeopleCount
+        self.gamePrice = gamePrice
+        self.title = title
+        self.content = content
+        self.matchDate = matchDate
+        self.startTime = startTime
+        self.endTime = endTime
+        self.matchDateString = matchDateString
+        self.pendingApplicantsUID = pendingApplicantsUID
+        self.acceptedApplicantsUID = acceptedApplicantsUID
+    }
+    
+    // fetch Data from firebase
     init(dictionary: [String: Any]) {
         self.id = dictionary["id"] as? String ?? UUID().uuidString
         self.userID = dictionary["userID"] as? String ?? ""

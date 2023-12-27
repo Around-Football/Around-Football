@@ -336,48 +336,13 @@ extension FirebaseAPI {
 extension FirebaseAPI {
     
     func createRecruitFieldData(
-        user: User?,
-        fieldID: String,
-        fieldName: String,
-        fieldAddress: String,
-        region: String,
-        type: String?,
-        recruitedPeopleCount: Int,
-        gamePrice: String,
-        title: String?,
-        content: String?,
-        matchDateString: String?,
-        matchDate: Timestamp?,
-        startTime: String?,
-        endTime: String?,
-        pendingApplicantsUID: [String?],
-        acceptedApplicantsUID: [String?],
+        recruit: Recruit,
         completion: @escaping (Error?) -> Void
     ) {
-        guard let user else { return }
-        let id = UUID().uuidString
-        let data = ["id": id,
-                    "userID": user.id,
-                    "userName": user.userName,
-                    "fieldID": fieldID,
-                    "fieldName": fieldName,
-                    "fieldAddress": fieldAddress,
-                    "region": region,
-                    "type": type,
-                    "recruitedPeopleCount": recruitedPeopleCount,
-                    "gamePrice": gamePrice,
-                    "title": title,
-                    "content": content,
-                    "matchDateString": matchDateString,
-                    "matchDate": matchDate,
-                    "startTime": startTime,
-                    "endTime": endTime,
-                    "pendingApplicantsUID": pendingApplicantsUID,
-                    "acceptedApplicantsUID": acceptedApplicantsUID] as [String : Any]
         
         REF_RECRUIT
-            .document(id)
-            .setData(data, completion: completion)
+            .document(recruit.id)
+            .setData(recruit.representation, completion: completion)
     }
     
     //date
