@@ -92,6 +92,10 @@ final class InfoViewController: UIViewController {
         infoTableView.rx.modelSelected(String.self)
             .subscribe { [weak self] cellTitle in
                 guard let self else { return }
+                guard let user = try? UserService.shared.currentUser_Rx.value() else {
+                    viewModel.coordinator?.presentLoginViewController()
+                    return
+                }
                 
                 switch cellTitle {
                 case "내 정보 수정":
@@ -103,7 +107,8 @@ final class InfoViewController: UIViewController {
                 case "신청 글":
                     viewModel.coordinator?.pushApplicationPostViewController()
                 default:
-                    print("DEBUG: cell없음")
+                    print("DEBUG: SettingCell없음")
+                    return
                 }
             }.disposed(by: disposeBag)
         
@@ -129,8 +134,6 @@ final class InfoViewController: UIViewController {
     
     private func configureUI() {
         view.backgroundColor = .white
-//        navigationController?.navigationBar.prefersLargeTitles = true
-//        navigationItem.title = "내 정보"
         
         view.addSubviews(infoHeaderView,
                          detailUserInfoView,

@@ -82,8 +82,10 @@ final class WrittenPostViewController: UIViewController {
     private func configureUI() {
         title = "작성 글"
         view.backgroundColor = .white
+        
         view.addSubview(writtenPostTableView)
         writtenPostTableView.addSubview(emptyLabel)
+        
         writtenPostTableView.snp.makeConstraints { make in
             make.top.bottom.equalTo(view.safeAreaLayoutGuide)
             make.leading.trailing.equalToSuperview()

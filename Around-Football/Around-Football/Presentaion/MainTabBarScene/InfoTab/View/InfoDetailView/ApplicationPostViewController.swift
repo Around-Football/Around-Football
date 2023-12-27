@@ -86,8 +86,10 @@ final class ApplicationPostViewController: UIViewController {
     private func configureUI() {
         title = "신청 글"
         view.backgroundColor = .white
+        
         view.addSubview(applicationPostTableView)
         applicationPostTableView.addSubview(emptyLabel)
+        
         applicationPostTableView.snp.makeConstraints { make in
             make.top.bottom.equalTo(view.safeAreaLayoutGuide)
             make.leading.trailing.equalToSuperview()
