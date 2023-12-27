@@ -141,7 +141,7 @@ final class DetailViewController: UIViewController {
     
     private func configureRecruitInfo() {
         guard let recruit = viewModel.getRecruit() else { return }
-        dateLabel.text = recruit.matchDayString
+        dateLabel.text = recruit.matchDayAndStartTime
         groundLabel.text = recruit.fieldName
         detailView.setValues(recruit: recruit)
     }

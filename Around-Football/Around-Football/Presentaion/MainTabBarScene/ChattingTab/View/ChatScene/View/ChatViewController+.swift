@@ -186,13 +186,13 @@ extension ChatViewController: MessagesDisplayDelegate {
             return .white
         }
         
-        return isFromCurrentSender(message: message) ? .primary : .incomingMessageBackground
+        return isFromCurrentSender(message: message) ? AFColor.primaryMessage : AFColor.grayMessage
     }
     
     func textColor(for message: MessageType,
                    at indexPath: IndexPath,
                    in messagesCollectionView: MessagesCollectionView) -> UIColor {
-        return isFromCurrentSender(message: message) ? .black : .white
+        return AFColor.secondary
     }
     
     // 말풍선의 꼬리 모양 방향

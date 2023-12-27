@@ -27,13 +27,16 @@ struct Recruit: Codable, Identifiable {
     var matchDateString: String //쿼리용 String
     var pendingApplicantsUID: [String?] //신청한 사람들 uid
     var acceptedApplicantsUID: [String?] //승인한 사람들 uid
-    var matchDayString: String {
+    var matchDayAndStartTime: String {
         let date = matchDate.dateValue()
         let dateFormatter = DateFormatter()
         dateFormatter.locale = Locale(identifier: "ko_KR")
         dateFormatter.dateFormat = "MM/dd (E)"
 
-        return dateFormatter.string(from: date)
+        return "\(dateFormatter.string(from: date)) \(startTime)"
+    }
+    var currentRecruitedNumber: String {
+        return "\(acceptedApplicantsUID.count)/\(recruitedPeopleCount)"
     }
     
     static func convertToArray(documents: [[String: Any]]) -> [Recruit] {
