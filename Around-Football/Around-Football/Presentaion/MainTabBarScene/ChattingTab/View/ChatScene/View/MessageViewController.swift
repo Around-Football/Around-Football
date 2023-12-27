@@ -64,7 +64,7 @@ final class MessageViewController: MessagesViewController {
     private func setupMessageInputBar() {
         messageInputBar.inputTextView.tintColor = .black
         messageInputBar.sendButton.setTitleColor(.blue, for: .normal)
-        messageInputBar.inputTextView.placeholder = "Input Message"
+        messageInputBar.inputTextView.placeholder = "채팅 보내기"
     }
     
     private func removeOutgoingMessageAvatars() {
