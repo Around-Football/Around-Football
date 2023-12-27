@@ -136,6 +136,7 @@
 		7C88C1AF2B2D9F4D00FB7385 /* AFFont.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C88C1AE2B2D9F4D00FB7385 /* AFFont.swift */; };
 		7C88C1B12B2DA40900FB7385 /* AFColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C88C1B02B2DA40900FB7385 /* AFColor.swift */; };
 		7C94EBD52B01BF0600A7E42A /* InfoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C94EBD42B01BF0600A7E42A /* InfoViewModel.swift */; };
+		7C9930512B3BB8D600CDD5FC /* SettingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C9930502B3BB8D600CDD5FC /* SettingViewModel.swift */; };
 		7CB21BA32AC94D36001D0058 /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CB21BA22AC94D36001D0058 /* DetailViewController.swift */; };
 		7CB21BA52AC94EE4001D0058 /* DetailUserInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CB21BA42AC94EE4001D0058 /* DetailUserInfoView.swift */; };
 		7CBFED6C2AE6477700915D65 /* CalenderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CBFED6B2AE6477700915D65 /* CalenderViewController.swift */; };
@@ -262,6 +263,7 @@
 		7C88C1AE2B2D9F4D00FB7385 /* AFFont.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AFFont.swift; sourceTree = "<group>"; };
 		7C88C1B02B2DA40900FB7385 /* AFColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AFColor.swift; sourceTree = "<group>"; };
 		7C94EBD42B01BF0600A7E42A /* InfoViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoViewModel.swift; sourceTree = "<group>"; };
+		7C9930502B3BB8D600CDD5FC /* SettingViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingViewModel.swift; sourceTree = "<group>"; };
 		7CB21BA22AC94D36001D0058 /* DetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
 		7CB21BA42AC94EE4001D0058 /* DetailUserInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailUserInfoView.swift; sourceTree = "<group>"; };
 		7CBFED6B2AE6477700915D65 /* CalenderViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalenderViewController.swift; sourceTree = "<group>"; };
@@ -658,6 +660,7 @@
 			isa = PBXGroup;
 			children = (
 				7C94EBD42B01BF0600A7E42A /* InfoViewModel.swift */,
+				7C9930502B3BB8D600CDD5FC /* SettingViewModel.swift */,
 				66656F9E2AD921D700AE1AFA /* FieldDetailViewModel.swift */,
 				7C2F9FE82B26E73200F1EF1B /* InfoPostViewModel.swift */,
 			);
@@ -1101,6 +1104,7 @@
 				668EE4A52AFCB0C5007A8844 /* ImageMediaItemModel.swift in Sources */,
 				7929A30F2ADE4B45006ED4FA /* InputInfoViewController.swift in Sources */,
 				274C22132AD7C16A005469E6 /* HomeViewModel.swift in Sources */,
+				7C9930512B3BB8D600CDD5FC /* SettingViewModel.swift in Sources */,
 				6609C5332ACE8B0E00798632 /* MapViewController+.swift in Sources */,
 				661D31B02B355357006CA8FF /* PopUpAlertViewController.swift in Sources */,
 				66BD86E52AE646CB00B1B256 /* FieldDetailViewController+.swift in Sources */,

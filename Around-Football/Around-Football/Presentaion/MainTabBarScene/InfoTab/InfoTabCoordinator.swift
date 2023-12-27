@@ -33,24 +33,25 @@ final class InfoTabCoordinator: BaseCoordinator {
         childCoordinators.append(coordinator)
     }
 
-    func pushEditView() {
-        //뷰 재사용, InputInfoCoordinator 사용
-        let coordinator = InputInfoCoordinator(navigationController: navigationController)
-        coordinator.start()
-        childCoordinators.append(coordinator)
+    func pushDetailCell(recruitItem: Recruit) {
+        let viewModel = DetailViewModel(coordinator: nil, recruitItem: recruitItem)
+        let vc = DetailViewController(viewModel: viewModel)
+        navigationController?.pushViewController(vc, animated: true)
     }
     
     func pushSettingView() {
-        let vc = SettingViewController()
+        let viewModel = SettingViewModel(coordinator: self)
+        let vc = SettingViewController(viewModel: viewModel)
         navigationController?.pushViewController(vc, animated: true)
     }
     
     // MARK: - 관심 글, 작성 글 ,신청 글 이동
     
-    func pushDetailCell(recruitItem: Recruit) {
-        let viewModel = DetailViewModel(coordinator: nil, recruitItem: recruitItem)
-        let vc = DetailViewController(viewModel: viewModel)
-        navigationController?.pushViewController(vc, animated: true)
+    func pushEditView() {
+        //뷰 재사용, InputInfoCoordinator 사용
+        let coordinator = InputInfoCoordinator(navigationController: navigationController)
+        coordinator.start()
+        childCoordinators.append(coordinator)
     }
     
     func pushBookmarkPostViewController() {
