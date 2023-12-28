@@ -58,6 +58,7 @@ class ChatHeaderView: UIView {
         $0.font = AFFont.text
         $0.text = "게시글을 확인할 수 없습니다."
         $0.textColor = AFColor.grayScale100
+        $0.textAlignment = .center
     }
     
     private let loadingView = UIActivityIndicatorView(style: .medium).then {

@@ -62,7 +62,7 @@ class ChatViewController: UIViewController {
         super.viewWillAppear(animated)
         viewModel.resetAlarmInformation()
         invokedViewWillAppear.onNext(())
-        navigationController?.navigationBar.prefersLargeTitles = false
+        self.navigationItem.largeTitleDisplayMode = .never // This fixes the issue
         navigationController?.navigationBar.titleTextAttributes = [
             NSAttributedString.Key.foregroundColor: AFColor.grayScale200
         ]
@@ -72,9 +72,9 @@ class ChatViewController: UIViewController {
     
     override func viewWillDisappear(_ animated: Bool) {
         navigationController?.navigationBar.titleTextAttributes = [
-            NSAttributedString.Key.foregroundColor: UIColor.black
+            NSAttributedString.Key.foregroundColor: AFColor.secondary
         ]
-        navigationController?.navigationBar.tintColor = UIColor.black
+        navigationController?.navigationBar.tintColor = AFColor.secondary
         NotiManager.shared.currentChatRoomId = nil
         viewModel.removeListener()
     }

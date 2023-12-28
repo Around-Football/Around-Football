@@ -22,7 +22,7 @@ final class MessageViewController: MessagesViewController {
     // MARK: - Properties
     
     let imageTransition = ImageTransition()
-
+    
     lazy var cameraBarButtonItem = InputBarButtonItem(type: .system).then {
         $0.tintColor = AFColor.grayScale200
         $0.image = UIImage(named: "Camera")
@@ -42,7 +42,7 @@ final class MessageViewController: MessagesViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        configureMessageCollectionViewLayout()
         configureUI()
         setupMessageInputBar()
         setupMessageInputBarLayer()
@@ -59,12 +59,42 @@ final class MessageViewController: MessagesViewController {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
     }
-
+    
     // MARK: - Helpers
+    private func configureMessageCollectionViewLayout() {
+        let dateLabelSize = configureAccessoryViewLabelSize()
+        let layout = messagesCollectionView.collectionViewLayout as? MessagesCollectionViewFlowLayout
+        layout?.sectionInset = UIEdgeInsets(top: 1, left: 8, bottom: 1, right: 8)
+        
+        // Hide the outgoing avatar and adjust the label alignment to line up with the messages
+        layout?.setMessageOutgoingAvatarSize(.zero)
+        layout?
+            .setMessageOutgoingMessageTopLabelAlignment(LabelAlignment(
+                textAlignment: .right,
+                textInsets: UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 8)))
+        layout?
+            .setMessageOutgoingMessageBottomLabelAlignment(LabelAlignment(
+                textAlignment: .right,
+                textInsets: UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 8)))
+        
+        // Set outgoing avatar to overlap with the message bubble
+        layout?
+            .setMessageIncomingMessageTopLabelAlignment(LabelAlignment(
+                textAlignment: .left,
+                textInsets: UIEdgeInsets(top: 0, left: 18, bottom: 0, right: 0)))
+        layout?.setMessageIncomingAvatarSize(.zero)
+        
+        layout?.setMessageIncomingAccessoryViewSize(CGSize(width: dateLabelSize.width, height: 30))
+        layout?.setMessageIncomingAccessoryViewPadding(HorizontalEdgeInsets(left: 4, right: 0))
+        layout?.setMessageIncomingAccessoryViewPosition(.cellBottom)
+        layout?.setMessageOutgoingAccessoryViewSize(CGSize(width: dateLabelSize.width, height: 30))
+        layout?.setMessageOutgoingAccessoryViewPadding(HorizontalEdgeInsets(left: 0, right: 4))
+        layout?.setMessageOutgoingAccessoryViewPosition(.cellBottom)
+    }
     
     private func configureUI() {
         view.backgroundColor = .systemBackground
-
+        
         if let sendButton = messageInputBar.rightStackView.arrangedSubviews.first as? InputBarButtonItem {
             let containerView = UIView()
             messageInputBar.rightStackView.addArrangedSubview(containerView)
@@ -78,7 +108,7 @@ final class MessageViewController: MessagesViewController {
             $0.top.equalTo((messageInputBar.inputTextView.inputBarAccessoryView?.snp.top)!).offset(16)
         }
     }
-        
+    
     private func setupMessageInputBar() {
         messageInputBar.inputTextView.placeholderLabel.attributedText = NSAttributedString(string: "채팅 보내기",
                                                                                            attributes: [.font: AFFont.text as Any,
@@ -121,5 +151,15 @@ final class MessageViewController: MessagesViewController {
         messageInputBar.inputTextView.inputBarAccessoryView?.layer.shadowOpacity = 1
         messageInputBar.inputTextView.inputBarAccessoryView?.layer.shadowColor = AFColor.grayScale50.cgColor
         messageInputBar.inputTextView.inputBarAccessoryView?.layer.shadowRadius = 0
+    }
+    
+    private func configureAccessoryViewLabelSize() -> CGSize{
+        let font = AFFont.filterDay
+        let text = "오후 00:00"
+        
+        let maxSize = CGSize(width: CGFloat.greatestFiniteMagnitude, height: CGFloat.greatestFiniteMagnitude)
+        
+        let boundingBox = text.boundingRect(with: maxSize, options: .usesLineFragmentOrigin, attributes: [.font: font as Any], context: nil)
+        return boundingBox.size
     }
 }
