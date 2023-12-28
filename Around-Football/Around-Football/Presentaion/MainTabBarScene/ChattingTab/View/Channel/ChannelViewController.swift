@@ -27,6 +27,10 @@ final class ChannelViewController: UIViewController {
     lazy var channelTableView = UITableView().then {
         $0.register(ChannelTableViewCell.self, forCellReuseIdentifier: ChannelTableViewCell.cellId)
         $0.delegate = self
+        $0.separatorInset = UIEdgeInsets().with({ edge in
+            edge.left = 0
+            edge.right = 0
+        })
     }
     
     let deleteChannelAlert = UIAlertController(title: .deleteChannel, message: .deleteChannel, preferredStyle: .alert)
@@ -62,6 +66,7 @@ final class ChannelViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        channelTableView.rowHeight = UITableView.automaticDimension
         configure()
         configureUI()
         bind()
@@ -83,12 +88,13 @@ final class ChannelViewController: UIViewController {
     func configure() {
         channelTableViewDataSource = RxTableViewSectionedReloadDataSource(configureCell: { data, tableView, indexPath, item in
             let cell = tableView.dequeueReusableCell(withIdentifier: ChannelTableViewCell.cellId, for: indexPath) as! ChannelTableViewCell
-            cell.chatRoomLabel.text = item.withUserName
-            cell.chatPreviewLabel.text = item.previewContent
-            let alarmNumber = item.alarmNumber
-            alarmNumber == 0 ? self.hideChatAlarmNumber(cell: cell) : self.showChatAlarmNumber(cell: cell, alarmNumber: alarmNumber)
-            let date = item.recentDate
-            cell.recentDateLabel.text = self.formatDate(date)
+//            cell.userNameLabel.text = item.withUserName
+//            cell.chatPreviewLabel.text = item.previewContent
+//            let alarmNumber = item.alarmNumber
+//            alarmNumber == 0 ? self.hideChatAlarmNumber(cell: cell) : self.showChatAlarmNumber(cell: cell, alarmNumber: alarmNumber)
+//            let date = item.recentDate
+//            cell.recentDateLabel.text = self.formatDate(date)
+            cell.configure(channelInfo: item)
             return cell
 
         })

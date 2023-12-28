@@ -182,7 +182,7 @@ extension ChatViewController: MessagesDisplayDelegate {
         guard let message = message as? Message else { return }
         let sentDateLabel = UILabel().then {
             $0.font = AFFont.filterDay
-            $0.textColor = AFColor.grayScale100
+            $0.textColor = AFColor.grayScale200
         }
 
         let dateFormatter = DateFormatter()
