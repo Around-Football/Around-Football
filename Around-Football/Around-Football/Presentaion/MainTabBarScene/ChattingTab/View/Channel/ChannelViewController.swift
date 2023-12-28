@@ -73,7 +73,11 @@ final class ChannelViewController: UIViewController {
         invokedViewWillAppear.onNext(())
         title = "채팅"
     }
-        
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        navigationItem.backButtonTitle = ""
+    }
+    
     // MARK: - Helpers
     
     func configure() {

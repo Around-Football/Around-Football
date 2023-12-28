@@ -101,9 +101,12 @@ extension ChatViewController {
         viewModel.channel
             .withUnretained(self)
             .subscribe { (owner, channel) in
-                DispatchQueue.main.async {
-                    owner.messageViewController.messageInputBar.isUserInteractionEnabled = false
-                    owner.messageViewController.messageInputBar.inputTextView.placeholder = "채팅을 보낼 수 없습니다."
+                guard let channel = channel else { return }
+                if !channel.isAvailable {
+                    DispatchQueue.main.async {
+                        owner.messageViewController.messageInputBar.isUserInteractionEnabled = false
+                        owner.messageViewController.messageInputBar.inputTextView.placeholder = "채팅을 보낼 수 없습니다."
+                    }
                 }
             }
             .disposed(by: disposeBag)
@@ -173,6 +176,30 @@ extension ChatViewController: MessagesLayoutDelegate {
 
 // 상대방이 보낸 메시지, 내가 보낸 메시지를 구분하여 색상과 모양 지정
 extension ChatViewController: MessagesDisplayDelegate {
+    
+    // 메시지 측면, 발송 시각 View
+    func configureAccessoryView(_ accessoryView: UIView, for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) {
+        guard let message = message as? Message else { return }
+        let sentDateLabel = UILabel().then {
+            $0.font = AFFont.filterDay
+            $0.textColor = AFColor.grayScale100
+        }
+
+        let dateFormatter = DateFormatter()
+        dateFormatter.locale = Locale(identifier: "ko_KR")
+        dateFormatter.dateFormat = "a h:mm"
+        let dateString = dateFormatter.string(from: message.sentDate)
+        
+        let isShowingTimeLabel = message.showTimeLabel
+        let sentDateString = isShowingTimeLabel ? dateString : ""
+        sentDateLabel.text = sentDateString
+        accessoryView.subviews.forEach { $0.removeFromSuperview() }
+
+        accessoryView.addSubview(sentDateLabel)
+        sentDateLabel.frame = accessoryView.bounds
+        accessoryView.backgroundColor = .systemBackground
+    }
+    
     // 말풍선의 배경 색상
     func backgroundColor(for message: MessageType,
                          at indexPath: IndexPath,
@@ -200,36 +227,6 @@ extension ChatViewController: MessagesDisplayDelegate {
         case .chat: return .bubble
         default: return .none
         }
-    }
-
-    // 말풍선 측면에 발송 시각 표시
-    func messageBottomLabelAttributedText(for message: MessageType,
-                                          at indexPath: IndexPath) -> NSAttributedString? {
-        guard let message = message as? Message else { return nil }
-        let dateFormatter = DateFormatter()
-        dateFormatter.locale = Locale(identifier: "ko_KR")
-        dateFormatter.dateFormat = "a h:mm"
-        let dateString = dateFormatter.string(from: message.sentDate)
-        
-        let isShowingTimeLabel = message.showTimeLabel
-        
-        return isShowingTimeLabel ? NSAttributedString(string: dateString, attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 10)]) : nil
-    }
-    
-    // 말풍선 측면 발송 시각 레이블 Height
-    func messageBottomLabelHeight(for message: MessageType,
-                                  at indexPath: IndexPath,
-                                  in messagesCollectionView: MessagesCollectionView) -> CGFloat {
-        guard let message = message as? Message else { return 16 }
-        let isShowingTimeLabel = message.showTimeLabel
-
-        return isShowingTimeLabel ? 16 : 0
-    }
-    
-    func messageBottomLabelAlignment(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> LabelAlignment? {
-        let leftInset = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 0)
-        let rightInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 10)
-        return isFromCurrentSender(message: message) ? .some(.init(textAlignment: .right, textInsets: rightInset)) : .some(.init(textAlignment: .left, textInsets: leftInset))
     }
 }
 
