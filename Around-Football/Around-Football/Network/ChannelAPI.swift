@@ -32,7 +32,7 @@ final class ChannelAPI {
     func createChannel(channelInfo: ChannelInfo, completion: @escaping () -> Void) {
         guard let ownerUser = try? UserService.shared.currentUser_Rx.value() else { return }
         let ownerChannel = channelInfo
-        let withUserChannel = ChannelInfo(id: channelInfo.id, withUser: ownerUser, recruitID: channelInfo.recruitID)
+        let withUserChannel = ChannelInfo(id: channelInfo.id, withUser: ownerUser, recruitID: channelInfo.recruitID, recruitUserID: channelInfo.recruitUserID)
         let channel = Channel(id: channelInfo.id, isAvailable: true)
         DB_REF.collection("channels").document(channel.id)
             .setData(channel.representation) {  [weak self] error in
