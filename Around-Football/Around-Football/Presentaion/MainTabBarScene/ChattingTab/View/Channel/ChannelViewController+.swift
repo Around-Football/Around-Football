@@ -87,18 +87,16 @@ extension ChannelViewController {
         }
     }
     
-    func hideChatAlarmNumber(cell: ChannelTableViewCell) {
-        cell.chatAlarmNumberLabel.text = ""
-        cell.chatAlarmNumberLabel.isHidden = true
-    }
-    
-    func showChatAlarmNumber(cell: ChannelTableViewCell, alarmNumber: Int) {
-        var alarmString = ""
-        alarmNumber > 999 ? (alarmString = "999+") : (alarmString = "\(alarmNumber)")
-        cell.chatAlarmNumberLabel.text = alarmString
-        cell.chatAlarmNumberLabel.isHidden = false
-        cell.updateAlarmLabelUI()
-    }
+//    func hideChatAlarmNumber(cell: ChannelTableViewCell) {
+//        cell.configureAlarmLabelText(text: "")
+//    }
+//    
+//    func showChatAlarmNumber(cell: ChannelTableViewCell, alarmNumber: Int) {
+//        var alarmString = ""
+//        alarmNumber > 999 ? (alarmString = "999+") : (alarmString = "\(alarmNumber)")
+//        cell.configureAlarmLabelText(text: alarmString)
+//        cell.updateAlarmLabelUI()
+//    }
     
     func formatDate(_ date: Date) -> String {
         let calendar = Calendar.current
@@ -121,6 +119,6 @@ extension ChannelViewController {
 
 extension ChannelViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 100
+        return tableView.rowHeight
     }
 }

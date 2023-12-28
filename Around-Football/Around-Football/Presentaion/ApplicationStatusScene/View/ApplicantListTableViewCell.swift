@@ -16,19 +16,13 @@ final class ApplicantListTableViewCell: UITableViewCell {
     // MARK: - Properties
     
     static let cellID = "ApplicantListTableViewCellID"
-    //    var viewModel: ApplicantListViewModel
-    //    weak var vc: ApplicantListViewController?
-    //    var uid: String
-    
     private var disposeBag = DisposeBag()
     
     private lazy var containerStackView = UIStackView().then {
         $0.addArrangedSubviews(userProfileInfoStackView,
-//                               spacerView,
                                buttonStackView)
         $0.axis = .horizontal
         $0.distribution = .equalCentering
-//        $0.setCustomSpacing(CGFloat.greatestFiniteMagnitude, after: userProfileInfoStackView)
     }
     
     private let spacerView = UIView()
@@ -151,20 +145,6 @@ final class ApplicantListTableViewCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         configureUI()
-    }
-    
-    // MARK: - Selectors
-    
-    @objc
-    private func acceptButtonTapped() {
-        //        FirebaseAPI.shared.acceptApplicants(recruitID: viewModel.recruitItem.fieldID, userID: uid)
-        //        vc?.acceptButtonTappedSubject.onNext((viewModel.recruitItem.fieldID, uid))
-    }
-    
-    @objc
-    private func rejectButtonTapped() {
-        //        FirebaseAPI.shared.deleteApplicant(recruitID: viewModel.recruitItem.fieldID, userID: uid)
-        //        vc?.rejectButtonTappedSubject.onNext((viewModel.recruitItem.fieldID, uid))
     }
     
     // MARK: - Helpers
