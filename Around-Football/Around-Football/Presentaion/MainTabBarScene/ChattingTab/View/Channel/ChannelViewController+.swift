@@ -26,9 +26,20 @@ extension ChannelViewController {
     }
     
     func bindChannels() {
-        viewModel.channels
+        Observable.combineLatest(viewModel.channels, segmentControlView.rx.selectedSegmentIndex.asObservable())
+            .withUnretained(self)
+            .map({ (owner, observe) in
+                let channels = observe.0
+                let index = observe.1
+                if index == 0, let currentUser = try? owner.viewModel.currentUser.value() {
+                    return channels.filter { $0.recruitUserID == currentUser.id }
+                } else if let currentUser = try? owner.viewModel.currentUser.value() {
+                   return channels.filter { $0.recruitUserID != currentUser.id}
+                }
+                return []
+            })
             .map { [ChannelSectionModel(model: "", items: $0)] }
-            .bind(to: channelTableView.rx.items(dataSource: channelTableViewDataSource))
+            .bind(to: channelTableView.rx.items(dataSource: ownChannelDataSource))
             .disposed(by: disposeBag)
         
         channelTableView.rx.itemDeleted

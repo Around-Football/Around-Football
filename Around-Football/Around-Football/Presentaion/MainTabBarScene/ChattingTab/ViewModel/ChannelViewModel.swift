@@ -140,7 +140,6 @@ final class ChannelViewModel {
         
     }
     
-    
     func showChatView(channelInfo: ChannelInfo) {
         coordinator?.pushChatView(channelInfo: channelInfo)
     }
