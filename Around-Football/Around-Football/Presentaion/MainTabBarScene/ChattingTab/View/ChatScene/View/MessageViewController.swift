@@ -118,6 +118,7 @@ final class MessageViewController: MessagesViewController {
         messageInputBar.inputTextView.font = AFFont.text
         messageInputBar.inputTextView.textColor = AFColor.secondary
         messageInputBar.inputTextView.textContainerInset = .init(top: 10, left: 16, bottom: 10, right: 16)
+        messageInputBar.inputTextView.placeholderLabelInsets = .init(top: 10, left: 22, bottom: 10, right: 16)
     }
     
     private func removeOutgoingMessageAvatars() {
