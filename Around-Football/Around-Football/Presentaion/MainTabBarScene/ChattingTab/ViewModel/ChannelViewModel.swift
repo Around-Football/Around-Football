@@ -51,7 +51,19 @@ final class ChannelViewModel {
                     owner.channelAPI.subscribe()
                         .asObservable()
                         .subscribe(onNext: { result in
-                            owner.updateCell(to: result)
+                            result.forEach { channelInfo, documentChangeType in
+                                var channelInfo = channelInfo
+                                if let url = channelInfo.downloadURL {
+                                    StorageAPI.downloadImage(url: url) { image in
+                                        if let image = image {
+                                            channelInfo.image = image
+                                        }
+                                        owner.updateCell(to: (channelInfo, documentChangeType))
+                                    }
+                                } else {
+                                    owner.updateCell(to: (channelInfo, documentChangeType))
+                                }
+                            }
                         }, onError: { error in
                             print("DEBUG - setupListener Error: \(error.localizedDescription)")
                             
@@ -64,9 +76,9 @@ final class ChannelViewModel {
     
     // MARK: - Helpers
     
-    private func updateCell(to data: [(ChannelInfo, DocumentChangeType)]) {
+    private func updateCell(to data: (ChannelInfo, DocumentChangeType)) {
         var currentChannels = channels.value
-        data.forEach { channel, documentChangeType in
+        let (channel, documentChangeType) = data
             switch documentChangeType {
             case .added:
                 guard currentChannels.contains(channel) == false else { return }
@@ -82,7 +94,6 @@ final class ChannelViewModel {
                 guard let index = currentChannels.firstIndex(of: channel) else { return }
                 currentChannels.remove(at: index)
             }
-        }
         channels.accept(currentChannels)
     }
     
