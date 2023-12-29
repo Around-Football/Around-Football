@@ -55,11 +55,9 @@ final class ChannelViewController: UIViewController {
             NSAttributedString.Key.font: AFFont.titleRegular as Any], for: .selected)
     }
         
-    private let underLineView: UIView = {
-        let view = UIView()
-        view.backgroundColor = AFColor.secondary
-        return view
-    }()
+    let underLineView = UIView().then {
+        $0.backgroundColor = AFColor.secondary
+    }
     
     // 움직일 underLineView의 leadingAnchor 따로 작성
     private var leadingConstraint: Constraint?
@@ -74,10 +72,8 @@ final class ChannelViewController: UIViewController {
     
     let deleteChannelAlert = UIAlertController(title: .deleteChannel, message: .deleteChannel, preferredStyle: .alert)
     
-    var ownChannelDataSource: RxTableViewSectionedReloadDataSource<ChannelSectionModel>!
-    
-    var recruitedChannelDataSource: RxTableViewSectionedReloadDataSource<ChannelSectionModel>!
-    
+    var channelTableViewDataSource: RxTableViewSectionedReloadDataSource<ChannelSectionModel>!
+        
     let loginLabel = UILabel().then {
         $0.backgroundColor = .systemBackground
         $0.text = """
@@ -127,9 +123,9 @@ final class ChannelViewController: UIViewController {
     
     // MARK: - Helpers
     
-    func configure() {
+    private func configure() {
         channelTableView.delegate = self
-        ownChannelDataSource = RxTableViewSectionedReloadDataSource(configureCell: { data, tableView, indexPath, item in
+        channelTableViewDataSource = RxTableViewSectionedReloadDataSource(configureCell: { data, tableView, indexPath, item in
             let cell = tableView.dequeueReusableCell(withIdentifier: ChannelTableViewCell.cellId, for: indexPath) as! ChannelTableViewCell
                 cell.configure(channelInfo: item)
 //            cell.userNameLabel.text = item.withUserName
@@ -143,20 +139,11 @@ final class ChannelViewController: UIViewController {
 
         })
         
-        recruitedChannelDataSource = RxTableViewSectionedReloadDataSource(configureCell: { data, tableView, indexPath, item in
-            let cell = tableView.dequeueReusableCell(withIdentifier: ChannelTableViewCell.cellId, for: indexPath) as! ChannelTableViewCell
-            cell.configure(channelInfo: item)
-            return cell
-        })
-        
-        ownChannelDataSource?.canMoveRowAtIndexPath = { _, _ in return false }
-        ownChannelDataSource?.canEditRowAtIndexPath = { dataSource, index in return true }
-        
-        recruitedChannelDataSource?.canMoveRowAtIndexPath = { _, _ in return false }
-        recruitedChannelDataSource?.canEditRowAtIndexPath = { dataSource, index in return true }
+        channelTableViewDataSource?.canMoveRowAtIndexPath = { _, _ in return false }
+        channelTableViewDataSource?.canEditRowAtIndexPath = { dataSource, index in return true }
     }
 
-    func configureUI() {
+    private func configureUI() {
         view.backgroundColor = .systemBackground
         
         view.addSubviews(
@@ -176,7 +163,7 @@ final class ChannelViewController: UIViewController {
         
         segmentContainerView.snp.makeConstraints {
             $0.top.equalTo(titleLabel.snp.bottom).offset(16)
-            $0.leading.equalToSuperview().offset(18)
+            $0.leading.equalToSuperview().offset(10)
             $0.trailing.equalToSuperview().offset(-20)
             $0.height.equalTo(30)
         }
@@ -192,7 +179,7 @@ final class ChannelViewController: UIViewController {
             $0.top.equalTo(segmentControlView.snp.bottom)
             $0.height.equalTo(5)
             $0.width.equalTo(firstSegmentWidth - 20)
-            $0.centerX.equalTo(segmentControlView.snp.leading).offset(firstSegmentCenterX)            
+            $0.centerX.equalTo(segmentControlView.snp.leading).offset(firstSegmentCenterX)
         }
         
         channelTableView.snp.makeConstraints {
@@ -206,7 +193,7 @@ final class ChannelViewController: UIViewController {
         }
     }
     
-    func bind() {
+    private func bind() {
         let input = ChannelViewModel.Input(
             invokedViewWillAppear: invokedViewWillAppear,
             selectedChannel: channelTableView.rx.itemSelected.asObservable(),
@@ -220,25 +207,6 @@ final class ChannelViewController: UIViewController {
         bindLoginModalView(with: output.isShowing)
         bindNavigateChannelView(with: output.navigateTo)
         bindTapSegmentControl()
-    }
-    
-    func bindTapSegmentControl() {
-        segmentControlView.rx.selectedSegmentIndex
-            .bind { [weak self] index in
-                guard let self = self else { return }
-                guard segmentControlView.frame.width != 0 else { return }
-                let segmentWidth = segmentControlView.frame.width / CGFloat(segmentControlView.numberOfSegments)
-                let selectedSegmentCenterX = segmentWidth * CGFloat(index) + segmentWidth / 2
-                let underlineViewWidth = underLineView.frame.width
-
-                DispatchQueue.main.async {
-                    UIView.animate(withDuration: 0.2, animations: {
-                        self.underLineView.frame.origin.x = selectedSegmentCenterX - underlineViewWidth / 2
-                        self.view.layoutIfNeeded()
-                    })
-                }
-            }
-            .disposed(by: disposeBag)
     }
     
     private func calculateSegmentWidth(title: String) -> CGFloat {

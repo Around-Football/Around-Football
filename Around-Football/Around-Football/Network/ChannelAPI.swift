@@ -108,12 +108,26 @@ final class ChannelAPI {
         
         let updateCurrentUserData = [
             "recentDate": message.sentDate,
-            "previewContent": contentMessage
+            "previewContent": contentMessage,
+            "withUserName": withUser.userName,
+            "withUserGender": withUser.gender,
+            "withUserAge": withUser.age,
+            "withUserArea": withUser.area,
+            "withUserMainUsedFeet": withUser.mainUsedFeet,
+            "withUserPosition": withUser.position
+            //            "downloadURL:" withUser.profileURL,"
         ] as [String: Any]
         
         let updateWithUserData = [
             "recentDate": message.sentDate,
             "previewContent": contentMessage,
+            "withUserName": owner.userName,
+            "withUserGender": owner.gender,
+            "withUserAge": owner.age,
+            "withUserArea": owner.area,
+            "withUserMainUsedFeet": owner.mainUsedFeet,
+            "withUserPosition": owner.position,
+//            "downloadURL:" owner.profileURL,"
             "alarmNumber": FieldValue.increment(Int64(1))
         ] as [String: Any]
         

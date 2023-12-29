@@ -39,7 +39,7 @@ extension ChannelViewController {
                 return []
             })
             .map { [ChannelSectionModel(model: "", items: $0)] }
-            .bind(to: channelTableView.rx.items(dataSource: ownChannelDataSource))
+            .bind(to: channelTableView.rx.items(dataSource: channelTableViewDataSource))
             .disposed(by: disposeBag)
         
         channelTableView.rx.itemDeleted
@@ -74,6 +74,25 @@ extension ChannelViewController {
             .disposed(by: disposeBag)
     }
     
+    func bindTapSegmentControl() {
+        segmentControlView.rx.selectedSegmentIndex
+            .bind { [weak self] index in
+                guard let self = self else { return }
+                guard segmentControlView.frame.width != 0 else { return }
+                let segmentWidth = segmentControlView.frame.width / CGFloat(segmentControlView.numberOfSegments)
+                let selectedSegmentCenterX = segmentWidth * CGFloat(index) + segmentWidth / 2
+                let underlineViewWidth = underLineView.frame.width
+
+                DispatchQueue.main.async {
+                    UIView.animate(withDuration: 0.2, animations: {
+                        self.underLineView.frame.origin.x = selectedSegmentCenterX - underlineViewWidth / 2
+                        self.view.layoutIfNeeded()
+                    })
+                }
+            }
+            .disposed(by: disposeBag)
+    }
+    
     func presentAlertController(indexPath: IndexPath) -> Observable<IndexPath> {
         return Observable.create { [weak self] observer in
             guard let self = self else { return Disposables.create { } }
@@ -97,35 +116,6 @@ extension ChannelViewController {
             }
         }
     }
-    
-//    func hideChatAlarmNumber(cell: ChannelTableViewCell) {
-//        cell.configureAlarmLabelText(text: "")
-//    }
-//    
-//    func showChatAlarmNumber(cell: ChannelTableViewCell, alarmNumber: Int) {
-//        var alarmString = ""
-//        alarmNumber > 999 ? (alarmString = "999+") : (alarmString = "\(alarmNumber)")
-//        cell.configureAlarmLabelText(text: alarmString)
-//        cell.updateAlarmLabelUI()
-//    }
-    
-    func formatDate(_ date: Date) -> String {
-        let calendar = Calendar.current
-        let formatter = DateFormatter()
-        formatter.locale = Locale(identifier: "ko_KR")
-        
-        if calendar.isDateInToday(date) {
-            formatter.dateFormat = "a h:mm"
-        } else if calendar.isDateInYesterday(date) {
-            return "어제"
-        } else if calendar.isDate(date, equalTo: Date(), toGranularity: .year) {
-            formatter.dateFormat = "M월 d일"
-        } else {
-            formatter.dateFormat = "yyyy년 M월 d일"
-        }
-        return formatter.string(from: date)
-    }
-    
 }
 
 extension ChannelViewController: UITableViewDelegate {

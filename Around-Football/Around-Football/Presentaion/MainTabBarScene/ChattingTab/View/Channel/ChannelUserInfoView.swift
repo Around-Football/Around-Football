@@ -75,12 +75,12 @@ class ChannelUserInfoView: UIView {
     }
     
     // MARK: - Helpers
-    func configure(user: User) {
-        userGenderLabel.text = user.gender
-        userAgeLabel.text = String(user.age)
-        userAreaLabel.text = user.area
-        userMainUsedFeetLabel.text = user.mainUsedFeet
-        userPositionLabel.text = user.position.map { $0 }.joined(separator: " ")
+    func configure(channelInfo: ChannelInfo) {
+        userGenderLabel.text = channelInfo.withUserGender
+        userAgeLabel.text = channelInfo.withUserAge
+        userAreaLabel.text = channelInfo.withUserArea
+        userMainUsedFeetLabel.text = channelInfo.withUserMainUsedFeet
+        userPositionLabel.text = channelInfo.withUserPosition.map { $0 }.joined(separator: " ")
     }
     
     private func configureUI() {

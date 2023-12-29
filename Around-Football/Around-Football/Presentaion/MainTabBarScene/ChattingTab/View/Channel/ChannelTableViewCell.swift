@@ -20,7 +20,7 @@ final class ChannelTableViewCell: UITableViewCell {
     
     private let profileImageView = UIImageView().then {
         $0.image = UIImage(named: "DefaultRecruitImage")
-        $0.contentMode = .scaleAspectFit
+        $0.contentMode = .scaleAspectFill
         $0.layer.cornerRadius = 24
         $0.layer.masksToBounds = true
     }
@@ -29,7 +29,7 @@ final class ChannelTableViewCell: UITableViewCell {
         $0.textColor = AFColor.secondary
         $0.font = AFFont.titleSmall
         $0.numberOfLines = 1
-        $0.text = "default"
+        $0.text = "Name"
     }
     
     private let recentDateLabel = UILabel().then {
@@ -44,7 +44,7 @@ final class ChannelTableViewCell: UITableViewCell {
         $0.textColor = .black
         $0.font = .systemFont(ofSize: 16)
         $0.numberOfLines = 2
-        $0.text = "오오옹"
+        $0.text = "Preview"
     }
     
     private lazy var chatAlarmNumberLabel = UILabel().then {
@@ -86,21 +86,22 @@ final class ChannelTableViewCell: UITableViewCell {
     
     // MARK: - Helpers
     
-    // TODO: - 지우기
+//    // TODO: - 지우기
+//    func configure(channelInfo: ChannelInfo) {
+//        userNameLabel.text = channelInfo.withUserName
+//        chatPreviewLabel.text = channelInfo.previewContent
+//        recentDateLabel.text = formatDate(channelInfo.recentDate)
+//        configureAlarmLabelText(alarmNumber: channelInfo.alarmNumber)
+//        updateAlarmLabelUI()
+//    }
+//        
     func configure(channelInfo: ChannelInfo) {
-        userNameLabel.text = channelInfo.withUserName
-        chatPreviewLabel.text = channelInfo.previewContent
-        recentDateLabel.text = formatDate(channelInfo.recentDate)
-        configureAlarmLabelText(alarmNumber: channelInfo.alarmNumber)
-        updateAlarmLabelUI()
-    }
+        channelInfo.downloadURL != nil ? (profileImageView.image = channelInfo.image) : (profileImageView.image = UIImage(systemName: "person"))
         
-    func configure(channelInfo: ChannelInfo, user: User) {
-//        profileImageView.image = UIImage(named: "")
         userNameLabel.text = channelInfo.withUserName
         chatPreviewLabel.text = channelInfo.previewContent
         recentDateLabel.text = formatDate(channelInfo.recentDate)
-        userDetailInfoView.configure(user: user)
+        userDetailInfoView.configure(channelInfo: channelInfo)
         configureAlarmLabelText(alarmNumber: channelInfo.alarmNumber)
         updateAlarmLabelUI()
     }
