@@ -39,6 +39,7 @@ final class InviteViewController: UIViewController {
     private let dateTitleLabel = UILabel().then {
         $0.text = "날짜"
         $0.font = AFFont.titleCard
+        $0.sizeToFit()
     }
     
     private let dateFilterButton: UIButton = {
@@ -141,6 +142,31 @@ final class InviteViewController: UIViewController {
         $0.font = AFFont.titleCard
     }
     
+    private var buttonConfig: UIButton.Configuration {
+        var config = UIButton.Configuration.plain()
+        config.contentInsets = NSDirectionalEdgeInsets(top: 10,
+                                                       leading: 10,
+                                                       bottom: 10,
+                                                       trailing: 10)
+        config.imagePadding = 5
+        config.imagePlacement = .top
+        config.titleAlignment = .center
+        return config
+    }
+    
+    private lazy var imageButton: UIButton = {
+        let button = UIButton(configuration: buttonConfig).then {
+            $0.setImage(UIImage(named: AFIcon.imagePlaceholder), for: .normal)
+            $0.titleLabel?.font = AFFont.filterRegular
+            $0.setTitle("0/3", for: .normal)
+            $0.setTitleColor(AFColor.grayScale200, for: .normal)
+            $0.layer.borderWidth = 1
+            $0.layer.borderColor = AFColor.grayScale100.cgColor
+            $0.layer.cornerRadius = 8
+        }
+        return button
+    }()
+    
     private let gamePriceLabel = UILabel().then {
         $0.text = "게임비"
         $0.font = AFFont.titleCard
@@ -176,9 +202,9 @@ final class InviteViewController: UIViewController {
     
     private lazy var contentTextView = UITextView().then {
         $0.delegate = self
-        $0.layer.cornerRadius = 5
+        $0.layer.cornerRadius = 8
         $0.layer.borderWidth = 0.8
-        $0.layer.borderColor = UIColor.gray.cgColor
+        $0.layer.borderColor = AFColor.grayScale100.cgColor
         $0.addSubview(contentPlaceHolderLabel)
         contentPlaceHolderLabel.frame = CGRect(x: 5, y: 0, width: 300, height: 30)
     }
@@ -400,7 +426,7 @@ final class InviteViewController: UIViewController {
                                 gamePriceLabel,
                                 gamePriceButton,
                                 contentLabel,
-                                
+                                imageButton,
                                 contentTextView,
                                 addButton)
         
@@ -421,33 +447,31 @@ final class InviteViewController: UIViewController {
         }
         
         dateTitleLabel.snp.makeConstraints { make in
-            make.top.equalTo(placeView.snp.bottom)
+            make.top.equalTo(placeView.snp.bottom).offset(10)
             make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
-            make.bottom.equalTo(peopleView.snp.top)
+            make.centerY.equalTo(datePicker)
+            make.height.equalTo(datePicker)
             make.width.lessThanOrEqualTo(UIScreen.main.bounds.width * 3/4)
         }
         
         datePicker.snp.makeConstraints { make in
             make.leading.equalTo(dateTitleLabel.snp.trailing)
-            make.top.equalTo(dateTitleLabel.snp.top)
-            make.bottom.equalTo(peopleView.snp.top)
             make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
             make.height.equalTo(34)
             make.width.equalTo(UIScreen.main.bounds.width * 1/4)
         }
         
         peopleView.snp.makeConstraints { make in
-            make.top.equalTo(dateTitleLabel.snp.bottom)
+            make.top.equalTo(datePicker.snp.bottom).offset(20)
             make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
             make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
-            make.bottom.equalTo(divider.snp.top).offset(-12)
-            make.height.equalTo(50)
         }
         
         divider.snp.makeConstraints { make in
             make.height.equalTo(2)
             make.leading.trailing.equalToSuperview()
-            make.bottom.equalTo(timeTitleLabel.snp.top).offset(-20)
+            make.top.equalTo(peopleView.snp.bottom).offset(20)
+            make.bottom.equalTo(startTimePicker.snp.top).offset(-20)
         }
         
         timeTitleLabel.snp.makeConstraints { make in
@@ -497,11 +521,12 @@ final class InviteViewController: UIViewController {
             make.centerY.equalTo(genderLabel)
             make.top.equalTo(typeSegmentedControl.snp.bottom).offset(10)
             make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
+            make.height.equalTo(datePicker.snp.height)
             make.width.equalTo(120)
         }
         
         gamePriceLabel.snp.makeConstraints { make in
-            make.top.equalTo(genderLabel.snp.bottom).offset(SuperviewOffsets.topPadding)
+            make.top.equalTo(genderLabel.snp.bottom)
             make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
         }
         
@@ -517,15 +542,22 @@ final class InviteViewController: UIViewController {
             make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
         }
         
+        imageButton.snp.makeConstraints { make in
+            make.top.equalTo(contentLabel.snp.bottom).offset(10)
+            make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
+            make.width.equalTo(80)
+            make.height.equalTo(imageButton.snp.width)
+        }
+        
         contentTextView.snp.makeConstraints { make in
-            make.top.equalTo(contentLabel.snp.bottom).offset(5)
+            make.top.equalTo(imageButton.snp.bottom).offset(10)
             make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
             make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
             make.height.equalTo(150)
         }
         
         addButton.snp.makeConstraints { make in
-            make.top.equalTo(contentTextView.snp.bottom).offset(SuperviewOffsets.topPadding)
+            make.top.equalTo(contentTextView.snp.bottom).offset(10)
             make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
             make.trailing.bottom.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
             make.height.equalTo(40)
