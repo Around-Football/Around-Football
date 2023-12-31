@@ -28,6 +28,7 @@ enum AFIcon {
     static let leftArrow = "AFLeftArrow"
     static let minus = "AFMinus"
     static let plus = "AFPlus"
+    static let imagePlaceholder = "AFImagePlaceholder"
     
     //logo
     static let smallLogo = "AFSmallLogo"
