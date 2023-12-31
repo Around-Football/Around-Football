@@ -13,8 +13,6 @@ import RxSwift
 import SnapKit
 import Then
 
-//TODO: - 게임비 항목 추가, Recruit 모델 수정
-
 final class InviteViewController: UIViewController {
     
     // MARK: - Properties
@@ -118,7 +116,7 @@ final class InviteViewController: UIViewController {
         $0.selectedSegmentIndex = 0 //기본 선택 풋살로
         viewModel.type.accept("풋살")
         $0.addTarget(self,
-                     action: #selector(segmentedControlValueChanged),
+                     action: #selector(typeSegmentedControlValueChanged),
                      for: .valueChanged)
     }
     
@@ -133,7 +131,7 @@ final class InviteViewController: UIViewController {
         $0.selectedSegmentIndex = 0
 //        viewModel.type.accept("풋살")
         $0.addTarget(self,
-                     action: #selector(segmentedControlValueChanged),
+                     action: #selector(genderSegmentedControlValueChanged),
                      for: .valueChanged)
     }
     
@@ -202,6 +200,7 @@ final class InviteViewController: UIViewController {
     
     private lazy var contentTextView = UITextView().then {
         $0.delegate = self
+        $0.font = AFFont.text?.withSize(16)
         $0.layer.cornerRadius = 8
         $0.layer.borderWidth = 0.8
         $0.layer.borderColor = AFColor.grayScale100.cgColor
@@ -244,8 +243,13 @@ final class InviteViewController: UIViewController {
     // MARK: - Selectors
     
     @objc
-    func segmentedControlValueChanged(_ sender: UISegmentedControl) {
+    func typeSegmentedControlValueChanged(_ sender: UISegmentedControl) {
         viewModel.type.accept(sender.titleForSegment(at: sender.selectedSegmentIndex))
+    }
+    
+    @objc
+    func genderSegmentedControlValueChanged(_ sender: UISegmentedControl) {
+        viewModel.gender.accept(sender.titleForSegment(at: sender.selectedSegmentIndex))
     }
     
     @objc
@@ -261,28 +265,25 @@ final class InviteViewController: UIViewController {
         let dateformatter = DateFormatter()
         dateformatter.locale = Locale(identifier: "ko_KR")
         dateformatter.dateFormat = "YYYY년 M월 d일"
-        let formattedDate = dateformatter.string(from: sender.date)
         
         let titleDateformatter = DateFormatter()
         titleDateformatter.locale = Locale(identifier: "ko_KR")
         titleDateformatter.dateFormat = "M월 d일"
         let buttonTitleDate = titleDateformatter.string(from: sender.date)
-        
-//        filterRequest.date = formattedDate
-//        saveFilterRequestToUserDefaults(filterRequest: filterRequest)
-//        getFilterRequestFromUserDefaults()
         dateFilterButton.setTitle(buttonTitleDate, for: .normal)
-//        loadRecruitList.onNext(filterRequest)
+        viewModel.matchDateString.accept(buttonTitleDate)
     }
     
     @objc
     private func startTimePickerSelected() {
         startTimeString = setSelectedTime(input: startTimePicker.date)
+        viewModel.startTime.accept(startTimeString)
     }
     
     @objc
     private func endTimePickerSelected() {
         endTimeString = setSelectedTime(input: endTimePicker.date)
+        viewModel.endTime.accept(endTimeString)
     }
     
     @objc
@@ -299,9 +300,6 @@ final class InviteViewController: UIViewController {
         print(result)
         return result
     }
-    
-    
-    // MARK: - Helpers
     
     private func setSearchFieldButton() {
         placeView.searchFieldButton.addTarget(self,
@@ -321,14 +319,18 @@ final class InviteViewController: UIViewController {
         let fieldObservables = [
             viewModel.fieldName.asObservable(),
             viewModel.type.asObservable(),
+            viewModel.matchDateString.asObservable(),
+            viewModel.startTime.asObservable(),
+            viewModel.endTime.asObservable(),
             viewModel.gamePrice.asObservable(),
-            viewModel.contentTitle.asObservable(),
-            viewModel.content.asObservable(),
+            viewModel.gender.asObservable(),
+            viewModel.content.asObservable()
         ]
         
         return Observable
             .combineLatest(fieldObservables)
             .map { fields in
+                print(fields.filter { $0 == nil || $0 == "" }.count == 0 ? true : false)
                 return fields.filter { $0 == nil || $0 == "" }.count == 0 ? true : false
             }
     }
@@ -365,12 +367,11 @@ final class InviteViewController: UIViewController {
             guard let self else { return }
             //현재 값 뷰모델에 전달
             viewModel.peopleCount.accept(peopleView.count)
-//            viewModel.contentTitle.accept(titleTextField.text)
             viewModel.content.accept(contentTextView.text)
-//            viewModel.matchDateString.accept(calenderViewController.selectedDateString)
-//            viewModel.matchDate.accept(Timestamp(date: calenderViewController.selectedDate ?? Date()))
-//            viewModel.startTime.accept(calenderViewController.startTimeString)
-//            viewModel.endTime.accept(calenderViewController.endTimeString)
+            viewModel.matchDateString.accept(dateFilterButton.currentTitle)
+            viewModel.matchDate.accept(Timestamp(date: datePicker.date))
+            viewModel.startTime.accept(startTimeString)
+            viewModel.endTime.accept(endTimeString)
             //올리기 함수
             viewModel.createRecruitFieldData()
             viewModel.coordinator.popInviteViewController()
