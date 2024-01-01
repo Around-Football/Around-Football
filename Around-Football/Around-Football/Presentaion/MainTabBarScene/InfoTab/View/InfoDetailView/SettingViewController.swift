@@ -21,8 +21,11 @@ final class SettingViewController: UIViewController {
     
     private let settingTableView = UITableView().then {
         $0.register(InfoCell.self, forCellReuseIdentifier: InfoCell.cellID)
+        $0.separatorInset = UIEdgeInsets().with({ edge in
+            edge.left = 0
+            edge.right = 0
+        })
     }
-    
     
     // MARK: - Lifecycles
     
