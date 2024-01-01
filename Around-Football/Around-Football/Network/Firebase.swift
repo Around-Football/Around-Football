@@ -200,7 +200,11 @@ extension FirebaseAPI {
         return Observable.create { observer in
             //유저불러옴
             guard let user = try? UserService.shared.currentUser_Rx.value() else { return Disposables.create() }
-            guard user.bookmarkedRecruit.count != 0 else { return Disposables.create() }
+            guard user.bookmarkedRecruit.count != 0
+            else {
+                observer.onNext([])
+                return Disposables.create()
+            }
             
             REF_RECRUIT
                 .whereField("id", in: user.bookmarkedRecruit as [Any])
