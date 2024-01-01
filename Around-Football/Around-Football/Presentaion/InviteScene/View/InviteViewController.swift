@@ -244,12 +244,12 @@ final class InviteViewController: UIViewController {
     
     @objc
     func typeSegmentedControlValueChanged(_ sender: UISegmentedControl) {
-        viewModel.type.accept(sender.titleForSegment(at: sender.selectedSegmentIndex))
+        viewModel.type.accept(sender.titleForSegment(at: sender.selectedSegmentIndex) ?? "")
     }
     
     @objc
     func genderSegmentedControlValueChanged(_ sender: UISegmentedControl) {
-        viewModel.gender.accept(sender.titleForSegment(at: sender.selectedSegmentIndex))
+        viewModel.gender.accept(sender.titleForSegment(at: sender.selectedSegmentIndex) ?? "")
     }
     
     @objc
@@ -270,8 +270,9 @@ final class InviteViewController: UIViewController {
         titleDateformatter.locale = Locale(identifier: "ko_KR")
         titleDateformatter.dateFormat = "M월 d일"
         let buttonTitleDate = titleDateformatter.string(from: sender.date)
+        let matchDateString = dateformatter.string(from: sender.date)
         dateFilterButton.setTitle(buttonTitleDate, for: .normal)
-        viewModel.matchDateString.accept(buttonTitleDate)
+        viewModel.matchDateString.accept(matchDateString)
     }
     
     @objc
@@ -330,7 +331,7 @@ final class InviteViewController: UIViewController {
         return Observable
             .combineLatest(fieldObservables)
             .map { fields in
-                return fields.filter { $0 == nil || $0 == "" }.count == 0 ? true : false
+                return fields.filter { $0 == "" }.count == 0 ? true : false
             }
     }
     
@@ -367,7 +368,7 @@ final class InviteViewController: UIViewController {
             //현재 값 뷰모델에 전달
             viewModel.peopleCount.accept(peopleView.count)
             viewModel.content.accept(contentTextView.text)
-            viewModel.matchDateString.accept(dateFilterButton.currentTitle)
+            viewModel.matchDateString.accept(dateFilterButton.currentTitle ?? "")
             viewModel.matchDate.accept(Timestamp(date: datePicker.date))
             viewModel.startTime.accept(startTimeString)
             viewModel.endTime.accept(endTimeString)

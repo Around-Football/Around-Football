@@ -147,10 +147,10 @@ final class ApplicantListViewModel {
             guard let self = self else { return }
             print("DEBUG - ", #function, isAvailable)
             if isAvailable, let channelId = channelId {
-                let channelInfo = ChannelInfo(id: channelId, withUser: user, recruitID: recruit.id)
+                let channelInfo = ChannelInfo(id: channelId, withUser: user, recruitID: recruit.id, recruitUserID: recruit.userID)
                 self.coordinator?.clickSendMessageButton(channelInfo: channelInfo)
             } else {
-                let channelInfo = ChannelInfo(id: UUID().uuidString, withUser: user, recruitID: recruit.id)
+                let channelInfo = ChannelInfo(id: UUID().uuidString, withUser: user, recruitID: recruit.id, recruitUserID: recruit.userID)
                 self.coordinator?.clickSendMessageButton(channelInfo: channelInfo, isNewChat: true)
             }
         }
