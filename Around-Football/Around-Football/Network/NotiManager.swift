@@ -34,7 +34,7 @@ final class NotiManager {
         let params: Parameters = [
             "to": receiverFcmToken,
             "notification": value,
-            "channelIdDictionary": channelIdDictionary
+            "data": channelIdDictionary
         ]
         let dataRequest = AF.request(fcmUrlString,
                                      method: .post,

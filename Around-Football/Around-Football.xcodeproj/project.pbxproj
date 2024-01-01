@@ -85,14 +85,14 @@
 		66BD8DB82B3174850094C78B /* ChatCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66BD8DB72B3174850094C78B /* ChatCoordinator.swift */; };
 		66C374362B0B010800DB2C2A /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = 66C374352B0B010800DB2C2A /* FirebaseMessaging */; };
 		66C5AFA92B3861D200A95460 /* DetailViewController+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66C5AFA82B3861D200A95460 /* DetailViewController+.swift */; };
-		66C5AFAE2B38AC9000A95460 /* ApplicationListHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66C5AFAD2B38AC9000A95460 /* ApplicationListHeaderView.swift */; };
 		66C5AFB82B3D691800A95460 /* ChannelUserInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66C5AFB72B3D691800A95460 /* ChannelUserInfoView.swift */; };
+		66C5AFAE2B38AC9000A95460 /* ApplicantListHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66C5AFAD2B38AC9000A95460 /* ApplicantListHeaderView.swift */; };
 		7929A30F2ADE4B45006ED4FA /* InputInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7929A30E2ADE4B45006ED4FA /* InputInfoViewController.swift */; };
 		7929A3112ADEAD35006ED4FA /* InputInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7929A3102ADEAD35006ED4FA /* InputInfoView.swift */; };
 		7929A3132ADEB319006ED4FA /* InputInfoViewController+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7929A3122ADEB319006ED4FA /* InputInfoViewController+.swift */; };
 		7929A3182ADFECD9006ED4FA /* ApplicantListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7929A3172ADFECD9006ED4FA /* ApplicantListViewController.swift */; };
 		7929A31A2ADFED07006ED4FA /* ApplicantListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7929A3192ADFED07006ED4FA /* ApplicantListTableViewCell.swift */; };
-		7929A31D2ADFFB15006ED4FA /* ApplicationStatusViewController+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7929A31C2ADFFB15006ED4FA /* ApplicationStatusViewController+.swift */; };
+		7929A31D2ADFFB15006ED4FA /* ApplicantListViewController+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7929A31C2ADFFB15006ED4FA /* ApplicantListViewController+.swift */; };
 		7C0684B92B2E20A60052F9A6 /* UIButton+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C0684B82B2E20A60052F9A6 /* UIButton+.swift */; };
 		7C141C622ADA5F38002CF180 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C141C612ADA5F38002CF180 /* LoginViewController.swift */; };
 		7C141C652ADA6008002CF180 /* KakaoSDK in Frameworks */ = {isa = PBXBuildFile; productRef = 7C141C642ADA6008002CF180 /* KakaoSDK */; };
@@ -215,14 +215,14 @@
 		66BD86E42AE646CB00B1B256 /* FieldDetailViewController+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FieldDetailViewController+.swift"; sourceTree = "<group>"; };
 		66BD8DB72B3174850094C78B /* ChatCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatCoordinator.swift; sourceTree = "<group>"; };
 		66C5AFA82B3861D200A95460 /* DetailViewController+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DetailViewController+.swift"; sourceTree = "<group>"; };
-		66C5AFAD2B38AC9000A95460 /* ApplicationListHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplicationListHeaderView.swift; sourceTree = "<group>"; };
 		66C5AFB72B3D691800A95460 /* ChannelUserInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChannelUserInfoView.swift; sourceTree = "<group>"; };
+		66C5AFAD2B38AC9000A95460 /* ApplicantListHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplicantListHeaderView.swift; sourceTree = "<group>"; };
 		7929A30E2ADE4B45006ED4FA /* InputInfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputInfoViewController.swift; sourceTree = "<group>"; };
 		7929A3102ADEAD35006ED4FA /* InputInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputInfoView.swift; sourceTree = "<group>"; };
 		7929A3122ADEB319006ED4FA /* InputInfoViewController+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "InputInfoViewController+.swift"; sourceTree = "<group>"; };
 		7929A3172ADFECD9006ED4FA /* ApplicantListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplicantListViewController.swift; sourceTree = "<group>"; };
 		7929A3192ADFED07006ED4FA /* ApplicantListTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplicantListTableViewCell.swift; sourceTree = "<group>"; };
-		7929A31C2ADFFB15006ED4FA /* ApplicationStatusViewController+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ApplicationStatusViewController+.swift"; sourceTree = "<group>"; };
+		7929A31C2ADFFB15006ED4FA /* ApplicantListViewController+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ApplicantListViewController+.swift"; sourceTree = "<group>"; };
 		7C0684B82B2E20A60052F9A6 /* UIButton+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIButton+.swift"; sourceTree = "<group>"; };
 		7C141C612ADA5F38002CF180 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		7C2B1AC62AF4B10B0052EC64 /* LoginCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginCoordinator.swift; sourceTree = "<group>"; };
@@ -799,8 +799,8 @@
 			isa = PBXGroup;
 			children = (
 				7929A3172ADFECD9006ED4FA /* ApplicantListViewController.swift */,
-				7929A31C2ADFFB15006ED4FA /* ApplicationStatusViewController+.swift */,
-				66C5AFAD2B38AC9000A95460 /* ApplicationListHeaderView.swift */,
+				7929A31C2ADFFB15006ED4FA /* ApplicantListViewController+.swift */,
+				66C5AFAD2B38AC9000A95460 /* ApplicantListHeaderView.swift */,
 				7929A3192ADFED07006ED4FA /* ApplicantListTableViewCell.swift */,
 			);
 			path = View;
@@ -1010,7 +1010,7 @@
 				66656F9D2AD9219F00AE1AFA /* FieldDetailViewController.swift in Sources */,
 				668EE4C12B050305007A8844 /* ImageMessageViewController.swift in Sources */,
 				7C0684B92B2E20A60052F9A6 /* UIButton+.swift in Sources */,
-				66C5AFAE2B38AC9000A95460 /* ApplicationListHeaderView.swift in Sources */,
+				66C5AFAE2B38AC9000A95460 /* ApplicantListHeaderView.swift in Sources */,
 				668EE4B42AFF552F007A8844 /* ChannelAPI.swift in Sources */,
 				667ABD672B1EBEE700142940 /* AppDelegate+.swift in Sources */,
 				7C322F122B304C6900D7897B /* AFIcon.swift in Sources */,
@@ -1029,7 +1029,7 @@
 				7C2B1AFC2AF4CE8A0052EC64 /* AppCoordinator.swift in Sources */,
 				7C2B1ADE2AF4B2DA0052EC64 /* InputInfoCoordinator.swift in Sources */,
 				7929A31A2ADFED07006ED4FA /* ApplicantListTableViewCell.swift in Sources */,
-				7929A31D2ADFFB15006ED4FA /* ApplicationStatusViewController+.swift in Sources */,
+				7929A31D2ADFFB15006ED4FA /* ApplicantListViewController+.swift in Sources */,
 				7C2F9FE92B26E73200F1EF1B /* InfoPostViewModel.swift in Sources */,
 				273674842AC308D1003ADE3F /* FieldModel.swift in Sources */,
 				669674882AC3E82B0067FD48 /* MainTabController.swift in Sources */,

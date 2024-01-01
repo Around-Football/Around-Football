@@ -282,5 +282,6 @@ final class DetailViewController: UIViewController {
         bindButtonAction()
         bindRecruitUser()
         bindButtonStyle(by: output.recruitStatus)
+        bindRecruit()
     }
 }
