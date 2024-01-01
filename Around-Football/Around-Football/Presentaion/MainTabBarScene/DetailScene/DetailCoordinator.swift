@@ -25,9 +25,14 @@ final class DetailCoordinator: BaseCoordinator {
     }
     
     func pushApplicationStatusViewController(recruit: Recruit) {
-        let viewModel = ApplicantListViewModel(coordinator: self, recruit: recruit)
-        let controller = ApplicantListViewController(viewModel: viewModel)
-        navigationController?.pushViewController(controller, animated: true)
+        if let viewController = navigationController?.viewControllers.first(where: { $0 is ApplicantListViewController }) {
+            navigationController?.popToViewController(viewController, animated: true)
+            removeThisChildCoordinators(coordinator: self)
+        } else {
+            let viewModel = ApplicantListViewModel(coordinator: self, recruit: recruit)
+            let controller = ApplicantListViewController(viewModel: viewModel)
+            navigationController?.pushViewController(controller, animated: true)
+        }
     }
         
     func clickSendMessageButton(channelInfo: ChannelInfo, isNewChat: Bool = false) {
@@ -47,7 +52,7 @@ final class DetailCoordinator: BaseCoordinator {
         childCoordinators.append(coordinator)
     }
 
-    func removeChildCoordinator() {
+    func removeChatCoordinator() {
         guard let coordinator = childCoordinators.last as? ChatCoordinator else {
             print("DEBUG - This Coordinator is not ChatTabCoordinator")
             return

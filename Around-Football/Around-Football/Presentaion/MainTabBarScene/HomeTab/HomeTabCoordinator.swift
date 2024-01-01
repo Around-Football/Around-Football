@@ -42,7 +42,7 @@ final class HomeTabCoordinator: BaseCoordinator {
         
         // MARK: - MapView이동시 coordinator 사용
         
-        let controller = MapViewController(viewModel: MapViewModel(latitude: 37, longitude: 126))
+        let controller = MapViewController(viewModel: MapViewModel(latitude: 37, longitude: 126), searchViewModel: SearchViewModel(coordinator: nil))
         navigationController?.pushViewController(controller, animated: true)
     }
     

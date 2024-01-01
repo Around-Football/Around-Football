@@ -17,41 +17,24 @@ final class InfoViewController: UIViewController {
     
     private var viewModel: InfoViewModel
     private var disposeBag = DisposeBag()
+    private let detailUserInfoView = DetailUserInfoView()
+    private let infoHeaderView = InfoHeaderView()
     
-    private let profileAndEditView = ProfileAndEditView()
-    private let iconAndImage: [(icon: String, title: String)] = [
-        (icon: "star", title: "관심 글"),
-        (icon: "doc.text", title: "작성 글"),
-        (icon: "ellipsis.message", title: "신청 글"),
-    ]
-    
-    private lazy var infoCollectionView: UICollectionView = {
-        let layout = UICollectionViewFlowLayout()
-        layout.minimumLineSpacing = 10
-        layout.minimumInteritemSpacing = 10
-        let cv = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        cv.delegate = self
-        cv.dataSource = self
-        cv.register(InfoCell.self, forCellWithReuseIdentifier: InfoCell.cellID)
-        return cv
-    }()
-    
-    private let infoStackView = UIStackView().then {
-        $0.axis = .vertical
-        $0.distribution = .fillEqually
-        $0.layer.cornerRadius = 10
-        $0.layer.borderColor = UIColor.gray.cgColor
-        $0.layer.borderWidth = 1.0
-        $0.addArrangedSubview(InfoArrangedView())
-        $0.addArrangedSubview(InfoArrangedView())
-        $0.addArrangedSubview(InfoArrangedView())
-        $0.addArrangedSubview(InfoArrangedView())
+    private lazy var infoTableView = UITableView().then {
+        $0.register(InfoCell.self, forCellReuseIdentifier: InfoCell.cellID)
+        $0.isScrollEnabled = false
+        $0.separatorInset = UIEdgeInsets().with({ edge in
+            edge.left = 0
+            edge.right = 0
+        })
     }
     
-    private lazy var logoutButton = UIButton().then {
-        $0.setTitle("로그아웃", for: .normal)
-        $0.setTitleColor(.black, for: .normal)
-        $0.addTarget(self, action: #selector(logoutButtonTapped), for: .touchUpInside)
+    private let lineView = UIView().then {
+        $0.backgroundColor = AFColor.grayScale50
+    }
+    
+    private let lineView2 = UIView().then {
+        $0.backgroundColor = AFColor.grayScale50
     }
     
     // MARK: - Lifecycles
@@ -68,10 +51,9 @@ final class InfoViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         configureUI()
-        configureStackView()
-        bindButtonActionHandler()
         bindUserInfo()
-        bindLogoutButton()
+        bindTableView()
+        configureSettingButton()
     }
     
     // MARK: - Selectors
@@ -85,160 +67,97 @@ final class InfoViewController: UIViewController {
     
     // MARK: - Helpers
     
-    private func bindLogoutButton() {
-        UserService.shared.currentUser_Rx.bind { [weak self] user in
+    private func configureSettingButton() {
+        infoHeaderView.settingButtonActionHandler = { [weak self] in
             guard let self else { return }
-            if user?.id == nil {
-                logoutButton.setTitle("로그인", for: .normal)
-            } else {
-                logoutButton.setTitle("로그아웃", for: .normal)
+            guard let _ = try? UserService.shared.currentUser_Rx.value() else {
+                viewModel.coordinator?.presentLoginViewController()
+                return
             }
+            viewModel.coordinator?.pushSettingView()
+        }
+    }
+    
+    private func bindTableView() {
+        
+        viewModel
+            .menusObservable
+            .bind(to: infoTableView.rx.items(cellIdentifier: InfoCell.cellID,
+                                              cellType: InfoCell.self)) { index, item, cell in
+            cell.setValues(title: item)
         }.disposed(by: disposeBag)
+        
+        infoTableView.rx.itemSelected
+            .subscribe(onNext: { [weak self] indexPath in
+                guard let self = self else { return }
+                guard let _ = try? UserService.shared.currentUser_Rx.value() else {
+                    viewModel.coordinator?.presentLoginViewController()
+                    return
+                }
+
+                switch indexPath.row {
+                case 0:
+                    viewModel.coordinator?.pushEditView()
+                case 1:
+                    viewModel.coordinator?.pushBookmarkPostViewController()
+                case 2:
+                    viewModel.coordinator?.pushApplicationPostViewController()
+                case 3:
+                    viewModel.coordinator?.pushWrittenPostViewController()
+                default:
+                    print("DEBUG: SettingCell 없음")
+                }
+
+                // 선택 효과 해제
+                infoTableView.deselectRow(at: indexPath, animated: true)
+            })
+            .disposed(by: disposeBag)
     }
     
     private func bindUserInfo() {
         UserService.shared.currentUser_Rx.bind { [weak self] user in
             guard let self else { return }
-            if user == nil {
-                profileAndEditView.userName.text = "로그인 해주세요"
-            } else {
-                profileAndEditView.userName.text = user?.userName
-            }
-        }.disposed(by: disposeBag)
-    }
-    
-    private func configureStackView() {
-        UserService.shared.currentUser_Rx
-            .bind { [weak self] user in
-                guard
-                    let self,
-                    let user,
-                    let views = infoStackView.arrangedSubviews as? [InfoArrangedView],
-                    let contents = [String(user.age), user.area, user.mainUsedFeet, user.position.joined(separator: ", ")] as? [String]
-                else { return }
-                
-                let titles = ["성별", "지역", "주발", "포지션"]
-            
-            (0..<titles.count).forEach {
-                views[$0].setValues(name: titles[$0], content: contents[$0])
-            }
+            detailUserInfoView.setValues(user: user, isSettingView: true)
         }.disposed(by: disposeBag)
     }
     
     private func configureUI() {
         view.backgroundColor = .white
-        navigationController?.navigationBar.prefersLargeTitles = true
-        navigationItem.title = "내 정보"
         
-        view.addSubviews(profileAndEditView,
-                         infoCollectionView,
-                         infoStackView)
+        view.addSubviews(infoHeaderView,
+                         detailUserInfoView,
+                         lineView,
+                         infoTableView,
+                         lineView2)
         
-        view.addSubview(logoutButton)
-        
-        profileAndEditView.snp.makeConstraints { make in
+        infoHeaderView.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide)
+            make.width.equalToSuperview()
+        }
+        
+        detailUserInfoView.snp.makeConstraints { make in
+            make.top.equalTo(infoHeaderView.snp.bottom)
             make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
             make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
+            make.height.equalTo(64)
         }
         
-        infoCollectionView.snp.makeConstraints { make in
-            make.top.equalTo(profileAndEditView.snp.bottom).offset(10)
-            make.leading.equalToSuperview().offset((SuperviewOffsets.leadingPadding))
-            make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
-            make.height.equalTo((UIScreen.main.bounds.width / 3) - 20)
+        lineView.snp.makeConstraints { make in
+            make.top.equalTo(detailUserInfoView.snp.bottom)
+            make.width.equalToSuperview()
+            make.height.equalTo(4)
         }
         
-        infoStackView.snp.makeConstraints { make in
-            make.top.equalTo(infoCollectionView.snp.bottom).offset(10)
-            make.leading.equalToSuperview().offset((SuperviewOffsets.leadingPadding))
-            make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
-            make.height.equalTo(150)
+        infoTableView.snp.makeConstraints { make in
+            make.top.equalTo(lineView.snp.bottom)
+            make.leading.trailing.equalToSuperview()
+            make.height.equalTo(256)
         }
         
-        logoutButton.snp.makeConstraints { make in
-            make.top.equalTo(infoStackView.snp.bottom).offset(20)
-            make.leading.equalToSuperview().offset(50)
-            make.trailing.equalToSuperview().offset(-50)
-        }
-    }
-    
-    private func bindButtonActionHandler() {
-        profileAndEditView.editButtonActionHandler = { [weak self] in
-            guard let self else { return }
-            
-            UserService.shared.currentUser_Rx
-                .take(1) //버튼 누를때만 요청하도록 1번만! 아니면 연동되서 값 바뀔때마다 실행됨
-                .subscribe(onNext: { [weak self] user in
-                    guard let self else { return }
-                    if user?.id == nil {
-                        viewModel.coordinator?.presentLoginViewController()
-                    } else {
-                        viewModel.coordinator?.pushEditView()
-                    }
-                }).disposed(by: disposeBag)
-        }
-        
-        profileAndEditView.settingButtonActionHandler = { [weak self] in
-            guard let self else { return }
-            
-            UserService.shared.currentUser_Rx
-                .take(1)
-                .subscribe(onNext: { [weak self] user in
-                    guard let self else { return }
-                    if user?.id == nil {
-                        viewModel.coordinator?.presentLoginViewController()
-                    } else {
-                        viewModel.coordinator?.pushEditView()
-                    }
-                })
-                .disposed(by: disposeBag)
-        }
-    }
-}
-
-//TODO: -Rx 리팩토링
-
-extension InfoViewController: UICollectionViewDelegateFlowLayout, UICollectionViewDataSource {
-    
-    func collectionView(_ collectionView: UICollectionView,
-                        layout collectionViewLayout: UICollectionViewLayout,
-                        sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let width = (UIScreen.main.bounds.width / 3) - 20
-        return CGSize(width: width, height: width)
-    }
-    
-    func collectionView(_ collectionView: UICollectionView,
-                        numberOfItemsInSection section: Int) -> Int {
-        iconAndImage.count
-    }
-    
-    func collectionView(_ collectionView: UICollectionView,
-                        cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(
-            withReuseIdentifier: InfoCell.cellID,
-            for: indexPath
-        ) as? InfoCell else {
-            return UICollectionViewCell()
-        }
-
-        cell.setValues(icon: iconAndImage[indexPath.item].icon,
-                       title: iconAndImage[indexPath.item].title)
-        return cell
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        
-        let title = iconAndImage[indexPath.item].title
-        switch title {
-        case _ where "관심 글" == title:
-            viewModel.coordinator?.pushBookmarkPostViewController()
-        case _ where "작성 글" == title:
-            viewModel.coordinator?.pushWrittenPostViewController()
-        case _ where "신청 글" == title:
-            viewModel.coordinator?.pushApplicationPostViewController()
-        default:
-            print("cell 없음")
+        lineView2.snp.makeConstraints { make in
+            make.top.equalTo(infoTableView.snp.bottom)
+            make.width.equalToSuperview()
+            make.height.equalTo(4)
         }
     }
 }
