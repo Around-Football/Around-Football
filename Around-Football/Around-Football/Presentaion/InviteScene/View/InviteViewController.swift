@@ -330,7 +330,6 @@ final class InviteViewController: UIViewController {
         return Observable
             .combineLatest(fieldObservables)
             .map { fields in
-                print(fields.filter { $0 == nil || $0 == "" }.count == 0 ? true : false)
                 return fields.filter { $0 == nil || $0 == "" }.count == 0 ? true : false
             }
     }
