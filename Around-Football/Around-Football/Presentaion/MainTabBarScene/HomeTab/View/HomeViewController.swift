@@ -272,7 +272,9 @@ final class HomeViewController: UIViewController {
         navigationController?.navigationBar.largeTitleTextAttributes = [
             NSAttributedString.Key.font: AFFont.titleMedium ?? UIFont()
         ]
-        navigationController?.navigationBar.largeTitleTextAttributes?[NSAttributedString.Key.paragraphStyle] = {
+        navigationController?
+            .navigationBar
+            .largeTitleTextAttributes?[NSAttributedString.Key.paragraphStyle] = {
             let style = NSMutableParagraphStyle()
             style.firstLineHeadIndent = 5
             return style

@@ -212,10 +212,10 @@ final class HomeTableViewCell: UITableViewCell {
                                 genderLabel)
     
         fieldImageView.snp.makeConstraints { make in
-            make.width.height.equalTo(80)
             make.top.equalToSuperview().offset(16)
             make.leading.equalToSuperview()
             make.bottom.equalToSuperview().offset(-16)
+            make.width.equalTo(80)
         }
 
         typeLabel.snp.makeConstraints { make in
@@ -254,30 +254,5 @@ final class HomeTableViewCell: UITableViewCell {
             make.height.equalTo(recruitLabel.snp.height)
             make.leading.equalTo(line.snp.trailing).offset(8)
         }
-        
-        // MARK: - 예전 디자인 코드
-//        userNameLabel.snp.makeConstraints { make in
-//            make.top.equalTo(recruitLabel.snp.bottom).offset(5)
-//            make.trailing.equalTo(snp.trailing).offset(SuperviewOffsets.trailingPadding)
-//            make.bottom.equalToSuperview().offset(-10)
-//        }
-        
-        
-//        titleLabel.snp.makeConstraints { make in
-//            make.top.equalToSuperview().offset(10)
-//            make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
-//        }
-        
-//        bookmarkButton.snp.makeConstraints { make in
-//            make.top.equalToSuperview().offset(10)
-//            make.leading.equalTo(titleLabel.snp.trailing).offset(10).priority(.low)
-//            make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
-//        }
-        
-        //        fieldAddress.snp.makeConstraints { make in
-        //            make.top.equalTo(dateLabel.snp.bottom).offset(5)
-        //            make.leading.equalTo(titleLabel)
-        //            make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
-        //        }
     }
 }
