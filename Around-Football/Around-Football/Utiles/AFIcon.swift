@@ -38,6 +38,7 @@ enum AFIcon {
     
     //button
     static let plusButton = "AFPlusButton"
+    static let rightButton = "AFRightCaret"
     static let backButton = "AFBackButton"
     static let trackingButton = "AFTrackingButton"
     static let searchButton = "AFSearchButton"

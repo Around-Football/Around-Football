@@ -33,6 +33,18 @@ final class FirebaseAPI {
         UserService.shared.currentUser_Rx.onNext(user) //유저 업데이트하고 업데이트한 유저정보 보내줌
     }
     
+    func deleteUser(_ userID: String) {
+        let ref = REF_USER.document(userID)
+        ref.delete { error in
+            if error != nil {
+                print("유저 탈퇴 에러 발생")
+            }
+            
+            print("\(userID)유저 삭제됨.")
+            UserService.shared.currentUser_Rx.onNext(nil)
+        }
+    }
+    
     //uid로 유저 불러오기
     func fetchUser(uid: String, completion: @escaping (User) -> Void) {
         REF_USER.document(uid).getDocument { snapshot, error in
@@ -144,11 +156,6 @@ final class FirebaseAPI {
         return Observable.create { observer in
             var collectionRef: Query = REF_RECRUIT
             
-//            if let date = input.date {
-//                collectionRef = collectionRef
-//                    .whereField("matchDateString", isEqualTo: input.date)
-//            }
-            
             if let region = input.region {
                 collectionRef = collectionRef
                     .whereField("region", isEqualTo: region)
@@ -193,11 +200,10 @@ extension FirebaseAPI {
         return Observable.create { observer in
             //유저불러옴
             guard let user = try? UserService.shared.currentUser_Rx.value() else { return Disposables.create() }
-            
-            let userBookmarkList = user.bookmarkedRecruit
+            guard user.bookmarkedRecruit.count != 0 else { return Disposables.create() }
             
             REF_RECRUIT
-                .whereField("id", in: userBookmarkList as [Any])
+                .whereField("id", in: user.bookmarkedRecruit as [Any])
                 .getDocuments { snapshot, error in
                     if error != nil {
                         print("loadBookmarkPostRx 추가 오류: \(String(describing: error?.localizedDescription))")
