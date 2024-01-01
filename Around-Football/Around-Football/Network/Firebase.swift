@@ -43,10 +43,10 @@ final class FirebaseAPI {
         }
     }
     
-    func fetchUser(uid: String) async throws -> User {
-        let result = try await REF_USER.document(uid).getDocument()
+    func fetchUser(uid: String) async throws -> User? {
+        guard let data = try await REF_USER.document(uid).getDocument().data() else { return nil }
         
-        let user = User(dictionary: result.data()!)
+        let user = User(dictionary: data)
         return user
     }
     
@@ -57,7 +57,7 @@ final class FirebaseAPI {
                 do {
                     var users: [User] = []
                     for uid in uids {
-                        let user = try await self.fetchUser(uid: uid)
+                        guard let user = try await self.fetchUser(uid: uid) else { continue }
                         users.append(user)
                     }
                     observe.onNext(users)
