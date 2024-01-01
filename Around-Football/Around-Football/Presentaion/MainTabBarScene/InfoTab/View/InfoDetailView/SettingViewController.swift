@@ -68,9 +68,14 @@ final class SettingViewController: UIViewController {
                     print("약관 및 정책 뷰로")
                 case 3:
                     print("로그아웃 alert")
-                    UserService.shared.logout()
+                    showPopUp(title: "로그아웃",
+                              message: "로그아웃 하시겠습니까?",
+                              rightActionCompletion: viewModel?.logout)
                 case 4:
                     print("탈퇴 alert")
+                    showPopUp(title: "회원 탈퇴",
+                              message: "정말로 탈퇴 하시겠습니까?",
+                              rightActionCompletion: viewModel?.withDraw)
                     
                 default:
                     print("SettingCell없음")
