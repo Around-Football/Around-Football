@@ -10,6 +10,8 @@ import UIKit
 import SnapKit
 import Then
 
+// MARK: - 내 정보, 설정 아이콘 커스텀 헤더 뷰
+
 final class InfoHeaderView: UIView {
     
     // MARK: - Properties

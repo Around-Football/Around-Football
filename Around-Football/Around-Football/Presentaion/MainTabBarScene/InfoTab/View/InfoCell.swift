@@ -33,8 +33,9 @@ final class InfoCell: UITableViewCell {
     
     // MARK: - Helpers
     
-    func setValues(title: String) {
+    func setValues(title: String, usingRightIcon: Bool = true) {
         titleLable.text = title
+        rightIcon.isHidden = !usingRightIcon
     }
 
     private func configureUI() {

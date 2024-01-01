@@ -174,9 +174,9 @@ final class HomeTableViewCell: UITableViewCell {
 //        genderLabel.text = ""
         
         // MARK: - 예전 디자인 코드
-        titleLabel.text = item.title
-        fieldAddress.text = "주소: \(item.fieldAddress)"
-        userNameLabel.text = "\(item.userName)"
+//        titleLabel.text = item.title
+//        fieldAddress.text = "주소: \(item.fieldAddress)"
+//        userNameLabel.text = "\(item.userName)"
     }
     
     //북마크 버튼 세팅
