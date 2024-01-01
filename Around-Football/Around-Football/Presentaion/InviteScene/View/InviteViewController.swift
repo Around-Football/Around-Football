@@ -80,8 +80,8 @@ final class InviteViewController: UIViewController {
         $0.font = AFFont.titleCard
     }
     
-    lazy var startTimeString: String = setSelectedTime(input: startTimePicker.date)
-    lazy var endTimeString: String = setSelectedTime(input: endTimePicker.date)
+    private lazy var startTimeString: String = setSelectedTime(input: startTimePicker.date)
+    private lazy var endTimeString: String = setSelectedTime(input: endTimePicker.date)
     
     private lazy var startTimePicker = UIDatePicker().then {
         $0.datePickerMode = .time
