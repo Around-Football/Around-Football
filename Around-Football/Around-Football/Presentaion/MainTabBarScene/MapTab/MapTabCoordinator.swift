@@ -14,8 +14,9 @@ final class MapTabCoordinator: BaseCoordinator {
     func makeMapViewController() -> UINavigationController {
         // MARK: - 뷰모델 좌표 어디서 넣어? 일단 임시로 좌표 넣음
         let mapViewModel = MapViewModel(latitude: 37, longitude: 127)
+        let searchViewModel = SearchViewModel(coordinator: nil)
         mapViewModel.coordinator = self
-        let mapViewController = MapViewController(viewModel: mapViewModel)
+        let mapViewController = MapViewController(viewModel: mapViewModel, searchViewModel: searchViewModel)
         navigationController = UINavigationController(rootViewController: mapViewController)
         navigationController?.navigationBar.isHidden = false
         

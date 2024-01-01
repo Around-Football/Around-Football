@@ -26,7 +26,10 @@ enum AFIcon {
     //component
     static let downCaret = "AFDownCaret"
     static let leftArrow = "AFLeftArrow"
-
+    static let minus = "AFMinus"
+    static let plus = "AFPlus"
+    static let imagePlaceholder = "AFImagePlaceholder"
+    
     //logo
     static let smallLogo = "AFSmallLogo"
     static let textLogo = "AFTextLogo"
@@ -35,6 +38,9 @@ enum AFIcon {
     
     //button
     static let plusButton = "AFPlusButton"
+    static let backButton = "AFBackButton"
+    static let trackingButton = "AFTrackingButton"
+    static let searchButton = "AFSearchButton"
     
     //background
     static let loginBackgroundImage = "AFBackground"
