@@ -62,7 +62,7 @@ final class ApplicantListHeaderView: UIView {
     // MARK: - Helpers
     
     func configure(recruit: Recruit) {
-        dateLabel.text = "\(recruit.matchDayString) \(recruit.startTime)"
+        dateLabel.text = "\(recruit.matchDayAndStartTime) \(recruit.startTime)"
         groundLabel.text = recruit.fieldName
         recruitingLabel.text = "\(recruit.acceptedApplicantsUID.count) / \(recruit.recruitedPeopleCount)"
         configureTypeLabel(recruit: recruit)
