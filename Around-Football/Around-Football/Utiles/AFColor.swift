@@ -42,5 +42,8 @@ enum AFColor {
     static let sunday = UIColor(hexCode: "#E11100")
     static let futsal = UIColor(hexCode: "#00BE08")
     static let soccor = UIColor(hexCode: "#006DED")
+    
+    static let grayMessage = UIColor(hexCode: "#F8F8F8")
+    static let primaryMessage = primary.withAlphaComponent(0.5)
 }
 

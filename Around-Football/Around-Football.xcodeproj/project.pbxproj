@@ -86,6 +86,7 @@
 		66C374362B0B010800DB2C2A /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = 66C374352B0B010800DB2C2A /* FirebaseMessaging */; };
 		66C5AFA92B3861D200A95460 /* DetailViewController+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66C5AFA82B3861D200A95460 /* DetailViewController+.swift */; };
 		66C5AFAE2B38AC9000A95460 /* ApplicationListHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66C5AFAD2B38AC9000A95460 /* ApplicationListHeaderView.swift */; };
+		66C5AFB82B3D691800A95460 /* ChannelUserInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66C5AFB72B3D691800A95460 /* ChannelUserInfoView.swift */; };
 		7929A30F2ADE4B45006ED4FA /* InputInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7929A30E2ADE4B45006ED4FA /* InputInfoViewController.swift */; };
 		7929A3112ADEAD35006ED4FA /* InputInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7929A3102ADEAD35006ED4FA /* InputInfoView.swift */; };
 		7929A3132ADEB319006ED4FA /* InputInfoViewController+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7929A3122ADEB319006ED4FA /* InputInfoViewController+.swift */; };
@@ -215,6 +216,7 @@
 		66BD8DB72B3174850094C78B /* ChatCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatCoordinator.swift; sourceTree = "<group>"; };
 		66C5AFA82B3861D200A95460 /* DetailViewController+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DetailViewController+.swift"; sourceTree = "<group>"; };
 		66C5AFAD2B38AC9000A95460 /* ApplicationListHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplicationListHeaderView.swift; sourceTree = "<group>"; };
+		66C5AFB72B3D691800A95460 /* ChannelUserInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChannelUserInfoView.swift; sourceTree = "<group>"; };
 		7929A30E2ADE4B45006ED4FA /* InputInfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputInfoViewController.swift; sourceTree = "<group>"; };
 		7929A3102ADEAD35006ED4FA /* InputInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputInfoView.swift; sourceTree = "<group>"; };
 		7929A3122ADEB319006ED4FA /* InputInfoViewController+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "InputInfoViewController+.swift"; sourceTree = "<group>"; };
@@ -432,6 +434,7 @@
 				668EE49B2AFC9E84007A8844 /* ChannelViewController.swift */,
 				668EE4B72B01A60E007A8844 /* ChannelViewController+.swift */,
 				668EE4B12AFCBC09007A8844 /* ChannelTableViewCell.swift */,
+				66C5AFB72B3D691800A95460 /* ChannelUserInfoView.swift */,
 			);
 			path = Channel;
 			sourceTree = "<group>";
@@ -1072,6 +1075,7 @@
 				274C21C42ACFE932005469E6 /* LoginViewModel.swift in Sources */,
 				2736744D2AC3061C003ADE3F /* AppDelegate.swift in Sources */,
 				668EE4C52B05038B007A8844 /* DisMissAnimation.swift in Sources */,
+				66C5AFB82B3D691800A95460 /* ChannelUserInfoView.swift in Sources */,
 				7C5F77602AC9DA08004CE48F /* GroundTitleView.swift in Sources */,
 				7CB21BA52AC94EE4001D0058 /* DetailUserInfoView.swift in Sources */,
 				7C2F9FE72B25EFF500F1EF1B /* ApplicationPostViewController.swift in Sources */,
