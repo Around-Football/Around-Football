@@ -24,6 +24,7 @@ final class InviteViewModel {
     var region: BehaviorRelay<String?> = BehaviorRelay(value: nil)
     var type: BehaviorRelay<String?> = BehaviorRelay(value: nil)
     var gamePrice: BehaviorRelay<String?> = BehaviorRelay(value: nil)
+    var gender: BehaviorRelay<String?> = BehaviorRelay(value: nil)
     var peopleCount: BehaviorRelay<Int> = BehaviorRelay(value: 1)
     var contentTitle: BehaviorRelay<String?> = BehaviorRelay(value: nil)
     var content: BehaviorRelay<String?> = BehaviorRelay(value: nil)

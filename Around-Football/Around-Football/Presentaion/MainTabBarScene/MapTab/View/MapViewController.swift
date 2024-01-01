@@ -19,9 +19,10 @@ final class MapViewController: UIViewController {
     
     private let disposeBag = DisposeBag()
     var viewModel: MapViewModel?
-    
-    init(viewModel: MapViewModel) {
+    private let searchViewModel: SearchViewModel
+    init(viewModel: MapViewModel, searchViewModel: SearchViewModel) {
         self.viewModel = viewModel
+        self.searchViewModel = searchViewModel
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -37,11 +38,38 @@ final class MapViewController: UIViewController {
     var locationManager = CLLocationManager()
     var modalViewController: FieldDetailViewController?
     
+    private var buttonConfig: UIButton.Configuration {
+        var config = UIButton.Configuration.plain()
+        config.contentInsets = NSDirectionalEdgeInsets(top: 10,
+                                                       leading: 10,
+                                                       bottom: 10,
+                                                       trailing: 10)
+        config.imagePadding = 5
+        config.titleAlignment = .leading
+        return config
+    }
+    
+    private lazy var searchFieldButton: UIButton = {
+        let button = UIButton(configuration: buttonConfig)
+        let image = UIImage(systemName: "magnifyingglass")
+        button.setTitle("장소를 검색해주세요.", for: .normal)
+        button.setImage(image?.withTintColor(UIColor.systemGray, renderingMode: .alwaysOriginal),for: .normal)
+        button.setTitleColor(.systemGray, for: .normal)
+        button.layer.cornerRadius = LayoutOptions.cornerRadious
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.backgroundColor = .white
+        button.layer.borderWidth = 1
+        button.layer.borderColor = AFColor.grayScale200.cgColor
+        button.contentHorizontalAlignment = .leading
+        button.addTarget(self, action: #selector(pressSearchBar), for: .touchUpInside)
+        return button
+    }()
+    
     private lazy var searchController: UISearchController = {
         let searchController = UISearchController(searchResultsController: searchResultsController)
         searchController.searchResultsUpdater = self
-        searchController.searchBar.placeholder = "장소를 입력하세요."
-        searchController.searchBar.setValue("취소", forKey: "cancelButtonText")
+//        searchController.searchBar.placeholder = "장소를 입력하세요."
+//        searchController.searchBar.setValue("취소", forKey: "cancelButtonText")
         return searchController
     }()
     
@@ -51,25 +79,10 @@ final class MapViewController: UIViewController {
         return controller
     }()
     
-    private lazy var datePicker = UIDatePicker().then {
-        $0.preferredDatePickerStyle = .compact
-        $0.datePickerMode = .date
-        $0.locale = Locale(identifier: "ko_KR")
-        $0.subviews[0].subviews[0].subviews[0].alpha = 0
-        $0.layer.backgroundColor = UIColor.white.cgColor
-        $0.layer.cornerRadius = LayoutOptions.cornerRadious
-        $0.setShadowLayer()
-        $0.addTarget(self, action: #selector(changeDate(_:)), for: .valueChanged)
-    }
-        
     private lazy var trackingButton = UIButton().then {
         let imageConfig = UIImage.SymbolConfiguration(pointSize: 30, weight: .medium)
-        let image = UIImage(systemName: "location", withConfiguration: imageConfig)
+        let image = UIImage(named: AFIcon.trackingButton, in: nil, with: imageConfig)
         $0.setImage(image, for: .normal)
-        $0.backgroundColor = .white
-        $0.tintColor = .black
-        $0.layer.cornerRadius = 56/2
-        $0.setShadowLayer()
         $0.addTarget(self, action: #selector(pressTrackingButton), for: .touchUpInside)
     }
     
@@ -89,7 +102,7 @@ final class MapViewController: UIViewController {
         setLocationManager()
         
         configureSearchController() // 검색 컨트롤러 설정
-        setupSearchBar() // 검색 바 설정
+        //setupSearchBar() // 검색 바 설정
         setTableView()
         if let locationCoordinate = locationManager.location?.coordinate {
             self.viewModel = MapViewModel(
@@ -100,7 +113,7 @@ final class MapViewController: UIViewController {
             guard let viewModel = viewModel else { return }
             
             viewModel.fetchFields()
-            viewModel.selectedDate = self.datePicker.date
+            //viewModel.selectedDate = self.datePicker.date
             _ = getlodDatas(label: MapLabel(labelType: .fieldPosition, poi: .fieldPosition(viewModel.fields.map{$0.id})), fields: viewModel.fields)
         }
     }
@@ -135,6 +148,12 @@ final class MapViewController: UIViewController {
     }
     
     // MARK: - Selectors
+    @objc
+    func pressSearchBar() {
+        let searchViewController = SearchViewController(searchViewModel: searchViewModel)
+        modalPresentationStyle = .fullScreen
+        present(searchViewController, animated: false)
+    }
     
     @objc
     func pressTrackingButton() {
@@ -198,7 +217,7 @@ final class MapViewController: UIViewController {
     }
     
     private func configureSearchController() {
-        navigationItem.searchController = searchController
+        //navigationItem.searchController = searchController
         definesPresentationContext = true
     }
     
@@ -208,14 +227,12 @@ final class MapViewController: UIViewController {
         searchController.searchBar.searchTextField.backgroundColor = .white
     }
     
-    
-    
     private func configureUI() {
         view.backgroundColor = .systemBackground
         
         view.addSubviews(
             mapContainer,
-            //datePicker,
+            searchFieldButton,
             trackingButton
         )
         
@@ -224,14 +241,15 @@ final class MapViewController: UIViewController {
             $0.bottom.equalTo(self.view.safeAreaLayoutGuide)
         }
         
-//        datePicker.snp.makeConstraints {
-//            $0.top.equalTo(searchController.searchBar.snp.bottom).offset(10)
-//            $0.centerX.equalToSuperview()
-//        }
+        searchFieldButton.snp.makeConstraints {
+            $0.top.equalToSuperview().offset(70)
+            $0.leading.equalToSuperview().offset(10)
+            $0.trailing.equalToSuperview().offset(-10)
+        }
         
         trackingButton.snp.makeConstraints {
-            $0.leading.equalTo(mapContainer).offset(20)
-            $0.bottom.equalTo(mapContainer).offset(-20)
+            $0.leading.equalTo(mapContainer).offset(10)
+            $0.bottom.equalTo(mapContainer).offset(-10)
             $0.height.width.equalTo(56)
         }
     }
@@ -245,10 +263,8 @@ extension MapViewController: UISearchResultsUpdating, UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         
         guard let viewModel = viewModel else { return}
-        
-        KakaoService.shared.searchField(searchText, 
+        KakaoService.shared.searchField(searchText,
                                         viewModel.searchResults,
                                         disposeBag)
     }
-    
 }

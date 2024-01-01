@@ -13,8 +13,6 @@ import RxSwift
 import SnapKit
 import Then
 
-//TODO: - 게임비 항목 추가, Recruit 모델 수정
-
 final class InviteViewController: UIViewController {
     
     // MARK: - Properties
@@ -27,14 +25,89 @@ final class InviteViewController: UIViewController {
     let contentView = UIView()
     private let placeView = GroundTitleView()
     private let peopleView = PeopleCountView()
-    private let calenderViewController = CalenderViewController()
-    
+    private let divider = UIView().then {
+        $0.backgroundColor = AFColor.grayScale50
+    }
     private lazy var scrollView = UIScrollView().then {
         $0.showsVerticalScrollIndicator = false
     }
     
+    private var selectedDate: Date?
+    
+    private let dateTitleLabel = UILabel().then {
+        $0.text = "날짜"
+        $0.font = AFFont.titleCard
+        $0.sizeToFit()
+    }
+    
+    private let dateFilterButton: UIButton = {
+        let button = UIButton().then {
+            $0.setTitle("선택하기", for: .normal)
+            $0.titleLabel?.font = AFFont.text?.withSize(16)
+            $0.setTitleColor(.label, for: .normal)
+            $0.configuration?.contentInsets = NSDirectionalEdgeInsets(top: 10,
+                                                                      leading: 10,
+                                                                      bottom: 10,
+                                                                      trailing: 10)
+            $0.backgroundColor = .lightGray.withAlphaComponent(0.2)
+            $0.layer.cornerRadius = 5
+            $0.showsMenuAsPrimaryAction = true
+        }
+        return button
+    }()
+    
+    private lazy var datePicker = UIDatePicker().then {
+        $0.preferredDatePickerStyle = .compact
+        $0.datePickerMode = .date
+        $0.locale = Locale(identifier: "ko_KR")
+        $0.layer.cornerRadius = 8
+        $0.clipsToBounds = true
+        let emptyView = UIView()
+        emptyView.backgroundColor = .white
+        $0.addSubviews(emptyView)
+        $0.addSubview(dateFilterButton)
+        emptyView.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
+        dateFilterButton.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
+        $0.addTarget(self, action: #selector(changeDate), for: .valueChanged)
+    }
+    
+    private let timeTitleLabel = UILabel().then {
+        $0.text = "시간"
+        $0.font = AFFont.titleCard
+    }
+    
+    private lazy var startTimeString: String = setSelectedTime(input: startTimePicker.date)
+    private lazy var endTimeString: String = setSelectedTime(input: endTimePicker.date)
+    
+    private lazy var startTimePicker = UIDatePicker().then {
+        $0.datePickerMode = .time
+        $0.locale = Locale(identifier: "ko_kr")
+        $0.minuteInterval = 30
+        $0.date = Date()
+        $0.addTarget(self, action: #selector(startTimePickerSelected), for: .valueChanged)
+    }
+    
+    private lazy var endTimePicker = UIDatePicker().then {
+        $0.datePickerMode = .time
+        $0.locale = Locale(identifier: "ko_kr")
+        $0.minuteInterval = 30
+        $0.date = Date()
+        $0.addTarget(self, action: #selector(endTimePickerSelected), for: .valueChanged)
+    }
+    
+    private let timePickerSeperator = UILabel().then {
+        $0.text = "-"
+        $0.font = AFFont.text?.withSize(16)
+        $0.sizeToFit()
+    }
+    
     private let typeLabel = UILabel().then {
-        $0.text = "유형"
+        $0.text = "매치 유형"
+        $0.font = AFFont.titleCard
     }
     
     private lazy var typeSegmentedControl = UISegmentedControl(
@@ -43,29 +116,71 @@ final class InviteViewController: UIViewController {
         $0.selectedSegmentIndex = 0 //기본 선택 풋살로
         viewModel.type.accept("풋살")
         $0.addTarget(self,
-                     action: #selector(segmentedControlValueChanged),
+                     action: #selector(typeSegmentedControlValueChanged),
+                     for: .valueChanged)
+    }
+    
+    private let genderLabel = UILabel().then {
+        $0.text = "성별"
+        $0.font = AFFont.titleCard
+    }
+    
+    private lazy var genderSegmentedControl = UISegmentedControl(
+        items: ["남성", "여성", "무관"]
+    ).then {
+        $0.selectedSegmentIndex = 0
+//        viewModel.type.accept("풋살")
+        $0.addTarget(self,
+                     action: #selector(genderSegmentedControlValueChanged),
                      for: .valueChanged)
     }
     
     private let contentLabel = UILabel().then {
-        $0.text = "내용"
+        $0.text = "상세내용"
+        $0.font = AFFont.titleCard
     }
+    
+    private var buttonConfig: UIButton.Configuration {
+        var config = UIButton.Configuration.plain()
+        config.contentInsets = NSDirectionalEdgeInsets(top: 10,
+                                                       leading: 10,
+                                                       bottom: 10,
+                                                       trailing: 10)
+        config.imagePadding = 5
+        config.imagePlacement = .top
+        config.titleAlignment = .center
+        return config
+    }
+    
+    private lazy var imageButton: UIButton = {
+        let button = UIButton(configuration: buttonConfig).then {
+            $0.setImage(UIImage(named: AFIcon.imagePlaceholder), for: .normal)
+            $0.titleLabel?.font = AFFont.filterRegular
+            $0.setTitle("0/3", for: .normal)
+            $0.setTitleColor(AFColor.grayScale200, for: .normal)
+            $0.layer.borderWidth = 1
+            $0.layer.borderColor = AFColor.grayScale100.cgColor
+            $0.layer.cornerRadius = 8
+        }
+        return button
+    }()
     
     private let gamePriceLabel = UILabel().then {
         $0.text = "게임비"
+        $0.font = AFFont.titleCard
     }
     
     private lazy var gamePriceButton: UIButton = {
         let button = UIButton().then {
             $0.setTitle("선택하기", for: .normal)
-            $0.titleLabel?.font = UIFont.systemFont(ofSize: 14)
+            $0.titleLabel?.font = AFFont.text?.withSize(16)
             $0.setTitleColor(.label, for: .normal)
             $0.configuration?.contentInsets = NSDirectionalEdgeInsets(top: 10,
                                                                       leading: 10,
                                                                       bottom: 10,
                                                                       trailing: 10)
             $0.backgroundColor = .lightGray.withAlphaComponent(0.2)
-            $0.layer.cornerRadius = LayoutOptions.cornerRadious
+            $0.layer.cornerRadius = 8
             $0.showsMenuAsPrimaryAction = true
         }
         
@@ -83,37 +198,20 @@ final class InviteViewController: UIViewController {
         return button
     }()
     
-    lazy var titleTextField = UITextField().then {
-        $0.delegate = self
-        $0.layer.cornerRadius = 5
-        $0.layer.borderWidth = 0.8
-        $0.layer.borderColor = UIColor.gray.cgColor
-        $0.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 5, height: $0.frame.height))
-        $0.leftViewMode = .always
-        $0.addSubview(titlePlaceHolderLabel)
-        titlePlaceHolderLabel.frame = CGRect(x: 5, y: 0, width: 300, height: 30)
-    }
-    
     private lazy var contentTextView = UITextView().then {
         $0.delegate = self
-        $0.layer.cornerRadius = 5
+        $0.font = AFFont.text?.withSize(16)
+        $0.layer.cornerRadius = 8
         $0.layer.borderWidth = 0.8
-        $0.layer.borderColor = UIColor.gray.cgColor
+        $0.layer.borderColor = AFColor.grayScale100.cgColor
         $0.addSubview(contentPlaceHolderLabel)
         contentPlaceHolderLabel.frame = CGRect(x: 5, y: 0, width: 300, height: 30)
     }
     
-    let titlePlaceHolderLabel = UILabel().then {
-        $0.text = "제목을 입력해주세요"
-        $0.font = .systemFont(ofSize: 12)
-        $0.textColor = .lightGray
-        $0.textAlignment = .left
-    }
-    
     let contentPlaceHolderLabel = UILabel().then {
-        $0.text = "내용을 입력해주세요"
-        $0.font = .systemFont(ofSize: 12)
-        $0.textColor = .lightGray
+        $0.text = "추가 내용을 작성해주세요."
+        $0.font = AFFont.text?.withSize(16)
+        $0.textColor = AFColor.grayScale100
         $0.textAlignment = .left
     }
     
@@ -133,6 +231,9 @@ final class InviteViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        navigationController?.navigationBar.titleTextAttributes = [
+            NSAttributedString.Key.foregroundColor: AFColor.grayScale200
+        ]
         configureUI()
         keyboardController()
         setAddButton()
@@ -142,8 +243,13 @@ final class InviteViewController: UIViewController {
     // MARK: - Selectors
     
     @objc
-    func segmentedControlValueChanged(_ sender: UISegmentedControl) {
+    func typeSegmentedControlValueChanged(_ sender: UISegmentedControl) {
         viewModel.type.accept(sender.titleForSegment(at: sender.selectedSegmentIndex))
+    }
+    
+    @objc
+    func genderSegmentedControlValueChanged(_ sender: UISegmentedControl) {
+        viewModel.gender.accept(sender.titleForSegment(at: sender.selectedSegmentIndex))
     }
     
     @objc
@@ -151,7 +257,49 @@ final class InviteViewController: UIViewController {
         viewModel.coordinator.presentSearchViewController()
     }
     
+    @objc
+    func changeDate(_ sender: UIDatePicker) {
+        dateFilterButton.isSelected.toggle()
+        selectedDate = sender.date
+        
+        let dateformatter = DateFormatter()
+        dateformatter.locale = Locale(identifier: "ko_KR")
+        dateformatter.dateFormat = "YYYY년 M월 d일"
+        
+        let titleDateformatter = DateFormatter()
+        titleDateformatter.locale = Locale(identifier: "ko_KR")
+        titleDateformatter.dateFormat = "M월 d일"
+        let buttonTitleDate = titleDateformatter.string(from: sender.date)
+        dateFilterButton.setTitle(buttonTitleDate, for: .normal)
+        viewModel.matchDateString.accept(buttonTitleDate)
+    }
+    
+    @objc
+    private func startTimePickerSelected() {
+        startTimeString = setSelectedTime(input: startTimePicker.date)
+        viewModel.startTime.accept(startTimeString)
+    }
+    
+    @objc
+    private func endTimePickerSelected() {
+        endTimeString = setSelectedTime(input: endTimePicker.date)
+        viewModel.endTime.accept(endTimeString)
+    }
+    
+    @objc
+    private func popInviteViewController() {
+        viewModel.coordinator.popInviteViewController()
+    }
+    
     // MARK: - Helpers
+    
+    private func setSelectedTime(input: Date) -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "HH:mm" // 24시간 형식의 시간과 분만 표시
+        let result = dateFormatter.string(from: input)
+        print(result)
+        return result
+    }
     
     private func setSearchFieldButton() {
         placeView.searchFieldButton.addTarget(self,
@@ -171,9 +319,12 @@ final class InviteViewController: UIViewController {
         let fieldObservables = [
             viewModel.fieldName.asObservable(),
             viewModel.type.asObservable(),
+            viewModel.matchDateString.asObservable(),
+            viewModel.startTime.asObservable(),
+            viewModel.endTime.asObservable(),
             viewModel.gamePrice.asObservable(),
-            viewModel.contentTitle.asObservable(),
-            viewModel.content.asObservable(),
+            viewModel.gender.asObservable(),
+            viewModel.content.asObservable()
         ]
         
         return Observable
@@ -199,28 +350,27 @@ final class InviteViewController: UIViewController {
         
         areFieldsEmptyObservable()
             .bind(onNext: { [weak self] bool in
-            guard let self else { return }
-            if bool == true {
-                addButton.setTitle("작성 완료", for: .normal)
-                addButton.setTitleColor(.white, for: .normal)
-                addButton.isEnabled = true
-            } else {
-                addButton.setTitle("모든 항목을 작성해주세요", for: .normal)
-                addButton.setTitleColor(.gray, for: .normal)
-                addButton.isEnabled = false
-            }
-        }).disposed(by: disposeBag)
+                guard let self else { return }
+                if bool == true {
+                    addButton.setTitle("작성 완료", for: .normal)
+                    addButton.setTitleColor(.white, for: .normal)
+                    addButton.isEnabled = true
+                } else {
+                    addButton.setTitle("모든 항목을 작성해주세요", for: .normal)
+                    addButton.setTitleColor(.gray, for: .normal)
+                    addButton.isEnabled = false
+                }
+            }).disposed(by: disposeBag)
         
         addButton.buttonActionHandler = { [weak self] in
             guard let self else { return }
             //현재 값 뷰모델에 전달
             viewModel.peopleCount.accept(peopleView.count)
-            viewModel.contentTitle.accept(titleTextField.text)
             viewModel.content.accept(contentTextView.text)
-            viewModel.matchDateString.accept(calenderViewController.selectedDateString)
-            viewModel.matchDate.accept(Timestamp(date: calenderViewController.selectedDate ?? Date()))
-            viewModel.startTime.accept(calenderViewController.startTimeString)
-            viewModel.endTime.accept(calenderViewController.endTimeString)
+            viewModel.matchDateString.accept(dateFilterButton.currentTitle)
+            viewModel.matchDate.accept(Timestamp(date: datePicker.date))
+            viewModel.startTime.accept(startTimeString)
+            viewModel.endTime.accept(endTimeString)
             //올리기 함수
             viewModel.createRecruitFieldData()
             viewModel.coordinator.popInviteViewController()
@@ -257,19 +407,26 @@ final class InviteViewController: UIViewController {
         view.backgroundColor = .white
         navigationItem.title = "용병 구하기"
         
-        addChild(calenderViewController)
         view.addSubview(scrollView)
         scrollView.addSubview(contentView)
         
         contentView.addSubviews(placeView,
+                                dateTitleLabel,
+                                datePicker,
                                 peopleView,
-                                calenderViewController.view,
+                                divider,
+                                timeTitleLabel,
+                                startTimePicker,
+                                timePickerSeperator,
+                                endTimePicker,
                                 typeLabel,
                                 typeSegmentedControl,
+                                genderLabel,
+                                genderSegmentedControl,
                                 gamePriceLabel,
                                 gamePriceButton,
                                 contentLabel,
-                                titleTextField,
+                                imageButton,
                                 contentTextView,
                                 addButton)
         
@@ -287,46 +444,97 @@ final class InviteViewController: UIViewController {
             make.top.equalTo(contentView.snp.top)
             make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
             make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
-//            make.width.equalToSuperview()
-            make.height.equalTo(50)
+        }
+        
+        dateTitleLabel.snp.makeConstraints { make in
+            make.top.equalTo(placeView.snp.bottom).offset(10)
+            make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
+            make.centerY.equalTo(datePicker)
+            make.height.equalTo(datePicker)
+            make.width.lessThanOrEqualTo(UIScreen.main.bounds.width * 3/4)
+        }
+        
+        datePicker.snp.makeConstraints { make in
+            make.leading.equalTo(dateTitleLabel.snp.trailing)
+            make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
+            make.height.equalTo(34)
+            make.width.equalTo(UIScreen.main.bounds.width * 1/4)
         }
         
         peopleView.snp.makeConstraints { make in
-            make.top.equalTo(placeView.snp.bottom)
+            make.top.equalTo(datePicker.snp.bottom).offset(20)
             make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
             make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
-//            make.width.equalTo(UIScreen.main.bounds.width * 1/3)
-            make.height.equalTo(50)
         }
         
-        calenderViewController.view.snp.makeConstraints { make in
-            make.top.equalTo(peopleView.snp.bottom).offset(40)
+        divider.snp.makeConstraints { make in
+            make.height.equalTo(2)
+            make.leading.trailing.equalToSuperview()
+            make.top.equalTo(peopleView.snp.bottom).offset(20)
+            make.bottom.equalTo(startTimePicker.snp.top).offset(-20)
+        }
+        
+        timeTitleLabel.snp.makeConstraints { make in
             make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
+            make.centerY.equalTo(startTimePicker)
+            make.width.equalTo(UIScreen.main.bounds.width * 1/3)
+        }
+        
+        startTimePicker.snp.makeConstraints { make in
+            make.leading.equalTo(timeTitleLabel.snp.trailing)
+            make.height.equalTo(datePicker.snp.height)
+            make.width.equalTo(datePicker.snp.width)
+        }
+        
+        timePickerSeperator.snp.makeConstraints { make in
+            make.leading.equalTo(startTimePicker.snp.trailing).offset(10)
+            make.trailing.equalTo(endTimePicker.snp.leading).offset(-10)
+            make.bottom.equalTo(timeTitleLabel)
+        }
+        
+        endTimePicker.snp.makeConstraints { make in
+            make.top.bottom.equalTo(startTimePicker)
             make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
-            make.height.equalTo(((UIScreen.main.bounds.width) / 7) * 6 + 100)
+            make.height.equalTo(datePicker.snp.height)
+            make.width.equalTo(datePicker.snp.width)
         }
         
         typeLabel.snp.makeConstraints { make in
-            make.top.equalTo(calenderViewController.view.snp.bottom).offset(SuperviewOffsets.topPadding)
+            make.top.equalTo(timeTitleLabel.snp.bottom).offset(SuperviewOffsets.topPadding)
             make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
         }
         
         typeSegmentedControl.snp.makeConstraints { make in
             make.centerY.equalTo(typeLabel)
+            make.top.equalTo(startTimePicker.snp.bottom).offset(10)
             make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
+            make.height.equalTo(datePicker.snp.height)
+            make.width.equalTo(datePicker.snp.width)
+        }
+        
+        genderLabel.snp.makeConstraints { make in
+            make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
+            make.top.equalTo(typeLabel.snp.bottom)
+        }
+        
+        genderSegmentedControl.snp.makeConstraints { make in
+            make.centerY.equalTo(genderLabel)
+            make.top.equalTo(typeSegmentedControl.snp.bottom).offset(10)
+            make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
+            make.height.equalTo(datePicker.snp.height)
             make.width.equalTo(120)
         }
         
         gamePriceLabel.snp.makeConstraints { make in
-            make.top.equalTo(typeLabel.snp.bottom).offset(SuperviewOffsets.topPadding)
+            make.top.equalTo(genderLabel.snp.bottom)
             make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
         }
         
         gamePriceButton.snp.makeConstraints { make in
             make.centerY.equalTo(gamePriceLabel)
             make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
-            make.height.equalTo(30)
-            make.width.equalTo(120)
+            make.height.equalTo(datePicker.snp.height)
+            make.width.equalTo(datePicker.snp.width)
         }
         
         contentLabel.snp.makeConstraints { make in
@@ -334,22 +542,22 @@ final class InviteViewController: UIViewController {
             make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
         }
         
-        titleTextField.snp.makeConstraints { make in
-            make.top.equalTo(contentLabel.snp.bottom).offset(5)
+        imageButton.snp.makeConstraints { make in
+            make.top.equalTo(contentLabel.snp.bottom).offset(10)
             make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
-            make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
-            make.height.equalTo(30)
+            make.width.equalTo(80)
+            make.height.equalTo(imageButton.snp.width)
         }
         
         contentTextView.snp.makeConstraints { make in
-            make.top.equalTo(titleTextField.snp.bottom).offset(5)
+            make.top.equalTo(imageButton.snp.bottom).offset(10)
             make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
             make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
             make.height.equalTo(150)
         }
         
         addButton.snp.makeConstraints { make in
-            make.top.equalTo(contentTextView.snp.bottom).offset(SuperviewOffsets.topPadding)
+            make.top.equalTo(contentTextView.snp.bottom).offset(10)
             make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
             make.trailing.bottom.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
             make.height.equalTo(40)
