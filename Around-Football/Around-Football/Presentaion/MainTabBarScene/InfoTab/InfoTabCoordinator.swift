@@ -39,6 +39,10 @@ final class InfoTabCoordinator: BaseCoordinator {
         navigationController?.pushViewController(vc, animated: true)
     }
     
+    func popViewController() {
+        navigationController?.popViewController(animated: true)
+    }
+    
     func pushSettingView() {
         let viewModel = SettingViewModel(coordinator: self)
         let vc = SettingViewController(viewModel: viewModel)

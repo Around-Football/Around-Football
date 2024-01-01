@@ -38,18 +38,20 @@ final class FirebaseAPI {
             UserService.shared.currentUser_Rx.onNext(user)
             completion?(nil)
         }
-//        REF_USER.document(currentUserID)
-//            .updateData(
-//                ["userName" : user.userName,
-//                 "age" : user.age,
-//                 "gender" : user.gender,
-//                 "area" : user.area,
-//                 "mainUsedFeet" : user.mainUsedFeet,
-//                 "position" : user.position,
-//                 "bookmarkedRecruit" : user.bookmarkedRecruit]
-//            )
         
         UserService.shared.currentUser_Rx.onNext(user) //유저 업데이트하고 업데이트한 유저정보 보내줌
+    }
+    
+    func deleteUser(_ userID: String) {
+        let ref = REF_USER.document(userID)
+        ref.delete { error in
+            if error != nil {
+                print("유저 탈퇴 에러 발생")
+            }
+            
+            print("\(userID)유저 삭제됨.")
+            UserService.shared.currentUser_Rx.onNext(nil)
+        }
     }
     
     //uid로 유저 불러오기

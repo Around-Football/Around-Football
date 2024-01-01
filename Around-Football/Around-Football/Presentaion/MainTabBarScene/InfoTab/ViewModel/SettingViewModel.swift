@@ -23,6 +23,15 @@ final class SettingViewModel {
         self.coordinator = coordinator
     }
     
+    // MARK: - 로그아웃, 회원탈퇴
     
+    func logout() {
+        UserService.shared.logout()
+        coordinator?.popViewController()
+    }
     
+    func withDraw() {
+        UserService.shared.deleteUser()
+        coordinator?.popViewController()
+    }
 }
