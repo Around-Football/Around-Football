@@ -64,6 +64,7 @@ final class SettingViewController: UIViewController {
                     print("알림 설정 뷰로")
                 case 1:
                     print("1:1 문의 뷰로")
+                    sendEmail()
                 case 2:
                     print("약관 및 정책 뷰로")
                 case 3:
