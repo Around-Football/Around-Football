@@ -24,6 +24,7 @@ final class BookmarkPostViewController: UIViewController {
         $0.text = "아직 관심 글이 없습니다.\n관심 글을 등록해주세요."
         $0.numberOfLines = 2
         $0.font = AFFont.titleMedium
+        $0.isHidden = true
     }
 
     private var bookmarkTableView = UITableView().then {
@@ -58,7 +59,7 @@ final class BookmarkPostViewController: UIViewController {
             .observe(on: MainScheduler.instance)
             .do(onNext: { [weak self] recruits in
                 guard let self else { return }
-                emptyLabel.isHidden = true
+                emptyLabel.isHidden = recruits.isEmpty ? false : true
             })
             .bind(to: bookmarkTableView.rx.items(cellIdentifier: HomeTableViewCell.id,
                                              cellType: HomeTableViewCell.self)) { index, item, cell in
