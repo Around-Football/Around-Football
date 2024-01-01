@@ -26,7 +26,7 @@ final class LoginViewController: UIViewController {
     private let backgroundView = UIImageView(image: UIImage(named: AFIcon.loginBackgroundImage))
     
     private let logoImageView = UIImageView().then {
-        $0.image = UIImage(named: "App_logo")
+        $0.image = UIImage(named: AFIcon.textLogo)
         $0.contentMode = .scaleAspectFit
     }
     

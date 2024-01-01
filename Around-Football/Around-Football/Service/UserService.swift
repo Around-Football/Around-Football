@@ -318,6 +318,8 @@ final class UserService: NSObject {
                 print("Error deleting user: \(error.localizedDescription)")
             } else {
                 print("User deleted successfully.")
+                //파베 유저 삭제
+                FirebaseAPI.shared.deleteUser(user.uid)
             }
         }
     }

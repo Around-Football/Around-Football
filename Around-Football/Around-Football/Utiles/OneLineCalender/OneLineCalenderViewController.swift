@@ -19,6 +19,7 @@ final class HCalenderObservableViewModel: ObservableObject {
 }
 
 struct HCalendarView: View {
+    
     @ObservedObject var observableViewModel = HCalenderObservableViewModel()
     let viewModel = HCalenderViewModel()
     private let calendar = Calendar.current
@@ -30,7 +31,7 @@ struct HCalendarView: View {
         ) ?? Date()
         
         ScrollView(.horizontal, showsIndicators: false) {
-            HStack(spacing: 10) {
+            HStack(spacing: 8) {
                 let components = (0...14) .map {
                     calendar.date(byAdding: .day, value: $0, to: startDate) ?? Date()
                 }
