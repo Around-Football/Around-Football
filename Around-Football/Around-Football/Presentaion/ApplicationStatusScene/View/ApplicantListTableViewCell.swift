@@ -13,25 +13,20 @@ import Then
 
 final class ApplicantListTableViewCell: UITableViewCell {
     
+    typealias ApplicantStatus = ApplicantListViewModel.ApplicantStatus
+    
     // MARK: - Properties
     
     static let cellID = "ApplicantListTableViewCellID"
-    //    var viewModel: ApplicantListViewModel
-    //    weak var vc: ApplicantListViewController?
-    //    var uid: String
-    
+
     private var disposeBag = DisposeBag()
     
     private lazy var containerStackView = UIStackView().then {
         $0.addArrangedSubviews(userProfileInfoStackView,
-//                               spacerView,
                                buttonStackView)
         $0.axis = .horizontal
         $0.distribution = .equalCentering
-//        $0.setCustomSpacing(CGFloat.greatestFiniteMagnitude, after: userProfileInfoStackView)
     }
-    
-    private let spacerView = UIView()
     
     private lazy var userProfileInfoStackView = UIStackView().then {
         $0.addArrangedSubviews(profileImage,
@@ -130,7 +125,7 @@ final class ApplicantListTableViewCell: UITableViewCell {
     let sendMessageButton = AFSmallButton(buttonTitle: "채팅하기",
                                           color: AFColor.secondary,
                                           font: AFFont.filterMedium)
-    let acceptButton = AFSmallButton(buttonTitle: "수락", color: .white, font: AFFont.filterMedium).then {
+    let acceptButton = AFSmallButton(buttonTitle: "수락하기", color: .white, font: AFFont.filterMedium).then {
         $0.layer.borderWidth = 1
         $0.layer.borderColor = AFColor.secondary.cgColor
     }
@@ -139,8 +134,6 @@ final class ApplicantListTableViewCell: UITableViewCell {
     // MARK: - Lifecycles
     
     init(style: UITableViewCell.CellStyle, reuseIdentifier: String?, viewModel: ApplicantListViewModel, uid: String) {
-        //        self.viewModel = viewModel
-        //        self.uid = uid
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         configureUI()
     }
@@ -148,29 +141,14 @@ final class ApplicantListTableViewCell: UITableViewCell {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         configureUI()
     }
-    
-    // MARK: - Selectors
-    
-    @objc
-    private func acceptButtonTapped() {
-        //        FirebaseAPI.shared.acceptApplicants(recruitID: viewModel.recruitItem.fieldID, userID: uid)
-        //        vc?.acceptButtonTappedSubject.onNext((viewModel.recruitItem.fieldID, uid))
-    }
-    
-    @objc
-    private func rejectButtonTapped() {
-        //        FirebaseAPI.shared.deleteApplicant(recruitID: viewModel.recruitItem.fieldID, userID: uid)
-        //        vc?.rejectButtonTappedSubject.onNext((viewModel.recruitItem.fieldID, uid))
-    }
-    
+
     // MARK: - Helpers
     
-    func bindUI(uid: String?) {
-    }
     func configure(user: User) {
         userNameLabel.text = user.userName
         userGenderLabel.text = user.gender
@@ -180,31 +158,33 @@ final class ApplicantListTableViewCell: UITableViewCell {
         userPositionLabel.text = user.position.map { $0 }.joined(separator: " ")
     }
     
+    func setButtonStyle(status: ApplicantStatus) {
+        acceptButton.isEnabled = status == .close ? false : true
+        acceptButton.setTitle(status.statusDescription, for: .normal)
+        acceptButton.setTitleColor(status == .accepted ? .white : AFColor.secondary, for: .normal)
+        acceptButton.setBackgroundColor(status == .accepted ? AFColor.grayScale200 : .white, for: .normal)
+        acceptButton.setBackgroundColor(status == .close ? .white : AFColor.grayScale200, for: .disabled)
+        acceptButton.setTitleColor(status == .close ? AFColor.grayScale200 : .white, for: .disabled)
+        acceptButton.layer.borderWidth = status == .accepted ? 0 : 1
+        acceptButton.layer.borderColor = status == .close ? AFColor.grayScale100.cgColor : AFColor.secondary.cgColor
+    }
+    
     private func configureUI() {
         backgroundColor = .systemBackground
         contentView.addSubview(containerStackView)
         
         containerStackView.snp.makeConstraints { make in
-            make.centerY.equalToSuperview()
+            make.top.equalToSuperview().offset(20)
             make.leading.equalToSuperview().offset(20)
             make.trailing.equalToSuperview().offset(-20)
+            make.bottom.equalToSuperview().offset(-20)
         }
-        
-//        userProfileInfoStackView.snp.makeConstraints { make in
-//            make.top.leading.bottom.equalToSuperview()
-//        }
-        
+                
         profileImage.snp.makeConstraints { make in
             make.height.equalTo(48)
             make.width.equalTo(48)
-//            make.centerY.equalToSuperview()
         }
-        
-//        buttonStackView.snp.makeConstraints { make in
-//            make.trailing.equalToSuperview()
-//            make.centerY.equalToSuperview()
-//        }
-        
+                
         sendMessageButton.snp.makeConstraints { make in
             make.height.equalTo(32)
             make.width.equalTo(72)

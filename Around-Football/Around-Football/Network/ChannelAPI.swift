@@ -32,7 +32,7 @@ final class ChannelAPI {
     func createChannel(channelInfo: ChannelInfo, completion: @escaping () -> Void) {
         guard let ownerUser = try? UserService.shared.currentUser_Rx.value() else { return }
         let ownerChannel = channelInfo
-        let withUserChannel = ChannelInfo(id: channelInfo.id, withUser: ownerUser, recruitID: channelInfo.recruitID)
+        let withUserChannel = ChannelInfo(id: channelInfo.id, withUser: ownerUser, recruitID: channelInfo.recruitID, recruitUserID: channelInfo.recruitUserID)
         let channel = Channel(id: channelInfo.id, isAvailable: true)
         DB_REF.collection("channels").document(channel.id)
             .setData(channel.representation) {  [weak self] error in
@@ -100,20 +100,34 @@ final class ChannelAPI {
             switch message.kind {
             case .photo(_):
                 return "사진"
-            case .text(let content):
-                return content
+            case .attributedText(let content):
+                return content.string
             default: return ""
             }
         }
         
         let updateCurrentUserData = [
             "recentDate": message.sentDate,
-            "previewContent": contentMessage
+            "previewContent": contentMessage,
+            "withUserName": withUser.userName,
+            "withUserGender": withUser.gender,
+            "withUserAge": withUser.age,
+            "withUserArea": withUser.area,
+            "withUserMainUsedFeet": withUser.mainUsedFeet,
+            "withUserPosition": withUser.position
+            //            "downloadURL:" withUser.profileURL,"
         ] as [String: Any]
         
         let updateWithUserData = [
             "recentDate": message.sentDate,
             "previewContent": contentMessage,
+            "withUserName": owner.userName,
+            "withUserGender": owner.gender,
+            "withUserAge": owner.age,
+            "withUserArea": owner.area,
+            "withUserMainUsedFeet": owner.mainUsedFeet,
+            "withUserPosition": owner.position,
+//            "downloadURL:" owner.profileURL,"
             "alarmNumber": FieldValue.increment(Int64(1))
         ] as [String: Any]
         

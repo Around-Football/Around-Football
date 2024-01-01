@@ -44,13 +44,43 @@ final class DetailUserInfoView: UIView {
         $0.textColor = AFColor.grayScale300
         $0.font = AFFont.filterRegular
     }
+    
+    private let userFoot = UILabel().then {
+        $0.text = ""
+        $0.textColor = AFColor.grayScale300
+        $0.font = AFFont.filterRegular
+    }
+    
+    private let userPosition = UILabel().then {
+        $0.text = ""
+        $0.textColor = AFColor.grayScale300
+        $0.font = AFFont.filterRegular
+    }
         
     private lazy var userDetailInfoStackView = UIStackView().then { view in
         let subViews = [userGenderLabel,
                         createHDividerView(),
                         userAgeLabel,
+                        userDetailInfoSettingViewStackView]
+        view.axis = .horizontal
+        view.spacing = 5
+        view.distribution = .fill
+        
+        subViews.forEach { label in
+            view.addArrangedSubview(label)
+        }
+        
+//        userDetailInfoSettingViewStackView.snp.makeConstraints { make in
+//            make.centerY.equalTo(userStackView.snp.centerY)
+//            make.leading.equalTo(userStackView.snp.trailing).offset(5)
+//        }
+    }
+    
+    private lazy var userDetailInfoSettingViewStackView = UIStackView().then { view in
+        let subViews = [createHDividerView(),
+                        userFoot,
                         createHDividerView(),
-                        userArea]
+                        userPosition]
         view.axis = .horizontal
         view.spacing = 5
         view.distribution = .fill
@@ -64,7 +94,7 @@ final class DetailUserInfoView: UIView {
         $0.addArrangedSubviews(userNameLabel,
                                userDetailInfoStackView)
         $0.axis = .vertical
-        $0.spacing = 4
+        $0.spacing = 8
         $0.distribution = .fill
         $0.alignment = .leading
     }
@@ -82,11 +112,24 @@ final class DetailUserInfoView: UIView {
     
     // MARK: - Helpers
     
-    func setValues(user: User) {
-        userNameLabel.text = user.userName
-        userGenderLabel.text = user.gender
-        userAgeLabel.text = String(user.age)
-        userArea.text = user.area
+    func setValues(user: User?, isSettingView: Bool = false) {
+        if user == nil {
+            userNameLabel.text = "로그인 해주세요"
+            userDetailInfoStackView.isHidden = true
+        } else {
+            userDetailInfoStackView.isHidden = false
+            userDetailInfoSettingViewStackView.isHidden = true
+            userNameLabel.text = user?.userName
+            userGenderLabel.text = user?.gender
+            userAgeLabel.text = String(user?.age ?? "")
+            userArea.text = user?.area
+        }
+
+        if isSettingView {
+            userFoot.text = user?.mainUsedFeet
+            userPosition.text = user?.position.joined(separator: " • ")
+            userDetailInfoSettingViewStackView.isHidden = false
+        }
     }
     
     private func configureUI() {
@@ -102,7 +145,7 @@ final class DetailUserInfoView: UIView {
         
         userStackView.snp.makeConstraints { make in
             make.centerY.equalToSuperview()
-            make.leading.equalTo(profileImageView.snp.trailing).offset(10)
+            make.leading.equalTo(profileImageView.snp.trailing).offset(14)
         }
     }
     

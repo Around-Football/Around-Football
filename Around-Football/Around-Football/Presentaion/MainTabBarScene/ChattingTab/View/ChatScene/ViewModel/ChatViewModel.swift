@@ -240,7 +240,7 @@ final class ChatViewModel {
     }
     
     private func uploadImage(image: UIImage, channel: Channel) {
-        StorageAPI.uploadImage(image: image, channel: channel) { [weak self] url in
+        StorageAPI.uploadImage(image: image, id: channel.id) { [weak self] url in
             guard let self = self,
                   let currentUser = currentUser,
                   let withUser = withUser,

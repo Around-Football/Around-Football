@@ -7,26 +7,23 @@
 
 import UIKit
 
-final class InfoCell: UICollectionViewCell {
+final class InfoCell: UITableViewCell {
     
     // MARK: - Properties
     
     static let cellID = "infoCell"
     
-    private let icon = UIImageView().then {
-        $0.tintColor = .label
+    private var titleLable = UILabel().then {
+        $0.text = "타이틀"
+        $0.font = AFFont.text
     }
     
-    private var title = UILabel().then {
-        $0.text = "관심 글"
-        $0.font = .systemFont(ofSize: 15)
-        $0.textAlignment = .center
-    }
+    private let rightIcon = UIImageView(image: UIImage(named: AFIcon.rightButton))
     
     // MARK: - Lifecycles
     
-    override init(frame: CGRect) {
-        super.init(frame: frame)
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
         configureUI()
     }
     
@@ -35,28 +32,26 @@ final class InfoCell: UICollectionViewCell {
     }
     
     // MARK: - Helpers
+    
+    func setValues(title: String, usingRightIcon: Bool = true) {
+        titleLable.text = title
+        rightIcon.isHidden = !usingRightIcon
+    }
 
     private func configureUI() {
-        layer.borderWidth = 1.0
-        layer.borderColor = UIColor.gray.cgColor
-        layer.cornerRadius = 10
+        addSubviews(titleLable, rightIcon)
         
-        addSubviews(icon, title)
-        
-        icon.snp.makeConstraints { make in
-            make.centerX.equalToSuperview()
-            make.centerY.equalToSuperview().offset(-15)
+        titleLable.snp.makeConstraints { make in
+            make.top.equalToSuperview().offset(20)
+            make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
+            make.bottom.equalToSuperview().offset(-20)
         }
         
-        title.snp.makeConstraints { make in
-            make.centerX.equalToSuperview()
-            make.centerY.equalToSuperview().offset(15)
+        rightIcon.snp.makeConstraints { make in
+            make.top.equalToSuperview().offset(20)
+            make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
+            make.bottom.equalToSuperview().offset(-20)
+            make.centerY.equalToSuperview()
         }
     }
-    
-    func setValues(icon: String, title: String) {
-        self.icon.image = UIImage(systemName: icon)
-        self.title.text = title
-    }
-    
 }
