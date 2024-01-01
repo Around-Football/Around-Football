@@ -70,7 +70,7 @@ final class InfoViewController: UIViewController {
     private func configureSettingButton() {
         infoHeaderView.settingButtonActionHandler = { [weak self] in
             guard let self else { return }
-            guard let user = try? UserService.shared.currentUser_Rx.value() else {
+            guard let _ = try? UserService.shared.currentUser_Rx.value() else {
                 viewModel.coordinator?.presentLoginViewController()
                 return
             }
@@ -90,8 +90,8 @@ final class InfoViewController: UIViewController {
         infoTableView.rx.itemSelected
             .subscribe(onNext: { [weak self] indexPath in
                 guard let self = self else { return }
-                guard let user = try? UserService.shared.currentUser_Rx.value() else {
-                    self.viewModel.coordinator?.presentLoginViewController()
+                guard let _ = try? UserService.shared.currentUser_Rx.value() else {
+                    viewModel.coordinator?.presentLoginViewController()
                     return
                 }
 

@@ -26,6 +26,7 @@ final class ApplicationPostViewController: UIViewController {
         $0.text = "아직 신청 글이 없습니다.\n참여 신청을 해주세요."
         $0.numberOfLines = 2
         $0.font = AFFont.titleMedium
+        $0.isHidden = true
     }
 
     private var applicationPostTableView = UITableView().then {
@@ -63,7 +64,7 @@ final class ApplicationPostViewController: UIViewController {
             .observe(on: MainScheduler.instance)
             .do(onNext: { [weak self] recruits in
                 guard let self else { return }
-                emptyLabel.isHidden = true
+                emptyLabel.isHidden = recruits.isEmpty ? false : true
             })
             .bind(to: applicationPostTableView.rx.items(cellIdentifier: HomeTableViewCell.id,
                                              cellType: HomeTableViewCell.self)) { index, item, cell in

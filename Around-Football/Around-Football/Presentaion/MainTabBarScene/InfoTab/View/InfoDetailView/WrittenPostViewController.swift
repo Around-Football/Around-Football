@@ -23,6 +23,7 @@ final class WrittenPostViewController: UIViewController {
         $0.text = "아직 작성 글이 없습니다.\n글을 작성해주세요."
         $0.numberOfLines = 2
         $0.font = AFFont.titleMedium
+        $0.isHidden = true
     }
 
     private var writtenPostTableView = UITableView().then {
@@ -59,11 +60,7 @@ final class WrittenPostViewController: UIViewController {
             .observe(on: MainScheduler.instance)
             .do(onNext: { [weak self] recruits in
                 guard let self else { return }
-                if recruits.isEmpty {
-                    emptyLabel.isHidden = false
-                } else {
-                    emptyLabel.isHidden = true
-                }
+                emptyLabel.isHidden = recruits.isEmpty ? false : true
             })
             .bind(to: writtenPostTableView.rx.items(cellIdentifier: HomeTableViewCell.id,
                                              cellType: HomeTableViewCell.self)) { index, item, cell in
