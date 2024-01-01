@@ -97,13 +97,13 @@ final class InfoViewController: UIViewController {
 
                 switch indexPath.row {
                 case 0:
-                    self.viewModel.coordinator?.pushEditView()
+                    viewModel.coordinator?.pushEditView()
                 case 1:
-                    self.viewModel.coordinator?.pushBookmarkPostViewController()
+                    viewModel.coordinator?.pushBookmarkPostViewController()
                 case 2:
-                    self.viewModel.coordinator?.pushWrittenPostViewController()
+                    viewModel.coordinator?.pushApplicationPostViewController()
                 case 3:
-                    self.viewModel.coordinator?.pushApplicationPostViewController()
+                    viewModel.coordinator?.pushWrittenPostViewController()
                 default:
                     print("DEBUG: SettingCell 없음")
                 }
