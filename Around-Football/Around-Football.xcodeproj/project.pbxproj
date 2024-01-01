@@ -85,8 +85,8 @@
 		66BD8DB82B3174850094C78B /* ChatCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66BD8DB72B3174850094C78B /* ChatCoordinator.swift */; };
 		66C374362B0B010800DB2C2A /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = 66C374352B0B010800DB2C2A /* FirebaseMessaging */; };
 		66C5AFA92B3861D200A95460 /* DetailViewController+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66C5AFA82B3861D200A95460 /* DetailViewController+.swift */; };
-		66C5AFB82B3D691800A95460 /* ChannelUserInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66C5AFB72B3D691800A95460 /* ChannelUserInfoView.swift */; };
 		66C5AFAE2B38AC9000A95460 /* ApplicantListHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66C5AFAD2B38AC9000A95460 /* ApplicantListHeaderView.swift */; };
+		66C5AFB82B3D691800A95460 /* ChannelUserInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66C5AFB72B3D691800A95460 /* ChannelUserInfoView.swift */; };
 		7929A30F2ADE4B45006ED4FA /* InputInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7929A30E2ADE4B45006ED4FA /* InputInfoViewController.swift */; };
 		7929A3112ADEAD35006ED4FA /* InputInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7929A3102ADEAD35006ED4FA /* InputInfoView.swift */; };
 		7929A3132ADEB319006ED4FA /* InputInfoViewController+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7929A3122ADEB319006ED4FA /* InputInfoViewController+.swift */; };
@@ -139,6 +139,7 @@
 		7C88C1B12B2DA40900FB7385 /* AFColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C88C1B02B2DA40900FB7385 /* AFColor.swift */; };
 		7C94EBD52B01BF0600A7E42A /* InfoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C94EBD42B01BF0600A7E42A /* InfoViewModel.swift */; };
 		7C9930512B3BB8D600CDD5FC /* SettingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C9930502B3BB8D600CDD5FC /* SettingViewModel.swift */; };
+		7CADB9302B4312EC003F61B7 /* WebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CADB92F2B4312EC003F61B7 /* WebViewController.swift */; };
 		7CB21BA32AC94D36001D0058 /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CB21BA22AC94D36001D0058 /* DetailViewController.swift */; };
 		7CB21BA52AC94EE4001D0058 /* DetailUserInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CB21BA42AC94EE4001D0058 /* DetailUserInfoView.swift */; };
 		7CBFED6C2AE6477700915D65 /* CalenderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CBFED6B2AE6477700915D65 /* CalenderViewController.swift */; };
@@ -218,8 +219,8 @@
 		66BD86E42AE646CB00B1B256 /* FieldDetailViewController+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FieldDetailViewController+.swift"; sourceTree = "<group>"; };
 		66BD8DB72B3174850094C78B /* ChatCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatCoordinator.swift; sourceTree = "<group>"; };
 		66C5AFA82B3861D200A95460 /* DetailViewController+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DetailViewController+.swift"; sourceTree = "<group>"; };
-		66C5AFB72B3D691800A95460 /* ChannelUserInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChannelUserInfoView.swift; sourceTree = "<group>"; };
 		66C5AFAD2B38AC9000A95460 /* ApplicantListHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplicantListHeaderView.swift; sourceTree = "<group>"; };
+		66C5AFB72B3D691800A95460 /* ChannelUserInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChannelUserInfoView.swift; sourceTree = "<group>"; };
 		7929A30E2ADE4B45006ED4FA /* InputInfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputInfoViewController.swift; sourceTree = "<group>"; };
 		7929A3102ADEAD35006ED4FA /* InputInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputInfoView.swift; sourceTree = "<group>"; };
 		7929A3122ADEB319006ED4FA /* InputInfoViewController+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "InputInfoViewController+.swift"; sourceTree = "<group>"; };
@@ -268,6 +269,7 @@
 		7C88C1B02B2DA40900FB7385 /* AFColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AFColor.swift; sourceTree = "<group>"; };
 		7C94EBD42B01BF0600A7E42A /* InfoViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoViewModel.swift; sourceTree = "<group>"; };
 		7C9930502B3BB8D600CDD5FC /* SettingViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingViewModel.swift; sourceTree = "<group>"; };
+		7CADB92F2B4312EC003F61B7 /* WebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewController.swift; sourceTree = "<group>"; };
 		7CB21BA22AC94D36001D0058 /* DetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
 		7CB21BA42AC94EE4001D0058 /* DetailUserInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailUserInfoView.swift; sourceTree = "<group>"; };
 		7CBFED6B2AE6477700915D65 /* CalenderViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalenderViewController.swift; sourceTree = "<group>"; };
@@ -853,6 +855,7 @@
 				7C2F9FE22B25EFC200F1EF1B /* BookmarkPostViewController.swift */,
 				7C2F9FE42B25EFE000F1EF1B /* WrittenPostViewController.swift */,
 				7C2F9FE62B25EFF500F1EF1B /* ApplicationPostViewController.swift */,
+				7CADB92F2B4312EC003F61B7 /* WebViewController.swift */,
 			);
 			path = InfoDetailView;
 			sourceTree = "<group>";
@@ -1108,6 +1111,7 @@
 				7C5EEA8A2B42C381003A0010 /* SettingViewController+.swift in Sources */,
 				2729185B2B022E84009C9042 /* SearchViewController.swift in Sources */,
 				7C2B1B002AF4D2B40052EC64 /* MapTabCoordinator.swift in Sources */,
+				7CADB9302B4312EC003F61B7 /* WebViewController.swift in Sources */,
 				668EE4AA2AFCB8F2007A8844 /* SenderModel.swift in Sources */,
 				668EE4A52AFCB0C5007A8844 /* ImageMediaItemModel.swift in Sources */,
 				7929A30F2ADE4B45006ED4FA /* InputInfoViewController.swift in Sources */,

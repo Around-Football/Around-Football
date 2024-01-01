@@ -39,6 +39,7 @@ final class InfoTabCoordinator: BaseCoordinator {
         navigationController?.pushViewController(vc, animated: true)
     }
     
+    @objc
     func popViewController() {
         navigationController?.popViewController(animated: true)
     }
@@ -74,6 +75,16 @@ final class InfoTabCoordinator: BaseCoordinator {
     func pushApplicationPostViewController() {
         let viewModel = InfoPostViewModel(coordinator: self)
         let vc = ApplicationPostViewController(viewModel: viewModel)
+        navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    // MARK: - 약관 웹 뷰
+    func pushWebViewController(url: String) {
+        let viewModel = SettingViewModel(coordinator: self)
+        let vc = WebViewController(viewModel: viewModel, url: url)
+        let AFBackButton = UIBarButtonItem(image: UIImage(named: AFIcon.backButton), style: .plain, target: self, action: #selector(popViewController))
+        AFBackButton.tintColor = AFColor.grayScale200
+        vc.navigationItem.setLeftBarButton(AFBackButton, animated: true)
         navigationController?.pushViewController(vc, animated: true)
     }
 }

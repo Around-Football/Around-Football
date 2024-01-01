@@ -67,6 +67,7 @@ final class SettingViewController: UIViewController {
                     sendEmail()
                 case 2:
                     print("약관 및 정책 뷰로")
+                    viewModel?.coordinator?.pushWebViewController(url: "https://www.notion.so/thekoon0456/AroundFootball-500672607c244999934b3a53f9cac0ae")
                 case 3:
                     print("로그아웃 alert")
                     showPopUp(title: "로그아웃",
