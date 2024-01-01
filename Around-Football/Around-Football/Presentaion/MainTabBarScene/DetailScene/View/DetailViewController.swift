@@ -93,6 +93,7 @@ final class DetailViewController: UIViewController {
         configureBookmarkStyle()
         configureRecruitInfo()
         configeUI()
+        navigationItem.backButtonTitle = ""
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -106,7 +107,6 @@ final class DetailViewController: UIViewController {
     }
     
     override func viewWillDisappear(_ animated: Bool) {
-        navigationItem.title = ""
         navigationController?.navigationBar.titleTextAttributes = [
             NSAttributedString.Key.foregroundColor: UIColor.black
         ]
@@ -141,7 +141,7 @@ final class DetailViewController: UIViewController {
     
     private func configureRecruitInfo() {
         guard let recruit = viewModel.getRecruit() else { return }
-        dateLabel.text = recruit.matchDayString
+        dateLabel.text = recruit.matchDayAndStartTime
         groundLabel.text = recruit.fieldName
         detailView.setValues(recruit: recruit)
     }
@@ -282,5 +282,6 @@ final class DetailViewController: UIViewController {
         bindButtonAction()
         bindRecruitUser()
         bindButtonStyle(by: output.recruitStatus)
+        bindRecruit()
     }
 }

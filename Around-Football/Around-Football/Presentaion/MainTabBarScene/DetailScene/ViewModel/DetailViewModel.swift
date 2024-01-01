@@ -38,10 +38,10 @@ final class DetailViewModel {
     // MARK: - Properties
     
     private let disposeBag = DisposeBag()
-    private let channelAPI = ChannelAPI()
-    let currentUser = UserService.shared.currentUser_Rx
-    weak var coordinator: DetailCoordinator?
-    private let recruitItem: BehaviorSubject<Recruit>
+    private let channelAPI = ChannelAPI.shared
+    private let currentUser = UserService.shared.currentUser_Rx
+    private weak var coordinator: DetailCoordinator?
+    let recruitItem: BehaviorSubject<Recruit>
     var recruitUser: BehaviorSubject<User?> = BehaviorSubject(value: nil)
     var isSelectedBookmark: Bool = false
     
@@ -87,10 +87,10 @@ final class DetailViewModel {
             guard let self = self else { return }
             print("DEBUG - ", #function, isAvailable)
             if isAvailable, let channelId = channelId {
-                let channelInfo = ChannelInfo(id: channelId, withUser: recruitUser, recruitID: recruitItem.id)
+                let channelInfo = ChannelInfo(id: channelId, withUser: recruitUser, recruitID: recruitItem.id, recruitUserID: recruitUser.id)
                 self.coordinator?.clickSendMessageButton(channelInfo: channelInfo)
             } else {
-                let channelInfo = ChannelInfo(id: UUID().uuidString, withUser: recruitUser, recruitID: recruitItem.id)
+                let channelInfo = ChannelInfo(id: UUID().uuidString, withUser: recruitUser, recruitID: recruitItem.id, recruitUserID: recruitUser.id)
                 self.coordinator?.clickSendMessageButton(channelInfo: channelInfo, isNewChat: true)
             }
         }
@@ -139,8 +139,18 @@ final class DetailViewModel {
     
     func transform(_ input: Input) -> Output {
         let recruitStatus = emitButtonStyleCalculator(by: input.invokedViewWillAppear)
+        fetchRecruitObservable(by: input.invokedViewWillAppear)
         let output = Output(recruitStatus: recruitStatus)
         return output
+    }
+    
+    private func fetchRecruitObservable(by inputObserver: Observable<Void>) {
+        inputObserver
+            .withUnretained(self)
+            .subscribe { (owner, _) in
+                owner.fetchRecruit()
+            }
+            .disposed(by: disposeBag)
     }
     
     private func emitButtonStyleCalculator(by inputObserver: Observable<Void>) -> Observable<RecruitStatus> {
@@ -149,15 +159,15 @@ final class DetailViewModel {
             .flatMapLatest { (owner, observers) -> Observable<RecruitStatus> in
                 guard let currentUser = observers.1,
                       let recruitItem = owner.getRecruit() else { return Observable.just(.availableRecruit) }
+                if currentUser.id == recruitItem.userID { return Observable.just(.ownRecruit) }
+
                 if recruitItem.pendingApplicantsUID.contains(currentUser.id) {
                     return Observable.just(.applied)
                 }
                 
                 if recruitItem.acceptedApplicantsUID.count == recruitItem.recruitedPeopleCount {
                     return Observable.just(.close)
-                }
-                
-                if currentUser.id == recruitItem.userID { return Observable.just(.ownRecruit) }
+                }                
                 
                 return Observable.just(.availableRecruit)
             }

@@ -32,7 +32,10 @@ struct Message: MessageType {
                 let mediaItem = ImageMediaItem(image: image)
                 return .photo(mediaItem)
             } else {
-                return .text(content)
+                let attributedText = NSAttributedString(string: content,
+                                                        attributes: [.font: AFFont.text as Any,
+                                                                     .foregroundColor: AFColor.secondary])
+                return .attributedText(attributedText)
             }
         case .date:
             return .custom(content)

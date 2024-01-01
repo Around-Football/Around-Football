@@ -38,13 +38,13 @@ extension InviteViewController: UITextFieldDelegate {
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         guard let text = (textField.text as NSString?)?.replacingCharacters(in: range, with: string) else { return true }
 
-        if text.isEmpty {
-            titlePlaceHolderLabel.isHidden = false
-            viewModel.contentTitle.accept(nil)
-        } else {
-            titlePlaceHolderLabel.isHidden = true
-            viewModel.contentTitle.accept(text)
-        }
+//        if text.isEmpty {
+//            titlePlaceHolderLabel.isHidden = false
+//            viewModel.contentTitle.accept(nil)
+//        } else {
+//            titlePlaceHolderLabel.isHidden = true
+//            viewModel.contentTitle.accept(text)
+//        }
         
         return true
     }
@@ -54,7 +54,7 @@ extension InviteViewController: UITextViewDelegate {
     func textViewDidChange(_ textView: UITextView) {
         if textView.text.isEmpty {
             contentPlaceHolderLabel.isHidden = false
-            viewModel.content.accept(nil)
+            viewModel.content.accept("")
         } else {
             contentPlaceHolderLabel.isHidden = true
             viewModel.content.accept(textView.text)

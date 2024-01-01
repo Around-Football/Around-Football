@@ -106,4 +106,12 @@ extension DetailViewController {
             }
             .disposed(by: disposeBag)
     }
+    
+    func bindRecruit() {
+        viewModel.recruitItem
+            .bind(with: self) { owner, recruit in
+                owner.detailView.setValues(recruit: recruit)
+            }
+            .disposed(by: disposeBag)
+    }
 }
