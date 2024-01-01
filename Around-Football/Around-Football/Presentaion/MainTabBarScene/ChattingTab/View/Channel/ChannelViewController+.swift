@@ -26,7 +26,18 @@ extension ChannelViewController {
     }
     
     func bindChannels() {
-        viewModel.channels
+        Observable.combineLatest(viewModel.channels, segmentControlView.rx.selectedSegmentIndex.asObservable())
+            .withUnretained(self)
+            .map({ (owner, observe) in
+                let channels = observe.0
+                let index = observe.1
+                if index == 0, let currentUser = try? owner.viewModel.currentUser.value() {
+                    return channels.filter { $0.recruitUserID == currentUser.id }
+                } else if let currentUser = try? owner.viewModel.currentUser.value() {
+                   return channels.filter { $0.recruitUserID != currentUser.id}
+                }
+                return []
+            })
             .map { [ChannelSectionModel(model: "", items: $0)] }
             .bind(to: channelTableView.rx.items(dataSource: channelTableViewDataSource))
             .disposed(by: disposeBag)
@@ -63,6 +74,25 @@ extension ChannelViewController {
             .disposed(by: disposeBag)
     }
     
+    func bindTapSegmentControl() {
+        segmentControlView.rx.selectedSegmentIndex
+            .bind { [weak self] index in
+                guard let self = self else { return }
+                guard segmentControlView.frame.width != 0 else { return }
+                let segmentWidth = segmentControlView.frame.width / CGFloat(segmentControlView.numberOfSegments)
+                let selectedSegmentCenterX = segmentWidth * CGFloat(index) + segmentWidth / 2
+                let underlineViewWidth = underLineView.frame.width
+
+                DispatchQueue.main.async {
+                    UIView.animate(withDuration: 0.2, animations: {
+                        self.underLineView.frame.origin.x = selectedSegmentCenterX - underlineViewWidth / 2
+                        self.view.layoutIfNeeded()
+                    })
+                }
+            }
+            .disposed(by: disposeBag)
+    }
+    
     func presentAlertController(indexPath: IndexPath) -> Observable<IndexPath> {
         return Observable.create { [weak self] observer in
             guard let self = self else { return Disposables.create { } }
@@ -86,41 +116,10 @@ extension ChannelViewController {
             }
         }
     }
-    
-    func hideChatAlarmNumber(cell: ChannelTableViewCell) {
-        cell.chatAlarmNumberLabel.text = ""
-        cell.chatAlarmNumberLabel.isHidden = true
-    }
-    
-    func showChatAlarmNumber(cell: ChannelTableViewCell, alarmNumber: Int) {
-        var alarmString = ""
-        alarmNumber > 999 ? (alarmString = "999+") : (alarmString = "\(alarmNumber)")
-        cell.chatAlarmNumberLabel.text = alarmString
-        cell.chatAlarmNumberLabel.isHidden = false
-        cell.updateAlarmLabelUI()
-    }
-    
-    func formatDate(_ date: Date) -> String {
-        let calendar = Calendar.current
-        let formatter = DateFormatter()
-        formatter.locale = Locale(identifier: "ko_KR")
-        
-        if calendar.isDateInToday(date) {
-            formatter.dateFormat = "a h:mm"
-        } else if calendar.isDateInYesterday(date) {
-            return "어제"
-        } else if calendar.isDate(date, equalTo: Date(), toGranularity: .year) {
-            formatter.dateFormat = "M월 d일"
-        } else {
-            formatter.dateFormat = "yyyy년 M월 d일"
-        }
-        return formatter.string(from: date)
-    }
-    
 }
 
 extension ChannelViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 100
+        return tableView.rowHeight
     }
 }

@@ -22,17 +22,20 @@ enum SuperviewOffsets {
 }
 
 extension UIColor {
-    static let backGroundGray = UIColor(named: "UIBackgroundGray")
-    /// 푸른 파란색 (91, 156, 203, 1)
-    static var primary = UIColor(red: 91/255, green: 156/255, blue: 203/255, alpha: 1)
-    /// 연한 회색
-    static var incomingMessageBackground = UIColor(red: 98/255, green: 98/255, blue: 98/255, alpha: 1)
     
     /// Convert color to image
     func image(_ size: CGSize = CGSize(width: 1, height: 1)) -> UIImage {
         return UIGraphicsImageRenderer(size: size).image { rendererContext in
             self.setFill()
             rendererContext.fill(CGRect(origin: .zero, size: size))
+        }
+    }
+}
+
+extension UIImage {
+    func resized(to size: CGSize) -> UIImage {
+        return UIGraphicsImageRenderer(size: size).image { _ in
+            draw(in: CGRect(origin: .zero, size: size))
         }
     }
 }

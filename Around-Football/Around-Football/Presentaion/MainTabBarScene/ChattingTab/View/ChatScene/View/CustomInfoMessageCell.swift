@@ -17,9 +17,9 @@ final class CustomInfoMessageCell: UICollectionViewCell {
     
     let label = UILabel().then {
         $0.textColor = .white
-        $0.font = .systemFont(ofSize: 10)
-        $0.backgroundColor = .lightGray
-        $0.layer.cornerRadius = 10
+        $0.font = AFFont.filterDay
+        $0.backgroundColor = AFColor.grayScale200
+        $0.layer.cornerRadius = 8
         $0.clipsToBounds = true
         $0.textAlignment = .center
         $0.numberOfLines = 0
@@ -52,7 +52,7 @@ final class CustomInfoMessageCell: UICollectionViewCell {
     
     private func setTextLabelSize(label: UILabel) -> CGSize {
         let size = (label.text as NSString?)?.size() ?? .zero
-        let newSize = CGSize(width: size.width + 15, height: size.height + 10)
+        let newSize = CGSize(width: size.width + 12, height: size.height + 13)
         return newSize
     }
 }
