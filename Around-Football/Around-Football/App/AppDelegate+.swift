@@ -17,44 +17,54 @@ extension AppDelegate: UNUserNotificationCenterDelegate, MessagingDelegate {
         print("DEBUG - Tap push notification", #function)
         
         if NotificationType.chat.rawValue == response.notification.request.content.userInfo["notificationType"] as? String {
-            guard let channelId = response.notification.request.content.userInfo["channelId"] as? String else {
+            guard let id = response.notification.request.content.userInfo["channelId"] as? String else {
                 print("DEBUG - Push Noti on the app, No ChatRoomId", #function)
                 return
             }
-            
-            // MARK: - 알림 누르면 앱 시작하면서 SceneDelegate 시작되므로 기존에 start 중복실행됐었음
-        
-            deepLinkChatView(channelId: channelId)
+//            deepLinkChatView(channelId: channelId)
+            deepLinkHandler(id: id, notificationType: .chat)
         }
+        
+        if NotificationType.applicant.rawValue == response.notification.request.content.userInfo["notificationType"] as? String {
+            guard let id = response.notification.request.content.userInfo["recruitId"] as? String else {
+                print("DEBUG - Push Noti on the app, No RecruitId", #function)
+                return
+            }
+//            deepLinkDetailView(recruitId: recruitId)
+            deepLinkHandler(id: id, notificationType: .applicant)
+        }
+        
     }
     
-    private func deepLinkChatView(channelId: String) {
-        if let _ = Auth.auth().currentUser?.uid {
-            Task {
-                do {
-                    guard let channelInfo = try await ChannelAPI.shared.fetchChannelInfo(channelId: channelId) else {
+    private func deepLinkHandler(id: String, notificationType: NotificationType) {
+        guard Auth.auth().currentUser?.uid != nil else { return }
+        Task {
+            guard
+                let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+                let sceneDelegate = windowScene.delegate as? SceneDelegate,
+                let appCoordinator = sceneDelegate.appCoordinator,
+                let mainTabBarCoordinator = appCoordinator
+                    .childCoordinators
+                    .first(where: { $0 is MainTabBarCoordinator }) as? MainTabBarCoordinator
+            else { return }
+
+            do {
+                switch notificationType {
+                case .chat:
+                    guard let channelInfo = try await ChannelAPI.shared.fetchChannelInfo(channelId: id) else {
                         throw NSError(domain: "ChannelInfo Fetch Error", code: -1)
                     }
-                    
-                    // MARK: - sceneDelegate, coordinator 불러옴
-                    
-                    guard
-                        let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-                        let sceneDelegate = windowScene.delegate as? SceneDelegate,
-                        let appCoordinator = sceneDelegate.appCoordinator
-                    else { return }
-
-                    guard
-                        let mainTabBarCoordinator = appCoordinator
-                            .childCoordinators
-                            .first(where: { $0 is MainTabBarCoordinator }) as? MainTabBarCoordinator
-                    else { return }
-                    
                     //채팅뷰로 이동
                     mainTabBarCoordinator.handleChatDeepLink(channelInfo: channelInfo)
-                } catch(let error as NSError) {
-                    print("DEBUG - Tap Push Notification Error", error.localizedDescription)
+                case .applicant:
+                    guard let recruit = try await FirebaseAPI.shared.fetchRecruit(recruitID: id) else {
+                        throw NSError(domain: "Recruit Fetch Error", code: -1)
+                    }
+                    mainTabBarCoordinator.handleApplicantListDeepLink(recruit: recruit)
+                case .approve: break
                 }
+            } catch(let error as NSError) {
+                print("DEBUG - Tap Push Notification Error", error.localizedDescription)
             }
         }
     }

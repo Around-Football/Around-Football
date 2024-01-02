@@ -34,6 +34,14 @@ final class DetailCoordinator: BaseCoordinator {
             navigationController?.pushViewController(controller, animated: true)
         }
     }
+    
+    func deepLinkApplicationViewController(recruit: Recruit) {
+        let viewModel = DetailViewModel(coordinator: self, recruitItem: recruit)
+        let controller = DetailViewController(viewModel: viewModel)
+        controller.hidesBottomBarWhenPushed = true
+        navigationController?.pushViewController(controller, animated: false)
+        pushApplicationStatusViewController(recruit: recruit)
+    }
         
     func clickSendMessageButton(channelInfo: ChannelInfo, isNewChat: Bool = false) {
         if navigationController?.viewControllers.first(where: { $0 is ChatViewController }) != nil {

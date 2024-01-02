@@ -39,6 +39,7 @@ extension Coordinator {
     // 자식 코디네이터와 코디네이터의 navigationController 해제
     func deinitCoordinator() {
         childCoordinators.forEach {
+            print("DEINIT COORDINATOR \($0.self)")
             $0.navigationController = nil
             $0.deinitCoordinator()
         }
