@@ -125,6 +125,7 @@ final class DetailViewModel {
     
     func sendRecruitApplicant() {
         guard let recruit = getRecruit(),
+              let recruitUser = try? recruitUser.value(),
               let user = getCurrentUser() else { return }
         FirebaseAPI.shared.appendPendingApplicant(recruitID: recruit.id, userID: user.id) { [weak self] error in
             if let error = error {
@@ -132,6 +133,7 @@ final class DetailViewModel {
                 return
             }
             self?.fetchRecruit()
+            NotiManager.shared.pushApplicantNotification(recruit: recruit, receiverFcmToken: recruitUser.fcmToken, from: user)
         }
     }
     

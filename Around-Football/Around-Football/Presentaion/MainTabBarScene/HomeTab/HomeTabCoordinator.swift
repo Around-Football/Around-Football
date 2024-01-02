@@ -37,6 +37,13 @@ final class HomeTabCoordinator: BaseCoordinator {
         navigationController?.navigationBar.isHidden = false
         coordinator.start(recruitItem: recruitItem)
     }
+    
+    func deepLinkApplicantView(recruit: Recruit) {
+        let coordinator = DetailCoordinator(navigationController: navigationController)
+        childCoordinators.append(coordinator)
+        navigationController?.navigationBar.isHidden = false
+        coordinator.deepLinkApplicationViewController(recruit: recruit)
+    }
 
     func pushMapView() {
         

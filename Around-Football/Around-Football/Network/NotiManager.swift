@@ -30,13 +30,13 @@ final class NotiManager {
             "sound": "default"
         ]
         let channelIdDictionary = ["channelId": channel.id,
-                                   "fromUserId": user.id,
                                    "notificationType": NotificationType.chat.rawValue]
         let params: Parameters = [
             "to": receiverFcmToken,
             "notification": value,
             "data": channelIdDictionary
         ]
+        
         let dataRequest = AF.request(fcmUrlString,
                                      method: .post,
                                      parameters: params,
@@ -48,5 +48,30 @@ final class NotiManager {
         print("DEBUG - ReceiverFCMToken: \(receiverFcmToken)")
     }
     
-
+    func pushApplicantNotification(recruit: Recruit, receiverFcmToken: String, from user: User) {
+        let value = [
+            "title": "용병 신청",
+            "body": "\(recruit.matchDayAndStartTime) 건에 대한 용병 신청이 접수되었습니다.",
+            "sound": "default"
+        ]
+        
+        let dic = ["recruitId": recruit.id,
+                   "notificationType": NotificationType.applicant.rawValue]
+        
+        let params: Parameters = [
+            "to": receiverFcmToken,
+            "notification": value,
+            "data": dic
+        ]
+        
+        let dataRequest = AF.request(fcmUrlString,
+                                     method: .post,
+                                     parameters: params,
+                                     encoding: JSONEncoding.default,
+                                     headers: headers)
+        dataRequest.response { response in
+            debugPrint(response.data as Any)
+        }
+        print("DEBUG - ReceiverFCMToken: \(receiverFcmToken)")
+    }
 }

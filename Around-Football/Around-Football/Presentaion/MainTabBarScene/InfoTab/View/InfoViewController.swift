@@ -56,6 +56,10 @@ final class InfoViewController: UIViewController {
         configureSettingButton()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        viewModel.coordinator?.deinitCoordinator()
+    }
+    
     // MARK: - Selectors
     
     @objc
