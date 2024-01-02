@@ -16,14 +16,16 @@ extension AppDelegate: UNUserNotificationCenterDelegate, MessagingDelegate {
         
         print("DEBUG - Tap push notification", #function)
         
-        guard let channelId = response.notification.request.content.userInfo["channelId"] as? String else {
-            print("DEBUG - Push Noti on the app, No ChatRoomId", #function)
-            return
-        }
+        if NotificationType.chat.rawValue == response.notification.request.content.userInfo["notificationType"] as? String {
+            guard let channelId = response.notification.request.content.userInfo["channelId"] as? String else {
+                print("DEBUG - Push Noti on the app, No ChatRoomId", #function)
+                return
+            }
+            
+            // MARK: - 알림 누르면 앱 시작하면서 SceneDelegate 시작되므로 기존에 start 중복실행됐었음
         
-        // MARK: - 알림 누르면 앱 시작하면서 SceneDelegate 시작되므로 기존에 start 중복실행됐었음
-    
-        deepLinkChatView(channelId: channelId)
+            deepLinkChatView(channelId: channelId)
+        }
     }
     
     private func deepLinkChatView(channelId: String) {

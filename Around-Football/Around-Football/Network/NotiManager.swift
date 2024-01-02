@@ -23,14 +23,15 @@ final class NotiManager {
     
     private init() { }
     
-    func pushNotification(channel: Channel, content: String, receiverFcmToken: String, from user: User) {
+    func pushChatNotification(channel: Channel, content: String, receiverFcmToken: String, from user: User) {
         let value = [
             "title": user.userName,
             "body": content,
             "sound": "default"
         ]
         let channelIdDictionary = ["channelId": channel.id,
-                                   "fromUserId": user.id]
+                                   "fromUserId": user.id,
+                                   "notificationType": NotificationType.chat.rawValue]
         let params: Parameters = [
             "to": receiverFcmToken,
             "notification": value,
@@ -46,5 +47,6 @@ final class NotiManager {
         }
         print("DEBUG - ReceiverFCMToken: \(receiverFcmToken)")
     }
+    
 
 }
