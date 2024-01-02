@@ -62,6 +62,12 @@ final class InviteViewController: UIViewController {
         $0.locale = Locale(identifier: "ko_KR")
         $0.layer.cornerRadius = 8
         $0.clipsToBounds = true
+        $0.minimumDate = Date()
+        let titleDateformatter = DateFormatter()
+        titleDateformatter.locale = Locale(identifier: "ko_KR")
+        titleDateformatter.dateFormat = "M월 d일"
+        let matchDateString = titleDateformatter.string(from: Date())
+        viewModel.matchDateString.accept(matchDateString)
         let emptyView = UIView()
         emptyView.backgroundColor = .white
         $0.addSubviews(emptyView)
@@ -72,7 +78,7 @@ final class InviteViewController: UIViewController {
         dateFilterButton.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
-        $0.addTarget(self, action: #selector(changeDate), for: .valueChanged)
+        $0.addTarget(self, action: #selector(changeDate), for: .allEvents)
     }
     
     private let timeTitleLabel = UILabel().then {
@@ -87,7 +93,8 @@ final class InviteViewController: UIViewController {
         $0.datePickerMode = .time
         $0.locale = Locale(identifier: "ko_kr")
         $0.minuteInterval = 30
-        $0.date = Date()
+        $0.minimumDate = Date(timeIntervalSinceNow: 0)
+        viewModel.startTime.accept(startTimeString)
         $0.addTarget(self, action: #selector(startTimePickerSelected), for: .valueChanged)
     }
     
@@ -95,7 +102,8 @@ final class InviteViewController: UIViewController {
         $0.datePickerMode = .time
         $0.locale = Locale(identifier: "ko_kr")
         $0.minuteInterval = 30
-        $0.date = Date()
+        $0.minimumDate = Date(timeInterval: 1800, since: startTimePicker.date)
+        viewModel.endTime.accept(endTimeString)
         $0.addTarget(self, action: #selector(endTimePickerSelected), for: .valueChanged)
     }
     
@@ -129,7 +137,7 @@ final class InviteViewController: UIViewController {
         items: ["남성", "여성", "무관"]
     ).then {
         $0.selectedSegmentIndex = 0
-//        viewModel.type.accept("풋살")
+        viewModel.gender.accept("남성")
         $0.addTarget(self,
                      action: #selector(genderSegmentedControlValueChanged),
                      for: .valueChanged)
