@@ -51,7 +51,13 @@ final class SettingViewController: UIViewController {
             .settingMenusObserverble
             .bind(to: settingTableView.rx.items(cellIdentifier: InfoCell.cellID,
                                                 cellType: InfoCell.self)) { index, item, cell in
-                cell.setValues(title: item, usingRightIcon: false)
+                
+                if item == "알림 설정" {
+                    print("\(item)")
+                    cell.setValues(title: item, usingRightIcon: false, usingSwitch: true)
+                } else {
+                    cell.setValues(title: item, usingRightIcon: false)
+                }
             }.disposed(by: disposeBag)
         
 //        ["알림 설정", "1:1 문의", "약관 및 정책", "로그아웃", "탈퇴"]
