@@ -51,6 +51,7 @@ final class InputInfoViewModel {
             .asObservable()
     }
     
+    //기존 데이터 있을때 화면에 뿌려줌
     private func setFirebaseUserInfo(input userInfo: Observable<User?>) {
         userInfo
             .subscribe(onNext: { [weak self] user in

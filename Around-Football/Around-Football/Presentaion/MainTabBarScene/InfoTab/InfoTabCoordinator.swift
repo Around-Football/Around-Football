@@ -36,10 +36,10 @@ final class InfoTabCoordinator: BaseCoordinator {
     func pushDetailCell(recruitItem: Recruit) {
         let viewModel = DetailViewModel(coordinator: nil, recruitItem: recruitItem)
         let vc = DetailViewController(viewModel: viewModel)
+        vc.setAFBackButton()
         navigationController?.pushViewController(vc, animated: true)
     }
-    
-    @objc
+
     func popViewController() {
         navigationController?.popViewController(animated: true)
     }
@@ -47,6 +47,7 @@ final class InfoTabCoordinator: BaseCoordinator {
     func pushSettingView() {
         let viewModel = SettingViewModel(coordinator: self)
         let vc = SettingViewController(viewModel: viewModel)
+        vc.setAFBackButton()
         navigationController?.pushViewController(vc, animated: true)
     }
     
@@ -62,19 +63,21 @@ final class InfoTabCoordinator: BaseCoordinator {
     func pushBookmarkPostViewController() {
         let viewModel = InfoPostViewModel(coordinator: self)
         let vc = BookmarkPostViewController(viewModel: viewModel)
-        
+        vc.setAFBackButton()
         navigationController?.pushViewController(vc, animated: true)
     }
     
     func pushWrittenPostViewController() {
         let viewModel = InfoPostViewModel(coordinator: self)
         let vc = WrittenPostViewController(viewModel: viewModel)
+        vc.setAFBackButton()
         navigationController?.pushViewController(vc, animated: true)
     }
     
     func pushApplicationPostViewController() {
         let viewModel = InfoPostViewModel(coordinator: self)
         let vc = ApplicationPostViewController(viewModel: viewModel)
+        vc.setAFBackButton()
         navigationController?.pushViewController(vc, animated: true)
     }
     
@@ -82,9 +85,9 @@ final class InfoTabCoordinator: BaseCoordinator {
     func pushWebViewController(url: String) {
         let viewModel = SettingViewModel(coordinator: self)
         let vc = WebViewController(viewModel: viewModel, url: url)
-        let AFBackButton = UIBarButtonItem(image: UIImage(named: AFIcon.backButton), style: .plain, target: self, action: #selector(popViewController))
-        AFBackButton.tintColor = AFColor.grayScale200
-        vc.navigationItem.setLeftBarButton(AFBackButton, animated: true)
+        vc.setAFBackButton()
         navigationController?.pushViewController(vc, animated: true)
     }
 }
+
+

@@ -12,8 +12,6 @@ import RxSwift
 import SnapKit
 import Then
 
-//TODO: - 파베 쿼리 이슈로 현재 승인 말고 딱 신청한 글만 나옴. 나중에 승인된 글과 신청한 글 어떻게 처리할지 논의하기
-
 final class ApplicationPostViewController: UIViewController {
     
     // MARK: - Properties
