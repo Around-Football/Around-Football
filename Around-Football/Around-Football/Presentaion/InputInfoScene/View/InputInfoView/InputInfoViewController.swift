@@ -207,8 +207,7 @@ final class InputInfoViewController: UIViewController {
         print("DEBUG: InputInfoViewController - nextButtonTapped")
         
         guard let user = viewModel?.inputUserInfo.value else { return }
-//        FirebaseAPI.shared.updateUser(user)
-        FirebaseAPI.shared.updateJoinUserData(user)
+        FirebaseAPI.shared.updateUser(user)
         UserService.shared.currentUser_Rx.onNext(user)
         
         //로그인 or 설정뷰에 따라 다르게 이동

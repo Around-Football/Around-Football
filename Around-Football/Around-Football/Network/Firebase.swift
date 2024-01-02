@@ -33,18 +33,6 @@ final class FirebaseAPI {
         UserService.shared.currentUser_Rx.onNext(user) //유저 업데이트하고 업데이트한 유저정보 보내줌
     }
     
-    func updateJoinUserData(_ user: User) {
-        let ref = REF_USER.document(user.id)
-        ref.updateData(user.representation) { error in
-            if error != nil {
-                print("DEBUG - Error", #function, error?.localizedDescription)
-                return
-            }
-            
-            UserService.shared.currentUser_Rx.onNext(user)
-        }
-    }
-    
     func deleteUser(_ userID: String) {
         let ref = REF_USER.document(userID)
         ref.delete { error in
