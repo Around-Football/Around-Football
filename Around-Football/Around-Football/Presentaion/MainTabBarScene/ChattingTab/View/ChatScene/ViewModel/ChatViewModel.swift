@@ -150,7 +150,6 @@ final class ChatViewModel {
         inputObserver
             .withUnretained(self)
             .subscribe { (owner, text) in
-                print(#function)
                 guard let currentUser = owner.currentUser else { return }
                 let message = Message(user: currentUser, content: text, messageType: .chat)
                 if owner.isNewChat {
@@ -182,7 +181,7 @@ final class ChatViewModel {
                 } else {
                     owner.uploadImage(image: image, channel: channel)
                 }
-                NotiManager.shared.pushNotification(channel: channel,
+                NotiManager.shared.pushChatNotification(channel: channel,
                                                     content: ("사진"),
                                                     receiverFcmToken: withUser.fcmToken,
                                                     from: currentUser)
@@ -284,7 +283,7 @@ final class ChatViewModel {
                                          withUser: withUser,
                                          channelId: channel.id,
                                          message: message)
-            NotiManager.shared.pushNotification(channel: channel,
+            NotiManager.shared.pushChatNotification(channel: channel,
                                                 content: message.content,
                                                 receiverFcmToken: withUser.fcmToken,
                                                 from: currentUser)

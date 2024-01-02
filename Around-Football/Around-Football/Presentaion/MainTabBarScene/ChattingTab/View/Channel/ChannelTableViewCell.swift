@@ -177,7 +177,6 @@ final class ChannelTableViewCell: UITableViewCell {
     
     private func setTextLabelSize(label: UILabel) -> CGSize {
         let size = (label.text as NSString?)?.size() ?? .zero
-//        print("DEBUG - SIZE \(size.width), \(size.height)")
         let addWidthValue = 20 - 6.673828125
         let newSize = CGSize(width: size.width + addWidthValue, height: 20)
         return newSize
