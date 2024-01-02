@@ -21,7 +21,7 @@ final class InviteViewController: UIViewController {
     private var searchViewModel: SearchViewModel
     private var invokedViewWillAppear = PublishSubject<Void>()
     private var disposeBag = DisposeBag()
-    
+
     let contentView = UIView()
     private let placeView = GroundTitleView()
     private let peopleView = PeopleCountView()
@@ -264,7 +264,7 @@ final class InviteViewController: UIViewController {
         
         let dateformatter = DateFormatter()
         dateformatter.locale = Locale(identifier: "ko_KR")
-        dateformatter.dateFormat = "YYYY년 M월 d일"
+        dateformatter.dateFormat = "yyyy년 MM월 d일"
         
         let titleDateformatter = DateFormatter()
         titleDateformatter.locale = Locale(identifier: "ko_KR")
@@ -368,7 +368,7 @@ final class InviteViewController: UIViewController {
             //현재 값 뷰모델에 전달
             viewModel.peopleCount.accept(peopleView.count)
             viewModel.content.accept(contentTextView.text)
-            viewModel.matchDateString.accept(dateFilterButton.currentTitle ?? "")
+//            viewModel.matchDateString.accept(dateFilterButton.currentTitle ?? "")
             viewModel.matchDate.accept(Timestamp(date: datePicker.date))
             viewModel.startTime.accept(startTimeString)
             viewModel.endTime.accept(endTimeString)
