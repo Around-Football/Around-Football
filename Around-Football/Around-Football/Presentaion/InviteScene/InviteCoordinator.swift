@@ -41,6 +41,10 @@ final class InviteCoordinator: BaseCoordinator {
         childCoordinators.append(coordinator)
     }
     
+    func presentPHPickerView(picker: UIViewController) {
+        navigationController?.present(picker, animated: true)
+    }
+    
     func removeThisChildCoordinators() {
         removeThisChildCoordinators(coordinator: self)
     }
