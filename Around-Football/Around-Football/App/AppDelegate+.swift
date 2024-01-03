@@ -5,10 +5,11 @@
 //  Created by 진태영 on 12/5/23.
 //
 
-import Foundation
+import UIKit
 
 import Firebase
 import FirebaseMessaging
+
 
 extension AppDelegate: UNUserNotificationCenterDelegate, MessagingDelegate {
     // MARK: Push Tab Handler
