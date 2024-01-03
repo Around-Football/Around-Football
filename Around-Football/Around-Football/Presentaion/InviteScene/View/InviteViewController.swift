@@ -395,8 +395,6 @@ final class InviteViewController: UIViewController {
             })
             .disposed(by: disposeBag)
         
-        //TODO: - 다 입력했을때 버튼 활성화되도록 수정
-        
         areFieldsEmptyObservable()
             .bind(onNext: { [weak self] bool in
                 guard let self else { return }

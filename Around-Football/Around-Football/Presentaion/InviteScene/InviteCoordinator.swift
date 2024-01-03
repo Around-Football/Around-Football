@@ -33,7 +33,7 @@ final class InviteCoordinator: BaseCoordinator {
         removeThisChildCoordinators()
     }
     
-    // SearchBViewController Delegate
+    // SearchViewController Delegate
     func presentSearchViewController() {
         let coordinator = SearchCoordinator(navigationController: navigationController, 
                                             searchViewModel: searchViewModel)
