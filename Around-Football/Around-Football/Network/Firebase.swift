@@ -33,6 +33,7 @@ final class FirebaseAPI {
         UserService.shared.currentUser_Rx.onNext(user) //유저 업데이트하고 업데이트한 유저정보 보내줌
     }
     
+    //회원 탈퇴
     func deleteUser(_ userID: String) {
         let ref = REF_USER.document(userID)
         ref.delete { error in
@@ -231,7 +232,9 @@ extension FirebaseAPI {
     func loadWrittenPostRx(userID: String?) -> Observable<[Recruit]> {
         return Observable.create { observer in
             //유저불러옴
-            guard let user = try? UserService.shared.currentUser_Rx.value() else { return Disposables.create() }
+            guard let user = try? UserService.shared.currentUser_Rx.value() else {
+                return Disposables.create()
+            }
             
             REF_RECRUIT
                 .whereField("userID", isEqualTo: user.id)
@@ -257,7 +260,9 @@ extension FirebaseAPI {
     func loadApplicationPostRx(userID: String?) -> Observable<[Recruit]> {
         return Observable.create { observer in
             //유저불러옴
-            guard let user = try? UserService.shared.currentUser_Rx.value() else { return Disposables.create() }
+            guard let user = try? UserService.shared.currentUser_Rx.value() else {
+                return Disposables.create()
+            }
             
             REF_RECRUIT
                 .whereField("pendingApplicantsUID", arrayContains: user.id)
