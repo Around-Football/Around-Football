@@ -133,7 +133,7 @@ final class DetailViewModel {
                 return
             }
             self?.fetchRecruit()
-            NotiManager.shared.pushApplicantNotification(recruit: recruit, receiverFcmToken: recruitUser.fcmToken, from: user)
+            NotiManager.shared.pushApplicantNotification(recruit: recruit, receiverFcmToken: recruitUser.fcmToken)
         }
     }
     

@@ -115,27 +115,29 @@ final class ApplicantListViewModel {
         return .availaleAccept
     }
     
-    func acceptApplicantion(uid: String) {
+    func acceptApplicantion(user: User) {
         let recruit = getRecruit()
-        FirebaseAPI.shared.acceptApplicants(recruitID: recruit.id, userID: uid) { [weak self] error in
+        FirebaseAPI.shared.acceptApplicants(recruitID: recruit.id, userID: user.id) { [weak self] error in
             if let error = error {
                 print("DEBUG - Error: \(error.localizedDescription)", #function)
                 return
             }
             guard let self = self else { return }
             self.fetchRecruit()
+            NotiManager.shared.pushAcceptNotification(recruit: recruit, receiverFcmToken: user.fcmToken)
         }
     }
     
-    func cancelApplicantion(uid: String) {
+    func cancelApplicantion(user: User) {
         let recruit = getRecruit()
-        FirebaseAPI.shared.cancelApplicants(recruitID: recruit.id, userID: uid) { [weak self] error in
+        FirebaseAPI.shared.cancelApplicants(recruitID: recruit.id, userID: user.id) { [weak self] error in
             if let error = error {
                 print("DEBUG - Error: \(error.localizedDescription)", #function)
                 return
             }
             guard let self = self else { return }
             self.fetchRecruit()
+            NotiManager.shared.pushCancelNotification(recruit: recruit, receiverFcmToken: user.fcmToken)
         }
     }
     

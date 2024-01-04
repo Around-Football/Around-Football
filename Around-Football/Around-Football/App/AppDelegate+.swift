@@ -16,24 +16,37 @@ extension AppDelegate: UNUserNotificationCenterDelegate, MessagingDelegate {
         
         print("DEBUG - Tap push notification", #function)
         
-        if NotificationType.chat.rawValue == response.notification.request.content.userInfo["notificationType"] as? String {
+        guard let type = response.notification.request.content.userInfo["notificationType"] as? String else { return }
+        
+        switch type {
+        case NotificationType.chat.rawValue:
             guard let id = response.notification.request.content.userInfo["channelId"] as? String else {
                 print("DEBUG - Push Noti on the app, No ChatRoomId", #function)
                 return
             }
 //            deepLinkChatView(channelId: channelId)
             deepLinkHandler(id: id, notificationType: .chat)
-        }
-        
-        if NotificationType.applicant.rawValue == response.notification.request.content.userInfo["notificationType"] as? String {
+        case NotificationType.applicant.rawValue:
             guard let id = response.notification.request.content.userInfo["recruitId"] as? String else {
                 print("DEBUG - Push Noti on the app, No RecruitId", #function)
                 return
             }
 //            deepLinkDetailView(recruitId: recruitId)
             deepLinkHandler(id: id, notificationType: .applicant)
+        case NotificationType.approve.rawValue:
+            guard let id = response.notification.request.content.userInfo["recruitId"] as? String else {
+                print("DEBUG - Push Noti on the app, No RecruitId", #function)
+                return
+            }
+            deepLinkHandler(id: id, notificationType: .approve)
+        case NotificationType.cancel.rawValue:
+            guard let id = response.notification.request.content.userInfo["recruitId"] as? String else {
+                print("DEBUG - Push Noti on the app, No RecruitId", #function)
+                return
+            }
+            deepLinkHandler(id: id, notificationType: .cancel)
+        default: break
         }
-        
     }
     
     private func deepLinkHandler(id: String, notificationType: NotificationType) {
@@ -61,7 +74,11 @@ extension AppDelegate: UNUserNotificationCenterDelegate, MessagingDelegate {
                         throw NSError(domain: "Recruit Fetch Error", code: -1)
                     }
                     mainTabBarCoordinator.handleApplicantListDeepLink(recruit: recruit)
-                case .approve: break
+                case .approve, .cancel:
+                    guard let recruit = try await FirebaseAPI.shared.fetchRecruit(recruitID: id) else {
+                        throw NSError(domain: "Recruit Fetch Error", code: -1)
+                    }
+                    mainTabBarCoordinator.handleDetailViewDeepLink(recruit: recruit)
                 }
             } catch(let error as NSError) {
                 print("DEBUG - Tap Push Notification Error", error.localizedDescription)

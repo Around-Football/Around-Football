@@ -145,10 +145,10 @@ final class ApplicantListViewController: UIViewController {
                 .bind { _ in
                     if applicantStatus == .accepted {
                         self.loadingView.startAnimating()
-                        self.viewModel.cancelApplicantion(uid: user.id)
+                        self.viewModel.cancelApplicantion(user: user)
                     } else {
                         self.loadingView.startAnimating()
-                        self.viewModel.acceptApplicantion(uid: user.id)
+                        self.viewModel.acceptApplicantion(user: user)
                     }
                 }
                 .disposed(by: self.disposeBag)
