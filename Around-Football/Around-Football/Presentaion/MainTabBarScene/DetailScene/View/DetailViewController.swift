@@ -25,6 +25,23 @@ final class DetailViewController: UIViewController {
     let detailView = DetailView()
     private let scrollView = UIScrollView()
     private let contentView = UIView()
+    private lazy var navigationRightButton = UIBarButtonItem().then {
+        var button = UIButton()
+        button.setImage(UIImage(systemName: "ellipsis"), for: .normal)
+        button.transform = .init(rotationAngle: 90 * .pi / 180.0)
+        let actions: [UIAction] = [UIAction(title: "수정", handler: { [weak self] _ in
+            // TODO: - InviteView 완성되면 연결
+//            self?.viewModel.editDetailView
+        }), UIAction(title: "삭제", handler: { [weak self] _ in
+            // TODO: - RemoveRecruit
+//            self?.viewModel.deleteRecruit()
+        })]
+        button.menu = UIMenu(children: actions)
+        button.showsMenuAsPrimaryAction = true
+        
+        $0.customView = button
+    }
+    
     private let detailImageScrollView = DetailImageScrollView().then {
         $0.layer.cornerRadius = 8
         $0.clipsToBounds = true
@@ -92,6 +109,7 @@ final class DetailViewController: UIViewController {
         configeUI()
         configureRecruitInfo()
         navigationItem.backButtonTitle = ""
+        navigationItem.rightBarButtonItem = navigationRightButton
     }
     
     override func viewWillAppear(_ animated: Bool) {
