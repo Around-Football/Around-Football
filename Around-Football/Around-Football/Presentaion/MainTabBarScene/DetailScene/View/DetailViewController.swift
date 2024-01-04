@@ -25,10 +25,8 @@ final class DetailViewController: UIViewController {
     let detailView = DetailView()
     private let scrollView = UIScrollView()
     private let contentView = UIView()
-    
-    private let mainImageView = UIImageView().then {
-        $0.image = UIImage(named: "DefaultRecruitImage")
-        $0.contentMode = .scaleAspectFill
+    private let detailImageScrollView = DetailImageScrollView().then {
+        $0.layer.cornerRadius = 8
         $0.clipsToBounds = true
     }
     
@@ -91,8 +89,8 @@ final class DetailViewController: UIViewController {
         bind()
         configureTypeLabel() // type 라벨 스타일 세팅
         configureBookmarkStyle()
-        configureRecruitInfo()
         configeUI()
+        configureRecruitInfo()
         navigationItem.backButtonTitle = ""
     }
     
@@ -144,6 +142,8 @@ final class DetailViewController: UIViewController {
         dateLabel.text = recruit.matchDayAndStartTime
         groundLabel.text = recruit.fieldName
         detailView.setValues(recruit: recruit)
+//        detailImageScrollView.configure(images: [UIImage(named: "DefaultRecruitImage"), UIImage(named: "CurrentPositionMark"), UIImage(named: "DefaultProfileImage"), UIImage(named: "DefaultRecruitImage")])
+        detailImageScrollView.configure(images: [])
     }
     
     func configureBookmarkStyle() {
@@ -180,7 +180,7 @@ final class DetailViewController: UIViewController {
                          bottomDivider,
                          bottomStackView)
         scrollView.addSubview(contentView)
-        contentView.addSubviews(mainImageView,
+        contentView.addSubviews(detailImageScrollView,
                                 typeLabel,
                                 dateLabel,
                                 groundLabel,
@@ -202,7 +202,7 @@ final class DetailViewController: UIViewController {
             make.width.equalToSuperview()
         }
         
-        mainImageView.snp.makeConstraints { make in
+        detailImageScrollView.snp.makeConstraints { make in
             make.top.equalToSuperview().offset(14)
             make.leading.equalToSuperview().offset(20)
             make.trailing.equalToSuperview().offset(-20)
@@ -210,14 +210,14 @@ final class DetailViewController: UIViewController {
         }
         
         typeLabel.snp.makeConstraints { make in
-            make.top.equalTo(mainImageView.snp.bottom).offset(20)
+            make.top.equalTo(detailImageScrollView.snp.bottom).offset(20)
             make.leading.equalToSuperview().offset(20)
             make.width.equalTo(51)
             make.height.equalTo(26)
         }
         
         dateLabel.snp.makeConstraints { make in
-            make.top.equalTo(mainImageView.snp.bottom).offset(20)
+            make.top.equalTo(detailImageScrollView.snp.bottom).offset(20)
             make.leading.equalTo(typeLabel.snp.trailing).offset(12)
         }
         
