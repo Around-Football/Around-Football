@@ -183,6 +183,14 @@ final class AFMenuButton: UIButton {
 //필터뷰 동그란 버튼
 final class AFRoundSmallButton: UIButton {
     
+    private var config: UIButton.Configuration {
+        var config = UIButton.Configuration.plain()
+        config.contentInsets = NSDirectionalEdgeInsets(top: 0,
+                                                       leading: 12,
+                                                       bottom: 0,
+                                                       trailing: 12)
+        return config
+    }
     // MARK: - Lifecycles
     
     init(buttonTitle: String, color: UIColor) {
@@ -197,18 +205,28 @@ final class AFRoundSmallButton: UIButton {
     // MARK: - Helpers
     
     private func configureUI(buttonTitle: String, color: UIColor) {
-        setTitle(buttonTitle, for: .normal)
-        setTitleColor(AFColor.grayScale300, for: .normal)
-        setBackgroundColor(.clear, for: .normal)
-        setTitleColor(.white, for: .selected)
-        setBackgroundColor(AFColor.secondary, for: .selected)
+        self.configuration = config
+        self.configurationUpdateHandler = { btn in
+            var attributedString = AttributedString.init(buttonTitle)
+            attributedString.font = AFFont.filterMedium
+            switch btn.state {
+            case .normal:
+                attributedString.foregroundColor = AFColor.grayScale300
+                btn.configuration?.attributedTitle = attributedString
+                btn.configuration?.background.backgroundColor = .clear
+            case .selected:
+                attributedString.foregroundColor = UIColor.white
+                btn.configuration?.attributedTitle = attributedString
+                btn.configuration?.background.backgroundColor = AFColor.secondary
+            default: break
+            }
+        }
+        
         layer.cornerRadius = 15
         clipsToBounds = true
         layer.borderWidth = 1.0
         layer.borderColor = AFColor.grayScale100.cgColor
-        
-        titleLabel?.font = AFFont.filterMedium
-        contentEdgeInsets = UIEdgeInsets(top: 0, left: 12, bottom: 0, right: 12)
+//        contentEdgeInsets = UIEdgeInsets(top: 0, left: 12, bottom: 0, right: 12)
     }
 }
 

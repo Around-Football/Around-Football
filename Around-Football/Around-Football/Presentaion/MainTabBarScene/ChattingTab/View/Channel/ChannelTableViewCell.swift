@@ -19,7 +19,7 @@ final class ChannelTableViewCell: UITableViewCell {
     // MARK: - Lifecycles
     
     private let profileImageView = UIImageView().then {
-        $0.image = UIImage(named: "DefaultRecruitImage")
+        $0.image = UIImage(named: "DefaultProfileImage")
         $0.contentMode = .scaleAspectFill
         $0.layer.cornerRadius = 24
         $0.layer.masksToBounds = true

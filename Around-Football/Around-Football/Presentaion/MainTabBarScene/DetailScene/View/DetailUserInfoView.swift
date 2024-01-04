@@ -69,11 +69,6 @@ final class DetailUserInfoView: UIView {
         subViews.forEach { label in
             view.addArrangedSubview(label)
         }
-        
-//        userDetailInfoSettingViewStackView.snp.makeConstraints { make in
-//            make.centerY.equalTo(userStackView.snp.centerY)
-//            make.leading.equalTo(userStackView.snp.trailing).offset(5)
-//        }
     }
     
     private lazy var userDetailInfoSettingViewStackView = UIStackView().then { view in
