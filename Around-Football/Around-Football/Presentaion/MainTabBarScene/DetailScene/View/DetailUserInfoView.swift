@@ -15,7 +15,7 @@ final class DetailUserInfoView: UIView {
     // MARK: - Properties
     
     private let profileImageView = UIImageView().then {
-        $0.image = UIImage(named: "AppIcon")
+        $0.image = UIImage(named: AFIcon.fieldImage)
         $0.contentMode = .scaleAspectFill
         $0.layer.cornerRadius = 20
         $0.clipsToBounds = true

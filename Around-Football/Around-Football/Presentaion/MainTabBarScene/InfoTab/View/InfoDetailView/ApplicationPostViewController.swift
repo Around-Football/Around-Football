@@ -20,10 +20,7 @@ final class ApplicationPostViewController: UIViewController {
     private let loadApplicationPost: PublishSubject<Void> = PublishSubject()
     private let disposeBag = DisposeBag()
     
-    private let emptyLabel = UILabel().then {
-        $0.text = "아직 신청 글이 없습니다.\n참여 신청을 해주세요."
-        $0.numberOfLines = 2
-        $0.font = AFFont.titleMedium
+    private lazy var emptyView = EmptyView(type: SettingTitle.application).then {
         $0.isHidden = true
     }
 
@@ -62,7 +59,7 @@ final class ApplicationPostViewController: UIViewController {
             .observe(on: MainScheduler.instance)
             .do(onNext: { [weak self] recruits in
                 guard let self else { return }
-                emptyLabel.isHidden = recruits.isEmpty ? false : true
+                emptyView.isHidden = recruits.isEmpty ? false : true
             })
             .bind(to: applicationPostTableView.rx.items(cellIdentifier: HomeTableViewCell.id,
                                              cellType: HomeTableViewCell.self)) { index, item, cell in
@@ -86,8 +83,8 @@ final class ApplicationPostViewController: UIViewController {
         title = "신청 글"
         view.backgroundColor = .white
         
-        view.addSubview(applicationPostTableView)
-        applicationPostTableView.addSubview(emptyLabel)
+        view.addSubviews(applicationPostTableView,
+                         emptyView)
         
         applicationPostTableView.snp.makeConstraints { make in
             make.top.bottom.equalTo(view.safeAreaLayoutGuide)
@@ -95,7 +92,7 @@ final class ApplicationPostViewController: UIViewController {
             make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
         }
         
-        emptyLabel.snp.makeConstraints { make in
+        emptyView.snp.makeConstraints { make in
             make.center.equalToSuperview()
         }
     }
