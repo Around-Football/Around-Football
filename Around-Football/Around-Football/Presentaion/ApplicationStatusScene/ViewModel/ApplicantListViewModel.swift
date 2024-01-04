@@ -125,6 +125,7 @@ final class ApplicantListViewModel {
             guard let self = self else { return }
             self.fetchRecruit()
             NotiManager.shared.pushAcceptNotification(recruit: recruit, receiverFcmToken: user.fcmToken)
+            print("DEBUG - ACCEPT")
         }
     }
     
@@ -138,6 +139,7 @@ final class ApplicantListViewModel {
             guard let self = self else { return }
             self.fetchRecruit()
             NotiManager.shared.pushCancelNotification(recruit: recruit, receiverFcmToken: user.fcmToken)
+            print("DEBUG - CANCEL")
         }
     }
     

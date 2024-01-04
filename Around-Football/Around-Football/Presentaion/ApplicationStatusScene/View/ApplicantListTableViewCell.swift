@@ -146,8 +146,23 @@ final class ApplicantListTableViewCell: UITableViewCell {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         configureUI()
     }
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        disposeBag = DisposeBag()
+    }
 
     // MARK: - Helpers
+    
+    func bind(acceptAction: @escaping() -> Void, messageAction: @escaping() -> Void) {
+        acceptButton.rx.tap
+            .bind { acceptAction() }
+            .disposed(by: disposeBag)
+        
+        sendMessageButton.rx.tap
+            .bind { messageAction() }
+            .disposed(by: disposeBag)
+    }
     
     func configure(user: User) {
         userNameLabel.text = user.userName
