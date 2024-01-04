@@ -52,4 +52,7 @@ enum AFIcon {
     static let googleLogin = "AFGoogleLogin"
     static let appleLogin = "AFAppleLogin"
     static let kakaoLogin = "AFKakaoLogin"
+    
+    //Search
+    static let searchItem = "AFSearchItem"
 }
