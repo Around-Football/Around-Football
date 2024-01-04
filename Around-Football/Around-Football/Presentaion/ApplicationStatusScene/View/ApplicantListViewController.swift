@@ -141,23 +141,17 @@ final class ApplicantListViewController: UIViewController {
             let applicantStatus = self.viewModel.emitApplicantStatusCalculator(uid: user.id)
             cell.configure(user: user)
             cell.setButtonStyle(status: applicantStatus)
-            cell.acceptButton.rx.tap
-                .bind { _ in
-                    if applicantStatus == .accepted {
-                        self.loadingView.startAnimating()
-                        self.viewModel.cancelApplicantion(user: user)
-                    } else {
-                        self.loadingView.startAnimating()
-                        self.viewModel.acceptApplicantion(user: user)
-                    }
+            cell.bind {
+                if applicantStatus == .accepted {
+                    self.loadingView.startAnimating()
+                    self.viewModel.cancelApplicantion(user: user)
+                } else {
+                    self.loadingView.startAnimating()
+                    self.viewModel.acceptApplicantion(user: user)
                 }
-                .disposed(by: self.disposeBag)
-            
-            cell.sendMessageButton.rx.tap
-                .bind { _ in
-                    self.viewModel.checkChannelAndPushChatViewController(user: user)
-                }
-                .disposed(by: self.disposeBag)
+            } messageAction: {
+                self.viewModel.checkChannelAndPushChatViewController(user: user)
+            }
         }
         .disposed(by: self.disposeBag)
         
