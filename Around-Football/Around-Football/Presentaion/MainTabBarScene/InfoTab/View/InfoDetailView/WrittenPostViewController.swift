@@ -19,10 +19,8 @@ final class WrittenPostViewController: UIViewController {
     var viewModel: InfoPostViewModel
     private let loadWrittenPost: PublishSubject<Void> = PublishSubject()
     private let disposeBag = DisposeBag()
-    private let emptyLabel = UILabel().then {
-        $0.text = "아직 작성 글이 없습니다.\n글을 작성해주세요."
-        $0.numberOfLines = 2
-        $0.font = AFFont.titleMedium
+    
+    private lazy var emptyView = EmptyView(type: SettingTitle.written).then {
         $0.isHidden = true
     }
 
@@ -60,7 +58,7 @@ final class WrittenPostViewController: UIViewController {
             .observe(on: MainScheduler.instance)
             .do(onNext: { [weak self] recruits in
                 guard let self else { return }
-                emptyLabel.isHidden = recruits.isEmpty ? false : true
+                emptyView.isHidden = recruits.isEmpty ? false : true
             })
             .bind(to: writtenPostTableView.rx.items(cellIdentifier: HomeTableViewCell.id,
                                              cellType: HomeTableViewCell.self)) { index, item, cell in
@@ -84,8 +82,8 @@ final class WrittenPostViewController: UIViewController {
         title = "작성 글"
         view.backgroundColor = .white
         
-        view.addSubview(writtenPostTableView)
-        writtenPostTableView.addSubview(emptyLabel)
+        view.addSubviews(writtenPostTableView,
+                         emptyView)
         
         writtenPostTableView.snp.makeConstraints { make in
             make.top.bottom.equalTo(view.safeAreaLayoutGuide)
@@ -93,7 +91,7 @@ final class WrittenPostViewController: UIViewController {
             make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
         }
         
-        emptyLabel.snp.makeConstraints { make in
+        emptyView.snp.makeConstraints { make in
             make.center.equalToSuperview()
         }
     }
