@@ -37,15 +37,7 @@ final class NotiManager {
             "data": channelIdDictionary
         ]
         
-        let dataRequest = AF.request(fcmUrlString,
-                                     method: .post,
-                                     parameters: params,
-                                     encoding: JSONEncoding.default,
-                                     headers: headers)
-        dataRequest.response { response in
-            debugPrint(response.data as Any)
-        }
-        print("DEBUG - ReceiverFCMToken: \(receiverFcmToken)")
+        sendMessage(params: params)
     }
     
     func pushApplicantNotification(recruit: Recruit, receiverFcmToken: String) {
@@ -64,15 +56,7 @@ final class NotiManager {
             "data": dic
         ]
         
-        let dataRequest = AF.request(fcmUrlString,
-                                     method: .post,
-                                     parameters: params,
-                                     encoding: JSONEncoding.default,
-                                     headers: headers)
-        dataRequest.response { response in
-            debugPrint(response.data as Any)
-        }
-        print("DEBUG - ReceiverFCMToken: \(receiverFcmToken)")
+        sendMessage(params: params)
     }
     
     func pushAcceptNotification(recruit: Recruit, receiverFcmToken: String) {
@@ -91,15 +75,7 @@ final class NotiManager {
             "data": dic
         ]
         
-        let dataRequest = AF.request(fcmUrlString,
-                                     method: .post,
-                                     parameters: params,
-                                     encoding: JSONEncoding.default,
-                                     headers: headers)
-        dataRequest.response { response in
-            debugPrint(response.data as Any)
-        }
-        print("DEBUG - ReceiverFCMToken: \(receiverFcmToken)")
+        sendMessage(params: params)
     }
     
     func pushCancelNotification(recruit: Recruit, receiverFcmToken: String) {
@@ -117,7 +93,27 @@ final class NotiManager {
             "notification": value,
             "data": dic
         ]
+        sendMessage(params: params)
+    }
+    
+    func pushDeleteNotification(recruit: Recruit, receiverFcmToken: String) {
+        let value = [
+            "title": "용병 모집 철회",
+            "body": "용병 승인된 \(recruit.matchDayAndStartTime) 게시글이 삭제되었습니다.",
+            "sound": "default"
+        ]
         
+        let dic = ["notificationType": NotificationType.delete.rawValue]
+        
+        let params: Parameters = [
+            "to": receiverFcmToken,
+            "notification": value,
+            "data": dic
+        ]
+        sendMessage(params: params)
+    }
+    
+    private func sendMessage(params: Parameters) {
         let dataRequest = AF.request(fcmUrlString,
                                      method: .post,
                                      parameters: params,
@@ -126,6 +122,6 @@ final class NotiManager {
         dataRequest.response { response in
             debugPrint(response.data as Any)
         }
-        print("DEBUG - ReceiverFCMToken: \(receiverFcmToken)")
+        print("DEBUG - ReceiverFCMToken: \(params["to"]!)")
     }
 }

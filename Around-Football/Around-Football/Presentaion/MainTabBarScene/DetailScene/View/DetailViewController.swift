@@ -33,8 +33,11 @@ final class DetailViewController: UIViewController {
             // TODO: - InviteView 완성되면 연결
 //            self?.viewModel.editDetailView
         }), UIAction(title: "삭제", handler: { [weak self] _ in
-            // TODO: - RemoveRecruit
-//            self?.viewModel.deleteRecruit()
+            self?.showPopUp(title: "용병 게시글 삭제",
+                      message: "삭제하시겠습니까?",
+                      leftActionTitle: "취소",
+                      rightActionTitle: "삭제",
+                      rightActionCompletion: self?.viewModel.deleteRecruit)
         })]
         button.menu = UIMenu(children: actions)
         button.showsMenuAsPrimaryAction = true

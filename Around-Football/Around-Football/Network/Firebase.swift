@@ -122,6 +122,10 @@ final class FirebaseAPI {
         return recruit
     }
     
+    func deleteRecruit(recruitID: String, completion: @escaping((Error?) -> Void)) {
+        REF_RECRUIT.document(recruitID).delete(completion: completion)
+    }
+    
     // MARK: - AuthService
     
     func updateFCMTokenAndFetchUser(uid: String, fcmToken: String) -> Single<User?> {
