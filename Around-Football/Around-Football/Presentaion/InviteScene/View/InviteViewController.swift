@@ -400,7 +400,7 @@ final class InviteViewController: UIViewController {
                 guard let self else { return }
                 if bool == true {
                     addButton.setTitle("작성 완료", for: .normal)
-                    addButton.setTitleColor(.white, for: .normal)
+                    addButton.setTitleColor(AFColor.secondary, for: .normal)
                     addButton.isEnabled = true
                 } else {
                     addButton.setTitle("모든 항목을 작성해주세요", for: .normal)
