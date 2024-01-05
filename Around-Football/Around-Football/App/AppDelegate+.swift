@@ -24,14 +24,12 @@ extension AppDelegate: UNUserNotificationCenterDelegate, MessagingDelegate {
                 print("DEBUG - Push Noti on the app, No ChatRoomId", #function)
                 return
             }
-//            deepLinkChatView(channelId: channelId)
             deepLinkHandler(id: id, notificationType: .chat)
         case NotificationType.applicant.rawValue:
             guard let id = response.notification.request.content.userInfo["recruitId"] as? String else {
                 print("DEBUG - Push Noti on the app, No RecruitId", #function)
                 return
             }
-//            deepLinkDetailView(recruitId: recruitId)
             deepLinkHandler(id: id, notificationType: .applicant)
         case NotificationType.approve.rawValue:
             guard let id = response.notification.request.content.userInfo["recruitId"] as? String else {
@@ -79,6 +77,7 @@ extension AppDelegate: UNUserNotificationCenterDelegate, MessagingDelegate {
                         throw NSError(domain: "Recruit Fetch Error", code: -1)
                     }
                     mainTabBarCoordinator.handleDetailViewDeepLink(recruit: recruit)
+                case .delete: break
                 }
             } catch(let error as NSError) {
                 print("DEBUG - Tap Push Notification Error", error.localizedDescription)

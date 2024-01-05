@@ -12,4 +12,5 @@ enum NotificationType: String {
     case applicant
     case approve
     case cancel
+    case delete
 }
