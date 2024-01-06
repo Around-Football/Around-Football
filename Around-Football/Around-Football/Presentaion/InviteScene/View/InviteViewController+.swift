@@ -36,7 +36,7 @@ extension InviteViewController {
 extension InviteViewController: UITextFieldDelegate {
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        guard let text = (textField.text as NSString?)?.replacingCharacters(in: range, with: string) else { return true }
+        guard ((textField.text as NSString?)?.replacingCharacters(in: range, with: string)) != nil else { return true }
 
 //        if text.isEmpty {
 //            titlePlaceHolderLabel.isHidden = false

@@ -148,22 +148,57 @@ final class ChannelAPI {
         updateRefData(ref: channelRef, data: updateDeleteInfo)
     }
     
-    func resetAlarmNumber(uid: String, channelId: String) {
-        let ref = REF_USER.document(uid).collection("channels").document(channelId)
-        let data = ["alarmNumber": 0]
-        updateRefData(ref: ref, data: data)
+    func updateTotalAlarmNumber(uid: String, alarmNumber: Int64, completion: (() -> Void)? = nil) {
+        let ref = REF_USER.document(uid)
+        let updateTotalAlertNumber = ["totalAlarmNumber": FieldValue.increment(alarmNumber)]
+        updateRefData(ref: ref, data: updateTotalAlertNumber, completion: completion)
     }
     
-    private func updateRefData(ref: DocumentReference, data: [String: Any]) {
+    func resetAlarmNumber(uid: String, channelId: String, completion: (() -> Void)? = nil) {
+        let ref = REF_USER.document(uid).collection("channels").document(channelId)
+        DB_REF.runTransaction { [weak self] transaction, errorPointer -> Any? in
+            guard let self = self else { return }
+            let snapshot: DocumentSnapshot
+            do {
+                try snapshot = transaction.getDocument(ref)
+            } catch let fetchError as NSError {
+                errorPointer?.pointee = fetchError
+                return nil
+            }
+            /// 기존 채팅방의 총 미확인 알림 개수 확인
+            guard let oldAlertNumber = snapshot.data()?["alarmNumber"] as? Int else {
+                let error = NSError(domain: "AppErrorDomain",
+                                    code: -1,
+                                    userInfo: [NSLocalizedDescriptionKey: "Unable to retreive totalAlarmNumber from snapshot \(snapshot)"])
+                errorPointer?.pointee = error
+                return nil
+            }
+            let data = ["alarmNumber": 0]
+            /// 기존 채팅방 알림 개수 0으로 변경
+            transaction.updateData(data, forDocument: ref)
+            /// user의 전체 미확인 알림 개수는 기존 채팅방 미확인 알림 개수를 뺀 값
+            updateTotalAlarmNumber(uid: uid, alarmNumber: Int64(-oldAlertNumber), completion: completion)
+            return nil
+        } completion: { _, error in
+            if let error = error {
+                print("DEBUG - Transaction failed: \(error.localizedDescription)")
+            } else {
+                print("DEBUG - Transaction successfully committed")
+            }
+        }
+    }
+    
+    private func updateRefData(ref: DocumentReference, data: [String: Any], completion: (() -> Void)? = nil) {
         ref.updateData(data) { error in
             if let error = error {
                 print("DEBUG - ", #function, error.localizedDescription)
                 return
             }
-            print("DEBUG - Document successfully updated", ref.path)
+            print("DEBUG - Document successfully updated")
+            completion?()
         }
     }
-    
+
     func deleteChannelInfo(uid: String, channelId: String) {
         REF_USER.document(uid).collection("channels").document(channelId).delete()
     }
