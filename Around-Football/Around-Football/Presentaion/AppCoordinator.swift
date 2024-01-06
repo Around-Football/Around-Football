@@ -84,6 +84,4 @@ final class AppCoordinator: BaseCoordinator {
         coordinator.start() // 뷰컨 생성 후 이동
         childCoordinators.append(coordinator)
     }
-    
-    //TODO: - 온보딩뷰 컨트롤러로 변경
 }

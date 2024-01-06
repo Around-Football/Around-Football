@@ -5,7 +5,7 @@
 //  Created by 진태영 on 12/5/23.
 //
 
-import Foundation
+import UIKit
 
 import Alamofire
 
@@ -23,21 +23,29 @@ final class NotiManager {
     
     private init() { }
     
-    func pushChatNotification(channel: Channel, content: String, receiverFcmToken: String, from user: User) {
-        let value = [
-            "title": user.userName,
-            "body": content,
-            "sound": "default"
-        ]
-        let channelIdDictionary = ["channelId": channel.id,
-                                   "notificationType": NotificationType.chat.rawValue]
-        let params: Parameters = [
-            "to": receiverFcmToken,
-            "notification": value,
-            "data": channelIdDictionary
-        ]
-        
-        sendMessage(params: params)
+    func setAppIconBadgeNumber(number: Int) {
+        UIApplication.shared.applicationIconBadgeNumber = number
+    }
+    
+    func pushChatNotification(channel: Channel, content: String, receiverFcmToken: String, to withUser: User, from owner: User) {
+        FirebaseAPI.shared.fetchUser(uid: withUser.id) { user in
+            let value = [
+                "title": owner.userName,
+                "body": content,
+                "sound": "default",
+                "badge": "\(user.totalAlarmNumber)"
+            ]
+            let channelIdDictionary = ["channelId": channel.id,
+                                       "notificationType": NotificationType.chat.rawValue]
+            let params: Parameters = [
+                "to": receiverFcmToken,
+                "notification": value,
+                "data": channelIdDictionary,
+                "content_available": true,
+                "priority": "high"
+            ]
+            self.sendMessage(params: params)
+        }
     }
     
     func pushApplicantNotification(recruit: Recruit, receiverFcmToken: String) {

@@ -11,7 +11,8 @@ import Firebase
 import FirebaseMessaging
 
 extension AppDelegate: UNUserNotificationCenterDelegate, MessagingDelegate {
-    // MARK: Push Tab Handler
+   
+    // MARK: - Push Tab Handler
     func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
         
         print("DEBUG - Tap push notification", #function)
@@ -85,9 +86,11 @@ extension AppDelegate: UNUserNotificationCenterDelegate, MessagingDelegate {
         }
     }
     
+    /// 포그라운드 알림
     // Present Notification after receiving Push Notification
     func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification) async -> UNNotificationPresentationOptions {
         print("DEBUG - Notification UserInfo", notification.request.content.userInfo)
+        
         guard let channelId = notification.request.content.userInfo["channelId"] as? String,
               Auth.auth().currentUser != nil else {
             print("DEBUG - Push Notification on the app, No ChatRoomId", #function)
@@ -103,12 +106,20 @@ extension AppDelegate: UNUserNotificationCenterDelegate, MessagingDelegate {
             return []
         }
         
+        if let uid = Auth.auth().currentUser?.uid,
+           notification.request.content.userInfo["notificationType"] as? String == NotificationType.chat.rawValue {
+            FirebaseAPI.shared.fetchUser(uid: uid) { user in
+                UserService.shared.currentUser_Rx.onNext(user)
+                NotiManager.shared.setAppIconBadgeNumber(number: user.totalAlarmNumber)
+            }
+        }
+        
         // 현재 활성화된 View가 알림의 채팅방 View가 아니라면, 알림 표시
         print("DEBUG - Push Notification on App, Not match View", #function)
         
         return [.sound, .banner, .list]
     }
-    
+            
     // FCMToken 업데이트시
     func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
         print("DEBUG - FCM Token Messaging", #function, fcmToken ?? "")

@@ -181,10 +181,6 @@ final class ChatViewModel {
                 } else {
                     owner.uploadImage(image: image, channel: channel)
                 }
-                NotiManager.shared.pushChatNotification(channel: channel,
-                                                    content: ("사진"),
-                                                    receiverFcmToken: withUser.fcmToken,
-                                                    from: currentUser)
             }
             .disposed(by: disposeBag)
         
@@ -263,6 +259,14 @@ final class ChatViewModel {
                                               withUser: withUser,
                                               channelId: channel.id,
                                               message: message)
+            
+            channelAPI.updateTotalAlarmNumber(uid: withUser.id, alarmNumber: 1) {
+                NotiManager.shared.pushChatNotification(channel: channel,
+                                                        content: ("사진"),
+                                                        receiverFcmToken: withUser.fcmToken,
+                                                        to: withUser,
+                                                        from: currentUser)
+            }
         }
     }
     
@@ -283,10 +287,14 @@ final class ChatViewModel {
                                          withUser: withUser,
                                          channelId: channel.id,
                                          message: message)
-            NotiManager.shared.pushChatNotification(channel: channel,
-                                                content: message.content,
-                                                receiverFcmToken: withUser.fcmToken,
-                                                from: currentUser)
+
+            channelAPI.updateTotalAlarmNumber(uid: withUser.id, alarmNumber: 1) {
+                NotiManager.shared.pushChatNotification(channel: channel,
+                                                        content: message.content,
+                                                        receiverFcmToken: withUser.fcmToken,
+                                                        to: withUser,
+                                                        from: currentUser)
+            }
             
             completion?()
         }
@@ -306,8 +314,13 @@ final class ChatViewModel {
     
     func resetAlarmInformation() {
         if let currentUser = self.currentUser {
-            channelAPI.resetAlarmNumber(uid: currentUser.id, channelId: channelInfo.id)
             NotiManager.shared.currentChatRoomId = channelInfo.id
+            channelAPI.resetAlarmNumber(uid: currentUser.id, channelId: channelInfo.id) {
+                FirebaseAPI.shared.fetchUser(uid: currentUser.id) { user in
+                    UserService.shared.currentUser_Rx.onNext(user)
+                    NotiManager.shared.setAppIconBadgeNumber(number: user.totalAlarmNumber)
+                }
+            }
         }
     }
     
