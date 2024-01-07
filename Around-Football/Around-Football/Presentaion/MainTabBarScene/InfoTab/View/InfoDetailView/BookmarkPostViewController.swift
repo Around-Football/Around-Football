@@ -20,7 +20,7 @@ final class BookmarkPostViewController: UIViewController {
     private let loadBookmarkPost: PublishSubject<Void> = PublishSubject()
     private let disposeBag = DisposeBag()
     
-    private lazy var emptyView = EmptyView(type: SettingTitle.bookmark).then {
+    private lazy var emptyView = EmptyAFView(type: EmptyAFView.SettingTitle.bookmark).then {
         $0.isHidden = true
     }
 

@@ -20,7 +20,7 @@ final class ApplicationPostViewController: UIViewController {
     private let loadApplicationPost: PublishSubject<Void> = PublishSubject()
     private let disposeBag = DisposeBag()
     
-    private lazy var emptyView = EmptyView(type: SettingTitle.application).then {
+    private lazy var emptyView = EmptyAFView(type: EmptyAFView.SettingTitle.application).then {
         $0.isHidden = true
     }
 
