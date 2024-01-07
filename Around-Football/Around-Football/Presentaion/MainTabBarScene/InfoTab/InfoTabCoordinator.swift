@@ -34,9 +34,6 @@ final class InfoTabCoordinator: BaseCoordinator {
     }
 
     func pushDetailCell(recruitItem: Recruit) {
-        
-        // MARK: - 코디네이터로 했는데 채팅뷰는 안넘어가지는듯?
-        
         let coordinator = DetailCoordinator(navigationController: navigationController)
         childCoordinators.append(coordinator)
         coordinator.start(recruitItem: recruitItem)
