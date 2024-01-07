@@ -22,7 +22,6 @@ import RxSwift
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        
         //Firebase 구성
         FirebaseApp.configure()
         //kakao 초기화
