@@ -262,8 +262,6 @@ extension MapViewController: UISearchResultsUpdating, UISearchBarDelegate {
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         guard let viewModel = viewModel else { return}
-        KakaoService.shared.searchField(searchText,
-                                        viewModel.searchResults,
-                                        disposeBag)
+        viewModel.searchFields(keyword: searchText, disposeBag: disposeBag)
     }
 }
