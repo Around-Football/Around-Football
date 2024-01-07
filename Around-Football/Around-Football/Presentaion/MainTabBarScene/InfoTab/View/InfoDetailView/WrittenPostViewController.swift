@@ -20,7 +20,7 @@ final class WrittenPostViewController: UIViewController {
     private let loadWrittenPost: PublishSubject<Void> = PublishSubject()
     private let disposeBag = DisposeBag()
     
-    private lazy var emptyView = EmptyView(type: SettingTitle.written).then {
+    private lazy var emptyView = EmptyAFView(type: EmptyAFView.SettingTitle.written).then {
         $0.isHidden = true
     }
 

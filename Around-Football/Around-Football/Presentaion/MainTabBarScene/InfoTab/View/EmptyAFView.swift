@@ -10,13 +10,15 @@ import UIKit
 import SnapKit
 import Then
 
-enum SettingTitle: String {
-    case bookmark = "관심있는"
-    case application = "신청한"
-    case written = "작성한"
-}
-
-final class EmptyView: UIView {
+final class EmptyAFView: UIView {
+    
+    //각 case에 따른 멘트
+    enum SettingTitle: String {
+        case noApplicant = "신청자가"
+        case bookmark = "관심있는 글이"
+        case application = "신청한 글이"
+        case written = "작성한 글이"
+    }
     
     // MARK: - Properties
     
@@ -38,7 +40,7 @@ final class EmptyView: UIView {
         super.init(frame: frame)
         
         configureUI()
-        setTitle(type)
+        setEmptyAFViewTitle(type)
     }
     
     required init?(coder: NSCoder) {
@@ -47,8 +49,8 @@ final class EmptyView: UIView {
     
     // MARK: - Helpers
     
-    private func setTitle(_ type: SettingTitle) {
-        emptylabel.text = "아직 \(type.rawValue) 글이 없어요!"
+    private func setEmptyAFViewTitle(_ type: SettingTitle) {
+        emptylabel.text = "아직 \(type.rawValue) 없어요!"
     }
     
     private func configureUI() {

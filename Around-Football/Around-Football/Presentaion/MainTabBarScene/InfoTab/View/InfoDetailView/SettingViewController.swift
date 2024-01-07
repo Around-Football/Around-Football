@@ -89,7 +89,7 @@ final class SettingViewController: UIViewController {
     }
     
     private func configureUI() {
-        navigationItem.title = "더 보기"
+        navigationItem.title = "설정"
         navigationController?.navigationBar.prefersLargeTitles = false
         view.backgroundColor = .white
         
