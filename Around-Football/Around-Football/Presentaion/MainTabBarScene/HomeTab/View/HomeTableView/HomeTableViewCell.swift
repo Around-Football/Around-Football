@@ -269,7 +269,7 @@ final class HomeTableViewCell: UITableViewCell {
             make.top.equalTo(dateLabel.snp.top)
             make.leading.equalTo(dateLabel.snp.trailing).offset(5)
             make.trailing.equalToSuperview().offset(-20)
-            make.width.height.equalTo(28)
+            make.height.equalTo(28)
         }
     }
 }
