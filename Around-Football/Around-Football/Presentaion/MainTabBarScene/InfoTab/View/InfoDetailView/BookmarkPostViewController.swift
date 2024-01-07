@@ -26,6 +26,10 @@ final class BookmarkPostViewController: UIViewController {
 
     private var bookmarkTableView = UITableView().then {
         $0.register(HomeTableViewCell.self, forCellReuseIdentifier: HomeTableViewCell.id)
+        $0.separatorInset = UIEdgeInsets().with({ edge in
+            edge.left = 0
+            edge.right = 20
+        })
     }
     
     // MARK: - Lifecycles
@@ -59,8 +63,10 @@ final class BookmarkPostViewController: UIViewController {
                 emptyView.isHidden = recruits.isEmpty ? false : true
             })
             .bind(to: bookmarkTableView.rx.items(cellIdentifier: HomeTableViewCell.id,
-                                             cellType: HomeTableViewCell.self)) { index, item, cell in
-                cell.bindContents(item: item)
+                                             cellType: HomeTableViewCell.self)) { [weak self] index, item, cell in
+                guard let self else { return }
+                cell.infoPostViewModel = viewModel
+                cell.bindContents(item: item, isBookmark: true)
                 cell.configureButtonTap()
             }.disposed(by: disposeBag)
         
@@ -86,7 +92,7 @@ final class BookmarkPostViewController: UIViewController {
         bookmarkTableView.snp.makeConstraints { make in
             make.top.bottom.equalTo(view.safeAreaLayoutGuide)
             make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
-            make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
+            make.trailing.equalToSuperview()
         }
         
         emptyView.snp.makeConstraints { make in

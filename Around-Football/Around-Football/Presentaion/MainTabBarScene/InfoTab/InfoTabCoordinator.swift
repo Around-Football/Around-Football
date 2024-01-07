@@ -34,10 +34,16 @@ final class InfoTabCoordinator: BaseCoordinator {
     }
 
     func pushDetailCell(recruitItem: Recruit) {
-        let viewModel = DetailViewModel(coordinator: nil, recruitItem: recruitItem)
-        let vc = DetailViewController(viewModel: viewModel)
-        vc.setAFBackButton()
-        navigationController?.pushViewController(vc, animated: true)
+        
+        // MARK: - 코디네이터로 했는데 채팅뷰는 안넘어가지는듯?
+        
+        let coordinator = DetailCoordinator(navigationController: navigationController)
+        coordinator.start(recruitItem: recruitItem)
+        
+//        let viewModel = DetailViewModel(coordinator: coordinator, recruitItem: recruitItem)
+//        let vc = DetailViewController(viewModel: viewModel)
+//        vc.setAFBackButton()
+//        navigationController?.pushViewController(vc, animated: true)
     }
 
     func popViewController() {

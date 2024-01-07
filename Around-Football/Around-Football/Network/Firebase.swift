@@ -29,7 +29,7 @@ final class FirebaseAPI {
             UserService.shared.currentUser_Rx.onNext(user)
             completion?(nil)
         }
-        
+        print("유저 업데이트 됨")
         UserService.shared.currentUser_Rx.onNext(user) //유저 업데이트하고 업데이트한 유저정보 보내줌
     }
     
