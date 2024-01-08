@@ -95,6 +95,15 @@ extension DetailViewController {
                 owner.configureBookmarkStyle()
             }
             .disposed(by: disposeBag)
+        
+        outputObservable
+            .withUnretained(self)
+            .bind { (owner, recruitStatus) in
+                if recruitStatus == .ownRecruit {
+                    owner.navigationItem.rightBarButtonItem = owner.navigationRightButton
+                }
+            }
+            .disposed(by: disposeBag)
     }
     
     func bindRecruitUser() {

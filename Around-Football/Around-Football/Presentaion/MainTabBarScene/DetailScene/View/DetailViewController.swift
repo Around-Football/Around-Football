@@ -25,7 +25,7 @@ final class DetailViewController: UIViewController {
     let detailView = DetailView()
     private let scrollView = UIScrollView()
     private let contentView = UIView()
-    private lazy var navigationRightButton = UIBarButtonItem().then {
+    lazy var navigationRightButton = UIBarButtonItem().then {
         var button = UIButton()
         button.setImage(UIImage(systemName: "ellipsis"), for: .normal)
         button.transform = .init(rotationAngle: 90 * .pi / 180.0)
@@ -111,7 +111,6 @@ final class DetailViewController: UIViewController {
         configureBookmarkStyle()
         configeUI()
         configureRecruitInfo()
-        navigationItem.rightBarButtonItem = navigationRightButton
     }
     
     override func viewWillAppear(_ animated: Bool) {
