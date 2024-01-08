@@ -7,11 +7,16 @@
 
 import UIKit
 
+
+import RxSwift
+import RxCocoa
+
 final class InfoCell: UITableViewCell {
     
     // MARK: - Properties
     
     static let cellID = "infoCell"
+    private let disposeBag = DisposeBag()
     
     private var titleLable = UILabel().then {
         $0.text = "타이틀"
@@ -19,6 +24,11 @@ final class InfoCell: UITableViewCell {
     }
     
     private let rightIcon = UIImageView(image: UIImage(named: AFIcon.rightButton))
+    
+    private let notificationSwitch = UISwitch().then {
+        $0.isOn = UIApplication.shared.isRegisteredForRemoteNotifications
+        $0.isHidden = true
+    }
     
     // MARK: - Lifecycles
     
@@ -33,13 +43,33 @@ final class InfoCell: UITableViewCell {
     
     // MARK: - Helpers
     
-    func setValues(title: String, usingRightIcon: Bool = true) {
+    func setValues(title: String, usingRightIcon: Bool = true, usingSwitch: Bool = false) {
         titleLable.text = title
         rightIcon.isHidden = !usingRightIcon
+        notificationSwitch.isHidden = !usingSwitch
+        bind()
+    }
+    
+    private func bind() {
+        if !notificationSwitch.isHidden {
+            bindSwitch()
+        }
+    }
+    
+    private func bindSwitch() {
+        notificationSwitch.rx.isOn
+            .bind { isOn in
+                if isOn {
+                    UIApplication.shared.registerForRemoteNotifications()
+                } else {
+                    UIApplication.shared.unregisterForRemoteNotifications()
+                }
+            }
+            .disposed(by: disposeBag)
     }
 
     private func configureUI() {
-        addSubviews(titleLable, rightIcon)
+        contentView.addSubviews(titleLable, rightIcon, notificationSwitch)
         
         titleLable.snp.makeConstraints { make in
             make.top.equalToSuperview().offset(20)
@@ -52,6 +82,14 @@ final class InfoCell: UITableViewCell {
             make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
             make.bottom.equalToSuperview().offset(-20)
             make.centerY.equalToSuperview()
+        }
+        
+        notificationSwitch.snp.makeConstraints { make in
+            make.top.equalToSuperview().offset(20)
+            make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
+            make.bottom.equalToSuperview().offset(-20)
+            make.centerY.equalToSuperview()
+
         }
     }
 }

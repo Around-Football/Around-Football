@@ -204,6 +204,7 @@ final class AFRoundSmallButton: UIButton {
         setBackgroundColor(.clear, for: .normal)
         setTitleColor(.white, for: .selected)
         setBackgroundColor(AFColor.secondary, for: .selected)
+        
         layer.cornerRadius = 15
         clipsToBounds = true
         layer.borderWidth = 1.0

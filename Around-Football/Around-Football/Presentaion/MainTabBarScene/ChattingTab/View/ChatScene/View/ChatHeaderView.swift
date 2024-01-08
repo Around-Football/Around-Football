@@ -14,7 +14,7 @@ class ChatHeaderView: UIView {
     
     // MARK: - Properties
     private let imageView = UIImageView().then {
-        $0.image = UIImage(named: "DefaultRecruitImage")
+        $0.image = UIImage(named: "DefaultProfileImage")
         $0.contentMode = .scaleAspectFit
         $0.layer.cornerRadius = 8
         $0.layer.masksToBounds = true

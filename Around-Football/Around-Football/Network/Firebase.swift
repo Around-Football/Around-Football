@@ -115,6 +115,18 @@ final class FirebaseAPI {
         }
     }
     
+    func fetchRecruit(recruitID: String) async throws -> Recruit? {
+        guard let data = try await REF_RECRUIT.document(recruitID).getDocument().data() else { return nil }
+        
+        let recruit = Recruit(dictionary: data)
+        
+        return recruit
+    }
+    
+    func deleteRecruit(recruitID: String, completion: @escaping((Error?) -> Void)) {
+        REF_RECRUIT.document(recruitID).delete(completion: completion)
+    }
+    
     // MARK: - AuthService
     
     func updateFCMTokenAndFetchUser(uid: String, fcmToken: String) -> Single<User?> {

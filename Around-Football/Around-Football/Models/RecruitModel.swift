@@ -60,16 +60,6 @@ struct Recruit: Codable, Identifiable {
         return rep
     }
     
-    static func convertToArray(documents: [[String: Any]]) -> [Recruit] {
-        var array: [Recruit] = []
-        for document in documents {
-            let recruit = Recruit(dictionary: document)
-            array.append(recruit)
-        }
-        
-        return array
-    }
-    
     // create new recruit
     init(userID: String, userName: String, fieldID: String, fieldName: String, fieldAddress: String, region: String, type: String, recruitedPeopleCount: Int, gamePrice: String, title: String, content: String, matchDate: Timestamp, startTime: String, endTime: String, matchDateString: String, pendingApplicantsUID: [String], acceptedApplicantsUID: [String]) {
         self.id = UUID().uuidString

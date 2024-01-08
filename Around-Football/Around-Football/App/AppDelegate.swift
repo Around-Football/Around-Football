@@ -36,6 +36,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let tabBar = UITabBar()
         appearance.configureWithOpaqueBackground()
         appearance.backgroundColor = .white
+        /// 세로 모드 tabBarItem Custom
+        appearance.stackedLayoutAppearance.normal.badgeBackgroundColor = AFColor.primary
+        appearance.stackedLayoutAppearance.normal.badgeTextAttributes = [.foregroundColor: AFColor.secondary]
+        /// 가로 모드 tabBarItem Custom
+        appearance.inlineLayoutAppearance.normal.badgeBackgroundColor = AFColor.primary
+        appearance.inlineLayoutAppearance.normal.badgeTextAttributes = [.foregroundColor: AFColor.secondary]
         tabBar.standardAppearance = appearance
         UITabBar.appearance().scrollEdgeAppearance = appearance
         //네비게이션 탭바 색상 검정색으로

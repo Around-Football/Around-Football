@@ -19,6 +19,7 @@ struct User: Codable {
     var position: [String]
     var fcmToken: String
     var bookmarkedRecruit: [String?] //북마크한 필드id 저장
+    var totalAlarmNumber: Int = 0
     
     var representation: [String: Any] {
         let rep = [
@@ -30,20 +31,11 @@ struct User: Codable {
             "mainUsedFeet": mainUsedFeet,
             "position": position,
             "fcmToken": fcmToken,
-            "bookmarkedRecruit": bookmarkedRecruit
+            "bookmarkedRecruit": bookmarkedRecruit,
+            "totalAlarmNumber": totalAlarmNumber
         ] as [String: Any]
         
         return rep
-    }
-
-    static func convertToArray(documents: [[String: Any]]) -> [User] {
-        var array: [User] = []
-        for document in documents {
-            let user = User(dictionary: document)
-            array.append(user)
-        }
-        
-        return array
     }
     
     init(dictionary: [String: Any]) {
@@ -57,5 +49,6 @@ struct User: Codable {
         self.position = dictionary["position"] as? [String] ?? []
         self.fcmToken = dictionary["fcmToken"] as? String ?? ""
         self.bookmarkedRecruit = dictionary["bookmarkedRecruit"] as? [String] ?? []
+        self.totalAlarmNumber = dictionary["totalAlarmNumber"] as? Int ?? 0
     }
 }

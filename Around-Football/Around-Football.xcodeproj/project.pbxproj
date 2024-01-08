@@ -33,6 +33,8 @@
 		274C21C72ACFF902005469E6 /* TextFieldDelegateHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 274C21C62ACFF901005469E6 /* TextFieldDelegateHandler.swift */; };
 		274C22112AD6D6EF005469E6 /* HomeTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 274C22102AD6D6EF005469E6 /* HomeTableViewCell.swift */; };
 		274C22132AD7C16A005469E6 /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 274C22122AD7C169005469E6 /* HomeViewModel.swift */; };
+		660932032B44090D000D7CFD /* NotificationType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 660932022B44090D000D7CFD /* NotificationType.swift */; };
+		660932052B468606000D7CFD /* DetailImageScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 660932042B468606000D7CFD /* DetailImageScrollView.swift */; };
 		277DCD2E2B4BFCCD0076784E /* UITextField+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 277DCD2D2B4BFCCD0076784E /* UITextField+.swift */; };
 		27B86A302B45778D0081F621 /* InviteImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27B86A2F2B45778D0081F621 /* InviteImageView.swift */; };
 		6609C5332ACE8B0E00798632 /* MapViewController+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6609C5322ACE8B0E00798632 /* MapViewController+.swift */; };
@@ -177,6 +179,8 @@
 		274C21C62ACFF901005469E6 /* TextFieldDelegateHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldDelegateHandler.swift; sourceTree = "<group>"; };
 		274C22102AD6D6EF005469E6 /* HomeTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeTableViewCell.swift; sourceTree = "<group>"; };
 		274C22122AD7C169005469E6 /* HomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewModel.swift; sourceTree = "<group>"; };
+		660932022B44090D000D7CFD /* NotificationType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationType.swift; sourceTree = "<group>"; };
+		660932042B468606000D7CFD /* DetailImageScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailImageScrollView.swift; sourceTree = "<group>"; };
 		277DCD2D2B4BFCCD0076784E /* UITextField+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITextField+.swift"; sourceTree = "<group>"; };
 		27B86A2F2B45778D0081F621 /* InviteImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InviteImageView.swift; sourceTree = "<group>"; };
 		6609C5322ACE8B0E00798632 /* MapViewController+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MapViewController+.swift"; sourceTree = "<group>"; };
@@ -402,6 +406,7 @@
 				273674812AC308D1003ADE3F /* FieldModel.swift */,
 				6609C5362ACFCCCD00798632 /* MapModel.swift */,
 				2729185C2B023682009C9042 /* SearchModel.swift */,
+				660932022B44090D000D7CFD /* NotificationType.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -745,6 +750,7 @@
 				7C33060E2B109E780042A815 /* DetailView.swift */,
 				7CB21BA42AC94EE4001D0058 /* DetailUserInfoView.swift */,
 				66C5AFA82B3861D200A95460 /* DetailViewController+.swift */,
+				660932042B468606000D7CFD /* DetailImageScrollView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -1035,6 +1041,7 @@
 				66C5AFAE2B38AC9000A95460 /* ApplicantListHeaderView.swift in Sources */,
 				668EE4B42AFF552F007A8844 /* ChannelAPI.swift in Sources */,
 				667ABD672B1EBEE700142940 /* AppDelegate+.swift in Sources */,
+				660932052B468606000D7CFD /* DetailImageScrollView.swift in Sources */,
 				7C322F122B304C6900D7897B /* AFIcon.swift in Sources */,
 				661D31B22B3553E0006CA8FF /* UIControl+.swift in Sources */,
 				7C5F775E2AC9CE8A004CE48F /* DateCell.swift in Sources */,
@@ -1117,6 +1124,7 @@
 				7CE0143E2AF8C5B700ED77D2 /* EditViewController.swift in Sources */,
 				7C33060F2B109E780042A815 /* DetailView.swift in Sources */,
 				668EE4BF2B0500D5007A8844 /* ChatViewController+.swift in Sources */,
+				660932032B44090D000D7CFD /* NotificationType.swift in Sources */,
 				2736744F2AC3061C003ADE3F /* SceneDelegate.swift in Sources */,
 				66391CA92B1F5E2000DB7249 /* UIAlertController+.swift in Sources */,
 				277DCD2E2B4BFCCD0076784E /* UITextField+.swift in Sources */,

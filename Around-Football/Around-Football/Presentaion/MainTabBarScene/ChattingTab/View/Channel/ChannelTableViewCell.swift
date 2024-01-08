@@ -19,7 +19,7 @@ final class ChannelTableViewCell: UITableViewCell {
     // MARK: - Lifecycles
     
     private let profileImageView = UIImageView().then {
-        $0.image = UIImage(named: "DefaultRecruitImage")
+        $0.image = UIImage(named: "DefaultProfileImage")
         $0.contentMode = .scaleAspectFill
         $0.layer.cornerRadius = 24
         $0.layer.masksToBounds = true
@@ -177,7 +177,6 @@ final class ChannelTableViewCell: UITableViewCell {
     
     private func setTextLabelSize(label: UILabel) -> CGSize {
         let size = (label.text as NSString?)?.size() ?? .zero
-//        print("DEBUG - SIZE \(size.width), \(size.height)")
         let addWidthValue = 20 - 6.673828125
         let newSize = CGSize(width: size.width + addWidthValue, height: 20)
         return newSize

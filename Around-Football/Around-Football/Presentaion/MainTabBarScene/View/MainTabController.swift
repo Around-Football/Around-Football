@@ -11,13 +11,15 @@ import FirebaseAuth
 import KakaoSDKAuth
 import KakaoSDKCommon
 import KakaoSDKUser
+import RxSwift
 
 final class MainTabController: UITabBarController {
     
     // MARK: - Properties
     
-    var viewModel: MainTabViewModel
-    var pages: [UINavigationController]
+    private let viewModel: MainTabViewModel
+    private var pages: [UINavigationController]
+    private let disposeBag = DisposeBag()
     
     // MARK: - Lifecycles
     
@@ -34,6 +36,7 @@ final class MainTabController: UITabBarController {
     override func viewDidLoad() {
         super.viewDidLoad()
         configureUI()
+        bind()
     }
     
     // MARK: - Helpers
@@ -58,5 +61,22 @@ final class MainTabController: UITabBarController {
         pages[1].tabBarItem.tag = 1
         pages[2].tabBarItem.tag = 2
         pages[3].tabBarItem.tag = 3
+    }
+    
+    private func bind() {
+        bindTabItemBadge()
+    }
+    
+    private func bindTabItemBadge() {
+        viewModel.user
+            .bind { user in
+                guard let user = user else { return }
+                if user.totalAlarmNumber > 0 {
+                    self.tabBar.items?[2].badgeValue = "\(user.totalAlarmNumber)"
+                } else {
+                    self.tabBar.items?[2].badgeValue = nil
+                }
+            }
+            .disposed(by: disposeBag)
     }
 }

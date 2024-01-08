@@ -55,7 +55,6 @@ class ChatViewController: UIViewController {
         configureUI()
         configureDelegate()
         bind()
-        navigationItem.backButtonTitle = ""
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -66,7 +65,6 @@ class ChatViewController: UIViewController {
         navigationController?.navigationBar.titleTextAttributes = [
             NSAttributedString.Key.foregroundColor: AFColor.grayScale200
         ]
-        navigationController?.navigationBar.tintColor = AFColor.grayScale200
         title = viewModel.channelInfo.withUserName
     }
     
