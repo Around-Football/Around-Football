@@ -99,7 +99,7 @@ final class MainTabBarCoordinator: BaseCoordinator {
               let navigationController = selectedCoordinator.navigationController else { return }
             
         navigationController.popToRootViewController(animated: false)
-        selectedCoordinator.deinitChildCoordinator()
+        selectedCoordinator.deinitCoordinator()
         mainTabController.selectedIndex = 2
         UserService.shared.currentUser_Rx
             .compactMap { $0 }

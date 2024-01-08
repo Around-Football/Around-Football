@@ -55,8 +55,8 @@ final class HomeTabCoordinator: BaseCoordinator {
     
     func pushInviteView() {
         let coordinator = InviteCoordinator(navigationController: navigationController)
+        childCoordinators.append(coordinator)
         coordinator.start()
-        coordinator.navigationController?.navigationBar.isHidden = false
     }
     
     func presentLoginViewController() {

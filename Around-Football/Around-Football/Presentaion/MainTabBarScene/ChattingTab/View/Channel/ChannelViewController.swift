@@ -113,12 +113,8 @@ final class ChannelViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.navigationBar.prefersLargeTitles = false
-
+        viewModel.deinitChildCoordinator()
         invokedViewWillAppear.onNext(())
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        navigationItem.backButtonTitle = ""
     }
     
     // MARK: - Helpers

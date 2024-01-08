@@ -21,12 +21,12 @@ final class InviteCoordinator: BaseCoordinator {
         let controller = InviteViewController(inviteViewModel: inviteViewModel, 
                                               searchViewModel: searchViewModel)
         controller.navigationController?.navigationBar.isHidden = false
-        navigationController?.navigationBar.prefersLargeTitles = false
         let AFBackButton = UIBarButtonItem(image: UIImage(named: AFIcon.backButton), style: .plain, target: self, action: #selector(popInviteViewController))
         AFBackButton.tintColor = AFColor.grayScale200
         controller.navigationItem.setLeftBarButton(AFBackButton, animated: true)
         navigationController?.pushViewController(controller, animated: true)
     }
+    
     @objc
     func popInviteViewController() {
         navigationController?.popViewController(animated: true)

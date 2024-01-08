@@ -111,7 +111,6 @@ final class DetailViewController: UIViewController {
         configureBookmarkStyle()
         configeUI()
         configureRecruitInfo()
-        navigationItem.backButtonTitle = ""
         navigationItem.rightBarButtonItem = navigationRightButton
     }
     
