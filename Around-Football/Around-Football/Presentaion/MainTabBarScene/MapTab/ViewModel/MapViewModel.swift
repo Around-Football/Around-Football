@@ -57,4 +57,8 @@ final class MapViewModel {
     func setCurrentLocation(latitude: Double, longitude: Double) {
         currentLocation = GeoPoint(latitude: latitude, longitude: longitude)
     }
+    
+    func searchFields(keyword: String, disposeBag: DisposeBag) {
+        KakaoService.shared.searchField(keyword, searchResults, disposeBag)
+    }
 }

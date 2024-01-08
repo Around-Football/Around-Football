@@ -33,12 +33,16 @@ final class InviteCoordinator: BaseCoordinator {
         removeThisChildCoordinators()
     }
     
-    // SearchBViewController Delegate
+    // SearchViewController Delegate
     func presentSearchViewController() {
         let coordinator = SearchCoordinator(navigationController: navigationController, 
                                             searchViewModel: searchViewModel)
         coordinator.start()
         childCoordinators.append(coordinator)
+    }
+    
+    func presentPHPickerView(picker: UIViewController) {
+        navigationController?.present(picker, animated: true)
     }
     
     func removeThisChildCoordinators() {

@@ -42,6 +42,7 @@ enum AFIcon {
     static let backButton = "AFBackButton"
     static let trackingButton = "AFTrackingButton"
     static let searchButton = "AFSearchButton"
+    static let deleteButton = "AFDeleteButton"
     
     //background
     static let loginBackgroundImage = "AFBackground"
@@ -51,4 +52,7 @@ enum AFIcon {
     static let googleLogin = "AFGoogleLogin"
     static let appleLogin = "AFAppleLogin"
     static let kakaoLogin = "AFKakaoLogin"
+    
+    //Search
+    static let searchItem = "AFSearchItem"
 }
