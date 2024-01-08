@@ -23,8 +23,13 @@ final class InputInfoCoordinator: BaseCoordinator {
     func start(isHidesBackButton: Bool) {
         let inputInfoViewModel = InputInfoViewModel(coordinator: self)
         let controller = InputInfoViewController(viewModel: inputInfoViewModel)
-        childCoordinators.append(self)
+        
+        if isHidesBackButton == false {
+            controller.setAFBackButton()
+        }
         controller.navigationItem.hidesBackButton = isHidesBackButton
+        
+        childCoordinators.append(self)
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationController?.pushViewController(controller, animated: true)
     }
