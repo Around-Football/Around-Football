@@ -12,7 +12,9 @@ import FirebaseMessaging
 
 
 extension AppDelegate: UNUserNotificationCenterDelegate, MessagingDelegate {
+    
     // MARK: Push Tab Handler
+    
     func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
         
         print("DEBUG - Tap push notification", #function)
