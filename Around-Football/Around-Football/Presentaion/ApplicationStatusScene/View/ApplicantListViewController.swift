@@ -69,7 +69,6 @@ final class ApplicantListViewController: UIViewController {
         navigationController?.navigationBar.titleTextAttributes = [
             NSAttributedString.Key.foregroundColor: AFColor.grayScale200
         ]
-        navigationController?.navigationBar.tintColor = AFColor.grayScale200
         
         viewModel.removeChildCoordinator()
     }

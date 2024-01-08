@@ -173,4 +173,8 @@ final class ChannelViewModel {
     func removeListner() {
         channelAPI.removeListener()
     }
+    
+    func deinitChildCoordinator() {
+        coordinator?.deinitCoordinator()
+    }
 }
