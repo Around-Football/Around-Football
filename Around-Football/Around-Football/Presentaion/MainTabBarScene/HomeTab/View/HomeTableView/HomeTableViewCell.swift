@@ -18,11 +18,13 @@ final class HomeTableViewCell: UITableViewCell {
     
     static let id: String = "HomeTableViewCellID"
     var viewModel: HomeViewModel?
+    var infoPostViewModel: InfoPostViewModel?
     private var user = try? UserService.shared.currentUser_Rx.value()
     private var disposeBag = DisposeBag()
-    private var fieldID: String?
+    private var recruitID: String?
     private var isSelectedButton: Bool?
-
+    var isBookmarkCell: Bool?
+    
     private let symbolConfiguration = UIImage.SymbolConfiguration(pointSize: 25, weight: .medium)
     
     private let defaultFieldImage = UIImage(named: AFIcon.fieldImage)
@@ -79,19 +81,21 @@ final class HomeTableViewCell: UITableViewCell {
         $0.text = "닉네임"
         $0.font = UIFont.systemFont(ofSize: 15, weight: .semibold)
     }
-
+    
     lazy var bookmarkButton = UIButton().then {
-        $0.setImage(UIImage(systemName: "star", withConfiguration: symbolConfiguration)?
+        $0.setImage(UIImage(systemName: "bookmark", withConfiguration: symbolConfiguration)?
             .withTintColor(.label, renderingMode: .alwaysOriginal), for: .normal)
+        $0.tintColor = .label
+        $0.isHidden = true //다른 cell은 안보이고, isBookmarkCell이 true일때만 보이도록 설정
     }
     
     func setSelectedBookmarkButton() {
-        bookmarkButton.setImage(UIImage(systemName: "star.fill", withConfiguration: symbolConfiguration)?
-            .withTintColor(.systemYellow, renderingMode: .alwaysOriginal), for: .normal)
+        bookmarkButton.setImage(UIImage(systemName: "bookmark.fill", withConfiguration: symbolConfiguration)?
+            .withTintColor(.label, renderingMode: .alwaysOriginal), for: .normal)
     }
     
     func setNormalBookmarkButton() {
-        bookmarkButton.setImage(UIImage(systemName: "star", withConfiguration: symbolConfiguration)?
+        bookmarkButton.setImage(UIImage(systemName: "bookmark", withConfiguration: symbolConfiguration)?
             .withTintColor(.label, renderingMode: .alwaysOriginal), for: .normal)
     }
     
@@ -123,13 +127,13 @@ final class HomeTableViewCell: UITableViewCell {
                     //북마크 해제 메서드
                     setNormalBookmarkButton()
                     //북마크 삭제
-                    viewModel?.removeBookmark(uid: user.id, fieldID: fieldID)
+                    infoPostViewModel?.removeBookmark(uid: user.id, recruitID: recruitID)
                     return false
                 } else {
                     //북마크 추가 메서드
                     setSelectedBookmarkButton()
                     //북마크 추가
-                    viewModel?.addBookmark(uid: user.id, fieldID: fieldID)
+                    infoPostViewModel?.addBookmark(uid: user.id, recruitID: recruitID)
                     return true
                 }
             }
@@ -148,16 +152,21 @@ final class HomeTableViewCell: UITableViewCell {
         return formattedDate
     }
     
-    func bindContents(item: Recruit) {
+    func bindContents(item: Recruit, isBookmark: Bool? = false) {
         let date = item.matchDate.dateValue()
         let formattedCellDate = formatMatchDate(date)
         
+        if let isBookmark,
+           isBookmark == true {
+            bookmarkButton.isHidden = false
+        }
+        
         //cell에 사용할 id 세팅
-        self.fieldID = item.fieldID
+        self.recruitID = item.id
         //북마크 버튼 바인딩
-        setBookmarkBinding(fieldID: item.fieldID)
+        setBookmarkBinding(recruitID: item.id)
         //UI정보 바인딩
-
+        
         if item.acceptedApplicantsUID.count == item.recruitedPeopleCount {
             typeLabel.text = "마감"
             typeLabel.backgroundColor = AFColor.grayScale200
@@ -165,28 +174,28 @@ final class HomeTableViewCell: UITableViewCell {
             typeLabel.text = item.type
             typeLabel.backgroundColor = item.type == "축구" ? AFColor.soccor : AFColor.futsal
         }
-
+        
         dateLabel.text = formattedCellDate
         fieldLabel.text = "\(item.fieldName)"
         recruitLabel.text = " \(item.acceptedApplicantsUID.count) / \(item.recruitedPeopleCount)명 모집"
         
         //TODO: - 성별 input 추가되면 바인딩하기
-//        genderLabel.text = ""
+        //        genderLabel.text = ""
         
         // MARK: - 예전 디자인 코드
-//        titleLabel.text = item.title
-//        fieldAddress.text = "주소: \(item.fieldAddress)"
-//        userNameLabel.text = "\(item.userName)"
+        //        titleLabel.text = item.title
+        //        fieldAddress.text = "주소: \(item.fieldAddress)"
+        //        userNameLabel.text = "\(item.userName)"
     }
     
     //북마크 버튼 세팅
-    private func setBookmarkBinding(fieldID: String) {
+    private func setBookmarkBinding(recruitID: String) {
         UserService.shared.currentUser_Rx
             .filter { $0 != nil }
             .subscribe(onNext: { [weak self] user in
                 guard let self else { return }
                 self.user = user
-                isSelectedButton = user?.bookmarkedRecruit.filter { $0 == fieldID }.count != 0
+                isSelectedButton = user?.bookmarkedRecruit.filter { $0 == recruitID }.count != 0
                 ? true : false
                 setupBookmarkButton()
             }).disposed(by: disposeBag)
@@ -209,15 +218,16 @@ final class HomeTableViewCell: UITableViewCell {
                                 typeLabel,
                                 recruitLabel,
                                 line,
-                                genderLabel)
-    
+                                genderLabel,
+                                bookmarkButton)
+        
         fieldImageView.snp.makeConstraints { make in
             make.top.equalToSuperview().offset(16)
             make.leading.equalToSuperview()
             make.bottom.equalToSuperview().offset(-16)
             make.width.equalTo(80)
         }
-
+        
         typeLabel.snp.makeConstraints { make in
             make.width.equalTo(34)
             make.height.equalTo(20)
@@ -228,7 +238,6 @@ final class HomeTableViewCell: UITableViewCell {
         dateLabel.snp.makeConstraints { make in
             make.top.equalTo(typeLabel.snp.top)
             make.leading.equalTo(typeLabel.snp.trailing).offset(8)
-            make.trailing.equalToSuperview()
         }
         
         fieldLabel.snp.makeConstraints { make in
@@ -253,6 +262,14 @@ final class HomeTableViewCell: UITableViewCell {
             make.centerY.equalTo(recruitLabel.snp.centerY)
             make.height.equalTo(recruitLabel.snp.height)
             make.leading.equalTo(line.snp.trailing).offset(8)
+        }
+        
+        contentView.addSubview(bookmarkButton)
+        bookmarkButton.snp.makeConstraints { make in
+            make.top.equalTo(dateLabel.snp.top)
+            make.leading.equalTo(dateLabel.snp.trailing).offset(5)
+            make.trailing.equalToSuperview().offset(-20)
+            make.height.equalTo(28)
         }
     }
 }

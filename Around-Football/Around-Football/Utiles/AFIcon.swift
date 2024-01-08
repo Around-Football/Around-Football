@@ -29,6 +29,7 @@ enum AFIcon {
     static let minus = "AFMinus"
     static let plus = "AFPlus"
     static let imagePlaceholder = "AFImagePlaceholder"
+    static let footballImage = "AFBallImage"
     
     //logo
     static let smallLogo = "AFSmallLogo"
@@ -42,6 +43,8 @@ enum AFIcon {
     static let backButton = "AFBackButton"
     static let trackingButton = "AFTrackingButton"
     static let searchButton = "AFSearchButton"
+    static let settingButton = "AFSettingButton"
+    static let deleteButton = "AFDeleteButton"
     
     //background
     static let loginBackgroundImage = "AFBackground"
@@ -51,4 +54,7 @@ enum AFIcon {
     static let googleLogin = "AFGoogleLogin"
     static let appleLogin = "AFAppleLogin"
     static let kakaoLogin = "AFKakaoLogin"
+    
+    //Search
+    static let searchItem = "AFSearchItem"
 }

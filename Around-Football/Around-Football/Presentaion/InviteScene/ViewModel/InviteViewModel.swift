@@ -48,6 +48,14 @@ final class InviteViewModel {
         .disposed(by: disposeBag)
     }
     
+//    func uploadImages() {
+//        StorageAPI.uploadImage(image: <#T##UIImage#>, id: <#T##String#>, completion: <#T##(URL?) -> Void#>)
+//    }
+    
+    func showPHPickerView(picker: UIViewController) {
+        coordinator.presentPHPickerView(picker: picker)
+    }
+    
     func createRecruitFieldData() {
         // MARK: - 테스트용 임시 데이터 파베에 올림
         guard let user = user else { return }

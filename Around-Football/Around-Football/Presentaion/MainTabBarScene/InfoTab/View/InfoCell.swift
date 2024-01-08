@@ -73,7 +73,7 @@ final class InfoCell: UITableViewCell {
         
         titleLable.snp.makeConstraints { make in
             make.top.equalToSuperview().offset(20)
-            make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
+            make.leading.equalToSuperview()
             make.bottom.equalToSuperview().offset(-20)
         }
         
