@@ -20,15 +20,16 @@ final class BookmarkPostViewController: UIViewController {
     private let loadBookmarkPost: PublishSubject<Void> = PublishSubject()
     private let disposeBag = DisposeBag()
     
-    private let emptyLabel = UILabel().then {
-        $0.text = "아직 관심 글이 없습니다.\n관심 글을 등록해주세요."
-        $0.numberOfLines = 2
-        $0.font = AFFont.titleMedium
+    private lazy var emptyView = EmptyAFView(type: EmptyAFView.SettingTitle.bookmark).then {
         $0.isHidden = true
     }
 
     private var bookmarkTableView = UITableView().then {
         $0.register(HomeTableViewCell.self, forCellReuseIdentifier: HomeTableViewCell.id)
+        $0.separatorInset = UIEdgeInsets().with({ edge in
+            edge.left = 0
+            edge.right = 20
+        })
     }
     
     // MARK: - Lifecycles
@@ -59,11 +60,13 @@ final class BookmarkPostViewController: UIViewController {
             .observe(on: MainScheduler.instance)
             .do(onNext: { [weak self] recruits in
                 guard let self else { return }
-                emptyLabel.isHidden = recruits.isEmpty ? false : true
+                emptyView.isHidden = recruits.isEmpty ? false : true
             })
             .bind(to: bookmarkTableView.rx.items(cellIdentifier: HomeTableViewCell.id,
-                                             cellType: HomeTableViewCell.self)) { index, item, cell in
-                cell.bindContents(item: item)
+                                             cellType: HomeTableViewCell.self)) { [weak self] index, item, cell in
+                guard let self else { return }
+                cell.infoPostViewModel = viewModel
+                cell.bindContents(item: item, isBookmark: true)
                 cell.configureButtonTap()
             }.disposed(by: disposeBag)
         
@@ -83,17 +86,17 @@ final class BookmarkPostViewController: UIViewController {
         title = "관심 글"
         view.backgroundColor = .white
         
-        view.addSubview(bookmarkTableView)
-        bookmarkTableView.addSubview(emptyLabel)
+        view.addSubviews(bookmarkTableView,
+                        emptyView)
         
         bookmarkTableView.snp.makeConstraints { make in
             make.top.bottom.equalTo(view.safeAreaLayoutGuide)
             make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
-            make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
+            make.trailing.equalToSuperview()
         }
         
-        emptyLabel.snp.makeConstraints { make in
-            make.center.equalToSuperview()
+        emptyView.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
         }
     }
 }
