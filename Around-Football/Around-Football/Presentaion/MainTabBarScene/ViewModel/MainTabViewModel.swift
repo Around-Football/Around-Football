@@ -7,6 +7,8 @@
 
 import Foundation
 
+import RxSwift
+
 final class MainTabViewModel {
-    
+    let user: BehaviorSubject<User?> = UserService.shared.currentUser_Rx
 }

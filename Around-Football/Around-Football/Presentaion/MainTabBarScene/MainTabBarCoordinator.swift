@@ -58,7 +58,39 @@ final class MainTabBarCoordinator: BaseCoordinator {
         navigationController?.viewControllers = [mainTabBarController]
     }
         
-    func pushToDetailView(recruit: Recruit) {
+    func handleDetailViewDeepLink(recruit: Recruit) {
+        guard let mainTabController = navigationController?.viewControllers.first as? MainTabController,
+              let selectedCoordinator = childCoordinators.first(where: { $0 is HomeTabCoordinator }) as? HomeTabCoordinator,
+              let navigationController = selectedCoordinator.navigationController else { return }
+        
+        navigationController.popToRootViewController(animated: false)
+        selectedCoordinator.deinitCoordinator()
+        mainTabController.selectedIndex = 0
+        UserService.shared.currentUser_Rx
+            .compactMap { $0 }
+            .take(1)
+            .bind { _ in
+                selectedCoordinator.pushToDetailView(recruitItem: recruit)
+            }
+            .disposed(by: disposeBag)
+    }
+    
+    func handleApplicantListDeepLink(recruit: Recruit) {
+        guard let mainTabController = navigationController?.viewControllers.first as? MainTabController,
+              let selectedCoordinator = childCoordinators.first(where: { $0 is HomeTabCoordinator }) as? HomeTabCoordinator,
+              let navigationController = selectedCoordinator.navigationController else { return }
+        
+        navigationController.popToRootViewController(animated: false)
+        selectedCoordinator.deinitCoordinator()
+        mainTabController.selectedIndex = 0
+        UserService.shared.currentUser_Rx
+            .compactMap { $0 }
+            .take(1)
+            .bind { _ in
+                selectedCoordinator.deepLinkApplicantView(recruit: recruit)
+            }
+            .disposed(by: disposeBag)
+
     }
     
     func handleChatDeepLink(channelInfo: ChannelInfo) {
@@ -66,10 +98,8 @@ final class MainTabBarCoordinator: BaseCoordinator {
               let selectedCoordinator = childCoordinators.first(where: { $0 is ChatTabCoordinator }) as? ChatTabCoordinator,
               let navigationController = selectedCoordinator.navigationController else { return }
             
-        if navigationController.viewControllers.count > 1 {
-            navigationController.viewControllers.removeSubrange(1...)
-        }
-        selectedCoordinator.deinitChildCoordinator()
+        navigationController.popToRootViewController(animated: false)
+        selectedCoordinator.deinitCoordinator()
         mainTabController.selectedIndex = 2
         UserService.shared.currentUser_Rx
             .compactMap { $0 }

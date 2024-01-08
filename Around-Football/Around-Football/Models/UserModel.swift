@@ -7,8 +7,10 @@
 
 import Foundation
 
+import Firebase
+
 struct User: Codable {
-    var id: String
+    var id: String = Auth.auth().currentUser?.uid ?? ""
     var userName: String
     var age: String
     var gender: String
@@ -17,6 +19,7 @@ struct User: Codable {
     var position: [String]
     var fcmToken: String
     var bookmarkedRecruit: [String?] //북마크한 필드id 저장
+    var totalAlarmNumber: Int = 0
     
     var representation: [String: Any] {
         let rep = [
@@ -28,24 +31,16 @@ struct User: Codable {
             "mainUsedFeet": mainUsedFeet,
             "position": position,
             "fcmToken": fcmToken,
-            "bookmarkedRecruit": bookmarkedRecruit
+            "bookmarkedRecruit": bookmarkedRecruit,
+            "totalAlarmNumber": totalAlarmNumber
         ] as [String: Any]
         
         return rep
     }
-
-    static func convertToArray(documents: [[String: Any]]) -> [User] {
-        var array: [User] = []
-        for document in documents {
-            let user = User(dictionary: document)
-            array.append(user)
-        }
-        
-        return array
-    }
     
     init(dictionary: [String: Any]) {
-        self.id = dictionary["id"] as? String ?? UUID().uuidString
+        // MARK: - 여기서 이상한 UUID를 넣어줘서 연동이 안됐었음
+//        self.id = dictionary["id"] as? String ?? "여기"
         self.userName = dictionary["userName"] as? String ?? ""
         self.age = dictionary["age"] as? String ?? ""
         self.gender = dictionary["gender"] as? String ?? ""
@@ -54,5 +49,6 @@ struct User: Codable {
         self.position = dictionary["position"] as? [String] ?? []
         self.fcmToken = dictionary["fcmToken"] as? String ?? ""
         self.bookmarkedRecruit = dictionary["bookmarkedRecruit"] as? [String] ?? []
+        self.totalAlarmNumber = dictionary["totalAlarmNumber"] as? Int ?? 0
     }
 }

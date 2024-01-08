@@ -26,7 +26,7 @@ final class InfoHeaderView: UIView {
     
     private lazy var settingButton = UIButton().then {
         let imageConfig = UIImage.SymbolConfiguration(pointSize: 20, weight: .regular)
-        let image = UIImage(systemName: "gear", withConfiguration: imageConfig)
+        let image = UIImage(named: AFIcon.settingButton)
         $0.setImage(image, for: .normal)
         $0.tintColor = .label
         $0.addTarget(self, action: #selector(settingButtonTapped), for: .touchUpInside)

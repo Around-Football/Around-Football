@@ -25,20 +25,10 @@ extension ChannelViewController {
             .disposed(by: disposeBag)
     }
     
-    func bindChannels() {
-        Observable.combineLatest(viewModel.channels, segmentControlView.rx.selectedSegmentIndex.asObservable())
+    func bindChannels(channels: Observable<[ChannelInfo]>) {
+        channels
             .withUnretained(self)
-            .map({ (owner, observe) in
-                let channels = observe.0
-                let index = observe.1
-                if index == 0, let currentUser = try? owner.viewModel.currentUser.value() {
-                    return channels.filter { $0.recruitUserID == currentUser.id }
-                } else if let currentUser = try? owner.viewModel.currentUser.value() {
-                   return channels.filter { $0.recruitUserID != currentUser.id}
-                }
-                return []
-            })
-            .map { [ChannelSectionModel(model: "", items: $0)] }
+            .map { [ChannelSectionModel(model: "", items: $1)] }
             .bind(to: channelTableView.rx.items(dataSource: channelTableViewDataSource))
             .disposed(by: disposeBag)
         
@@ -65,8 +55,12 @@ extension ChannelViewController {
             .disposed(by: disposeBag)
     }
     
-    func bindNavigateChannelView(with outputObservable: Observable<ChannelInfo>) {
-        outputObservable
+    func bindNavigateChannelView(with outputObservable: Observable<[ChannelInfo]>) {
+        channelTableView.rx.itemSelected
+            .withLatestFrom(outputObservable) { (indexPath, channels) -> ChannelInfo in
+                self.channelTableView.deselectRow(at: indexPath, animated: true)
+                return channels[indexPath.row]
+            }
             .withUnretained(self)
             .subscribe { (owner, channelInfo) in
                 owner.viewModel.showChatView(channelInfo: channelInfo)

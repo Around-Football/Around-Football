@@ -22,8 +22,14 @@ class SearchViewController: UIViewController {
     var searchViewModel: SearchViewModel
     var searchCoordinator: SearchCoordinator?
     
-    private lazy var searchController = UISearchController(searchResultsController: nil)
-    
+    //private lazy var searchController = UISearchController(searchResultsController: nil)
+    private var searchTextField = UITextField().then {
+        let magnifyglassImage = UIView()
+        $0.placeholder = "장소를 검색해주세요."
+        $0.addLeftPadding()
+        guard let image = UIImage(systemName: "magnifyingglass") else { return }
+        $0.addleftimage(image: image)
+    }
     private lazy var searchBar: UISearchBar = {
         let searchBar = UISearchBar().then {
             $0.placeholder = "장소를 검색해주세요."
@@ -46,7 +52,7 @@ class SearchViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         configureUI()
-        configureSearchController()
+//        configureSearchController()
         setTableView()
     }
     
@@ -56,22 +62,27 @@ class SearchViewController: UIViewController {
     
     // MARK: - Helpers
     
-    private func configureSearchController() {
-        navigationItem.searchController = searchController
-    }
+//    private func configureSearchController() {
+//        navigationItem.searchController = searchController
+//    }
     
     private func configureUI() {
         view.backgroundColor = .white
         
-        view.addSubviews(searchBar,
+        view.addSubviews(searchTextField,
                          tableView)
-        searchBar.snp.makeConstraints { make in
-            make.top.equalToSuperview()
-            make.leading.trailing.equalToSuperview()
+//        searchBar.snp.makeConstraints { make in
+//            make.top.equalToSuperview()
+//            make.leading.trailing.equalToSuperview()
+//        }
+        searchTextField.snp.makeConstraints { make in
+            make.top.equalToSuperview().offset(SuperviewOffsets.topPadding)
+            make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
+            make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
         }
         
         tableView.snp.makeConstraints { make in
-            make.top.equalTo(searchBar.snp.bottom)
+            make.top.equalTo(searchTextField.snp.bottom)
             make.leading.trailing.equalToSuperview()
             make.bottom.equalToSuperview().offset(SuperviewOffsets.bottomPadding)
         }
@@ -102,6 +113,11 @@ class SearchViewController: UIViewController {
                     cell.fieldAddressLabel.text = place.address
                 }
                 .disposed(by: disposeBag)
+    }
+    
+    @objc
+    private func textFieldDidChange(_ sender: Any?) {
+        
     }
 }
 

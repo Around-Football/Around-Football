@@ -43,12 +43,4 @@ final class ChatTabCoordinator: BaseCoordinator {
         coordinator.start() //여기서 모달뷰로 만듬
         childCoordinators.append(coordinator)
     }
-
-    func popCurrnetPage() {
-        navigationController?.popViewController(animated: true)
-    }
-    
-    func deinitChildCoordinator() {
-        super.deinitCoordinator()
-    }
 }

@@ -78,6 +78,7 @@ final class AFMediumButton: UIButton {
         setTitleColor(AFColor.grayScale200, for: .normal)
         setTitleColor(AFColor.secondary, for: .selected)
         layer.cornerRadius = LayoutOptions.cornerRadious
+        clipsToBounds = true
         layer.borderWidth = 1.0
         layer.borderColor = AFColor.grayScale100.cgColor
         setBackgroundColor(color, for: .selected)
@@ -147,6 +148,7 @@ final class AFMenuButton: UIButton {
         setTitleColor(.label, for: .normal)
         tintColor = AFColor.secondary
         layer.cornerRadius = LayoutOptions.cornerRadious
+        clipsToBounds = true
         layer.borderWidth = 1.0
         layer.borderColor = AFColor.grayScale100.cgColor
         showsMenuAsPrimaryAction = true
@@ -202,6 +204,7 @@ final class AFRoundSmallButton: UIButton {
         setBackgroundColor(.clear, for: .normal)
         setTitleColor(.white, for: .selected)
         setBackgroundColor(AFColor.secondary, for: .selected)
+        
         layer.cornerRadius = 15
         clipsToBounds = true
         layer.borderWidth = 1.0

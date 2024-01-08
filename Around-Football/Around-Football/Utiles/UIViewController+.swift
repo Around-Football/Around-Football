@@ -58,3 +58,18 @@ extension UIViewController {
         present(popUpViewController, animated: false, completion: nil)
     }
 }
+
+// MARK: - BackButton
+
+extension UIViewController {
+    func setAFBackButton() {
+        let AFBackButton = UIBarButtonItem(image: UIImage(named: AFIcon.backButton), style: .plain, target: self, action: #selector(popViewController))
+        AFBackButton.tintColor = AFColor.grayScale200
+        self.navigationItem.setLeftBarButton(AFBackButton, animated: true)
+    }
+    
+    @objc
+    func popViewController() {
+        navigationController?.popViewController(animated: true)
+    }
+}

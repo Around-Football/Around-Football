@@ -16,12 +16,21 @@ final class SearchTableViewCell: UITableViewCell {
     
     static let cellID: String = "SearchTableViewCell"
     
+    private let searchImageView = UIImageView().then {
+        $0.image = UIImage(named: AFIcon.searchItem)
+        $0.contentMode = .scaleAspectFit
+        $0.translatesAutoresizingMaskIntoConstraints = false
+    }
+    
     var fieldNameLabel = UILabel().then {
         $0.text = "구장 이름"
+        $0.font = AFFont.text?.withSize(16)
     }
     
     var fieldAddressLabel = UILabel().then {
         $0.text = "구장 주소"
+        $0.font = AFFont.text?.withSize(14)
+        $0.textColor = AFColor.grayScale300
     }
     
     // MARK: - Lifecycles
@@ -44,18 +53,27 @@ final class SearchTableViewCell: UITableViewCell {
     
     private func configureUI() {
         
-        self.addSubviews(fieldNameLabel,
+        self.addSubviews(searchImageView,
+                         fieldNameLabel,
                          fieldAddressLabel)
+        
+        searchImageView.snp.makeConstraints { make in
+            make.top.equalToSuperview().offset(SuperviewOffsets.topPadding)
+            make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
+            make.trailing.equalTo(fieldAddressLabel.snp.leading)
+            make.bottom.equalTo(fieldAddressLabel.snp.top)
+            
+        }
         
         fieldNameLabel.snp.makeConstraints { make in
             make.top.equalToSuperview().offset(SuperviewOffsets.topPadding)
-            make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
+            make.leading.equalTo(fieldAddressLabel)
             make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
         }
         
         fieldAddressLabel.snp.makeConstraints { make in
-            make.top.equalTo(fieldNameLabel.snp.bottom).offset(10)
-            make.leading.equalTo(fieldNameLabel)
+            make.top.equalTo(fieldNameLabel.snp.bottom).offset(5)
+            make.leading.equalToSuperview().offset(60)
             make.trailing.equalTo(fieldNameLabel)
             make.bottom.equalToSuperview().offset(SuperviewOffsets.bottomPadding)
         }
