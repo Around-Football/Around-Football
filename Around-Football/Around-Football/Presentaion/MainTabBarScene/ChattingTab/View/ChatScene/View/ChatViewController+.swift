@@ -91,7 +91,6 @@ extension ChatViewController {
         return buttonEvent
             .withLatestFrom(messageViewController.messageInputBar.inputTextView.rx.text.orEmpty)
             .do(onNext: { [weak self] _ in
-                print(#function)
                 self?.messageViewController.messageInputBar.inputTextView.text.removeAll()
             })
             .asObservable()

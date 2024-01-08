@@ -53,11 +53,12 @@ final class UserService: NSObject {
                     .asObservable()
                     .catchAndReturn(nil)
             }
-            .subscribe { [weak self] user in
+            .subscribe(onNext: { [weak self] user in
                 guard let self else { return }
                 currentUser_Rx.onNext(user)
                 checkUserInfoExist.onNext(true)
-            }
+                NotiManager.shared.setAppIconBadgeNumber(number: user?.totalAlarmNumber ?? 0)
+            })
             .disposed(by: disposeBag)
     }
     
@@ -99,6 +100,8 @@ final class UserService: NSObject {
                 let center = UNUserNotificationCenter.current()
                 center.removeAllPendingNotificationRequests()
                 center.removeAllDeliveredNotifications()
+                
+                NotiManager.shared.setAppIconBadgeNumber(number: 0)
             }
             .disposed(by: disposeBag)
     }
@@ -150,6 +153,7 @@ final class UserService: NSObject {
                             .setData(["id": uid]) { [weak self] error in
                                 guard let self else { return }
                                 if error != nil {
+                                    print("setUserDataError: \(error?.localizedDescription)")
                                     return
                                 }
                                 

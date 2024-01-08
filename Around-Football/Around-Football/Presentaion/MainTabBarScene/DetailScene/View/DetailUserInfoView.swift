@@ -14,11 +14,13 @@ final class DetailUserInfoView: UIView {
     
     // MARK: - Properties
     
-    private let profileImageView = UIImageView().then {
-        $0.image = UIImage(named: "AppIcon")
+    private lazy var profileImageView = UIImageView().then {
+        $0.image = UIImage(named: AFIcon.fieldImage)
         $0.contentMode = .scaleAspectFill
         $0.layer.cornerRadius = 20
         $0.clipsToBounds = true
+        $0.isUserInteractionEnabled = true
+        $0.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(imageViewTapped)))
     }
     
     private let userNameLabel = UILabel().then {
@@ -69,11 +71,6 @@ final class DetailUserInfoView: UIView {
         subViews.forEach { label in
             view.addArrangedSubview(label)
         }
-        
-//        userDetailInfoSettingViewStackView.snp.makeConstraints { make in
-//            make.centerY.equalTo(userStackView.snp.centerY)
-//            make.leading.equalTo(userStackView.snp.trailing).offset(5)
-//        }
     }
     
     private lazy var userDetailInfoSettingViewStackView = UIStackView().then { view in
@@ -108,6 +105,14 @@ final class DetailUserInfoView: UIView {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    // MARK: - Selectors
+    
+    @objc
+    func imageViewTapped() {
+        // TODO: - ImagePicker 코드 추가하기
+        print("이미지 눌림")
     }
     
     // MARK: - Helpers

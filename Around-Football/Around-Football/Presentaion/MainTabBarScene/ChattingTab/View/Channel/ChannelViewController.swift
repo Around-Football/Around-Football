@@ -113,12 +113,8 @@ final class ChannelViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.navigationBar.prefersLargeTitles = false
-
+        viewModel.deinitChildCoordinator()
         invokedViewWillAppear.onNext(())
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        navigationItem.backButtonTitle = ""
     }
     
     // MARK: - Helpers
@@ -128,12 +124,6 @@ final class ChannelViewController: UIViewController {
         channelTableViewDataSource = RxTableViewSectionedReloadDataSource(configureCell: { data, tableView, indexPath, item in
             let cell = tableView.dequeueReusableCell(withIdentifier: ChannelTableViewCell.cellId, for: indexPath) as! ChannelTableViewCell
                 cell.configure(channelInfo: item)
-//            cell.userNameLabel.text = item.withUserName
-//            cell.chatPreviewLabel.text = item.previewContent
-//            let alarmNumber = item.alarmNumber
-//            alarmNumber == 0 ? self.hideChatAlarmNumber(cell: cell) : self.showChatAlarmNumber(cell: cell, alarmNumber: alarmNumber)
-//            let date = item.recentDate
-//            cell.recentDateLabel.text = self.formatDate(date)
             
             return cell
 
@@ -196,16 +186,16 @@ final class ChannelViewController: UIViewController {
     private func bind() {
         let input = ChannelViewModel.Input(
             invokedViewWillAppear: invokedViewWillAppear,
-            selectedChannel: channelTableView.rx.itemSelected.asObservable(),
+            selectedSegment: segmentControlView.rx.selectedSegmentIndex.asObservable(),
             invokedDeleteChannel: invokedDeleteChannel
         )
         
         let output = viewModel.transform(input)
         
         bindContentView()
-        bindChannels()
+        bindChannels(channels: output.segmentChannels)
         bindLoginModalView(with: output.isShowing)
-        bindNavigateChannelView(with: output.navigateTo)
+        bindNavigateChannelView(with: output.segmentChannels)
         bindTapSegmentControl()
     }
     

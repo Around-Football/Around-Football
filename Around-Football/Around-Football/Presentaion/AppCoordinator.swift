@@ -39,6 +39,7 @@ extension Coordinator {
     // 자식 코디네이터와 코디네이터의 navigationController 해제
     func deinitCoordinator() {
         childCoordinators.forEach {
+            print("DEINIT COORDINATOR \($0.self)")
             $0.navigationController = nil
             $0.deinitCoordinator()
         }
@@ -83,6 +84,4 @@ final class AppCoordinator: BaseCoordinator {
         coordinator.start() // 뷰컨 생성 후 이동
         childCoordinators.append(coordinator)
     }
-    
-    //TODO: - 온보딩뷰 컨트롤러로 변경
 }

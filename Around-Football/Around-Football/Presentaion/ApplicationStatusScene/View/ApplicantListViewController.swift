@@ -69,7 +69,6 @@ final class ApplicantListViewController: UIViewController {
         navigationController?.navigationBar.titleTextAttributes = [
             NSAttributedString.Key.foregroundColor: AFColor.grayScale200
         ]
-        navigationController?.navigationBar.tintColor = AFColor.grayScale200
         
         viewModel.removeChildCoordinator()
     }
@@ -141,23 +140,17 @@ final class ApplicantListViewController: UIViewController {
             let applicantStatus = self.viewModel.emitApplicantStatusCalculator(uid: user.id)
             cell.configure(user: user)
             cell.setButtonStyle(status: applicantStatus)
-            cell.acceptButton.rx.tap
-                .bind { _ in
-                    if applicantStatus == .accepted {
-                        self.loadingView.startAnimating()
-                        self.viewModel.cancelApplicantion(uid: user.id)
-                    } else {
-                        self.loadingView.startAnimating()
-                        self.viewModel.acceptApplicantion(uid: user.id)
-                    }
+            cell.bind {
+                if applicantStatus == .accepted {
+                    self.loadingView.startAnimating()
+                    self.viewModel.cancelApplicantion(user: user)
+                } else {
+                    self.loadingView.startAnimating()
+                    self.viewModel.acceptApplicantion(user: user)
                 }
-                .disposed(by: self.disposeBag)
-            
-            cell.sendMessageButton.rx.tap
-                .bind { _ in
-                    self.viewModel.checkChannelAndPushChatViewController(user: user)
-                }
-                .disposed(by: self.disposeBag)
+            } messageAction: {
+                self.viewModel.checkChannelAndPushChatViewController(user: user)
+            }
         }
         .disposed(by: self.disposeBag)
         

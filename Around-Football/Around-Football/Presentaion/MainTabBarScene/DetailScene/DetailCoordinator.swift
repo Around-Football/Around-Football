@@ -15,13 +15,23 @@ final class DetailCoordinator: BaseCoordinator {
     func start(recruitItem: Recruit) {
         let viewModel = DetailViewModel(coordinator: self, recruitItem: recruitItem)
         let controller = DetailViewController(viewModel: viewModel)
+        let AFBackButton = UIBarButtonItem(image: UIImage(named: AFIcon.backButton), style: .plain, target: self, action: #selector(popDetailViewController))
+        AFBackButton.tintColor = AFColor.grayScale200
+        controller.navigationItem.setLeftBarButton(AFBackButton, animated: true)
         controller.hidesBottomBarWhenPushed = true
+        
         navigationController?.pushViewController(controller, animated: true)
     }
     
+    @objc
     func popDetailViewController() {
         navigationController?.popViewController(animated: true)
         deinitCoordinator()
+    }
+    
+    @objc
+    func popApplicantViewController() {
+        navigationController?.popViewController(animated: true)
     }
     
     func pushApplicationStatusViewController(recruit: Recruit) {
@@ -31,8 +41,17 @@ final class DetailCoordinator: BaseCoordinator {
         } else {
             let viewModel = ApplicantListViewModel(coordinator: self, recruit: recruit)
             let controller = ApplicantListViewController(viewModel: viewModel)
+            let AFBackButton = UIBarButtonItem(image: UIImage(named: AFIcon.backButton), style: .plain, target: self, action: #selector(popApplicantViewController))
+            AFBackButton.tintColor = AFColor.grayScale200
+            controller.navigationItem.setLeftBarButton(AFBackButton, animated: true)
+
             navigationController?.pushViewController(controller, animated: true)
         }
+    }
+    
+    func deepLinkApplicationViewController(recruit: Recruit) {
+        start(recruitItem: recruit)
+        pushApplicationStatusViewController(recruit: recruit)
     }
         
     func clickSendMessageButton(channelInfo: ChannelInfo, isNewChat: Bool = false) {

@@ -34,11 +34,16 @@ final class InfoTabCoordinator: BaseCoordinator {
     }
 
     func pushDetailCell(recruitItem: Recruit) {
-        let viewModel = DetailViewModel(coordinator: nil, recruitItem: recruitItem)
-        let vc = DetailViewController(viewModel: viewModel)
-        navigationController?.pushViewController(vc, animated: true)
+        let coordinator = DetailCoordinator(navigationController: navigationController)
+        childCoordinators.append(coordinator)
+        coordinator.start(recruitItem: recruitItem)
+        
+//        let viewModel = DetailViewModel(coordinator: coordinator, recruitItem: recruitItem)
+//        let vc = DetailViewController(viewModel: viewModel)
+//        vc.setAFBackButton()
+//        navigationController?.pushViewController(vc, animated: true)
     }
-    
+
     func popViewController() {
         navigationController?.popViewController(animated: true)
     }
@@ -46,6 +51,7 @@ final class InfoTabCoordinator: BaseCoordinator {
     func pushSettingView() {
         let viewModel = SettingViewModel(coordinator: self)
         let vc = SettingViewController(viewModel: viewModel)
+        vc.setAFBackButton()
         navigationController?.pushViewController(vc, animated: true)
     }
     
@@ -61,19 +67,31 @@ final class InfoTabCoordinator: BaseCoordinator {
     func pushBookmarkPostViewController() {
         let viewModel = InfoPostViewModel(coordinator: self)
         let vc = BookmarkPostViewController(viewModel: viewModel)
-        
+        vc.setAFBackButton()
         navigationController?.pushViewController(vc, animated: true)
     }
     
     func pushWrittenPostViewController() {
         let viewModel = InfoPostViewModel(coordinator: self)
         let vc = WrittenPostViewController(viewModel: viewModel)
+        vc.setAFBackButton()
         navigationController?.pushViewController(vc, animated: true)
     }
     
     func pushApplicationPostViewController() {
         let viewModel = InfoPostViewModel(coordinator: self)
         let vc = ApplicationPostViewController(viewModel: viewModel)
+        vc.setAFBackButton()
+        navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    // MARK: - 약관 웹 뷰
+    func pushWebViewController(url: String) {
+        let viewModel = SettingViewModel(coordinator: self)
+        let vc = WebViewController(viewModel: viewModel, url: url)
+        vc.setAFBackButton()
         navigationController?.pushViewController(vc, animated: true)
     }
 }
+
+
