@@ -55,18 +55,18 @@ final class SettingViewController: UIViewController {
     // MARK: - Helpers
     
     private func bindUI() {
-        viewModel?
-            .settingMenusObserverble
-            .bind(to: settingTableView.rx.items(cellIdentifier: InfoCell.cellID,
-                                                cellType: InfoCell.self)) { index, item, cell in
-                
-                if item == "알림 설정" {
-                    print("\(item)")
-                    cell.setValues(title: item, usingRightIcon: false, usingSwitch: true)
-                } else {
-                    cell.setValues(title: item, usingRightIcon: false)
-                }
-            }.disposed(by: disposeBag)
+//        viewModel?
+//            .settingMenusObserverble
+//            .bind(to: settingTableView.rx.items(cellIdentifier: InfoCell.cellID,
+//                                                cellType: InfoCell.self)) { index, item, cell in
+//                
+//                if item == "알림 설정" {
+//                    print("\(item)")
+//                    cell.setValues(title: item, usingRightIcon: false, usingSwitch: true)
+//                } else {
+//                    cell.setValues(title: item, usingRightIcon: false)
+//                }
+//            }.disposed(by: disposeBag)
         
         // MARK: - Section에 따라 설정
         
@@ -136,7 +136,12 @@ extension SettingViewController {
         dataSource = RxTableViewSectionedReloadDataSource<SectionModel>(
             configureCell: { (_, tableView, indexPath, item) in
                 let cell = tableView.dequeueReusableCell(withIdentifier: InfoCell.cellID, for: indexPath) as! InfoCell
-                cell.setValues(title: item, usingRightIcon: false)
+                if item == "알림 설정" {
+                    print("\(item)")
+                    cell.setValues(title: item, usingRightIcon: false, usingSwitch: true)
+                } else {
+                    cell.setValues(title: item, usingRightIcon: false)
+                }
                 return cell
             },
             titleForHeaderInSection: { dataSource, sectionIndex in
