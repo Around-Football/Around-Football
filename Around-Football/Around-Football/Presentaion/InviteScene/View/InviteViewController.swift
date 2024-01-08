@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import PhotosUI
 
 import Firebase
 import RxCocoa
@@ -25,6 +26,7 @@ final class InviteViewController: UIViewController {
     let contentView = UIView()
     private let placeView = GroundTitleView()
     private let peopleView = PeopleCountView()
+    private let inviteImageView = InviteImageView(frame: CGRect(x: 0, y: 0, width: 0, height: 0))
     private let divider = UIView().then {
         $0.backgroundColor = AFColor.grayScale50
     }
@@ -63,6 +65,12 @@ final class InviteViewController: UIViewController {
         $0.locale = Locale(identifier: "ko_KR")
         $0.layer.cornerRadius = 8
         $0.clipsToBounds = true
+        $0.minimumDate = Date()
+        let titleDateformatter = DateFormatter()
+        titleDateformatter.locale = Locale(identifier: "ko_KR")
+        titleDateformatter.dateFormat = "M월 d일"
+        let matchDateString = titleDateformatter.string(from: Date())
+        viewModel.matchDateString.accept(matchDateString)
         let emptyView = UIView()
         emptyView.backgroundColor = .white
         $0.addSubviews(emptyView)
@@ -73,7 +81,7 @@ final class InviteViewController: UIViewController {
         dateFilterButton.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
-        $0.addTarget(self, action: #selector(changeDate), for: .valueChanged)
+        $0.addTarget(self, action: #selector(changeDate), for: .allEvents)
     }
     
     private let timeTitleLabel = UILabel().then {
@@ -88,7 +96,7 @@ final class InviteViewController: UIViewController {
         $0.datePickerMode = .time
         $0.locale = Locale(identifier: "ko_kr")
         $0.minuteInterval = 30
-        $0.date = Date()
+        $0.minimumDate = Date(timeIntervalSinceNow: 0)
         $0.addTarget(self, action: #selector(startTimePickerSelected), for: .valueChanged)
     }
     
@@ -96,7 +104,7 @@ final class InviteViewController: UIViewController {
         $0.datePickerMode = .time
         $0.locale = Locale(identifier: "ko_kr")
         $0.minuteInterval = 30
-        $0.date = Date()
+        $0.minimumDate = Date(timeInterval: 1800, since: startTimePicker.date)
         $0.addTarget(self, action: #selector(endTimePickerSelected), for: .valueChanged)
     }
     
@@ -115,10 +123,10 @@ final class InviteViewController: UIViewController {
         items: ["풋살", "축구"]
     ).then {
         $0.selectedSegmentIndex = 0 //기본 선택 풋살로
-        viewModel.type.accept("풋살")
         $0.addTarget(self,
                      action: #selector(typeSegmentedControlValueChanged),
                      for: .valueChanged)
+        viewModel.type.accept("풋살")
     }
     
     private let genderLabel = UILabel().then {
@@ -130,10 +138,10 @@ final class InviteViewController: UIViewController {
         items: ["남성", "여성", "무관"]
     ).then {
         $0.selectedSegmentIndex = 0
-//        viewModel.type.accept("풋살")
         $0.addTarget(self,
                      action: #selector(genderSegmentedControlValueChanged),
                      for: .valueChanged)
+        viewModel.gender.accept("남성")
     }
     
     private let contentLabel = UILabel().then {
@@ -153,11 +161,13 @@ final class InviteViewController: UIViewController {
         return config
     }
     
+    var uploadedImages = PublishSubject<[UIImage]>()
+    private var images = [UIImage]()
     private lazy var imageButton: UIButton = {
         let button = UIButton(configuration: buttonConfig).then {
             $0.setImage(UIImage(named: AFIcon.imagePlaceholder), for: .normal)
             $0.titleLabel?.font = AFFont.filterRegular
-            $0.setTitle("0/3", for: .normal)
+            $0.setTitle("\(images.count)/3", for: .normal)
             $0.setTitleColor(AFColor.grayScale200, for: .normal)
             $0.layer.borderWidth = 1
             $0.layer.borderColor = AFColor.grayScale100.cgColor
@@ -191,8 +201,8 @@ final class InviteViewController: UIViewController {
         button.menu = UIMenu(children: prices.map { price in
             UIAction(title: price) { [weak self] _ in
                 guard let self else { return }
-                viewModel.gamePrice.accept(price)
                 button.setTitle(price, for: .normal)
+                viewModel.gamePrice.accept(price)
             }
         })
         
@@ -206,7 +216,10 @@ final class InviteViewController: UIViewController {
         $0.layer.borderWidth = 0.8
         $0.layer.borderColor = AFColor.grayScale100.cgColor
         $0.addSubview(contentPlaceHolderLabel)
-        contentPlaceHolderLabel.frame = CGRect(x: 5, y: 0, width: 300, height: 30)
+        contentPlaceHolderLabel.frame = CGRect(x: 5, 
+                                               y: 0,
+                                               width: 300,
+                                               height: 30)
     }
     
     let contentPlaceHolderLabel = UILabel().then {
@@ -239,6 +252,7 @@ final class InviteViewController: UIViewController {
         keyboardController()
         setAddButton()
         setSearchFieldButton()
+        bindImageButtonEvent()
     }
     
     // MARK: - Selectors
@@ -316,6 +330,20 @@ final class InviteViewController: UIViewController {
             .disposed(by: disposeBag)
     }
     
+    private func bindImageButtonEvent() {
+        imageButton.rx.tap
+            .withUnretained(self)
+            .subscribe { (owner, event) in
+                var configuaration = PHPickerConfiguration()
+                configuaration.selectionLimit = 3
+                configuaration.filter = .images
+                let picker = PHPickerViewController(configuration: configuaration)
+                picker.delegate = self
+                owner.viewModel.showPHPickerView(picker: picker)
+            }
+            .disposed(by: disposeBag)
+    }
+    
     func areFieldsEmptyObservable() -> Observable<Bool> {
         
         let fieldObservables = [
@@ -336,8 +364,28 @@ final class InviteViewController: UIViewController {
             }
     }
     
-    private func setAddButton() {
+    // TODO: - 업로드 이미지 Rx 바인딩
+    private func setImages() {
+        lazy var imageViews = [UIImage]()
+        uploadedImages.subscribe { images in
+            for image in images {
+                imageViews.append(image)
+            }
+        }
+        .disposed(by: disposeBag)
         
+        imageViews.forEach {
+            inviteImageView.image = $0
+            contentView.addSubview(inviteImageView)
+            inviteImageView.snp.makeConstraints { make in
+                make.leading.equalTo(imageButton.snp.trailing).offset(10)
+                make.top.bottom.width.height.equalTo(imageButton)
+            }
+        }
+        print("setImage")
+    }
+    
+    private func setAddButton() {
         searchViewModel.dataSubject
             .subscribe(onNext: { [weak self] place in
                 guard let self else { return }
@@ -348,14 +396,12 @@ final class InviteViewController: UIViewController {
             })
             .disposed(by: disposeBag)
         
-        //TODO: - 다 입력했을때 버튼 활성화되도록 수정
-        
         areFieldsEmptyObservable()
             .bind(onNext: { [weak self] bool in
                 guard let self else { return }
                 if bool == true {
                     addButton.setTitle("작성 완료", for: .normal)
-                    addButton.setTitleColor(.white, for: .normal)
+                    addButton.setTitleColor(AFColor.secondary, for: .normal)
                     addButton.isEnabled = true
                 } else {
                     addButton.setTitle("모든 항목을 작성해주세요", for: .normal)
@@ -564,5 +610,29 @@ final class InviteViewController: UIViewController {
             make.trailing.bottom.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
             make.height.equalTo(40)
         }
+    }
+}
+
+extension InviteViewController: PHPickerViewControllerDelegate {
+    func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
+        results.forEach {
+            let itemProvider = $0.itemProvider
+            guard
+                itemProvider.canLoadObject(ofClass: UIImage.self)
+            else {
+                return
+            }
+            itemProvider.loadObject(ofClass: UIImage.self) { [weak self] image, error in
+                guard
+                    let self = self,
+                    let image = image as? UIImage
+                else {
+                    return
+                }
+                images.append(image)
+            }
+        }
+        self.uploadedImages.onNext(images)
+        picker.dismiss(animated: true)
     }
 }

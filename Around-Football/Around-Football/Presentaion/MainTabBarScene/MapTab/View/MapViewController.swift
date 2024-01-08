@@ -52,14 +52,14 @@ final class MapViewController: UIViewController {
     private lazy var searchFieldButton: UIButton = {
         let button = UIButton(configuration: buttonConfig)
         let image = UIImage(systemName: "magnifyingglass")
-        button.setTitle("장소를 검색해주세요.", for: .normal)
-        button.setImage(image?.withTintColor(UIColor.systemGray, renderingMode: .alwaysOriginal),for: .normal)
-        button.setTitleColor(.systemGray, for: .normal)
+        button.setTitle("장소를 입력하세요", for: .normal)
+        button.titleLabel?.font = AFFont.text?.withSize(16)
+        button.setImage(image?.withTintColor(AFColor.grayScale300, renderingMode: .alwaysOriginal),for: .normal)
+        button.setTitleColor(AFColor.grayScale100, for: .normal)
         button.layer.cornerRadius = LayoutOptions.cornerRadious
         button.translatesAutoresizingMaskIntoConstraints = false
         button.backgroundColor = .white
-        button.layer.borderWidth = 1
-        button.layer.borderColor = AFColor.grayScale200.cgColor
+        button.setShadowLayer()
         button.contentHorizontalAlignment = .leading
         button.addTarget(self, action: #selector(pressSearchBar), for: .touchUpInside)
         return button
@@ -243,8 +243,8 @@ final class MapViewController: UIViewController {
         
         searchFieldButton.snp.makeConstraints {
             $0.top.equalToSuperview().offset(70)
-            $0.leading.equalToSuperview().offset(10)
-            $0.trailing.equalToSuperview().offset(-10)
+            $0.leading.equalToSuperview().offset(20)
+            $0.trailing.equalToSuperview().offset(-20)
         }
         
         trackingButton.snp.makeConstraints {
@@ -261,10 +261,7 @@ extension MapViewController: UISearchResultsUpdating, UISearchBarDelegate {
     }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        
         guard let viewModel = viewModel else { return}
-        KakaoService.shared.searchField(searchText,
-                                        viewModel.searchResults,
-                                        disposeBag)
+        viewModel.searchFields(keyword: searchText, disposeBag: disposeBag)
     }
 }
