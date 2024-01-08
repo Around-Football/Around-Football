@@ -50,6 +50,7 @@ final class HomeViewController: UIViewController {
     
     private lazy var homeTableView = UITableView().then {
         $0.register(HomeTableViewCell.self, forCellReuseIdentifier: HomeTableViewCell.id)
+        $0.refreshControl = refreshControl
         $0.separatorInset = UIEdgeInsets().with({ edge in
             edge.left = 0
             edge.right = 20
@@ -75,6 +76,11 @@ final class HomeViewController: UIViewController {
     private lazy var floatingButton = UIButton().then {
         $0.setImage(UIImage(named: AFIcon.plusButton), for: .normal)
         $0.addTarget(self, action: #selector(didTapFloatingButton), for: .touchUpInside)
+    }
+    
+    private lazy var refreshControl = UIRefreshControl().then {
+        $0.tintColor = AFColor.grayScale100
+        $0.addTarget(self, action: #selector(refreshData), for: .valueChanged)
     }
     
     // MARK: - Lifecycles
@@ -108,6 +114,18 @@ final class HomeViewController: UIViewController {
     }
     
     // MARK: - Selectors
+    
+    @objc func refreshData() {
+        print("DEBUG: refreshable 실행")
+        refreshControl.beginRefreshing()
+        
+        loadRecruitList.onNext(filterRequest)
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) { [weak self] in
+            guard let self else { return }
+            refreshControl.endRefreshing()
+        }
+    }
     
     @objc
     private func resetButtonTapped() {

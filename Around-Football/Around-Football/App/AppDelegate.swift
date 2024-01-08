@@ -22,7 +22,6 @@ import RxSwift
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        
         //Firebase 구성
         FirebaseApp.configure()
         //kakao 초기화
@@ -48,7 +47,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         //네비게이션 탭바 색상 검정색으로
         UINavigationBar.appearance().tintColor = .label
         UINavigationBar.appearance().titleTextAttributes = [NSAttributedString.Key.font: AFFont.titleCard as Any]
-
+        
         return true
     }
     

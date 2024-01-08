@@ -58,4 +58,30 @@ final class InfoPostViewModel {
                 return recruitObservable
             }
     }
+    
+    // MARK: - Cell 북마크 메서드
+    
+    func addBookmark(uid: String, recruitID: String?) {
+        print("add 눌림")
+        FirebaseAPI.shared.fetchUser(uid: uid) { user in
+            var user = user
+            var bookmark = user.bookmarkedRecruit
+            bookmark.append(recruitID)
+            user.bookmarkedRecruit = bookmark
+            FirebaseAPI.shared.updateUser(user)
+        }
+    }
+    
+    func removeBookmark(uid: String, recruitID: String?) {
+        print("remove 눌림")
+        FirebaseAPI.shared.fetchUser(uid: uid) { user in
+            var user = user
+            var bookmark = user.bookmarkedRecruit
+            bookmark.removeAll { fID in
+                recruitID == fID
+            }
+            user.bookmarkedRecruit = bookmark
+            FirebaseAPI.shared.updateUser(user)
+        }
+    }
 }

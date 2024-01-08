@@ -154,7 +154,8 @@ final class InfoViewController: UIViewController {
         
         infoTableView.snp.makeConstraints { make in
             make.top.equalTo(lineView.snp.bottom)
-            make.leading.trailing.equalToSuperview()
+            make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
+            make.trailing.equalToSuperview()
             make.height.equalTo(256)
         }
         
