@@ -125,6 +125,7 @@ final class DetailViewModel {
     
     func sendRecruitApplicant() {
         guard let recruit = getRecruit(),
+              let recruitUser = try? recruitUser.value(),
               let user = getCurrentUser() else { return }
         FirebaseAPI.shared.appendPendingApplicant(recruitID: recruit.id, userID: user.id) { [weak self] error in
             if let error = error {
@@ -132,6 +133,7 @@ final class DetailViewModel {
                 return
             }
             self?.fetchRecruit()
+            NotiManager.shared.pushApplicantNotification(recruit: recruit, receiverFcmToken: recruitUser.fcmToken)
         }
     }
     
@@ -171,6 +173,26 @@ final class DetailViewModel {
                 
                 return Observable.just(.availableRecruit)
             }
+    }
+    
+    func deleteRecruit() {
+        guard let recruit = getRecruit() else { return }
+        FirebaseAPI.shared.deleteRecruit(recruitID: recruit.id) { [weak self] error in
+            if let error = error {
+                print("DEBUG - Error: \(error.localizedDescription)", #function)
+                return
+            }
+            guard let self = self else { return }
+            
+            FirebaseAPI.shared.fetchUsersRx(uids: recruit.acceptedApplicantsUID)
+                .take(1)
+                .bind { users in
+                    print("DEBUG - APPLICANT")
+                    users.forEach { NotiManager.shared.pushDeleteNotification(recruit: recruit, receiverFcmToken: $0.fcmToken)}
+                }
+                .disposed(by: disposeBag)
+            coordinator?.popDetailViewController()
+        }
     }
     
     func getCurrentUser() -> User? {

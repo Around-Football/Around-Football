@@ -25,13 +25,13 @@ final class ChannelViewModel {
     
     struct Input {
         let invokedViewWillAppear: Observable<Void>
-        let selectedChannel: Observable<IndexPath>
+        let selectedSegment: Observable<Int>
         let invokedDeleteChannel: Observable<IndexPath>
     }
     
     struct Output {
         let isShowing: Observable<Bool>
-        let navigateTo: Observable<ChannelInfo>
+        let segmentChannels: Observable<[ChannelInfo]>
     }
     
     // MARK: - Lifecycles
@@ -101,8 +101,8 @@ final class ChannelViewModel {
         setupListener(currentUser: self.currentUser.asObservable())
         deleteChannelInfo(by: input.invokedDeleteChannel)
         let isShowing = configureShowingLoginView(by: input.invokedViewWillAppear)
-        let navigateTo = emitSelectedChannelInfo(by: input.selectedChannel)
-        return Output(isShowing: isShowing, navigateTo: navigateTo)
+        let channels = emitSelectedSegmentChannelInfo(by: input.selectedSegment)
+        return Output(isShowing: isShowing, segmentChannels: channels)
     }
     
     private func configureShowingLoginView(by inputObserver: Observable<Void>) -> Observable<Bool> {
@@ -121,12 +121,19 @@ final class ChannelViewModel {
             }
     }
     
-    private func emitSelectedChannelInfo(by inputObserver: Observable<IndexPath>)
-    -> Observable<ChannelInfo> {
-        inputObserver
-            .withLatestFrom(channels) { (indexPath, channels) -> ChannelInfo in
-                return channels[indexPath.row]
-            }
+    private func emitSelectedSegmentChannelInfo(by inputObserver: Observable<Int>) -> Observable<[ChannelInfo]> {
+        return Observable.combineLatest(channels, inputObserver)
+            .withUnretained(self)
+            .flatMap({ (owner, observe) -> Observable<[ChannelInfo]> in
+                let channels = observe.0
+                let index = observe.1
+                guard let currentUser = try? owner.currentUser.value() else { return .just([]) }
+                if index == 0 {
+                    return .just(channels.filter { $0.recruitUserID == currentUser.id })
+                } else {
+                    return .just(channels.filter{ $0.recruitUserID != currentUser.id })
+                }
+            })
     }
     
     private func deleteChannelInfo(by inputObserver: Observable<IndexPath>) {
@@ -165,5 +172,9 @@ final class ChannelViewModel {
     
     func removeListner() {
         channelAPI.removeListener()
+    }
+    
+    func deinitChildCoordinator() {
+        coordinator?.deinitCoordinator()
     }
 }

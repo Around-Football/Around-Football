@@ -18,6 +18,9 @@ final class ChatCoordinator: BaseCoordinator {
     func start(channelInfo: ChannelInfo, isNewChat: Bool = false) {
         let viewModel = ChatViewModel(coordinator: self, channelInfo: channelInfo, isNewChat: isNewChat)
         let controller = ChatViewController(viewModel: viewModel)
+        let AFBackButton = UIBarButtonItem(image: UIImage(named: AFIcon.backButton), style: .plain, target: self, action: #selector(popChatViewController))
+        AFBackButton.tintColor = AFColor.grayScale200
+        controller.navigationItem.setLeftBarButton(AFBackButton, animated: true)
         controller.hidesBottomBarWhenPushed = true
         navigationController?.pushViewController(controller, animated: true)
     }
@@ -27,8 +30,10 @@ final class ChatCoordinator: BaseCoordinator {
         navigationController?.present(picker, animated: true)
     }
     
-    func popCurrnetPage() {
+    @objc
+    func popChatViewController() {
         navigationController?.popViewController(animated: true)
+        deinitCoordinator()
     }
     
     func pushToDetailView(recruitItem: Recruit) {
@@ -36,9 +41,5 @@ final class ChatCoordinator: BaseCoordinator {
         navigationController?.navigationBar.isHidden = false
         coordinator.start(recruitItem: recruitItem)
         childCoordinators.append(coordinator)
-    }
-    
-    func deinitChildCoordinator() {
-        super.deinitCoordinator()
     }
 }

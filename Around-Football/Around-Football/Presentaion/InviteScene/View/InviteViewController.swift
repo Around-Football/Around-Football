@@ -255,6 +255,10 @@ final class InviteViewController: UIViewController {
         bindImageButtonEvent()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        navigationController?.navigationBar.prefersLargeTitles = false
+    }
+    
     // MARK: - Selectors
     
     @objc

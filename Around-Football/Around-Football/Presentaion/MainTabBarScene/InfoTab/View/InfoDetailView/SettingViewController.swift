@@ -55,6 +55,18 @@ final class SettingViewController: UIViewController {
     // MARK: - Helpers
     
     private func bindUI() {
+        viewModel?
+            .settingMenusObserverble
+            .bind(to: settingTableView.rx.items(cellIdentifier: InfoCell.cellID,
+                                                cellType: InfoCell.self)) { index, item, cell in
+                
+                if item == "알림 설정" {
+                    print("\(item)")
+                    cell.setValues(title: item, usingRightIcon: false, usingSwitch: true)
+                } else {
+                    cell.setValues(title: item, usingRightIcon: false)
+                }
+            }.disposed(by: disposeBag)
         
         // MARK: - Section에 따라 설정
         
