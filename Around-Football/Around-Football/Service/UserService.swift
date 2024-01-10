@@ -344,7 +344,7 @@ extension UserService {
             let uid = result?.user.uid
             
             REF_USER.document(uid ?? UUID().uuidString)
-                .setData(["id" : uid ?? UUID().uuidString])
+                .setData(["id": uid ?? UUID().uuidString])
             
             isLoginObservable.onNext(())
         }

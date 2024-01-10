@@ -241,21 +241,21 @@ final class ChatViewModel {
                   let withUser = withUser,
                   let url = url else { return }
             
-            self.isSendingPhoto.accept(false)
+            isSendingPhoto.accept(false)
             var message = Message(user: currentUser, image: image)
             message.downloadURL = url
             
             // Date 메시지 첨부 전송 여부 로직
             let saveMessages = appendDateMessageCell(message: message)
             
-            self.chatAPI.save(saveMessages) { error in
+            chatAPI.save(saveMessages) { error in
                 if let error = error {
                     print("DEBUG - inputBar Error: \(error.localizedDescription)")
                     return
                 }
             }
             
-            self.channelAPI.updateChannelInfo(owner: currentUser,
+            channelAPI.updateChannelInfo(owner: currentUser,
                                               withUser: withUser,
                                               channelId: channel.id,
                                               message: message)
