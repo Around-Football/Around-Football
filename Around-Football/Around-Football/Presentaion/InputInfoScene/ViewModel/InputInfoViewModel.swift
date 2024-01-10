@@ -41,14 +41,6 @@ final class InputInfoViewModel {
         }
     }
     
-    private func fetchUser() {
-        guard let uid = Auth.auth().currentUser?.uid else { return }
-        FirebaseAPI.shared.fetchUser(uid: uid) { [weak self] user in
-            self?.inputUserInfo.accept(user)
-            print("DEBUG - FETCH USER: \(user)")
-        }
-    }
-    
     // MARK: - Helpers
     
     func trensform(_ input: Input) -> Output {
