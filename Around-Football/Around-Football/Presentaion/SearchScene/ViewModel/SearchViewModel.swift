@@ -25,4 +25,8 @@ final class SearchViewModel {
     init(coordinator: SearchCoordinator?) {
         self.coordinator = coordinator
     }
+    
+    func searchFields(keyword: String, disposeBag: DisposeBag) {
+        KakaoService.shared.searchField(keyword, searchResults, disposeBag)
+    }
 }
