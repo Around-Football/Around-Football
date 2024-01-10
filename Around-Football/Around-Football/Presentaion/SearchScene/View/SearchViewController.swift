@@ -15,28 +15,28 @@ class SearchViewController: UIViewController {
     
     // MARK: - Properties
     
-    private let tableView = UITableView()
+    private let tableView = UITableView().then {         
+        $0.separatorInset = UIEdgeInsets().with({ edge in
+        edge.left = 0
+        edge.right = 0
+    })
+    }
     
     private let disposeBag = DisposeBag()
     
     var searchViewModel: SearchViewModel
     var searchCoordinator: SearchCoordinator?
     
-    //private lazy var searchController = UISearchController(searchResultsController: nil)
-    private var searchTextField = UITextField().then {
-        let magnifyglassImage = UIView()
+    private lazy var searchTextField = UITextField().then {
         $0.placeholder = "장소를 검색해주세요."
-        $0.addLeftPadding()
         guard let image = UIImage(systemName: "magnifyingglass") else { return }
-        $0.addleftimage(image: image)
+        $0.setLeftView(image: image, imageColor: AFColor.grayScale300)
+        $0.addTarget(self, action: #selector(textFieldDidChange), for: .editingChanged)
     }
-    private lazy var searchBar: UISearchBar = {
-        let searchBar = UISearchBar().then {
-            $0.placeholder = "장소를 검색해주세요."
-            $0.delegate = self
-        }
-        return searchBar
-    }()
+    
+    private let divider = UIView().then {
+        $0.backgroundColor = AFColor.grayScale50
+    }
     
     // MARK: - Lifecycles
     
@@ -52,7 +52,6 @@ class SearchViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         configureUI()
-//        configureSearchController()
         setTableView()
     }
     
@@ -62,27 +61,27 @@ class SearchViewController: UIViewController {
     
     // MARK: - Helpers
     
-//    private func configureSearchController() {
-//        navigationItem.searchController = searchController
-//    }
-    
     private func configureUI() {
         view.backgroundColor = .white
         
         view.addSubviews(searchTextField,
+                         divider,
                          tableView)
-//        searchBar.snp.makeConstraints { make in
-//            make.top.equalToSuperview()
-//            make.leading.trailing.equalToSuperview()
-//        }
+        
         searchTextField.snp.makeConstraints { make in
             make.top.equalToSuperview().offset(SuperviewOffsets.topPadding)
             make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
             make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
         }
         
+        divider.snp.makeConstraints { make in
+            make.top.equalTo(searchTextField.snp.bottom).offset(10)
+            make.leading.trailing.equalToSuperview()
+            make.height.equalTo(4)
+        }
+        
         tableView.snp.makeConstraints { make in
-            make.top.equalTo(searchTextField.snp.bottom)
+            make.top.equalTo(divider.snp.bottom)
             make.leading.trailing.equalToSuperview()
             make.bottom.equalToSuperview().offset(SuperviewOffsets.bottomPadding)
         }
@@ -117,8 +116,13 @@ class SearchViewController: UIViewController {
     
     @objc
     private func textFieldDidChange(_ sender: Any?) {
-        
+        guard let keyword = searchTextField.text else { return }
+        searchViewModel.searchFields(keyword: keyword, disposeBag: disposeBag)
     }
+}
+
+extension SearchViewController: UITextFieldDelegate {
+    
 }
 
 extension SearchViewController: UISearchBarDelegate, UISearchResultsUpdating {
