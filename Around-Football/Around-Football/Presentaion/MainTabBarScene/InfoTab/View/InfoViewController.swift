@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import PhotosUI
 
 import FirebaseAuth
 import RxSwift
@@ -19,6 +20,7 @@ final class InfoViewController: UIViewController {
     private var disposeBag = DisposeBag()
     private let detailUserInfoView = DetailUserInfoView()
     private let infoHeaderView = InfoHeaderView()
+    private let imageSubject = PublishSubject<UIImage>()
     
     private lazy var infoTableView = UITableView().then {
         $0.register(InfoCell.self, forCellReuseIdentifier: InfoCell.cellID)
@@ -54,9 +56,25 @@ final class InfoViewController: UIViewController {
         bindUserInfo()
         bindTableView()
         configureSettingButton()
+        
+        detailUserInfoView.profileImageView.isUserInteractionEnabled = true
+        detailUserInfoView.profileImageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(imageViewTapped)))
+        viewModel.uploadImage(InfoViewModel.Input(setUserProfileImage: imageSubject))
     }
     
     // MARK: - Selectors
+    
+    @objc
+    func imageViewTapped() {
+        print("설정 눌림")
+        var configuration = PHPickerConfiguration()
+        configuration.selectionLimit = 1
+        configuration.filter = .images
+        let picker = PHPickerViewController(configuration: configuration)
+        picker.delegate = self
+        
+        viewModel.coordinator?.presentPHPickerView(picker: picker)
+    }
     
     @objc
     func logoutButtonTapped() {
@@ -74,6 +92,7 @@ final class InfoViewController: UIViewController {
                 viewModel.coordinator?.presentLoginViewController()
                 return
             }
+            
             viewModel.coordinator?.pushSettingView()
         }
     }
@@ -160,5 +179,28 @@ final class InfoViewController: UIViewController {
             make.width.equalToSuperview()
             make.height.equalTo(4)
         }
+    }
+}
+
+extension InfoViewController: PHPickerViewControllerDelegate {
+    func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
+        picker.dismiss(animated: true)
+        
+        let itemProvider = results.first?.itemProvider
+        if let itemProvider = itemProvider,
+           itemProvider.canLoadObject(ofClass: UIImage.self) {
+            itemProvider.loadObject(ofClass: UIImage.self) { [weak self] image, error in
+                if let image = image as? UIImage {
+                    print("image있음")
+                    self?.imageSubject.onNext(image)
+                } else {
+                    print("image없음")
+                }
+            }
+        }
+    }
+    
+    func imagePickerControllerDidCancel(_ picker: PHPickerViewController) {
+        picker.dismiss(animated: true)
     }
 }
