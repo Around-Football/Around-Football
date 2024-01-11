@@ -141,6 +141,8 @@ final class InfoViewController: UIViewController {
     }
     
     private func configureUI() {
+        infoTableView.rowHeight = 60
+        
         view.backgroundColor = .white
         
         view.addSubviews(infoHeaderView,
