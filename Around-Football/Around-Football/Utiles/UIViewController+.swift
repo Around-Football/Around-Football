@@ -72,4 +72,15 @@ extension UIViewController {
     func popViewController() {
         navigationController?.popViewController(animated: true)
     }
+    
+    func setModalAFBackButton() {
+        let AFBackButton = UIBarButtonItem(image: UIImage(named: AFIcon.backButton), style: .plain, target: self, action: #selector(dismissViewController))
+        AFBackButton.tintColor = AFColor.grayScale200
+        self.navigationItem.setLeftBarButton(AFBackButton, animated: true)
+    }
+    
+    @objc
+    func dismissViewController() {
+        dismiss(animated: true)
+    }
 }
