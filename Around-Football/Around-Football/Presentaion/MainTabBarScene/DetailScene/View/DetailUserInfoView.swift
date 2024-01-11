@@ -14,7 +14,7 @@ final class DetailUserInfoView: UIView {
     
     // MARK: - Properties
     
-    private lazy var profileImageView = UIImageView().then {
+    lazy var profileImageView = UIImageView().then {
         $0.image = UIImage(named: AFIcon.fieldImage)
         $0.contentMode = .scaleAspectFill
         $0.layer.cornerRadius = 20
@@ -111,7 +111,7 @@ final class DetailUserInfoView: UIView {
     
     @objc
     func imageViewTapped() {
-        // TODO: - ImagePicker 코드 추가하기
+        // TODO: - 사진 크게 보기 추가?
         print("이미지 눌림")
     }
     
@@ -122,6 +122,11 @@ final class DetailUserInfoView: UIView {
             userNameLabel.text = "로그인 해주세요"
             userDetailInfoStackView.isHidden = true
         } else {
+            // MARK: - User 추가하고 주석 풀기
+//            StorageAPI.downloadImage(url: user.profileImageURL, completion: { userImage in
+//                profileImageView.image = userImage ?? UIImage(named: AFIcon.fieldImage)
+//            })
+            
             userDetailInfoStackView.isHidden = false
             userDetailInfoSettingViewStackView.isHidden = true
             userNameLabel.text = user?.userName
