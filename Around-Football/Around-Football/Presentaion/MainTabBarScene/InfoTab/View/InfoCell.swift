@@ -75,6 +75,7 @@ final class InfoCell: UITableViewCell {
             make.top.equalToSuperview().offset(20)
             make.leading.equalToSuperview()
             make.bottom.equalToSuperview().offset(-20)
+            make.height.equalTo(20)
         }
         
         rightIcon.snp.makeConstraints { make in
@@ -89,7 +90,6 @@ final class InfoCell: UITableViewCell {
             make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
             make.bottom.equalToSuperview().offset(-20)
             make.centerY.equalToSuperview()
-
         }
     }
 }

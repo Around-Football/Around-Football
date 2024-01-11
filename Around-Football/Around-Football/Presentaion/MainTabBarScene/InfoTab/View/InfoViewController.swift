@@ -171,7 +171,7 @@ final class InfoViewController: UIViewController {
             make.top.equalTo(lineView.snp.bottom)
             make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
             make.trailing.equalToSuperview()
-            make.height.equalTo(256)
+            make.height.equalTo(240)
         }
         
         lineView2.snp.makeConstraints { make in
