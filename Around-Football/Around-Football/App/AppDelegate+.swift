@@ -111,6 +111,7 @@ extension AppDelegate: UNUserNotificationCenterDelegate, MessagingDelegate {
         if let uid = Auth.auth().currentUser?.uid,
            notification.request.content.userInfo["notificationType"] as? String == NotificationType.chat.rawValue {
             FirebaseAPI.shared.fetchUser(uid: uid) { user in
+                guard let user = user else { return }
                 UserService.shared.currentUser_Rx.onNext(user)
                 NotiManager.shared.setAppIconBadgeNumber(number: user.totalAlarmNumber)
             }

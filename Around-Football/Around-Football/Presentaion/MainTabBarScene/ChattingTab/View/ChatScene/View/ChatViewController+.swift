@@ -97,15 +97,36 @@ extension ChatViewController {
     }
     
     func bindEnabledSendObjectButton() {
-        viewModel.channel
+        Observable
+            .combineLatest(viewModel.channel, viewModel.withUser)
             .withUnretained(self)
-            .subscribe { (owner, channel) in
-                guard let channel = channel else { return }
-                if !channel.isAvailable {
+            .subscribe { (owner, observer) in
+                guard let channel = observer.0 else { return }
+                let withUser = observer.1
+                
+                if !channel.isAvailable || withUser == nil {
                     DispatchQueue.main.async {
                         owner.messageViewController.messageInputBar.isUserInteractionEnabled = false
                         owner.messageViewController.messageInputBar.inputTextView.placeholder = "채팅을 보낼 수 없습니다."
                     }
+                } else {
+                    DispatchQueue.main.async {
+                        owner.messageViewController.messageInputBar.isUserInteractionEnabled = true
+                        owner.messageViewController.messageInputBar.inputTextView.placeholder = "채팅 보내기"
+                    }
+                }
+            }
+            .disposed(by: disposeBag)
+    }
+    
+    func bindNavigationTitle() {
+        viewModel.withUser
+            .withUnretained(self)
+            .subscribe { (owner, user) in
+                if let user = user {
+                    owner.title = user.userName
+                } else {
+                    owner.title = "알 수 없음"
                 }
             }
             .disposed(by: disposeBag)
