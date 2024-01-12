@@ -47,9 +47,9 @@ final class FirebaseAPI {
     }
     
     //uid로 유저 불러오기
-    func fetchUser(uid: String, completion: @escaping (User) -> Void) {
+    func fetchUser(uid: String, completion: @escaping (User?) -> Void) {
         REF_USER.document(uid).getDocument { snapshot, error in
-            guard let dictionary = snapshot?.data() else { return }
+            guard let dictionary = snapshot?.data() else { return completion(nil) }
             
             let user = User(dictionary: dictionary)
             completion(user)

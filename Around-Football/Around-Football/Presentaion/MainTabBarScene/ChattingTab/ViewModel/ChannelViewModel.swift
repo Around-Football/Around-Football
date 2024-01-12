@@ -151,6 +151,7 @@ final class ChannelViewModel {
                 let withUserId = channelInfo.withUserId
                 owner.channelAPI.resetAlarmNumber(uid: currentUser.id, channelId: channelInfo.id) {
                     FirebaseAPI.shared.fetchUser(uid: currentUser.id) { user in
+                        guard let user = user else { return }
                         UserService.shared.currentUser_Rx.onNext(user)
                         NotiManager.shared.setAppIconBadgeNumber(number: user.totalAlarmNumber)
                     }
