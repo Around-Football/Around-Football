@@ -46,8 +46,6 @@ final class HomeTabCoordinator: BaseCoordinator {
     }
 
     func pushMapView() {
-        
-        // MARK: - MapView이동시 coordinator 사용
         let coordinator = MapTabCoordinator(navigationController: navigationController)
         let controller = MapViewController(viewModel: MapViewModel(coordinator: coordinator, latitude: 37, longitude: 126))
         navigationController?.pushViewController(controller, animated: true)
