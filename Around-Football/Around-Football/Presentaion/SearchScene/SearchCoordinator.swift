@@ -18,7 +18,6 @@ final class SearchCoordinator: BaseCoordinator {
         let presentViewController = UINavigationController(rootViewController: controller)
         presentViewController.modalPresentationStyle = .fullScreen
         navigationController?.present(presentViewController, animated: true)
-        navigationController
     }
     
     @objc
