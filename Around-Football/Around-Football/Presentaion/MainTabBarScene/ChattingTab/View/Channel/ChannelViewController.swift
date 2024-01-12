@@ -22,7 +22,7 @@ final class ChannelViewController: UIViewController {
     let disposeBag = DisposeBag()
     
     private let invokedViewWillAppear = PublishSubject<Void>()
-    let invokedDeleteChannel = PublishSubject<IndexPath>()
+    let invokedDeleteChannel = PublishSubject<ChannelInfo>()
     
     private let titleLabel = UILabel().then {
         $0.text = "채팅"

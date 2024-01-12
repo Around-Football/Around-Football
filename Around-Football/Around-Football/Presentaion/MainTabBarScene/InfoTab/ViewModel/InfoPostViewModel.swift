@@ -64,7 +64,7 @@ final class InfoPostViewModel {
     func addBookmark(uid: String, recruitID: String?) {
         print("add 눌림")
         FirebaseAPI.shared.fetchUser(uid: uid) { user in
-            var user = user
+            guard var user = user else { return }
             var bookmark = user.bookmarkedRecruit
             bookmark.append(recruitID)
             user.bookmarkedRecruit = bookmark
@@ -75,7 +75,7 @@ final class InfoPostViewModel {
     func removeBookmark(uid: String, recruitID: String?) {
         print("remove 눌림")
         FirebaseAPI.shared.fetchUser(uid: uid) { user in
-            var user = user
+            guard var user = user else { return }
             var bookmark = user.bookmarkedRecruit
             bookmark.removeAll { fID in
                 recruitID == fID

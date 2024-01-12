@@ -25,7 +25,7 @@ extension ChannelViewController {
             .disposed(by: disposeBag)
     }
     
-    func bindChannels(channels: Observable<[ChannelInfo]>) {
+    func bindChannels(channels: BehaviorRelay<[ChannelInfo]>) {
         channels
             .withUnretained(self)
             .map { [ChannelSectionModel(model: "", items: $1)] }
@@ -34,12 +34,13 @@ extension ChannelViewController {
         
         channelTableView.rx.itemDeleted
             .withUnretained(self)
-            .flatMap({ (owner, indexPath) -> Observable<IndexPath> in
-                return owner.presentAlertController(indexPath: indexPath)
+            .flatMap({ (owner, indexPath) -> Observable<ChannelInfo> in
+                let channelInfo = channels.value[indexPath.row]
+                return owner.presentAlertController(channelInfo: channelInfo)
             })
-            .subscribe(with: self) { owner, indexPath in
-                owner.invokedDeleteChannel.onNext(indexPath)
-                print("DEBUG - remove row: \(owner.viewModel.channels.value[indexPath.row])")
+            .subscribe(with: self) { owner, channelInfo in
+                owner.invokedDeleteChannel.onNext(channelInfo)
+                print("DEBUG - remove row: \(channelInfo)")
             }
             .disposed(by: disposeBag)
     }
@@ -55,7 +56,7 @@ extension ChannelViewController {
             .disposed(by: disposeBag)
     }
     
-    func bindNavigateChannelView(with outputObservable: Observable<[ChannelInfo]>) {
+    func bindNavigateChannelView(with outputObservable: BehaviorRelay<[ChannelInfo]>) {
         channelTableView.rx.itemSelected
             .withLatestFrom(outputObservable) { (indexPath, channels) -> ChannelInfo in
                 self.channelTableView.deselectRow(at: indexPath, animated: true)
@@ -87,14 +88,14 @@ extension ChannelViewController {
             .disposed(by: disposeBag)
     }
     
-    func presentAlertController(indexPath: IndexPath) -> Observable<IndexPath> {
+    func presentAlertController(channelInfo: ChannelInfo) -> Observable<ChannelInfo> {
         return Observable.create { [weak self] observer in
             guard let self = self else { return Disposables.create { } }
             let alertController = UIAlertController(title: .deleteChannel,
                                                     message: .deleteChannel,
                                                     preferredStyle: .alert)
             let deleteAction = UIAlertAction(title: "나가기", style: .destructive) { _ in
-                observer.onNext(indexPath)
+                observer.onNext(channelInfo)
                 observer.onCompleted()
             }
             let cancelAction = UIAlertAction(title: "취소", style: .cancel) { _ in

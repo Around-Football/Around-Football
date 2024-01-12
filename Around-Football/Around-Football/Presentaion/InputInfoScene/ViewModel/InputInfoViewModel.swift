@@ -7,6 +7,7 @@
 
 import Foundation
 
+import Firebase
 import RxCocoa
 import RxSwift
 
@@ -22,7 +23,7 @@ final class InputInfoViewModel {
     
     weak var coordinator: InputInfoCoordinator?
     private var currentUserRx = UserService.shared.currentUser_Rx
-    var inputUserInfo: BehaviorRelay<User> = BehaviorRelay(value: User(dictionary: [:]))
+    var inputUserInfo: BehaviorRelay<User>
     var userName: BehaviorRelay<String?> = BehaviorRelay(value: "")
     var age: BehaviorRelay<String?> = BehaviorRelay(value: "")
     var gender: BehaviorRelay<String?> = BehaviorRelay(value: "")
@@ -33,6 +34,11 @@ final class InputInfoViewModel {
     
     init(coordinator: InputInfoCoordinator) {
         self.coordinator = coordinator
+        if let user = try? currentUserRx.value() {
+            self.inputUserInfo = BehaviorRelay(value: user)
+        } else {
+            self.inputUserInfo = BehaviorRelay(value: User(dictionary: [:]))
+        }
     }
     
     // MARK: - Helpers
@@ -71,7 +77,9 @@ final class InputInfoViewModel {
     }
     
     func updateData() {
-        let inputData = ["userName": userName.value ?? "",
+        let inputData = ["id": inputUserInfo.value.id,
+                         "fcmToken": inputUserInfo.value.fcmToken,
+                         "userName": userName.value ?? "",
                          "age": age.value ?? "",
                          "gender": gender.value ?? "",
                          "area": area.value ?? "",

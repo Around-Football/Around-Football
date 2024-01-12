@@ -46,7 +46,6 @@ final class DetailViewController: UIViewController {
     }
     
     private let detailImageScrollView = DetailImageScrollView().then {
-        $0.layer.cornerRadius = 8
         $0.clipsToBounds = true
     }
     
@@ -223,9 +222,12 @@ final class DetailViewController: UIViewController {
         
         detailImageScrollView.snp.makeConstraints { make in
             make.top.equalToSuperview().offset(14)
-            make.leading.equalToSuperview().offset(20)
-            make.trailing.equalToSuperview().offset(-20)
-            make.height.equalTo(186)
+//            make.leading.equalToSuperview()
+//            make.trailing.equalToSuperview()
+//            make.height.equalTo(220)
+            make.width.equalToSuperview()
+            make.height.equalTo(detailImageScrollView.snp.width).multipliedBy(0.54)
+            
         }
         
         typeLabel.snp.makeConstraints { make in
