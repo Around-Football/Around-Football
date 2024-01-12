@@ -37,7 +37,8 @@ final class MapViewModel {
     
     // MARK: - Lifecycles
     
-    init(latitude: Double, longitude: Double, searchLocation: GeoPoint? = nil) {
+    init(coordinator: MapTabCoordinator, latitude: Double, longitude: Double, searchLocation: GeoPoint? = nil) {
+        self.coordinator = coordinator
         self.currentLocation = GeoPoint(latitude: latitude, longitude: longitude)
         self.searchLocation = searchLocation
         selectedDate = Date()
