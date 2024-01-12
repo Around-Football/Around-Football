@@ -17,7 +17,7 @@ final class SearchViewModel {
     
     // MARK: - Properties
     
-    var coordinator: SearchCoordinator?
+    weak var coordinator: SearchCoordinator?
     var dataSubject: PublishSubject = PublishSubject<Place>()
     let searchResults = BehaviorSubject<[Place]>(value: [])
     private let disposeBag = DisposeBag()
