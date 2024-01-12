@@ -75,6 +75,7 @@ final class InfoCell: UITableViewCell {
             make.top.equalToSuperview().offset(20)
             make.leading.equalToSuperview()
             make.bottom.equalToSuperview().offset(-20)
+            make.centerY.equalToSuperview()
         }
         
         rightIcon.snp.makeConstraints { make in
@@ -85,11 +86,9 @@ final class InfoCell: UITableViewCell {
         }
         
         notificationSwitch.snp.makeConstraints { make in
-            make.top.equalToSuperview().offset(20)
-            make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
-            make.bottom.equalToSuperview().offset(-20)
+            make.trailing.equalToSuperview().offset(-5)
             make.centerY.equalToSuperview()
-
+            make.width.equalTo(50)
         }
     }
 }

@@ -18,11 +18,10 @@ final class MapViewController: UIViewController {
     // MARK: - Properties
     
     private let disposeBag = DisposeBag()
-    var viewModel: MapViewModel?
-    private let searchViewModel: SearchViewModel
-    init(viewModel: MapViewModel, searchViewModel: SearchViewModel) {
+    var viewModel: MapViewModel
+    
+    init(viewModel: MapViewModel) {
         self.viewModel = viewModel
-        self.searchViewModel = searchViewModel
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -65,14 +64,6 @@ final class MapViewController: UIViewController {
         return button
     }()
     
-    private lazy var searchController: UISearchController = {
-        let searchController = UISearchController(searchResultsController: searchResultsController)
-        searchController.searchResultsUpdater = self
-//        searchController.searchBar.placeholder = "장소를 입력하세요."
-//        searchController.searchBar.setValue("취소", forKey: "cancelButtonText")
-        return searchController
-    }()
-    
     private lazy var searchResultsController: UITableViewController = {
         let controller = UITableViewController(style: .plain)
         controller.tableView.dataSource = nil
@@ -100,17 +91,11 @@ final class MapViewController: UIViewController {
         configureMap()
         configureUI()
         setLocationManager()
-        
-        configureSearchController() // 검색 컨트롤러 설정
-        //setupSearchBar() // 검색 바 설정
         setTableView()
         if let locationCoordinate = locationManager.location?.coordinate {
-            self.viewModel = MapViewModel(
-                latitude: locationCoordinate.latitude,
-                longitude: locationCoordinate.longitude
-            )
+            viewModel.setCurrentLocation(latitude: locationCoordinate.latitude, longitude: locationCoordinate.longitude)
             
-            guard let viewModel = viewModel else { return }
+//            guard let viewModel = viewModel else { return }
             
             viewModel.fetchFields()
             //viewModel.selectedDate = self.datePicker.date
@@ -148,29 +133,26 @@ final class MapViewController: UIViewController {
     }
     
     // MARK: - Selectors
+    
     @objc
-    func pressSearchBar() {
-        let searchViewController = SearchViewController(searchViewModel: searchViewModel)
-        modalPresentationStyle = .fullScreen
-        present(searchViewController, animated: false)
+    private func pressSearchBar() {
+        viewModel.coordinator?.presentSearchViewController()
     }
     
     @objc
     func pressTrackingButton() {
         self.changeCurrentPoi()
-        guard let location = viewModel?.currentLocation else { return }
+        let location = viewModel.currentLocation
         self.moveCamera(latitude: location.latitude, longitude: location.longitude)
     }
     
     @objc
     func changeDate(_ sender: UIDatePicker) {
-        guard let viewModel = self.viewModel else { return }
         viewModel.selectedDate = sender.date
     }
     
     func tapHandler(_ param: PoiInteractionEventParam) {
         let itemID = param.poiItem.itemID
-        guard let viewModel = self.viewModel else { return }
         guard let field = viewModel.fields.filter({ $0.id == itemID }).first else { return }
         let selectedDate = viewModel.selectedDate
         
@@ -192,16 +174,14 @@ final class MapViewController: UIViewController {
         
         let selectedItem = searchResultsController.tableView.rx.modelSelected(Place.self)
         
-        guard let viewModel = viewModel else { return }
-        
         selectedItem
             .subscribe(onNext: { [weak self] place in
-                viewModel.dataSubject
+                self?.viewModel.dataSubject
                     .onNext(place)
                 self?.searchResultsController.dismiss(animated: true)
                 self?.moveCamera(latitude: Double(place.y) ?? 127, 
                                  longitude: Double(place.x) ?? 38)
-                self?.searchController.searchBar.text = place.name
+                self?.searchFieldButton.titleLabel?.text = place.name
             })
             .disposed(by: disposeBag)
         
@@ -214,17 +194,6 @@ final class MapViewController: UIViewController {
                     cell.fieldAddressLabel.text = place.address
                 }
                 .disposed(by: disposeBag)
-    }
-    
-    private func configureSearchController() {
-        //navigationItem.searchController = searchController
-        definesPresentationContext = true
-    }
-    
-    private func setupSearchBar() {
-        searchController.searchBar.delegate = self
-        searchController.searchBar.sizeToFit()
-        searchController.searchBar.searchTextField.backgroundColor = .white
     }
     
     private func configureUI() {
@@ -261,7 +230,6 @@ extension MapViewController: UISearchResultsUpdating, UISearchBarDelegate {
     }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        guard let viewModel = viewModel else { return}
         viewModel.searchFields(keyword: searchText, disposeBag: disposeBag)
     }
 }

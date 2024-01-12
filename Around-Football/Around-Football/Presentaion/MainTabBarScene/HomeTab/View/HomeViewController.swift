@@ -135,7 +135,7 @@ final class HomeViewController: UIViewController {
         
         regionFilterButton.setTitle("모든 지역", for: .normal)
         typeFilterButton.setTitle("매치 유형", for: .normal)
-        genderFilterButton.setTitle("성별 무관", for: .normal)
+        genderFilterButton.setTitle("성별", for: .normal)
         
         filterRequest = RecruitFilter(region: nil, type: nil, gender: nil)
         saveFilterRequestToUserDefaults(filterRequest: filterRequest)

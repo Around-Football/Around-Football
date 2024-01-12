@@ -34,7 +34,6 @@ final class AFButton: UIButton {
     
     @objc
     func buttonClicked() {
-        print("DEBUG: buttonClicked")
         if let buttonActionHandler {
             buttonActionHandler()
         }

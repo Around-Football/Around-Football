@@ -29,6 +29,7 @@ final class NotiManager {
     
     func pushChatNotification(channel: Channel, content: String, receiverFcmToken: String, to withUser: User, from owner: User) {
         FirebaseAPI.shared.fetchUser(uid: withUser.id) { user in
+            guard let user = user else { return }
             let value = [
                 "title": owner.userName,
                 "body": content,
