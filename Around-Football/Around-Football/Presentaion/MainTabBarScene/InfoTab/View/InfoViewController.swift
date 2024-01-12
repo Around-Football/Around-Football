@@ -56,20 +56,7 @@ final class InfoViewController: UIViewController {
         bindUserInfo()
         bindTableView()
         configureSettingButton()
-        
-        detailUserInfoView.profileImageView.isUserInteractionEnabled = true
-        detailUserInfoView.profileImageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(imageViewTapped)))
-        
-        viewModel
-            .uploadImage(InfoViewModel.Input(setUserProfileImage: imageSubject))
-            .userProfileImageURL
-            .bind { [weak self] url in
-                guard let self else { return }
-                DispatchQueue.main.async { [weak self] in
-                    guard let self else { return }
-                detailUserInfoView.profileImageView.kf.setImage(with: URL(string: url) ?? URL(string: "https://firebasestorage.googleapis.com:443/v0/b/around-football.appspot.com/o/8930189C-6983-4A48-9E02-321C8484897E%2F846FF6B7-454F-4EAB-8C43-89DD402FE0D21703843637.667433?alt=media&token=5e8c3184-0dba-4cec-8b04-910c8e3c03e0")!)
-                }
-            }.disposed(by: disposeBag)
+        setUserImage()
     }
     
     // MARK: - Selectors
@@ -94,6 +81,14 @@ final class InfoViewController: UIViewController {
     }
     
     // MARK: - Helpers
+    
+    func setUserImage() {
+        detailUserInfoView.profileImageView.isUserInteractionEnabled = true
+        detailUserInfoView.profileImageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(imageViewTapped)))
+        
+        viewModel
+            .uploadImage(InfoViewModel.Input(setUserProfileImage: imageSubject))
+    }
     
     private func configureSettingButton() {
         infoHeaderView.settingButtonActionHandler = { [weak self] in
@@ -148,6 +143,12 @@ final class InfoViewController: UIViewController {
             guard let self else { return }
             detailUserInfoView.setValues(user: user, isSettingView: true)
             viewModel.user = user
+            
+            //user 사진 업데이트시 반영
+            guard let user else { return }
+            detailUserInfoView.profileImageView.kf.setImage(with: URL(string: user.profileImageUrl) ?? URL(string: "https://firebasestorage.googleapis.com:443/v0/b/around-football.appspot.com/o/8930189C-6983-4A48-9E02-321C8484897E%2F846FF6B7-454F-4EAB-8C43-89DD402FE0D21703843637.667433?alt=media&token=5e8c3184-0dba-4cec-8b04-910c8e3c03e0")!,
+                                                            placeholder: UIImage(named: AFIcon.fieldImage))
+            
         }.disposed(by: disposeBag)
     }
     
