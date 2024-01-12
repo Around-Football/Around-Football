@@ -26,12 +26,12 @@ final class ChannelViewModel {
     struct Input {
         let invokedViewWillAppear: Observable<Void>
         let selectedSegment: Observable<Int>
-        let invokedDeleteChannel: Observable<IndexPath>
+        let invokedDeleteChannel: Observable<ChannelInfo>
     }
     
     struct Output {
         let isShowing: Observable<Bool>
-        let segmentChannels: Observable<[ChannelInfo]>
+        let segmentChannels: BehaviorRelay<[ChannelInfo]>
     }
     
     // MARK: - Lifecycles
@@ -121,37 +121,50 @@ final class ChannelViewModel {
             }
     }
     
-    private func emitSelectedSegmentChannelInfo(by inputObserver: Observable<Int>) -> Observable<[ChannelInfo]> {
-        return Observable.combineLatest(channels, inputObserver)
+    private func emitSelectedSegmentChannelInfo(by inputObserver: Observable<Int>) -> BehaviorRelay<[ChannelInfo]> {
+        let result = BehaviorRelay<[ChannelInfo]>(value: [])
+
+        Observable.combineLatest(channels, inputObserver)
             .withUnretained(self)
             .flatMap({ (owner, observe) -> Observable<[ChannelInfo]> in
                 let channels = observe.0
                 let index = observe.1
                 guard let currentUser = try? owner.currentUser.value() else { return .just([]) }
                 if index == 0 {
-                    return .just(channels.filter { $0.recruitUserID == currentUser.id })
+                    return .just(channels.filter { $0.recruitUserID == currentUser.id})
                 } else {
-                    return .just(channels.filter{ $0.recruitUserID != currentUser.id })
+                    return .just(channels.filter { $0.recruitUserID != currentUser.id})
                 }
             })
+            .bind(to: result)
+            .disposed(by: disposeBag)
+        
+        return result
     }
     
-    private func deleteChannelInfo(by inputObserver: Observable<IndexPath>) {
+    private func deleteChannelInfo(by inputObserver: Observable<ChannelInfo>) {
         inputObserver
             .withUnretained(self)
-            .subscribe(onNext: { (owner, indexPath) in
+            .subscribe(onNext: { (owner, channelInfo) in
                 guard let currentUser = try? owner.currentUser.value() else { return }
-                let channelInfo = owner.channels.value[indexPath.row]
                 let channelId = channelInfo.id
                 let withUserId = channelInfo.withUserId
-                owner.channelAPI.deleteChannelInfo(uid: currentUser.id, channelId: channelId)
-                if channelInfo.isAvailable {
-                    owner.channelAPI.updateDeleteChannelInfo(withUserId: withUserId, channelId: channelId)
+                owner.channelAPI.resetAlarmNumber(uid: currentUser.id, channelId: channelInfo.id) {
+                    FirebaseAPI.shared.fetchUser(uid: currentUser.id) { user in
+                        guard let user = user else { return }
+                        UserService.shared.currentUser_Rx.onNext(user)
+                        NotiManager.shared.setAppIconBadgeNumber(number: user.totalAlarmNumber)
+                    }
                     
-                    let deleteChannelMessage = Message(user: currentUser, content: "", messageType: .inform)
-                    ChatAPI.shared.save([deleteChannelMessage], channelId: channelId)
-                } else {
-                    owner.channelAPI.deleteChannel(channelId: channelId)
+                    owner.channelAPI.deleteChannelInfo(uid: currentUser.id, channelId: channelId)
+                    if channelInfo.isAvailable {
+                        owner.channelAPI.updateDeleteChannelInfo(withUserId: withUserId, channelId: channelId)
+                        
+                        let deleteChannelMessage = Message(user: currentUser, content: "", messageType: .inform)
+                        ChatAPI.shared.save([deleteChannelMessage], channelId: channelId)
+                    } else {
+                        owner.channelAPI.deleteChannel(channelId: channelId)
+                    }
                 }
             })
             .disposed(by: disposeBag)

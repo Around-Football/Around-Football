@@ -10,7 +10,7 @@ import Foundation
 import Firebase
 
 struct User: Codable {
-    var id: String = Auth.auth().currentUser?.uid ?? ""
+    var id: String
     var userName: String
     var age: String
     var gender: String
@@ -41,8 +41,7 @@ struct User: Codable {
     }
     
     init(dictionary: [String: Any]) {
-        // MARK: - 여기서 이상한 UUID를 넣어줘서 연동이 안됐었음
-//        self.id = dictionary["id"] as? String ?? "여기"
+        self.id = dictionary["id"] as? String ?? UUID().uuidString
         self.userName = dictionary["userName"] as? String ?? ""
         self.age = dictionary["age"] as? String ?? ""
         self.gender = dictionary["gender"] as? String ?? ""

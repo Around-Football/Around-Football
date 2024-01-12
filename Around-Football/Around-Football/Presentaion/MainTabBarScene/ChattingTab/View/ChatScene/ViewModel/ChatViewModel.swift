@@ -25,7 +25,7 @@ final class ChatViewModel {
     let channelInfo: ChannelInfo
     var recruit: BehaviorRelay<Recruit?> = BehaviorRelay(value: nil)
     var currentUser: User?
-    var withUser: User? = nil
+    var withUser: BehaviorRelay<User?> = BehaviorRelay(value: nil)
     var isSendingPhoto: BehaviorRelay<Bool> = BehaviorRelay(value: false)
     var isNewChat: Bool
     
@@ -110,7 +110,7 @@ final class ChatViewModel {
             .withUnretained(self)
             .subscribe { (owner, _) in
                 FirebaseAPI.shared.fetchUser(uid: owner.channelInfo.withUserId) { user in
-                    owner.withUser = user
+                    owner.withUser.accept(user)
                 }
             }
             .disposed(by: disposeBag)
@@ -169,9 +169,7 @@ final class ChatViewModel {
         inputObserver
             .withUnretained(self)
             .subscribe { (owner, image) in
-                guard let currentUser = owner.currentUser,
-                      let withUser = owner.withUser,
-                      let channel = owner.channel.value else { return }
+                guard let channel = owner.channel.value else { return }
                 owner.isSendingPhoto.accept(true)
                 if owner.isNewChat {
                     owner.channelAPI.createChannel(channelInfo: owner.channelInfo) {
@@ -238,25 +236,25 @@ final class ChatViewModel {
         StorageAPI.uploadImage(image: image, id: channel.id) { [weak self] url in
             guard let self = self,
                   let currentUser = currentUser,
-                  let withUser = withUser,
+                  let withUser = withUser.value,
                   let url = url else { return }
             
-            self.isSendingPhoto.accept(false)
+            isSendingPhoto.accept(false)
             var message = Message(user: currentUser, image: image)
             message.downloadURL = url
             
             // Date 메시지 첨부 전송 여부 로직
             let saveMessages = appendDateMessageCell(message: message)
             
-            self.chatAPI.save(saveMessages) { error in
+            chatAPI.save(saveMessages) { error in
                 if let error = error {
                     print("DEBUG - inputBar Error: \(error.localizedDescription)")
                     return
                 }
             }
             
-            self.channelAPI.updateChannelInfo(owner: currentUser,
-                                              withUser: withUser,
+            channelAPI.updateChannelInfo(owner: currentUser,
+                                         withUser: withUser,
                                               channelId: channel.id,
                                               message: message)
             
@@ -281,7 +279,7 @@ final class ChatViewModel {
             }
             guard let self = self,
                   let currentUser = currentUser,
-                  let withUser = withUser,
+                  let withUser = withUser.value,
                   let channel = self.channel.value else { return }
             channelAPI.updateChannelInfo(owner: currentUser,
                                          withUser: withUser,
@@ -317,6 +315,7 @@ final class ChatViewModel {
             NotiManager.shared.currentChatRoomId = channelInfo.id
             channelAPI.resetAlarmNumber(uid: currentUser.id, channelId: channelInfo.id) {
                 FirebaseAPI.shared.fetchUser(uid: currentUser.id) { user in
+                    guard let user = user else { return }
                     UserService.shared.currentUser_Rx.onNext(user)
                     NotiManager.shared.setAppIconBadgeNumber(number: user.totalAlarmNumber)
                 }

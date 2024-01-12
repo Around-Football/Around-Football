@@ -65,7 +65,6 @@ class ChatViewController: UIViewController {
         navigationController?.navigationBar.titleTextAttributes = [
             NSAttributedString.Key.foregroundColor: AFColor.grayScale200
         ]
-        title = viewModel.channelInfo.withUserName
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -129,7 +128,8 @@ class ChatViewController: UIViewController {
         // MARK: - Bind HeaderView
         bindRecruitInfo(by: output.recruitStatus)
         bindRecruitInfoTapEvent()
-        
+        bindNavigationTitle()
+
         // MARK: - Bind MessageViewController
         bindCameraBarButtonEvent()
         bindMessages()
