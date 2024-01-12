@@ -15,17 +15,16 @@ class SearchViewController: UIViewController {
     
     // MARK: - Properties
     
-    private let tableView = UITableView().then {         
+    private let tableView = UITableView().then {
         $0.separatorInset = UIEdgeInsets().with({ edge in
-        edge.left = 0
-        edge.right = 0
-    })
+            edge.left = 0
+            edge.right = 0
+        })
     }
     
     private let disposeBag = DisposeBag()
     
     var searchViewModel: SearchViewModel
-    var searchCoordinator: SearchCoordinator?
     
     private lazy var searchTextField = UITextField().then {
         $0.placeholder = "장소를 검색해주세요."
@@ -55,7 +54,15 @@ class SearchViewController: UIViewController {
         setTableView()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.navigationBar.titleTextAttributes = [
+            NSAttributedString.Key.foregroundColor: AFColor.grayScale200
+        ]
+    }
+    
     override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
         searchViewModel.coordinator?.dismissSearchViewController()
     }
     
@@ -63,13 +70,13 @@ class SearchViewController: UIViewController {
     
     private func configureUI() {
         view.backgroundColor = .white
-        
+        navigationItem.title = "장소 찾기"
         view.addSubviews(searchTextField,
                          divider,
                          tableView)
         
         searchTextField.snp.makeConstraints { make in
-            make.top.equalToSuperview().offset(SuperviewOffsets.topPadding)
+            make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(10)
             make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
             make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
         }
@@ -88,7 +95,7 @@ class SearchViewController: UIViewController {
     }
     
     private func setTableView() {
-        tableView.register(SearchTableViewCell.self, 
+        tableView.register(SearchTableViewCell.self,
                            forCellReuseIdentifier: SearchTableViewCell.cellID)
         tableView.dataSource = nil
         
