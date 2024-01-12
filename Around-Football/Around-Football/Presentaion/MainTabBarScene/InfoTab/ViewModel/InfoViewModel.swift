@@ -29,35 +29,20 @@ final class InfoViewModel {
         let setUserProfileImage: Observable<UIImage>
     }
     
-    struct Output {
-        let userProfileImageURL: Observable<String>
+    func uploadImage(_ input: Input) {
+        setUserProfileImage(by: input.setUserProfileImage)
     }
     
-    func uploadImage(_ input: Input) -> Output {
-        let url = setUserProfileImage(by: input.setUserProfileImage)
-        
-        return Output(userProfileImageURL: url)
-    }
-    
-    private func setUserProfileImage(by inputObserver: Observable<UIImage>) -> Observable<String> {
+    private func setUserProfileImage(by inputObserver: Observable<UIImage>){
         inputObserver
-            .flatMap { [weak self] input -> Observable<String> in
-                guard let self else {
-                    print("self없음")
-                    return Observable.empty()
-                }
-                guard var user else {
-                    print("user없음")
-                    return Observable.empty()
-                }
-                
-                StorageAPI.uploadImage(image: input, id: user.id) { url in
+            .subscribe { [weak self] input in
+                guard let self,
+                      var user else { return }
+                StorageAPI.uploadProfileImage(image: input, id: user.id) { url in
                     print( url?.absoluteString ?? "")
                     user.profileImageUrl = url?.absoluteString ?? ""
                     FirebaseAPI.shared.updateUser(user)
                 }
-                
-                return Observable.just(user.profileImageUrl)
-            }
+            }.disposed(by: disposeBag)
     }
 }
