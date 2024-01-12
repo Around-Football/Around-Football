@@ -197,7 +197,7 @@ final class DetailView: UIView {
         
         contentStackView.snp.makeConstraints {
             $0.top.equalTo(gamePriceStackView.snp.bottom).offset(16)
-            $0.bottom.leading.equalToSuperview()
+            $0.bottom.leading.trailing.equalToSuperview()
         }
     }
 }
