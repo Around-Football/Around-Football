@@ -33,11 +33,8 @@ final class ApplicantListViewController: UIViewController {
         })
     }
     
-    private let defaultTextLabel = UILabel().then {
-        $0.text = "아직 신청자가 없어요!"
-        $0.font = AFFont.text
-        $0.textColor = AFColor.grayScale100
-        $0.textAlignment = .center
+    private lazy var emptyView = EmptyAFView(type: EmptyAFView.SettingTitle.noApplicant).then {
+        $0.isHidden = true
     }
     
     let loadingView = UIActivityIndicatorView(style: .medium).then {
@@ -86,7 +83,7 @@ final class ApplicantListViewController: UIViewController {
         view.backgroundColor = .systemBackground
         view.addSubviews(headerView,
                          tableView,
-                         defaultTextLabel,
+                         emptyView,
                          loadingView)
         
         headerView.snp.makeConstraints { make in
@@ -101,11 +98,11 @@ final class ApplicantListViewController: UIViewController {
             make.bottom.equalToSuperview()
         }
         
-        defaultTextLabel.snp.makeConstraints { make in
-            make.top.equalTo(headerView.snp.bottom).offset(20)
-            make.leading.equalToSuperview().offset(20)
-            make.trailing.equalToSuperview().offset(-20)
-            make.bottom.equalTo(tableView.snp.centerY)
+        emptyView.snp.makeConstraints { make in
+            make.top.equalTo(headerView.snp.bottom)
+            make.leading.equalToSuperview()
+            make.trailing.equalToSuperview()
+            make.bottom.equalToSuperview()
         }
         
         loadingView.snp.makeConstraints { make in
@@ -126,7 +123,8 @@ final class ApplicantListViewController: UIViewController {
             .withUnretained(self)
             .subscribe(onNext: { (owner, recruit) in
                 self.headerView.configure(recruit: recruit)
-                if !recruit.pendingApplicantsUID.isEmpty { owner.defaultTextLabel.isHidden = true }
+                if !recruit.pendingApplicantsUID.isEmpty { owner.emptyView.isHidden = true }
+                else { owner.emptyView.isHidden = false }
             })
             .disposed(by: disposeBag)
     }
