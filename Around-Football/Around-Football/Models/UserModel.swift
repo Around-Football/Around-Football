@@ -20,6 +20,7 @@ struct User: Codable {
     var fcmToken: String
     var bookmarkedRecruit: [String?] //북마크한 필드id 저장
     var totalAlarmNumber: Int = 0
+    var profileImageUrl: String
     
     var representation: [String: Any] {
         let rep = [
@@ -32,7 +33,8 @@ struct User: Codable {
             "position": position,
             "fcmToken": fcmToken,
             "bookmarkedRecruit": bookmarkedRecruit,
-            "totalAlarmNumber": totalAlarmNumber
+            "totalAlarmNumber": totalAlarmNumber,
+            "profileImageUrl": profileImageUrl
         ] as [String: Any]
         
         return rep
@@ -50,5 +52,6 @@ struct User: Codable {
         self.fcmToken = dictionary["fcmToken"] as? String ?? ""
         self.bookmarkedRecruit = dictionary["bookmarkedRecruit"] as? [String] ?? []
         self.totalAlarmNumber = dictionary["totalAlarmNumber"] as? Int ?? 0
+        self.profileImageUrl = dictionary["profileImageUrl"] as? String ?? ""
     }
 }

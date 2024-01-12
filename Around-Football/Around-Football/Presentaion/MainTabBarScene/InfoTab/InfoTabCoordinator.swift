@@ -55,6 +55,12 @@ final class InfoTabCoordinator: BaseCoordinator {
         navigationController?.pushViewController(vc, animated: true)
     }
     
+    // MARK: - UserImagePicker
+    //메세지 관련
+    func presentPHPickerView(picker: UIViewController) {
+        navigationController?.present(picker, animated: true)
+    }
+    
     // MARK: - 관심 글, 작성 글 ,신청 글 이동
     
     func pushEditView() {
