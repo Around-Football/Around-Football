@@ -59,14 +59,13 @@ final class SearchTableViewCell: UITableViewCell {
         
         searchImageView.snp.makeConstraints { make in
             make.top.equalToSuperview().offset(SuperviewOffsets.topPadding)
-            make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
+            make.leading.equalToSuperview().offset(10)
             make.trailing.equalTo(fieldAddressLabel.snp.leading)
-            make.bottom.equalTo(fieldAddressLabel.snp.top)
-            
+            make.height.equalTo(fieldNameLabel)
         }
         
         fieldNameLabel.snp.makeConstraints { make in
-            make.top.equalToSuperview().offset(SuperviewOffsets.topPadding)
+            make.top.equalTo(searchImageView)
             make.leading.equalTo(fieldAddressLabel)
             make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
         }
