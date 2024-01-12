@@ -73,7 +73,7 @@ final class DetailImageScrollView: UIView {
 
         if images.isEmpty {
             let imageView = UIImageView()
-            imageView.contentMode = .scaleAspectFit
+            imageView.contentMode = .scaleAspectFill
             imageView.clipsToBounds = true
             imageView.image = UIImage(named: "DefaultRecruitImage")
             imageScrollView.addSubview(imageView)

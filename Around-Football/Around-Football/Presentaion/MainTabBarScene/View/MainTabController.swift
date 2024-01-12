@@ -36,7 +36,6 @@ final class MainTabController: UITabBarController {
     override func viewDidLoad() {
         super.viewDidLoad()
         configureUI()
-        bind()
     }
     
     // MARK: - Helpers
@@ -61,22 +60,5 @@ final class MainTabController: UITabBarController {
         pages[1].tabBarItem.tag = 1
         pages[2].tabBarItem.tag = 2
         pages[3].tabBarItem.tag = 3
-    }
-    
-    private func bind() {
-        bindTabItemBadge()
-    }
-    
-    private func bindTabItemBadge() {
-        viewModel.user
-            .bind { user in
-                guard let user = user else { return }
-                if user.totalAlarmNumber > 0 {
-                    self.tabBar.items?[2].badgeValue = "\(user.totalAlarmNumber)"
-                } else {
-                    self.tabBar.items?[2].badgeValue = nil
-                }
-            }
-            .disposed(by: disposeBag)
     }
 }

@@ -31,7 +31,7 @@ final class UserService: NSObject {
     var currentUser_Rx: BehaviorSubject<User?> = BehaviorSubject(value: nil)
     var isLoginObservable: BehaviorSubject<Void> = BehaviorSubject(value: ())
     var isLogoutObservable: PublishSubject<Void> = PublishSubject()
-    var checkUserInfoExist:  PublishSubject<Bool> = PublishSubject()
+    var checkUserInfoExist: PublishSubject<Bool> = PublishSubject()
     private let disposeBag = DisposeBag()
     
     // MARK: - Lifecycles
@@ -344,7 +344,7 @@ extension UserService {
             let uid = result?.user.uid
             
             REF_USER.document(uid ?? UUID().uuidString)
-                .setData(["id" : uid ?? UUID().uuidString])
+                .setData(["id": uid ?? UUID().uuidString])
             
             isLoginObservable.onNext(())
         }

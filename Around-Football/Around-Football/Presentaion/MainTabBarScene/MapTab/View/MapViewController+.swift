@@ -60,10 +60,8 @@ extension MapViewController: MapControllerDelegate, KakaoMapEventDelegate {
     
     func addViews() {
         //여기에서 그릴 View(KakaoMap, Roadview)들을 추가한다.
-        guard let location = self.viewModel?.currentLocation else {
-            print("Map AddView Failed")
-            return
-        }
+        let location = self.viewModel.currentLocation
+        
         
         let defaultPosition: MapPoint = MapPoint(
             longitude: location.longitude,
@@ -79,9 +77,7 @@ extension MapViewController: MapControllerDelegate, KakaoMapEventDelegate {
         //KakaoMap 추가.
         if mapController?.addView(mapviewInfo) == Result.OK {
             print("OK") //추가 성공. 성공시 추가적으로 수행할 작업을 진행한다.
-            
-            guard let location = self.viewModel?.currentLocation else { return }
-            // POI
+
             let currentMapLabel = MapLabel(labelType: .currentPosition, poi: .currentPosition)
             let mapPoint = MapPoint(longitude: location.longitude, latitude: location.latitude)
             createLabelLayer(label: currentMapLabel)
@@ -91,7 +87,7 @@ extension MapViewController: MapControllerDelegate, KakaoMapEventDelegate {
             // GUI
             //            createSpriteGUI()
             
-            guard let fields = self.viewModel?.fields else { return }
+            let fields = self.viewModel.fields
             let idArray = fields.map { $0.id }
             let fieldsMapLabel = MapLabel(labelType: .fieldPosition, poi: .fieldPosition(idArray))
             createLabelLayer(label: fieldsMapLabel)
@@ -262,7 +258,7 @@ extension MapViewController: MapControllerDelegate, KakaoMapEventDelegate {
         let layer = manager.getLabelLayer(layerID: mapLabel.layerID)
         let poi = layer?.getPoi(poiID: mapLabel.poiID[0])
         
-        guard let location = self.viewModel?.currentLocation else { return }
+        let location = viewModel.currentLocation
         let newPoint = MapPoint(longitude: location.longitude, latitude: location.latitude)
         poi?.moveAt(newPoint, duration: 1000)
     }
@@ -338,7 +334,7 @@ extension MapViewController: CLLocationManagerDelegate {
         print("위도: \(location.coordinate.latitude)")
         print("경도: \(location.coordinate.longitude)")
         // 현재 고유위치  37.253463   127.036306
-        guard let viewModel = viewModel else { return }
+//        guard let viewModel = viewModel else { return }
         //        // 현재 위치로 카메라 이동
         //        if viewModel.isSearchCurrentLocation {
         viewModel.setCurrentLocation(

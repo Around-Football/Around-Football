@@ -86,15 +86,6 @@ final class ChannelTableViewCell: UITableViewCell {
     
     // MARK: - Helpers
     
-//    // TODO: - 지우기
-//    func configure(channelInfo: ChannelInfo) {
-//        userNameLabel.text = channelInfo.withUserName
-//        chatPreviewLabel.text = channelInfo.previewContent
-//        recentDateLabel.text = formatDate(channelInfo.recentDate)
-//        configureAlarmLabelText(alarmNumber: channelInfo.alarmNumber)
-//        updateAlarmLabelUI()
-//    }
-//        
     func configure(channelInfo: ChannelInfo) {
         channelInfo.downloadURL != nil ? (profileImageView.image = channelInfo.image) : (profileImageView.image = UIImage(systemName: "person"))
         
