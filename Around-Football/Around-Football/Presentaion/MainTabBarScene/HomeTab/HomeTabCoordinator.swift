@@ -45,11 +45,11 @@ final class HomeTabCoordinator: BaseCoordinator {
         coordinator.deepLinkApplicationViewController(recruit: recruit)
     }
 
-    func pushMapView() {
-        let coordinator = MapTabCoordinator(navigationController: navigationController)
-        let controller = MapViewController(viewModel: MapViewModel(coordinator: coordinator, latitude: 37, longitude: 126))
-        navigationController?.pushViewController(controller, animated: true)
-    }
+//    func pushMapView() {
+//        let coordinator = MapTabCoordinator(navigationController: navigationController)
+//        let controller = MapViewController(viewModel: MapViewModel(coordinator: coordinator, latitude: 37, longitude: 126), searchViewModel: sear)
+//        navigationController?.pushViewController(controller, animated: true)
+//    }
     
     func pushInviteView() {
         let coordinator = InviteCoordinator(navigationController: navigationController)

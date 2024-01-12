@@ -81,6 +81,6 @@ extension UIViewController {
     
     @objc
     func dismissViewController() {
-        dismiss(animated: true)
+        dismiss(animated: false)
     }
 }

@@ -19,9 +19,11 @@ final class MapViewController: UIViewController {
     
     private let disposeBag = DisposeBag()
     var viewModel: MapViewModel
+    var searchViewModel: SearchViewModel?
     
-    init(viewModel: MapViewModel) {
+    init(viewModel: MapViewModel, searchViewModel: SearchViewModel? = nil) {
         self.viewModel = viewModel
+        self.searchViewModel = searchViewModel
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -55,8 +57,8 @@ final class MapViewController: UIViewController {
         button.titleLabel?.font = AFFont.text?.withSize(16)
         button.setImage(image?.withTintColor(AFColor.grayScale300, renderingMode: .alwaysOriginal),for: .normal)
         button.setTitleColor(AFColor.grayScale100, for: .normal)
+        button.setTitleColor(AFColor.grayScale200, for: .highlighted)
         button.layer.cornerRadius = LayoutOptions.cornerRadious
-        button.translatesAutoresizingMaskIntoConstraints = false
         button.backgroundColor = .white
         button.setShadowLayer()
         button.contentHorizontalAlignment = .leading
@@ -92,6 +94,7 @@ final class MapViewController: UIViewController {
         configureUI()
         setLocationManager()
         setTableView()
+        
         if let locationCoordinate = locationManager.location?.coordinate {
             viewModel.setCurrentLocation(latitude: locationCoordinate.latitude, longitude: locationCoordinate.longitude)
             
@@ -136,6 +139,7 @@ final class MapViewController: UIViewController {
     
     @objc
     private func pressSearchBar() {
+        print("눌림")
         viewModel.coordinator?.presentSearchViewController()
     }
     
@@ -174,26 +178,20 @@ final class MapViewController: UIViewController {
         
         let selectedItem = searchResultsController.tableView.rx.modelSelected(Place.self)
         
-        selectedItem
+        searchViewModel?.dataSubject
             .subscribe(onNext: { [weak self] place in
-                self?.viewModel.dataSubject
-                    .onNext(place)
-                self?.searchResultsController.dismiss(animated: true)
                 self?.moveCamera(latitude: Double(place.y) ?? 127, 
                                  longitude: Double(place.x) ?? 38)
-                self?.searchFieldButton.titleLabel?.text = place.name
             })
             .disposed(by: disposeBag)
         
-        _ = viewModel.searchResults
-            .debug()
-            .bind(to: searchResultsController.tableView.rx.items(
-                cellIdentifier: SearchTableViewCell.cellID,
-                cellType: SearchTableViewCell.self)) { index, place, cell in
-                    cell.fieldNameLabel.text = place.name
-                    cell.fieldAddressLabel.text = place.address
-                }
-                .disposed(by: disposeBag)
+        searchViewModel?.dataSubject
+            .bind(onNext: { [weak self] place in
+                guard let self else { return }
+                searchFieldButton.setTitle(place.name, for: .normal)
+                searchFieldButton.setTitleColor(AFColor.grayScale400, for: .normal)
+            })
+            .disposed(by: disposeBag)
     }
     
     private func configureUI() {
@@ -206,14 +204,15 @@ final class MapViewController: UIViewController {
         )
         
         mapContainer.snp.makeConstraints {
-            $0.top.leading.trailing.equalTo(self.view)
+            $0.top.equalToSuperview()
+            $0.leading.trailing.equalToSuperview()
             $0.bottom.equalTo(self.view.safeAreaLayoutGuide)
         }
         
         searchFieldButton.snp.makeConstraints {
-            $0.top.equalToSuperview().offset(70)
-            $0.leading.equalToSuperview().offset(20)
-            $0.trailing.equalToSuperview().offset(-20)
+            $0.top.equalTo(view.safeAreaLayoutGuide)
+            $0.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
+            $0.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
         }
         
         trackingButton.snp.makeConstraints {
