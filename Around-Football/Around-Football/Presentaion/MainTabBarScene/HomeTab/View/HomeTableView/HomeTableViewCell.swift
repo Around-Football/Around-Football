@@ -27,8 +27,11 @@ final class HomeTableViewCell: UITableViewCell {
     
     private let symbolConfiguration = UIImage.SymbolConfiguration(pointSize: 25, weight: .medium)
     
-    private let defaultFieldImage = UIImage(named: AFIcon.fieldImage)
-    private lazy var fieldImageView = UIImageView(image: defaultFieldImage)
+    //private let defaultFieldImage = UIImage(named: AFIcon.fieldImage)
+    private let fieldImageView = UIImageView().then {
+        $0.clipsToBounds = true
+        $0.layer.cornerRadius = 8
+    }
     
     private var typeLabel = UILabel().then {
         $0.text = "축구"
@@ -179,8 +182,8 @@ final class HomeTableViewCell: UITableViewCell {
         fieldLabel.text = "\(item.fieldName)"
         recruitLabel.text = " \(item.acceptedApplicantsUID.count) / \(item.recruitedPeopleCount)명 모집"
         
-        //TODO: - 성별 input 추가되면 바인딩하기
-        //        genderLabel.text = ""
+        genderLabel.text = "\(item.gender)"
+        fieldImageView.image = viewModel?.setTitleImage(recruit: item)
         
         // MARK: - 예전 디자인 코드
         //        titleLabel.text = item.title
@@ -226,6 +229,7 @@ final class HomeTableViewCell: UITableViewCell {
             make.leading.equalToSuperview()
             make.bottom.equalToSuperview().offset(-16)
             make.width.equalTo(80)
+            make.height.equalTo(80)
         }
         
         typeLabel.snp.makeConstraints { make in
