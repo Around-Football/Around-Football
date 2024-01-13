@@ -163,13 +163,19 @@ final class DetailViewModel {
                       let recruitItem = owner.getRecruit() else { return Observable.just(.availableRecruit) }
                 if currentUser.id == recruitItem.userID { return Observable.just(.ownRecruit) }
 
+                //시간이 과거면 마감으로 표시
+                if owner.isDateInFuture(targetDate: recruitItem.matchDate.dateValue()) {
+                    return Observable.just(.close)
+                }
+                
                 if recruitItem.pendingApplicantsUID.contains(currentUser.id) {
                     return Observable.just(.applied)
                 }
                 
                 if recruitItem.acceptedApplicantsUID.count == recruitItem.recruitedPeopleCount {
                     return Observable.just(.close)
-                }                
+                }
+
                 
                 return Observable.just(.availableRecruit)
             }
@@ -201,6 +207,13 @@ final class DetailViewModel {
     
     func getRecruit() -> Recruit? {
         return try? recruitItem.value()
+    }
+    
+    //모집Date 비교
+    func isDateInFuture(targetDate: Date) -> Bool {
+        let currentDate = Date()
+        let comparisonResult = currentDate.compare(targetDate)
+        return comparisonResult == .orderedDescending
     }
     
     // MARK: - Coordinator
