@@ -13,6 +13,25 @@ import RxSwift
 import SnapKit
 import Then
 
+protocol Searchable {
+    func updateSearchBar(dataSubject: PublishSubject<Place>,
+                         searchBarButton: UIButton,
+                         disposeBag: DisposeBag)
+}
+
+extension Searchable {
+    func updateSearchBar(dataSubject: PublishSubject<Place>,
+                         searchBarButton: UIButton,
+                         disposeBag: DisposeBag) {
+        dataSubject
+            .bind(onNext: { place in
+                searchBarButton.setTitle(place.name, for: .normal)
+                searchBarButton.setTitleColor(AFColor.grayScale400, for: .normal)
+            })
+            .disposed(by: disposeBag)
+    }
+}
+
 final class MapViewController: UIViewController, Searchable {
     
     // MARK: - Properties
@@ -84,8 +103,6 @@ final class MapViewController: UIViewController, Searchable {
     deinit {
         mapController?.stopRendering()
         mapController?.stopEngine()
-        
-        print("deinit")
     }
     
     override func viewDidLoad() {
@@ -93,23 +110,21 @@ final class MapViewController: UIViewController, Searchable {
         configureMap()
         configureUI()
         setLocationManager()
-        setTableView()
+        bindSearch()
         
         if let locationCoordinate = locationManager.location?.coordinate {
-            viewModel.setCurrentLocation(latitude: locationCoordinate.latitude, longitude: locationCoordinate.longitude)
-            
-//            guard let viewModel = viewModel else { return }
-            
+            viewModel.setCurrentLocation(latitude: locationCoordinate.latitude,
+                                         longitude: locationCoordinate.longitude)
             viewModel.fetchFields()
-            //viewModel.selectedDate = self.datePicker.date
-            _ = getlodDatas(label: MapLabel(labelType: .fieldPosition, poi: .fieldPosition(viewModel.fields.map{$0.id})), fields: viewModel.fields)
+            _ = getlodDatas(label: MapLabel(labelType: .fieldPosition,
+                                            poi: .fieldPosition(viewModel.fields.map{ $0.id })),
+                            fields: viewModel.fields)
         }
     }
     
     override func viewWillAppear(_ animated: Bool) {
         addObservers()
         _appear = true
-        //        if _auth {
         if mapController?.engineStarted == false {
             mapController?.startEngine()
         }
@@ -117,29 +132,12 @@ final class MapViewController: UIViewController, Searchable {
         if mapController?.rendering == false {
             mapController?.startRendering()
         }
-        //        }
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        //        _appear = false
-        //        mapController?.stopRendering()  //렌더링 중지.
-    }
-    
-    override func viewDidDisappear(_ animated: Bool) {
-        //        removeObservers()
-        //        mapController?.stopEngine()     //엔진 정지. 추가되었던 ViewBase들이 삭제된다.
-    }
-    
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        //        mapController?.initEngine() //엔진 초기화. 엔진 내부 객체 생성 및 초기화가 진행된다.
     }
     
     // MARK: - Selectors
     
     @objc
     private func pressSearchBar() {
-        print("눌림")
         viewModel.coordinator?.presentSearchViewController()
     }
     
@@ -171,25 +169,16 @@ final class MapViewController: UIViewController, Searchable {
     
     // MARK: - Helpers
     
-    private func setTableView() {
-        searchResultsController.tableView.register(SearchTableViewCell.self,
-                           forCellReuseIdentifier: SearchTableViewCell.cellID)
-        searchResultsController.tableView.dataSource = nil
-        
-        let selectedItem = searchResultsController.tableView.rx.modelSelected(Place.self)
-        
-        searchViewModel?.dataSubject
+    private func bindSearch() {
+        guard let searchViewModel = searchViewModel else { return }
+        updateSearchBar(dataSubject: searchViewModel.dataSubject,
+                        searchBarButton: searchFieldButton,
+                        disposeBag: disposeBag)
+        searchViewModel.dataSubject
             .subscribe(onNext: { [weak self] place in
-                self?.moveCamera(latitude: Double(place.y) ?? 127, 
-                                 longitude: Double(place.x) ?? 38)
-            })
-            .disposed(by: disposeBag)
-        
-        searchViewModel?.dataSubject
-            .bind(onNext: { [weak self] place in
                 guard let self else { return }
-                searchFieldButton.setTitle(place.name, for: .normal)
-                searchFieldButton.setTitleColor(AFColor.grayScale400, for: .normal)
+                moveCamera(latitude: Double(place.y) ?? 127,
+                           longitude: Double(place.x) ?? 38)
             })
             .disposed(by: disposeBag)
     }
@@ -220,15 +209,5 @@ final class MapViewController: UIViewController, Searchable {
             $0.bottom.equalTo(mapContainer).offset(-10)
             $0.height.width.equalTo(56)
         }
-    }
-}
-
-extension MapViewController: UISearchResultsUpdating, UISearchBarDelegate {
-    func updateSearchResults(for searchController: UISearchController) {
-        setTableView()
-    }
-    
-    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        viewModel.searchFields(keyword: searchText, disposeBag: disposeBag)
     }
 }
