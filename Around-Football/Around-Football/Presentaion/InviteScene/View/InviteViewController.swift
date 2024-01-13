@@ -95,7 +95,6 @@ final class InviteViewController: UIViewController, Searchable {
         $0.datePickerMode = .time
         $0.locale = Locale(identifier: "ko_kr")
         $0.minuteInterval = 30
-        $0.minimumDate = Date(timeIntervalSinceNow: 0)
         $0.addTarget(self, action: #selector(startTimePickerSelected), for: .valueChanged)
     }
     
@@ -122,10 +121,10 @@ final class InviteViewController: UIViewController, Searchable {
         items: ["풋살", "축구"]
     ).then {
         $0.selectedSegmentIndex = 0 //기본 선택 풋살로
+        viewModel.type.accept("풋살")
         $0.addTarget(self,
                      action: #selector(typeSegmentedControlValueChanged),
                      for: .valueChanged)
-        viewModel.type.accept("풋살")
     }
     
     private let genderLabel = UILabel().then {
@@ -137,10 +136,10 @@ final class InviteViewController: UIViewController, Searchable {
         items: ["남성", "여성", "무관"]
     ).then {
         $0.selectedSegmentIndex = 0
+        viewModel.gender.accept("남성")
         $0.addTarget(self,
                      action: #selector(genderSegmentedControlValueChanged),
                      for: .valueChanged)
-        viewModel.gender.accept("남성")
     }
     
     private let contentLabel = UILabel().then {
@@ -427,6 +426,22 @@ final class InviteViewController: UIViewController, Searchable {
             .disposed(by: disposeBag)
         
         areFieldsEmptyObservable()
+            .subscribe { [weak self] _ in
+                guard let self else { return }
+                let fieldObservables = [
+                    viewModel.fieldName.value,
+                    viewModel.type.value,
+                    viewModel.matchDateString.value,
+                    viewModel.startTime.value,
+                    viewModel.endTime.value,
+                    viewModel.gamePrice.value,
+                    viewModel.gender.value,
+                    viewModel.content.value
+                ]
+                print(fieldObservables)
+            }.disposed(by: disposeBag)
+        
+        areFieldsEmptyObservable()
             .bind(onNext: { [weak self] bool in
                 guard let self else { return }
                 if bool == true {
@@ -449,8 +464,9 @@ final class InviteViewController: UIViewController, Searchable {
             viewModel.startTime.accept(startTimeString)
             viewModel.endTime.accept(endTimeString)
             //올리기 함수
-            viewModel.createRecruitFieldData()
+            viewModel.setRecruitImages(uploadedImages)
             viewModel.coordinator.popInviteViewController()
+            
         }
     }
     
@@ -621,7 +637,6 @@ final class InviteViewController: UIViewController, Searchable {
         imageButton.snp.makeConstraints { make in
             make.top.equalTo(contentLabel.snp.bottom).offset(10)
             make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
-//            make.width.equalToSuperview().multipliedBy(0.2)
             make.width.equalTo((UIScreen.main.bounds.width - 70) / 4)
             make.height.equalTo(imageButton.snp.width)
         }
@@ -662,30 +677,22 @@ extension InviteViewController: PHPickerViewControllerDelegate {
                 images.append(nil)
                 continue
             }
-
             dispatchGroup.enter()
 
             itemProvider.loadObject(ofClass: UIImage.self) { image, error in
                 defer {
                     dispatchGroup.leave()
                 }
-
                 guard let image = image as? UIImage else {
                     return
                 }
-
                 resultImage = image
-                print("1: \(resultImage)")
             }
-
-            dispatchGroup.wait() // 동기적으로 기다림
-            print("2: \(resultImage)")
-
+            dispatchGroup.wait()
             images.append(resultImage)
         }
 
         dispatchGroup.notify(queue: .main) {
-            print("3: \(images)")
             self.uploadedImages.onNext(images)
             picker.dismiss(animated: true)
         }
