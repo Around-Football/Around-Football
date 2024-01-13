@@ -13,7 +13,7 @@ import RxSwift
 import SnapKit
 import Then
 
-final class MapViewController: UIViewController {
+final class MapViewController: UIViewController, Searchable {
     
     // MARK: - Properties
     
