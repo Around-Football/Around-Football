@@ -25,7 +25,7 @@ final class SettingViewController: UIViewController {
     private let viewModel: SettingViewModel?
     private let disposeBag = DisposeBag()
     
-    private let settingTableView = UITableView().then {
+    private let settingTableView = UITableView(frame: .zero, style: .plain).then {
         $0.register(InfoCell.self, forCellReuseIdentifier: InfoCell.cellID)
         $0.separatorInset = UIEdgeInsets().with({ edge in
             edge.left = 0
@@ -68,7 +68,6 @@ final class SettingViewController: UIViewController {
                     case 0:
                         print("알림 설정 하기")
                     default:
-                        print("SettingCell없음")
                         return
                     }
                 case 1:
@@ -80,7 +79,6 @@ final class SettingViewController: UIViewController {
                         print("약관 및 정책 뷰로")
                         viewModel?.coordinator?.pushWebViewController(url: "https://www.notion.so/thekoon0456/899108fe75174f91b09294adfae9de06")
                     default:
-                        print("SettingCell없음")
                         return
                     }
                 case 2:
@@ -96,11 +94,10 @@ final class SettingViewController: UIViewController {
                                   message: "정말로 탈퇴 하시겠습니까?",
                                   rightActionCompletion: viewModel?.withDraw)
                     default:
-                        print("SettingCell없음")
                         return
                     }
                 default:
-                    print("잘못된 섹션입니다.")
+                    return
                 }
                 
                 settingTableView.deselectRow(at: indexPath, animated: true)
