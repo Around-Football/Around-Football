@@ -238,6 +238,7 @@ final class HomeTableViewCell: UITableViewCell {
         dateLabel.snp.makeConstraints { make in
             make.top.equalTo(typeLabel.snp.top)
             make.leading.equalTo(typeLabel.snp.trailing).offset(8)
+            make.trailing.equalToSuperview()
         }
         
         fieldLabel.snp.makeConstraints { make in
