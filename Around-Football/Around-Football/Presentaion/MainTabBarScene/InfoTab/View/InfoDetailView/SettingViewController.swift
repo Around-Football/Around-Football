@@ -55,18 +55,6 @@ final class SettingViewController: UIViewController {
     // MARK: - Helpers
     
     private func bindUI() {
-//        viewModel?
-//            .settingMenusObserverble
-//            .bind(to: settingTableView.rx.items(cellIdentifier: InfoCell.cellID,
-//                                                cellType: InfoCell.self)) { index, item, cell in
-//                
-//                if item == "알림 설정" {
-//                    print("\(item)")
-//                    cell.setValues(title: item, usingRightIcon: false, usingSwitch: true)
-//                } else {
-//                    cell.setValues(title: item, usingRightIcon: false)
-//                }
-//            }.disposed(by: disposeBag)
         
         // MARK: - Section에 따라 설정
         
@@ -78,24 +66,12 @@ final class SettingViewController: UIViewController {
                 case 0:
                     switch indexPath.row {
                     case 0:
-                        print("로그아웃 alert")
-                        showPopUp(title: "로그아웃",
-                                  message: "로그아웃 하시겠습니까?",
-                                  rightActionCompletion: viewModel?.logout)
-                    case 1:
-                        print("탈퇴 alert")
-                        showPopUp(title: "회원 탈퇴",
-                                  message: "정말로 탈퇴 하시겠습니까?",
-                                  rightActionCompletion: viewModel?.withDraw)
-                    case 2:
                         print("알림 설정 하기")
                     default:
                         print("SettingCell없음")
                         return
                     }
-                    
                 case 1:
-                    
                     switch indexPath.row {
                     case 0:
                         print("1:1 문의 뷰로")
@@ -107,11 +83,26 @@ final class SettingViewController: UIViewController {
                         print("SettingCell없음")
                         return
                     }
+                case 2:
+                    switch indexPath.row {
+                    case 0:
+                        print("로그아웃 alert")
+                        showPopUp(title: "로그아웃",
+                                  message: "로그아웃 하시겠습니까?",
+                                  rightActionCompletion: viewModel?.logout)
+                    case 1:
+                        print("탈퇴 alert")
+                        showPopUp(title: "회원 탈퇴",
+                                  message: "정말로 탈퇴 하시겠습니까?",
+                                  rightActionCompletion: viewModel?.withDraw)
+                    default:
+                        print("SettingCell없음")
+                        return
+                    }
                 default:
                     print("잘못된 섹션입니다.")
                 }
                 
-                //cell 선택 초기화
                 settingTableView.deselectRow(at: indexPath, animated: true)
             }.disposed(by: disposeBag)
     }
@@ -131,15 +122,48 @@ final class SettingViewController: UIViewController {
 }
 
 extension SettingViewController {
+    //cell 구성
+    enum SettingSection: Int, CaseIterable {
+        case normal
+        case service
+        case account
+        
+        var title: String {
+            switch self {
+            case .normal:
+                return "일반"
+            case .service:
+                return "서비스"
+            case .account:
+                return "계정 관리"
+            }
+        }
+        
+        var items: [String] {
+            switch self {
+            case .normal:
+                return ["알림 설정"]
+            case .service:
+                return ["1:1 문의", "약관 및 정책"]
+            case .account:
+                return ["로그아웃", "회원 탈퇴"]
+            }
+        }
+    }
+}
+
+extension SettingViewController {
     func setSectionTableView() {
         // 데이터 소스 초기화
         dataSource = RxTableViewSectionedReloadDataSource<SectionModel>(
-            configureCell: { (_, tableView, indexPath, item) in
+            configureCell: {  (_, tableView, indexPath, item) in
                 let cell = tableView.dequeueReusableCell(withIdentifier: InfoCell.cellID, for: indexPath) as! InfoCell
                 if item == "알림 설정" {
                     print("\(item)")
+                    cell.selectionStyle = .none //알림설정은 cell클릭설정 x
                     cell.setValues(title: item, usingRightIcon: false, usingSwitch: true)
                 } else {
+                    self.settingTableView.allowsSelection = true
                     cell.setValues(title: item, usingRightIcon: false)
                 }
                 return cell
@@ -150,9 +174,10 @@ extension SettingViewController {
         )
         
         // 데이터 생성
-        let section1 = SectionModel(model: "일반", items: ["로그아웃", "회원 탈퇴", "알림 설정"])
-        let section2 = SectionModel(model: "서비스", items: ["1:1 문의", "약관 및 정책"])
-        let sections: [SectionModel] = [section1, section2]
+        let sectionNormal = SectionModel(model: SettingSection.normal.title, items: SettingSection.normal.items)
+        let sectionService = SectionModel(model: SettingSection.service.title, items: SettingSection.service.items)
+        let sectionAccount = SectionModel(model: SettingSection.account.title, items:SettingSection.account.items)
+        let sections: [SectionModel] = [sectionNormal, sectionService, sectionAccount]
         let sectionsObservable = Observable.just(sections)
         
         sectionsObservable
