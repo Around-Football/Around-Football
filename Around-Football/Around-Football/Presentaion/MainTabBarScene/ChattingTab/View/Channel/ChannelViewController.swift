@@ -58,9 +58,6 @@ final class ChannelViewController: UIViewController {
     let underLineView = UIView().then {
         $0.backgroundColor = AFColor.secondary
     }
-    
-    // 움직일 underLineView의 leadingAnchor 따로 작성
-    private var leadingConstraint: Constraint?
 
     let channelTableView = UITableView().then {
         $0.register(ChannelTableViewCell.self, forCellReuseIdentifier: ChannelTableViewCell.cellId)

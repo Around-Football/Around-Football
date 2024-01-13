@@ -26,6 +26,10 @@ final class ApplicationPostViewController: UIViewController {
 
     private var applicationPostTableView = UITableView().then {
         $0.register(HomeTableViewCell.self, forCellReuseIdentifier: HomeTableViewCell.id)
+        $0.separatorInset = UIEdgeInsets().with({ edge in
+            edge.left = 0
+            edge.right = 0
+        })
     }
     
     // MARK: - Lifecycles
