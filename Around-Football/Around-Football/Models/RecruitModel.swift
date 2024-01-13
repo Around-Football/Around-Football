@@ -17,6 +17,7 @@ struct Recruit: Codable, Identifiable {
     var fieldAddress: String // 운동장 주소
     var region: String
     var type: String //유형: 풋살, 축구
+    var gender: String
     var recruitedPeopleCount: Int //모집 인원
     var gamePrice: String // 무료도 있을 수 있으니
     var title: String
@@ -38,6 +39,7 @@ struct Recruit: Codable, Identifiable {
     var currentRecruitedNumber: String {
         return "\(acceptedApplicantsUID.count)/\(recruitedPeopleCount)"
     }
+    var recruitImages: [String]
     var representation: [String: Any] {
         let rep = ["id": id,
                    "userID": userID,
@@ -47,6 +49,7 @@ struct Recruit: Codable, Identifiable {
                    "fieldAddress": fieldAddress,
                    "region": region,
                    "type": type,
+                   "gender": gender,
                    "recruitedPeopleCount": recruitedPeopleCount,
                    "gamePrice": gamePrice,
                    "title": title,
@@ -56,12 +59,12 @@ struct Recruit: Codable, Identifiable {
                    "startTime": startTime,
                    "endTime": endTime,
                    "pendingApplicantsUID": pendingApplicantsUID,
-                   "acceptedApplicantsUID": acceptedApplicantsUID] as [String : Any]
+                   "acceptedApplicantsUID": acceptedApplicantsUID,
+                   "recruitImages": recruitImages] as [String : Any]
         return rep
     }
     
-    // create new recruit
-    init(userID: String, userName: String, fieldID: String, fieldName: String, fieldAddress: String, region: String, type: String, recruitedPeopleCount: Int, gamePrice: String, title: String, content: String, matchDate: Timestamp, startTime: String, endTime: String, matchDateString: String, pendingApplicantsUID: [String], acceptedApplicantsUID: [String]) {
+    init(userID: String, userName: String, fieldID: String, fieldName: String, fieldAddress: String, region: String, type: String, gender: String, recruitedPeopleCount: Int, gamePrice: String, title: String, content: String, matchDate: Timestamp, startTime: String, endTime: String, matchDateString: String, pendingApplicantsUID: [String], acceptedApplicantsUID: [String], recruitImages: [String]) {
         self.id = UUID().uuidString
         self.userID = userID
         self.userName = userName
@@ -70,6 +73,7 @@ struct Recruit: Codable, Identifiable {
         self.fieldAddress = fieldAddress
         self.region = region
         self.type = type
+        self.gender = gender
         self.recruitedPeopleCount = recruitedPeopleCount
         self.gamePrice = gamePrice
         self.title = title
@@ -80,9 +84,9 @@ struct Recruit: Codable, Identifiable {
         self.matchDateString = matchDateString
         self.pendingApplicantsUID = pendingApplicantsUID
         self.acceptedApplicantsUID = acceptedApplicantsUID
+        self.recruitImages = recruitImages
     }
     
-    // fetch Data from firebase
     init(dictionary: [String: Any]) {
         self.id = dictionary["id"] as? String ?? UUID().uuidString
         self.userID = dictionary["userID"] as? String ?? ""
@@ -92,6 +96,7 @@ struct Recruit: Codable, Identifiable {
         self.fieldAddress = dictionary["fieldAddress"] as? String ?? ""
         self.region = dictionary["region"] as? String ?? ""
         self.type = dictionary["type"] as? String ?? ""
+        self.gender = dictionary["gender"] as? String ?? ""
         self.recruitedPeopleCount = dictionary["recruitedPeopleCount"] as? Int ?? Int()
         self.gamePrice = dictionary["gamePrice"] as? String ?? ""
         self.title = dictionary["title"] as? String ?? ""
@@ -102,6 +107,7 @@ struct Recruit: Codable, Identifiable {
         self.endTime = dictionary["endTime"] as? String ?? ""
         self.pendingApplicantsUID = dictionary["pendingApplicantsUID"] as? [String] ?? []
         self.acceptedApplicantsUID = dictionary["acceptedApplicantsUID"] as? [String] ?? []
+        self.recruitImages = dictionary["recruitImages"] as? [String] ?? []
     }
 }
 
