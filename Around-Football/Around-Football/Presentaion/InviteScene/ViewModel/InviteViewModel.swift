@@ -13,7 +13,20 @@ import RxSwift
 
 final class InviteViewModel {
     
+    // MARK: - Type
+    
+    struct Input {
+        let recruitImages: Observable<[UIImage]>
+    }
+    
+    struct Output {
+        let recruit: Observable<Recruit>
+    }
+    
+    // MARK: - Properties
+    
     private var user: User?
+    private var recruit: Recruit?
     private var disposeBag = DisposeBag()
     
     private var fieldID = UUID().uuidString
@@ -30,6 +43,7 @@ final class InviteViewModel {
     var matchDate: BehaviorRelay<Timestamp> = BehaviorRelay(value: Timestamp(date: Date()))
     var startTime: BehaviorRelay<String> = BehaviorRelay(value: "")
     var endTime: BehaviorRelay<String> = BehaviorRelay(value: "")
+    var recruitImages: [String] = []
     private let pendingApplicantsUID: [String] = []
     private let acceptedApplicantsUID: [String] = []
     
@@ -40,6 +54,8 @@ final class InviteViewModel {
         setUser()
     }
     
+    // MARK: - Helpers
+    
     private func setUser() {
         UserService.shared.currentUser_Rx.subscribe(onNext: { [weak self] user in
             guard let self else { return }
@@ -48,24 +64,36 @@ final class InviteViewModel {
         .disposed(by: disposeBag)
     }
     
-//    func uploadImages() {
-//        StorageAPI.uploadImage(image: <#T##UIImage#>, id: <#T##String#>, completion: <#T##(URL?) -> Void#>)
-//    }
+    func setRecruitImages(_ uploadImages: BehaviorSubject<[UIImage?]>) {
+        uploadImages
+            .subscribe { [weak self] input in
+                guard let self = self else { return }
+                
+                StorageAPI.uploadRecruitImage(images: input) { [weak self] url in
+                    guard let url = url,
+                          let self else { return }
+                    recruitImages.append(url.absoluteString)
+                    if self.recruitImages.count == input.count {
+                        self.createRecruitFieldData()
+                    }
+                }
+            }.disposed(by: disposeBag)
+    }
     
     func showPHPickerView(picker: UIViewController) {
         coordinator.presentPHPickerView(picker: picker)
     }
     
     func createRecruitFieldData() {
-        // MARK: - 테스트용 임시 데이터 파베에 올림
         guard let user = user else { return }
-        let recruit = Recruit(userID: user.id, 
+        let recruit = Recruit(userID: user.id,
                               userName: user.userName,
                               fieldID: fieldID,
                               fieldName: fieldName.value,
                               fieldAddress: fieldAddress.value,
                               region: region.value,
                               type: type.value,
+                              gender: gender.value,
                               recruitedPeopleCount: peopleCount.value,
                               gamePrice: gamePrice.value,
                               title: contentTitle.value,
@@ -75,7 +103,8 @@ final class InviteViewModel {
                               endTime: endTime.value,
                               matchDateString: matchDateString.value,
                               pendingApplicantsUID: pendingApplicantsUID,
-                              acceptedApplicantsUID: acceptedApplicantsUID)
+                              acceptedApplicantsUID: acceptedApplicantsUID,
+                              recruitImages: recruitImages)
         
         FirebaseAPI.shared.createRecruitFieldData(recruit: recruit) { error in
             if error == nil {
