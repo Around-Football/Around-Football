@@ -19,7 +19,7 @@ final class HomeTableViewCell: UITableViewCell {
     static let id: String = "HomeTableViewCellID"
     var viewModel: HomeViewModel?
     var infoPostViewModel: InfoPostViewModel?
-    private var user = try? UserService.shared.currentUser_Rx.value()
+    private var user: User?
     private var disposeBag = DisposeBag()
     private var recruitID: String?
     private var isSelectedButton: Bool?
@@ -180,7 +180,7 @@ final class HomeTableViewCell: UITableViewCell {
         recruitLabel.text = " \(item.acceptedApplicantsUID.count) / \(item.recruitedPeopleCount)명 모집"
         
         //TODO: - 성별 input 추가되면 바인딩하기
-        //        genderLabel.text = ""
+//        genderLabel.text = item.gender
         
         // MARK: - 예전 디자인 코드
         //        titleLabel.text = item.title
