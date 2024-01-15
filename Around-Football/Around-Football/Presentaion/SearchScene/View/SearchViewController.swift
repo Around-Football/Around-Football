@@ -102,6 +102,7 @@ class SearchViewController: UIViewController {
         let selectedItem = tableView.rx.modelSelected(Place.self)
         
         selectedItem
+            .debug()
             .subscribe(onNext: { [weak self] place in
                 guard let self = self else { return }
                 searchViewModel.dataSubject

@@ -8,16 +8,18 @@
 import UIKit
 
 final class SearchCoordinator: BaseCoordinator {
-    var type: CoordinatorType = .map
     
-    override func start() {
-        let searchViewModel = SearchViewModel(coordinator: self)
-        let controller = SearchViewController(searchViewModel: searchViewModel)
+    var type: CoordinatorType = .map
+    //지도
+    func start(viewModel: SearchViewModel) {
+        let controller = SearchViewController(searchViewModel: viewModel)
         controller.navigationController?.navigationBar.isHidden = false
         controller.setModalAFBackButton()
         let presentViewController = UINavigationController(rootViewController: controller)
         presentViewController.modalPresentationStyle = .fullScreen
-        navigationController?.present(presentViewController, animated: true)
+//        presentViewController.modalTransitionStyle = .crossDissolve
+        print("\(navigationController)")
+        navigationController?.present(presentViewController, animated: false)
     }
     
     @objc

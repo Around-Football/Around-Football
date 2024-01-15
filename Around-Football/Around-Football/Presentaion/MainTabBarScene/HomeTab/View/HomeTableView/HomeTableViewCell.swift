@@ -19,7 +19,7 @@ final class HomeTableViewCell: UITableViewCell {
     static let id: String = "HomeTableViewCellID"
     var viewModel: HomeViewModel?
     var infoPostViewModel: InfoPostViewModel?
-    private var user = try? UserService.shared.currentUser_Rx.value()
+    private var user: User?
     private var disposeBag = DisposeBag()
     private var recruitID: String?
     private var isSelectedButton: Bool?
@@ -152,6 +152,13 @@ final class HomeTableViewCell: UITableViewCell {
         return formattedDate
     }
     
+    //모집Date 비교
+    func isDateInFuture(targetDate: Date) -> Bool {
+        let currentDate = Date()
+        let comparisonResult = currentDate.compare(targetDate)
+        return comparisonResult == .orderedDescending
+    }
+    
     func bindContents(item: Recruit, isBookmark: Bool? = false) {
         let date = item.matchDate.dateValue()
         let formattedCellDate = formatMatchDate(date)
@@ -174,13 +181,19 @@ final class HomeTableViewCell: UITableViewCell {
             typeLabel.text = item.type
             typeLabel.backgroundColor = item.type == "축구" ? AFColor.soccor : AFColor.futsal
         }
+
+        //시간이 과거면 마감으로 표시
+        if isDateInFuture(targetDate: item.matchDate.dateValue()) {
+            typeLabel.text = "마감"
+            typeLabel.backgroundColor = AFColor.grayScale200
+        }
         
         dateLabel.text = formattedCellDate
         fieldLabel.text = "\(item.fieldName)"
         recruitLabel.text = " \(item.acceptedApplicantsUID.count) / \(item.recruitedPeopleCount)명 모집"
         
         //TODO: - 성별 input 추가되면 바인딩하기
-        //        genderLabel.text = ""
+//        genderLabel.text = item.gender
         
         // MARK: - 예전 디자인 코드
         //        titleLabel.text = item.title

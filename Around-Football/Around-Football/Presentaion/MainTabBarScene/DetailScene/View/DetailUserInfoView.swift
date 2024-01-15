@@ -14,10 +14,18 @@ final class DetailUserInfoView: UIView {
     
     // MARK: - Properties
     
+    private let isInfoTab: Bool
+    
+    private let cameraImage = UIImageView(image: UIImage(named: AFIcon.cameraButton))
+    
     lazy var profileImageView = UIImageView().then {
         $0.image = UIImage(named: AFIcon.fieldImage)
         $0.contentMode = .scaleAspectFill
-        $0.layer.cornerRadius = 20
+        if isInfoTab {
+            $0.layer.cornerRadius = 64/2
+        } else {
+            $0.layer.cornerRadius = 20
+        }
         $0.clipsToBounds = true
         $0.isUserInteractionEnabled = true
         $0.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(imageViewTapped)))
@@ -98,8 +106,10 @@ final class DetailUserInfoView: UIView {
 
     // MARK: - Lifecycles
     
-    override init(frame: CGRect) {
+    init(frame: CGRect = .zero, isInfoTab: Bool = false) {
+        self.isInfoTab = isInfoTab
         super.init(frame: frame)
+        
         configureUI()
     }
     
@@ -122,11 +132,6 @@ final class DetailUserInfoView: UIView {
             userNameLabel.text = "로그인 해주세요"
             userDetailInfoStackView.isHidden = true
         } else {
-            // MARK: - User 추가하고 주석 풀기
-//            StorageAPI.downloadImage(url: user.profileImageURL, completion: { userImage in
-//                profileImageView.image = userImage ?? UIImage(named: AFIcon.fieldImage)
-//            })
-            
             userDetailInfoStackView.isHidden = false
             userDetailInfoSettingViewStackView.isHidden = true
             userNameLabel.text = user?.userName
@@ -145,14 +150,29 @@ final class DetailUserInfoView: UIView {
     private func configureUI() {
         addSubviews(profileImageView,
                     userStackView)
-        
-        profileImageView.snp.makeConstraints { make in
-            make.leading.equalToSuperview()
-            make.centerY.equalToSuperview()
-            make.height.equalTo(40)
-            make.width.equalTo(40)
+        if isInfoTab {
+            profileImageView.snp.makeConstraints { make in
+                make.leading.equalToSuperview()
+                make.centerY.equalToSuperview()
+                make.height.equalTo(64)
+                make.width.equalTo(64)
+                
+                addSubview(cameraImage)
+                cameraImage.snp.makeConstraints { make in
+                    make.width.height.equalTo(20)
+                    make.trailing.equalTo(profileImageView.snp.trailing)
+                    make.bottom.equalTo(profileImageView.snp.bottom)
+                }
+            }
+        } else {
+            profileImageView.snp.makeConstraints { make in
+                make.leading.equalToSuperview()
+                make.centerY.equalToSuperview()
+                make.height.equalTo(40)
+                make.width.equalTo(40)
+            }
         }
-        
+
         userStackView.snp.makeConstraints { make in
             make.centerY.equalToSuperview()
             make.leading.equalTo(profileImageView.snp.trailing).offset(14)

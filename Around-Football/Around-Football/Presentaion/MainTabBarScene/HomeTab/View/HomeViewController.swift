@@ -100,6 +100,7 @@ final class HomeViewController: UIViewController {
         bindUI()
         bindScrollButtons()
         setUserInfo()
+
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -262,6 +263,7 @@ final class HomeViewController: UIViewController {
                     selectedDateSet.contains(recruit.matchDateString)
                 }
             }
+            
             return recruits
         }
         .bind(to: homeTableView.rx.items(cellIdentifier: HomeTableViewCell.id,
