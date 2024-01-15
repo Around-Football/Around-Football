@@ -463,6 +463,7 @@ final class InviteViewController: UIViewController, Searchable {
             viewModel.matchDate.accept(Timestamp(date: datePicker.date))
             viewModel.startTime.accept(startTimeString)
             viewModel.endTime.accept(endTimeString)
+            
             //올리기 함수
             viewModel.setRecruitImages(uploadedImages)
             viewModel.coordinator.popInviteViewController()

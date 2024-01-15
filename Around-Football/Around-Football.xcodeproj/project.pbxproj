@@ -643,6 +643,7 @@
 			isa = PBXGroup;
 			children = (
 				6609C5342ACE8D3600798632 /* MapViewModel.swift */,
+				66656F9E2AD921D700AE1AFA /* FieldDetailViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -681,7 +682,6 @@
 			children = (
 				7C94EBD42B01BF0600A7E42A /* InfoViewModel.swift */,
 				7C9930502B3BB8D600CDD5FC /* SettingViewModel.swift */,
-				66656F9E2AD921D700AE1AFA /* FieldDetailViewModel.swift */,
 				7C2F9FE82B26E73200F1EF1B /* InfoPostViewModel.swift */,
 			);
 			path = ViewModel;
