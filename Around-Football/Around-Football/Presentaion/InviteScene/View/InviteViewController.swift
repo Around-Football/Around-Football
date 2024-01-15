@@ -330,6 +330,9 @@ final class InviteViewController: UIViewController {
             .map {
                 $0.name
             }
+            .do { input in
+                print(input)
+            }
             .bind(to: placeView.searchFieldButton.rx.title())
             .disposed(by: disposeBag)
     }

@@ -45,6 +45,7 @@ enum AFIcon {
     static let searchButton = "AFSearchButton"
     static let settingButton = "AFSettingButton"
     static let deleteButton = "AFDeleteButton"
+    static let cameraButton = "AFCameraButton"
     
     //background
     static let loginBackgroundImage = "AFBackground"
