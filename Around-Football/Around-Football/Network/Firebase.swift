@@ -367,6 +367,10 @@ extension FirebaseAPI {
         REF_RECRUIT
             .document(recruit.id)
             .setData(recruit.representation, completion: completion)
+        
+//        REF_FIELD
+//            .document(recruit.fieldID)
+//            .setData(recruit.representation, completion: completion)
     }
     
     //date
@@ -385,6 +389,31 @@ extension FirebaseAPI {
                     return
                 }
                 
+                _ = snapshot.documents.map { $0.data() }
+            }
+    }
+}
+
+// MARK: - Field
+
+extension FirebaseAPI {
+    func fetchField(fieldID: String) async throws -> Field? {
+        guard let data = try await REF_RECRUIT.document(fieldID).getDocument().data() else { return nil }
+        
+        let field = Field(dictionary: data)
+        
+        return field
+    }
+    
+    func fetchFieldData(fieldAddress: String) {
+        REF_RECRUIT
+            .whereField("fieldAddress", isEqualTo: fieldAddress)
+            .getDocuments { snapshot, error in
+                guard let snapshot = snapshot else {
+                    let errorMessage = error?.localizedDescription ?? "None ERROR"
+                    print("DEBUG: fetchRecruitFieldData Error - \(errorMessage)")
+                    return
+                }
                 _ = snapshot.documents.map { $0.data() }
             }
     }

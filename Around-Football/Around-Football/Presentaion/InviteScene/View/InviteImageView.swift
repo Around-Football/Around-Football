@@ -7,12 +7,15 @@
 
 import UIKit
 
+import RxCocoa
+import RxSwift
 import SnapKit
 import Then
 
 class InviteImageView: UIImageView {
-    private let deleteButton = UIButton().then {
+    lazy var deleteButton = UIButton().then {
         $0.setImage(UIImage(named: AFIcon.deleteButton), for: .normal)
+        $0.addTarget(self, action: #selector(removeImage), for: .touchUpInside)
     }
     
     override init(frame: CGRect) {
@@ -27,10 +30,16 @@ class InviteImageView: UIImageView {
     private func configureUI() {
         addSubview(deleteButton)
         deleteButton.snp.makeConstraints { make in
-            make.top.equalToSuperview().offset(10)
-            make.trailing.equalToSuperview().offset(-10)
-            make.width.equalTo(10)
-            make.height.equalTo(10)
+            make.top.equalToSuperview().offset(5)
+            make.trailing.equalToSuperview().offset(-5)
+            make.width.equalTo(30)
+            make.height.equalTo(30)
         }
+    }
+    
+    @objc
+    private func removeImage() {
+        self.removeFromSuperview()
+        NotificationCenter.default.post(name: .updateUploadImages, object: nil)
     }
 }

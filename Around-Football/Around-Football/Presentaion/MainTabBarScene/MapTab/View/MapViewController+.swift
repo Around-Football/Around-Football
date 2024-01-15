@@ -140,10 +140,10 @@ extension MapViewController: MapControllerDelegate, KakaoMapEventDelegate {
             consecutive: true,
             durationInMillis: 1000
         )
-        let mappoint = MapPoint(longitude: longitude, latitude: latitude)
+        let mapPoint = MapPoint(longitude: longitude, latitude: latitude)
         mapView.animateCamera(
             cameraUpdate: CameraUpdate.make(
-                target: mappoint,
+                target: mapPoint,
                 zoomLevel: 14, mapView: mapView),
             options: animationOptions
         )
@@ -215,7 +215,7 @@ extension MapViewController: MapControllerDelegate, KakaoMapEventDelegate {
         
         if label.labelType == .fieldPosition {
             let layer = manager.getLodLabelLayer(layerID: label.layerID)
-            let datas = getlodDatas(label: label, fields: fields)
+            let datas = getloadDatas(label: label, fields: fields)
             let lodPois = layer?.addLodPois(options: datas.0, at: datas.1)
             guard let lodPois = lodPois else { return }
             let _ = lodPois.map {
@@ -230,7 +230,7 @@ extension MapViewController: MapControllerDelegate, KakaoMapEventDelegate {
         
     }
     
-    func getlodDatas( label: MapLabel, fields: [Field]) -> ([PoiOptions], [MapPoint]) {
+    func getloadDatas( label: MapLabel, fields: [Field]) -> ([PoiOptions], [MapPoint]) {
         var options: [PoiOptions] = []
         var positions: [MapPoint] = []
         

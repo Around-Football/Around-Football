@@ -17,8 +17,6 @@ final class SearchCoordinator: BaseCoordinator {
         controller.setModalAFBackButton()
         let presentViewController = UINavigationController(rootViewController: controller)
         presentViewController.modalPresentationStyle = .fullScreen
-//        presentViewController.modalTransitionStyle = .crossDissolve
-        print("\(navigationController)")
         navigationController?.present(presentViewController, animated: false)
     }
     
