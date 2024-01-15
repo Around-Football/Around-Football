@@ -31,15 +31,15 @@ final class MapTabCoordinator: BaseCoordinator {
         return navigationController
     }
     
-    // SearchViewController Delegate
-//    func presentSearchViewController() {
-////        coordinator.start()
-////        childCoordinators.append(coordinator)
-//        searchCoordinator.start(viewModel: searchViewModel)
-//    }
-    
     func presentSearchViewController() {
-        print("함수실행")
         self.searchCoordinator.start(viewModel: self.searchViewModel)
+    }
+    
+    func presentDetailViewController() {
+        let fieldViewModel = FieldDetailViewModel()
+        let modalViewController = FieldDetailViewController()
+        let navigation = UINavigationController(rootViewController: modalViewController)
+        navigationController?.present(navigation, animated: true)
+        
     }
 }
