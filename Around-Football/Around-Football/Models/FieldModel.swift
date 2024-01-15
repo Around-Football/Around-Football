@@ -15,7 +15,7 @@ struct Field: Codable, Identifiable {
     var id: String //운동장ID(추가)
     var fieldName: String //운동장 이름
     var fieldAddress: String //운동장 주소
-    var imageURL: String //운동장 이미지
+//    var imageURL: String //운동장 이미지
     var location: GeoPoint //운동장 좌표
     
     static func convertToArray(documents: [[String: Any]]) -> [Field] {
@@ -32,7 +32,7 @@ struct Field: Codable, Identifiable {
         self.id = dictionary["id"] as? String ?? UUID().uuidString
         self.fieldName = dictionary["fieldName"] as? String ?? ""
         self.fieldAddress = dictionary["fieldAddress"] as? String ?? ""
-        self.imageURL = dictionary["imageURL"] as? String ?? ""
+//        self.imageURL = dictionary["imageURL"] as? String ?? ""
         self.location = dictionary["location"] as? GeoPoint ?? GeoPoint(latitude: 0, longitude: 0)
     }
 }

@@ -13,15 +13,36 @@ import RxSwift
 import SnapKit
 import Then
 
-final class MapViewController: UIViewController {
+protocol Searchable {
+    func updateSearchBar(dataSubject: PublishSubject<Place>,
+                         searchBarButton: UIButton,
+                         disposeBag: DisposeBag)
+}
+
+extension Searchable {
+    func updateSearchBar(dataSubject: PublishSubject<Place>,
+                         searchBarButton: UIButton,
+                         disposeBag: DisposeBag) {
+        dataSubject
+            .bind(onNext: { place in
+                searchBarButton.setTitle(place.name, for: .normal)
+                searchBarButton.setTitleColor(AFColor.grayScale400, for: .normal)
+            })
+            .disposed(by: disposeBag)
+    }
+}
+
+final class MapViewController: UIViewController, Searchable {
     
     // MARK: - Properties
     
     private let disposeBag = DisposeBag()
     var viewModel: MapViewModel
+    var searchViewModel: SearchViewModel?
     
-    init(viewModel: MapViewModel) {
+    init(viewModel: MapViewModel, searchViewModel: SearchViewModel? = nil) {
         self.viewModel = viewModel
+        self.searchViewModel = searchViewModel
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -55,8 +76,8 @@ final class MapViewController: UIViewController {
         button.titleLabel?.font = AFFont.text?.withSize(16)
         button.setImage(image?.withTintColor(AFColor.grayScale300, renderingMode: .alwaysOriginal),for: .normal)
         button.setTitleColor(AFColor.grayScale100, for: .normal)
+        button.setTitleColor(AFColor.grayScale200, for: .highlighted)
         button.layer.cornerRadius = LayoutOptions.cornerRadious
-        button.translatesAutoresizingMaskIntoConstraints = false
         button.backgroundColor = .white
         button.setShadowLayer()
         button.contentHorizontalAlignment = .leading
@@ -82,8 +103,6 @@ final class MapViewController: UIViewController {
     deinit {
         mapController?.stopRendering()
         mapController?.stopEngine()
-        
-        print("deinit")
     }
     
     override func viewDidLoad() {
@@ -91,22 +110,21 @@ final class MapViewController: UIViewController {
         configureMap()
         configureUI()
         setLocationManager()
-        setTableView()
+        bindSearch()
+        
         if let locationCoordinate = locationManager.location?.coordinate {
-            viewModel.setCurrentLocation(latitude: locationCoordinate.latitude, longitude: locationCoordinate.longitude)
-            
-//            guard let viewModel = viewModel else { return }
-            
+            viewModel.setCurrentLocation(latitude: locationCoordinate.latitude,
+                                         longitude: locationCoordinate.longitude)
             viewModel.fetchFields()
-            //viewModel.selectedDate = self.datePicker.date
-            _ = getlodDatas(label: MapLabel(labelType: .fieldPosition, poi: .fieldPosition(viewModel.fields.map{$0.id})), fields: viewModel.fields)
+            _ = getloadDatas(label: MapLabel(labelType: .fieldPosition,
+                                            poi: .fieldPosition(viewModel.fields.map{ $0.id })),
+                            fields: viewModel.fields)
         }
     }
     
     override func viewWillAppear(_ animated: Bool) {
         addObservers()
         _appear = true
-        //        if _auth {
         if mapController?.engineStarted == false {
             mapController?.startEngine()
         }
@@ -114,22 +132,6 @@ final class MapViewController: UIViewController {
         if mapController?.rendering == false {
             mapController?.startRendering()
         }
-        //        }
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        //        _appear = false
-        //        mapController?.stopRendering()  //렌더링 중지.
-    }
-    
-    override func viewDidDisappear(_ animated: Bool) {
-        //        removeObservers()
-        //        mapController?.stopEngine()     //엔진 정지. 추가되었던 ViewBase들이 삭제된다.
-    }
-    
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        //        mapController?.initEngine() //엔진 초기화. 엔진 내부 객체 생성 및 초기화가 진행된다.
     }
     
     // MARK: - Selectors
@@ -144,6 +146,7 @@ final class MapViewController: UIViewController {
         self.changeCurrentPoi()
         let location = viewModel.currentLocation
         self.moveCamera(latitude: location.latitude, longitude: location.longitude)
+        viewModel.coordinator?.presentDetailViewController()
     }
     
     @objc
@@ -156,44 +159,29 @@ final class MapViewController: UIViewController {
         guard let field = viewModel.fields.filter({ $0.id == itemID }).first else { return }
         let selectedDate = viewModel.selectedDate
         
-        let fieldViewModel = FieldDetailViewModel(field: field, selectedDate: selectedDate)
-        self.modalViewController = FieldDetailViewController(viewModel: fieldViewModel)
-        
-        if let modalViewController = self.modalViewController {
-            let navigation = UINavigationController(rootViewController: modalViewController)
-            present(navigation, animated: true)
-        }
+//        let fieldViewModel = FieldDetailViewModel(field: field)
+//        self.modalViewController = FieldDetailViewController(viewModel: fieldViewModel)
+//        
+//        if let modalViewController = self.modalViewController {
+//            let navigation = UINavigationController(rootViewController: modalViewController)
+//            present(navigation, animated: true)
+//        }
     }
     
     // MARK: - Helpers
     
-    private func setTableView() {
-        searchResultsController.tableView.register(SearchTableViewCell.self,
-                           forCellReuseIdentifier: SearchTableViewCell.cellID)
-        searchResultsController.tableView.dataSource = nil
-        
-        let selectedItem = searchResultsController.tableView.rx.modelSelected(Place.self)
-        
-        selectedItem
+    private func bindSearch() {
+        guard let searchViewModel = searchViewModel else { return }
+        updateSearchBar(dataSubject: searchViewModel.dataSubject,
+                        searchBarButton: searchFieldButton,
+                        disposeBag: disposeBag)
+        searchViewModel.dataSubject
             .subscribe(onNext: { [weak self] place in
-                self?.viewModel.dataSubject
-                    .onNext(place)
-                self?.searchResultsController.dismiss(animated: true)
-                self?.moveCamera(latitude: Double(place.y) ?? 127, 
-                                 longitude: Double(place.x) ?? 38)
-                self?.searchFieldButton.titleLabel?.text = place.name
+                guard let self else { return }
+                moveCamera(latitude: Double(place.y) ?? 127,
+                           longitude: Double(place.x) ?? 38)
             })
             .disposed(by: disposeBag)
-        
-        _ = viewModel.searchResults
-            .debug()
-            .bind(to: searchResultsController.tableView.rx.items(
-                cellIdentifier: SearchTableViewCell.cellID,
-                cellType: SearchTableViewCell.self)) { index, place, cell in
-                    cell.fieldNameLabel.text = place.name
-                    cell.fieldAddressLabel.text = place.address
-                }
-                .disposed(by: disposeBag)
     }
     
     private func configureUI() {
@@ -206,14 +194,15 @@ final class MapViewController: UIViewController {
         )
         
         mapContainer.snp.makeConstraints {
-            $0.top.leading.trailing.equalTo(self.view)
+            $0.top.equalToSuperview()
+            $0.leading.trailing.equalToSuperview()
             $0.bottom.equalTo(self.view.safeAreaLayoutGuide)
         }
         
         searchFieldButton.snp.makeConstraints {
-            $0.top.equalToSuperview().offset(70)
-            $0.leading.equalToSuperview().offset(20)
-            $0.trailing.equalToSuperview().offset(-20)
+            $0.top.equalTo(view.safeAreaLayoutGuide)
+            $0.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
+            $0.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
         }
         
         trackingButton.snp.makeConstraints {
@@ -221,15 +210,5 @@ final class MapViewController: UIViewController {
             $0.bottom.equalTo(mapContainer).offset(-10)
             $0.height.width.equalTo(56)
         }
-    }
-}
-
-extension MapViewController: UISearchResultsUpdating, UISearchBarDelegate {
-    func updateSearchResults(for searchController: UISearchController) {
-        setTableView()
-    }
-    
-    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        viewModel.searchFields(keyword: searchText, disposeBag: disposeBag)
     }
 }

@@ -5,9 +5,10 @@
 //  Created by 강창현 on 10/12/23.
 //
 
-import Foundation
+import UIKit
 
 import RxSwift
+
 
 final class HomeViewModel {
     
@@ -44,5 +45,25 @@ final class HomeViewModel {
                 let recruitObservable = FirebaseAPI.shared.readRecruitRx(input: input)
                 return recruitObservable
             }
+    }
+    
+    func setTitleImage(recruit: Recruit) -> UIImage {
+        guard 
+            let defaultImage = UIImage(named: AFIcon.fieldImage)
+        else {
+            return UIImage()
+        }
+        guard
+            let titleImageURL = recruit.recruitImages.first,
+            let url = URL(string: titleImageURL)
+        else {
+            return defaultImage
+        }
+        var titleImage: UIImage = UIImage()
+        StorageAPI.downloadImage(url: url) { image in
+            guard let image = image else { return }
+            titleImage = image
+        }
+        return titleImage
     }
 }

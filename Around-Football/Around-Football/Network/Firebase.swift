@@ -240,7 +240,6 @@ extension FirebaseAPI {
         }
     }
     
-    //유저가 신청하기 누르면 pendingApplicationsUID 추가
     func loadWrittenPostRx(userID: String?) -> Observable<[Recruit]> {
         return Observable.create { observer in
             //유저불러옴
@@ -256,11 +255,9 @@ extension FirebaseAPI {
                     }
                     
                     guard let documents = snapshot?.documents else { return }
-                    let writtenPost = documents.compactMap { document -> Recruit? in
-                        let recruitData = document.data()
-                        return Recruit(dictionary: recruitData)
-                    }
-                    
+                    let writtenPost = documents.map {
+                        Recruit(dictionary: $0.data())
+                        }
                     observer.onNext(writtenPost)
                     observer.onCompleted()
                 }
@@ -370,6 +367,10 @@ extension FirebaseAPI {
         REF_RECRUIT
             .document(recruit.id)
             .setData(recruit.representation, completion: completion)
+        
+//        REF_FIELD
+//            .document(recruit.fieldID)
+//            .setData(recruit.representation, completion: completion)
     }
     
     //date
@@ -388,6 +389,31 @@ extension FirebaseAPI {
                     return
                 }
                 
+                _ = snapshot.documents.map { $0.data() }
+            }
+    }
+}
+
+// MARK: - Field
+
+extension FirebaseAPI {
+    func fetchField(fieldID: String) async throws -> Field? {
+        guard let data = try await REF_RECRUIT.document(fieldID).getDocument().data() else { return nil }
+        
+        let field = Field(dictionary: data)
+        
+        return field
+    }
+    
+    func fetchFieldData(fieldAddress: String) {
+        REF_RECRUIT
+            .whereField("fieldAddress", isEqualTo: fieldAddress)
+            .getDocuments { snapshot, error in
+                guard let snapshot = snapshot else {
+                    let errorMessage = error?.localizedDescription ?? "None ERROR"
+                    print("DEBUG: fetchRecruitFieldData Error - \(errorMessage)")
+                    return
+                }
                 _ = snapshot.documents.map { $0.data() }
             }
     }
