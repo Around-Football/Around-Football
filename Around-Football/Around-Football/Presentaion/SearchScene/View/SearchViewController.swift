@@ -30,6 +30,7 @@ class SearchViewController: UIViewController {
         $0.placeholder = "장소를 검색해주세요."
         guard let image = UIImage(systemName: "magnifyingglass") else { return }
         $0.setLeftView(image: image, imageColor: AFColor.grayScale300)
+        $0.clearButtonMode = .whileEditing
         $0.addTarget(self, action: #selector(textFieldDidChange), for: .editingChanged)
     }
     
@@ -111,7 +112,6 @@ class SearchViewController: UIViewController {
             .disposed(by: disposeBag)
         
         _ = searchViewModel.searchResults
-            .debug()
             .bind(to: tableView.rx.items(
                 cellIdentifier: SearchTableViewCell.cellID,
                 cellType: SearchTableViewCell.self)) { index, place, cell in
@@ -125,27 +125,5 @@ class SearchViewController: UIViewController {
     private func textFieldDidChange(_ sender: Any?) {
         guard let keyword = searchTextField.text else { return }
         searchViewModel.searchFields(keyword: keyword, disposeBag: disposeBag)
-    }
-}
-
-extension SearchViewController: UITextFieldDelegate {
-    
-}
-
-extension SearchViewController: UISearchBarDelegate, UISearchResultsUpdating {
-    func updateSearchResults(for searchController: UISearchController) {
-        
-    }
-    
-    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        
-    }
-    
-    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
-        
-    }
-    
-    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        KakaoService.shared.searchField(searchText, searchViewModel.searchResults, disposeBag)
     }
 }

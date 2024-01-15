@@ -14,11 +14,14 @@ protocol InviteCoordinatorDelegate {
 final class InviteCoordinator: BaseCoordinator {
 
     var type: CoordinatorType = .home
-    var searchViewModel = SearchViewModel(coordinator: nil)
+    
+    lazy var searchCoordinator = SearchCoordinator(navigationController: navigationController)
+    lazy var searchViewModel = SearchViewModel(coordinator: searchCoordinator)
     
     override func start() {
         let inviteViewModel = InviteViewModel(coordinator: self)
-        let controller = InviteViewController(inviteViewModel: inviteViewModel, 
+
+        let controller = InviteViewController(inviteViewModel: inviteViewModel,
                                               searchViewModel: searchViewModel)
         controller.navigationController?.navigationBar.isHidden = false
         controller.setAFBackButton()
@@ -33,9 +36,9 @@ final class InviteCoordinator: BaseCoordinator {
     
     // SearchViewController Delegate
     func presentSearchViewController() {
-        let coordinator = SearchCoordinator(navigationController: navigationController)
-        coordinator.start()
-        childCoordinators.append(coordinator)
+//        coordinator.start()
+//        childCoordinators.append(coordinator)
+        searchCoordinator.start(viewModel: searchViewModel)
     }
     
     func presentPHPickerView(picker: UIViewController) {

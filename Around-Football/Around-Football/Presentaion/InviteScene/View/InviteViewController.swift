@@ -14,7 +14,7 @@ import RxSwift
 import SnapKit
 import Then
 
-final class InviteViewController: UIViewController {
+final class InviteViewController: UIViewController, Searchable {
     
     // MARK: - Properties
     
@@ -26,7 +26,6 @@ final class InviteViewController: UIViewController {
     let contentView = UIView()
     private let placeView = GroundTitleView()
     private let peopleView = PeopleCountView()
-    private let inviteImageView = InviteImageView(frame: CGRect(x: 0, y: 0, width: 0, height: 0))
     private let divider = UIView().then {
         $0.backgroundColor = AFColor.grayScale50
     }
@@ -96,7 +95,6 @@ final class InviteViewController: UIViewController {
         $0.datePickerMode = .time
         $0.locale = Locale(identifier: "ko_kr")
         $0.minuteInterval = 30
-        $0.minimumDate = Date(timeIntervalSinceNow: 0)
         $0.addTarget(self, action: #selector(startTimePickerSelected), for: .valueChanged)
     }
     
@@ -123,10 +121,10 @@ final class InviteViewController: UIViewController {
         items: ["풋살", "축구"]
     ).then {
         $0.selectedSegmentIndex = 0 //기본 선택 풋살로
+        viewModel.type.accept("풋살")
         $0.addTarget(self,
                      action: #selector(typeSegmentedControlValueChanged),
                      for: .valueChanged)
-        viewModel.type.accept("풋살")
     }
     
     private let genderLabel = UILabel().then {
@@ -138,10 +136,10 @@ final class InviteViewController: UIViewController {
         items: ["남성", "여성", "무관"]
     ).then {
         $0.selectedSegmentIndex = 0
+        viewModel.gender.accept("남성")
         $0.addTarget(self,
                      action: #selector(genderSegmentedControlValueChanged),
                      for: .valueChanged)
-        viewModel.gender.accept("남성")
     }
     
     private let contentLabel = UILabel().then {
@@ -161,17 +159,17 @@ final class InviteViewController: UIViewController {
         return config
     }
     
-    var uploadedImages = PublishSubject<[UIImage]>()
-    private var images = [UIImage]()
+    private var uploadedImages = BehaviorSubject(value: [UIImage?]())
+
     private lazy var imageButton: UIButton = {
         let button = UIButton(configuration: buttonConfig).then {
             $0.setImage(UIImage(named: AFIcon.imagePlaceholder), for: .normal)
             $0.titleLabel?.font = AFFont.filterRegular
-            $0.setTitle("\(images.count)/3", for: .normal)
+            $0.setTitle("0/3", for: .normal)
             $0.setTitleColor(AFColor.grayScale200, for: .normal)
             $0.layer.borderWidth = 1
-            $0.layer.borderColor = AFColor.grayScale100.cgColor
             $0.layer.cornerRadius = 8
+            $0.layer.borderColor = AFColor.grayScale100.cgColor
         }
         return button
     }()
@@ -208,6 +206,12 @@ final class InviteViewController: UIViewController {
         
         return button
     }()
+    
+    private var imageStackView = UIStackView().then {
+        $0.distribution = .fillEqually
+        $0.spacing = 10
+        $0.axis = .horizontal
+    }
     
     private lazy var contentTextView = UITextView().then {
         $0.delegate = self
@@ -251,8 +255,10 @@ final class InviteViewController: UIViewController {
         configureUI()
         keyboardController()
         setAddButton()
+        setImages()
         setSearchFieldButton()
         bindImageButtonEvent()
+        NotificationCenter.default.addObserver(self, selector: #selector(updateUploadImages), name: .updateUploadImages, object: nil)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -307,6 +313,18 @@ final class InviteViewController: UIViewController {
     }
     
     @objc
+    private func updateUploadImages() {
+        var updateImages = [UIImage]()
+        imageStackView.arrangedSubviews.forEach { view in
+            guard let view = view as? UIImageView,
+                  let image = view.image else { return }
+            updateImages.append(image)
+            view.removeFromSuperview()
+        }
+        uploadedImages.onNext(updateImages)
+    }
+    
+    @objc
     private func popInviteViewController() {
         viewModel.coordinator.popInviteViewController()
     }
@@ -325,19 +343,19 @@ final class InviteViewController: UIViewController {
         placeView.searchFieldButton.addTarget(self,
                                               action: #selector(searchFieldButtonTapped),
                                               for: .touchUpInside)
-        
-        searchViewModel.dataSubject
-            .map {
-                $0.name
-            }
-            .bind(to: placeView.searchFieldButton.rx.title())
-            .disposed(by: disposeBag)
+        updateSearchBar(dataSubject: searchViewModel.dataSubject,
+                        searchBarButton: placeView.searchFieldButton,
+                        disposeBag: disposeBag)
     }
     
     private func bindImageButtonEvent() {
         imageButton.rx.tap
             .withUnretained(self)
             .subscribe { (owner, event) in
+                owner.uploadedImages.onNext([])
+                owner.imageStackView.arrangedSubviews.forEach { view in
+                    view.removeFromSuperview()
+                }
                 var configuaration = PHPickerConfiguration()
                 configuaration.selectionLimit = 3
                 configuaration.filter = .images
@@ -370,23 +388,30 @@ final class InviteViewController: UIViewController {
     
     // TODO: - 업로드 이미지 Rx 바인딩
     private func setImages() {
-        lazy var imageViews = [UIImage]()
-        uploadedImages.subscribe { images in
-            for image in images {
-                imageViews.append(image)
+        uploadedImages
+            .subscribe(on: MainScheduler.instance)
+            .subscribe { [weak self] images in
+                guard let images = images.element,
+                      let self = self else { return }
+                imageButton.setTitle("\(images.count)/3", for: .normal)
+                print(images.count)
+                for image in images {
+                    guard let image = image else { return }
+                    let inviteImageView = InviteImageView(frame: .zero).then {
+                        $0.clipsToBounds = true
+                        $0.layer.cornerRadius = 8
+                        $0.isUserInteractionEnabled = true
+                    }
+                    inviteImageView.image = image
+                    imageStackView.addArrangedSubview(inviteImageView)
+                    
+                    inviteImageView.snp.makeConstraints { make in
+                        make.width.equalTo(self.imageButton.snp.width)
+                        make.height.equalTo(self.imageButton.snp.height)
+                    }
+                }
             }
-        }
-        .disposed(by: disposeBag)
-        
-        imageViews.forEach {
-            inviteImageView.image = $0
-            contentView.addSubview(inviteImageView)
-            inviteImageView.snp.makeConstraints { make in
-                make.leading.equalTo(imageButton.snp.trailing).offset(10)
-                make.top.bottom.width.height.equalTo(imageButton)
-            }
-        }
-        print("setImage")
+            .disposed(by: disposeBag)
     }
     
     private func setAddButton() {
@@ -399,6 +424,22 @@ final class InviteViewController: UIViewController {
                 viewModel.region.accept(region)
             })
             .disposed(by: disposeBag)
+        
+        areFieldsEmptyObservable()
+            .subscribe { [weak self] _ in
+                guard let self else { return }
+                let fieldObservables = [
+                    viewModel.fieldName.value,
+                    viewModel.type.value,
+                    viewModel.matchDateString.value,
+                    viewModel.startTime.value,
+                    viewModel.endTime.value,
+                    viewModel.gamePrice.value,
+                    viewModel.gender.value,
+                    viewModel.content.value
+                ]
+                print(fieldObservables)
+            }.disposed(by: disposeBag)
         
         areFieldsEmptyObservable()
             .bind(onNext: { [weak self] bool in
@@ -419,13 +460,14 @@ final class InviteViewController: UIViewController {
             //현재 값 뷰모델에 전달
             viewModel.peopleCount.accept(peopleView.count)
             viewModel.content.accept(contentTextView.text)
-//            viewModel.matchDateString.accept(dateFilterButton.currentTitle ?? "")
             viewModel.matchDate.accept(Timestamp(date: datePicker.date))
             viewModel.startTime.accept(startTimeString)
             viewModel.endTime.accept(endTimeString)
+            
             //올리기 함수
-            viewModel.createRecruitFieldData()
+            viewModel.setRecruitImages(uploadedImages)
             viewModel.coordinator.popInviteViewController()
+            
         }
     }
     
@@ -479,6 +521,7 @@ final class InviteViewController: UIViewController {
                                 gamePriceButton,
                                 contentLabel,
                                 imageButton,
+                                imageStackView,
                                 contentTextView,
                                 addButton)
         
@@ -503,11 +546,9 @@ final class InviteViewController: UIViewController {
             make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
             make.centerY.equalTo(datePicker)
             make.height.equalTo(datePicker)
-            make.width.lessThanOrEqualTo(UIScreen.main.bounds.width * 3/4)
         }
         
         datePicker.snp.makeConstraints { make in
-            make.leading.equalTo(dateTitleLabel.snp.trailing)
             make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
             make.height.equalTo(34)
             make.width.equalTo(UIScreen.main.bounds.width * 1/4)
@@ -574,7 +615,7 @@ final class InviteViewController: UIViewController {
             make.top.equalTo(typeSegmentedControl.snp.bottom).offset(10)
             make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
             make.height.equalTo(datePicker.snp.height)
-            make.width.equalTo(120)
+            make.width.equalTo(typeSegmentedControl.snp.width).multipliedBy(1.5)
         }
         
         gamePriceLabel.snp.makeConstraints { make in
@@ -597,8 +638,15 @@ final class InviteViewController: UIViewController {
         imageButton.snp.makeConstraints { make in
             make.top.equalTo(contentLabel.snp.bottom).offset(10)
             make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
-            make.width.equalTo(80)
+            make.width.equalTo((UIScreen.main.bounds.width - 70) / 4)
             make.height.equalTo(imageButton.snp.width)
+        }
+        
+        imageStackView.snp.makeConstraints { make in
+            make.top.equalTo(contentLabel.snp.bottom).offset(10)
+            make.leading.equalTo(imageButton.snp.trailing).offset(10)
+            make.trailing.lessThanOrEqualTo(view.safeAreaLayoutGuide).offset(SuperviewOffsets.trailingPadding)
+            make.height.equalTo(imageButton.snp.height)
         }
         
         contentTextView.snp.makeConstraints { make in
@@ -619,24 +667,35 @@ final class InviteViewController: UIViewController {
 
 extension InviteViewController: PHPickerViewControllerDelegate {
     func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
-        results.forEach {
-            let itemProvider = $0.itemProvider
-            guard
-                itemProvider.canLoadObject(ofClass: UIImage.self)
-            else {
-                return
+        let dispatchGroup = DispatchGroup()
+        var images: [UIImage?] = []
+
+        for result in results {
+            let itemProvider = result.itemProvider
+            var resultImage: UIImage?
+
+            guard itemProvider.canLoadObject(ofClass: UIImage.self) else {
+                images.append(nil)
+                continue
             }
-            itemProvider.loadObject(ofClass: UIImage.self) { [weak self] image, error in
-                guard
-                    let self = self,
-                    let image = image as? UIImage
-                else {
+            dispatchGroup.enter()
+
+            itemProvider.loadObject(ofClass: UIImage.self) { image, error in
+                defer {
+                    dispatchGroup.leave()
+                }
+                guard let image = image as? UIImage else {
                     return
                 }
-                images.append(image)
+                resultImage = image
             }
+            dispatchGroup.wait()
+            images.append(resultImage)
         }
-        self.uploadedImages.onNext(images)
-        picker.dismiss(animated: true)
+
+        dispatchGroup.notify(queue: .main) {
+            self.uploadedImages.onNext(images)
+            picker.dismiss(animated: true)
+        }
     }
 }
