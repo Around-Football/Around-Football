@@ -116,7 +116,7 @@ final class MapViewController: UIViewController, Searchable {
             viewModel.setCurrentLocation(latitude: locationCoordinate.latitude,
                                          longitude: locationCoordinate.longitude)
             viewModel.fetchFields()
-            _ = getlodDatas(label: MapLabel(labelType: .fieldPosition,
+            _ = getloadDatas(label: MapLabel(labelType: .fieldPosition,
                                             poi: .fieldPosition(viewModel.fields.map{ $0.id })),
                             fields: viewModel.fields)
         }
@@ -146,6 +146,7 @@ final class MapViewController: UIViewController, Searchable {
         self.changeCurrentPoi()
         let location = viewModel.currentLocation
         self.moveCamera(latitude: location.latitude, longitude: location.longitude)
+        viewModel.coordinator?.presentDetailViewController()
     }
     
     @objc
@@ -158,13 +159,13 @@ final class MapViewController: UIViewController, Searchable {
         guard let field = viewModel.fields.filter({ $0.id == itemID }).first else { return }
         let selectedDate = viewModel.selectedDate
         
-        let fieldViewModel = FieldDetailViewModel(field: field, selectedDate: selectedDate)
-        self.modalViewController = FieldDetailViewController(viewModel: fieldViewModel)
-        
-        if let modalViewController = self.modalViewController {
-            let navigation = UINavigationController(rootViewController: modalViewController)
-            present(navigation, animated: true)
-        }
+//        let fieldViewModel = FieldDetailViewModel(field: field)
+//        self.modalViewController = FieldDetailViewController(viewModel: fieldViewModel)
+//        
+//        if let modalViewController = self.modalViewController {
+//            let navigation = UINavigationController(rootViewController: modalViewController)
+//            present(navigation, animated: true)
+//        }
     }
     
     // MARK: - Helpers
