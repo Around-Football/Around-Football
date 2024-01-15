@@ -240,7 +240,6 @@ extension FirebaseAPI {
         }
     }
     
-    //유저가 신청하기 누르면 pendingApplicationsUID 추가
     func loadWrittenPostRx(userID: String?) -> Observable<[Recruit]> {
         return Observable.create { observer in
             //유저불러옴
@@ -256,11 +255,9 @@ extension FirebaseAPI {
                     }
                     
                     guard let documents = snapshot?.documents else { return }
-                    let writtenPost = documents.compactMap { document -> Recruit? in
-                        let recruitData = document.data()
-                        return Recruit(dictionary: recruitData)
-                    }
-                    
+                    let writtenPost = documents.map {
+                        Recruit(dictionary: $0.data())
+                        }
                     observer.onNext(writtenPost)
                     observer.onCompleted()
                 }

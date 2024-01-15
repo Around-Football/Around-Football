@@ -18,7 +18,8 @@ final class InfoViewController: UIViewController {
     
     private var viewModel: InfoViewModel
     private var disposeBag = DisposeBag()
-    private let detailUserInfoView = DetailUserInfoView()
+    private let detailUserInfoView = DetailUserInfoView(frame: .zero,
+                                                        isInfoTab: true)
     private let infoHeaderView = InfoHeaderView()
     private let imageSubject = PublishSubject<UIImage>()
     
@@ -176,7 +177,7 @@ final class InfoViewController: UIViewController {
         }
         
         lineView.snp.makeConstraints { make in
-            make.top.equalTo(detailUserInfoView.snp.bottom)
+            make.top.equalTo(detailUserInfoView.snp.bottom).offset(16)
             make.width.equalToSuperview()
             make.height.equalTo(4)
         }

@@ -20,6 +20,12 @@ final class InfoPostViewModel {
     
     struct Input {
         let loadPost: Observable<Void>
+        let selectedSegment: Observable<Int>? // writtenPostViewController Segment
+        
+        init(loadPost: Observable<Void>, selectedSegment: Observable<Int>? = nil) {
+            self.loadPost = loadPost
+            self.selectedSegment = selectedSegment
+        }
     }
     
     struct Output {
@@ -31,8 +37,9 @@ final class InfoPostViewModel {
     func transform(_ input: Input) -> Output {
         let bookmarkList = loadBookmarkPost(by: input.loadPost)
         let writtenList = loadWrittenPost(by: input.loadPost)
+        let selectedWrittenList = emitSelectedSegmentRecruits(selectedSegment: input.selectedSegment, recruits: writtenList)
         let applicationList = loadApplicationPost(by: input.loadPost)
-        return Output(bookmarkList: bookmarkList, writtenList: writtenList, applicationList: applicationList)
+        return Output(bookmarkList: bookmarkList, writtenList: selectedWrittenList, applicationList: applicationList)
     }
     
     private func loadBookmarkPost(by inputObserver: Observable<Void>) -> Observable<[Recruit]> {
@@ -56,6 +63,24 @@ final class InfoPostViewModel {
             .flatMap { () -> Observable<[Recruit]> in
                 let recruitObservable = FirebaseAPI.shared.loadApplicationPostRx(userID: Auth.auth().currentUser?.uid)
                 return recruitObservable
+            }
+    }
+    
+    private func emitSelectedSegmentRecruits(selectedSegment: Observable<Int>?, recruits: Observable<[Recruit]>) -> Observable<[Recruit]> {
+        return Observable.combineLatest(selectedSegment ?? .just(0), recruits)
+            .withUnretained(self)
+            .flatMap { (owner, observe) -> Observable<[Recruit]> in
+                let index = observe.0
+                let recruits = observe.1
+                if index == 0 { // 모집 중
+                    return .just(recruits.filter {
+                        $0.matchDate.dateValue() > Date() && $0.acceptedApplicantsUID.count < $0.pendingApplicantsUID.count
+                    })
+                } else { // 마감
+                    return .just(recruits.filter {
+                        $0.matchDate.dateValue() <= Date() || $0.acceptedApplicantsUID.count >= $0.pendingApplicantsUID.count
+                    })
+                }
             }
     }
     
@@ -83,5 +108,9 @@ final class InfoPostViewModel {
             user.bookmarkedRecruit = bookmark
             FirebaseAPI.shared.updateUser(user)
         }
+    }
+    
+    func showDetailView(recruit: Recruit) {
+        coordinator?.pushDetailCell(recruitItem: recruit)
     }
 }

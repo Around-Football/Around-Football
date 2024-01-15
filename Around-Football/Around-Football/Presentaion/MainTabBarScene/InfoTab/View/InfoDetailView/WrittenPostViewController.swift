@@ -17,10 +17,6 @@ final class WrittenPostViewController: UIViewController, UITableViewDelegate {
     
     // MARK: - Properties
     
-    typealias writtenPostSectionModel = SectionModel<String, Recruit>
-    
-    var writtenPostTableViewDataSource: RxTableViewSectionedReloadDataSource<writtenPostSectionModel>!
-    
     var viewModel: InfoPostViewModel
     private let loadWrittenPost: PublishSubject<Void> = PublishSubject()
     private let disposeBag = DisposeBag()
@@ -31,6 +27,10 @@ final class WrittenPostViewController: UIViewController, UITableViewDelegate {
 
     private var writtenPostTableView = UITableView().then {
         $0.register(HomeTableViewCell.self, forCellReuseIdentifier: HomeTableViewCell.id)
+        $0.separatorInset = UIEdgeInsets().with({ edge in
+            edge.left = 0
+            edge.right = 0
+        })
     }
     
     private let segmentContainerView = UIView().then {
@@ -41,10 +41,10 @@ final class WrittenPostViewController: UIViewController, UITableViewDelegate {
         $0.selectedSegmentTintColor = .clear
         $0.setBackgroundImage(UIImage(), for: .normal, barMetrics: .default)
         $0.setDividerImage(UIImage(), forLeftSegmentState: .normal, rightSegmentState: .normal, barMetrics: .default)
-        $0.insertSegment(withTitle: "모집 중", at: 0, animated: true)
-        $0.insertSegment(withTitle: "마감", at: 1, animated: true)
-        $0.setWidth(calculateSegmentWidth(title: "모집 중"), forSegmentAt: 0)
-        $0.setWidth(calculateSegmentWidth(title: "마감"), forSegmentAt: 1)
+        $0.insertSegment(withTitle: "모집 공고", at: 0, animated: true)
+        $0.insertSegment(withTitle: "마감 공고", at: 1, animated: true)
+        $0.setWidth(calculateSegmentWidth(title: "모집 공고"), forSegmentAt: 0)
+        $0.setWidth(calculateSegmentWidth(title: "마감 공고"), forSegmentAt: 1)
 
         $0.selectedSegmentIndex = 0
         
@@ -62,9 +62,6 @@ final class WrittenPostViewController: UIViewController, UITableViewDelegate {
         $0.backgroundColor = AFColor.secondary
     }
     
-    // 움직일 underLineView의 leadingAnchor 따로 작성
-    private var leadingConstraint: Constraint?
-    
     // MARK: - Lifecycles
     
     init(viewModel: InfoPostViewModel) {
@@ -79,9 +76,7 @@ final class WrittenPostViewController: UIViewController, UITableViewDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         configureUI()
-        configure()
-        bindTapSegmentControl()
-        bindUI()
+        bind()
 
         loadWrittenPost.onNext(())
     }
@@ -107,72 +102,41 @@ final class WrittenPostViewController: UIViewController, UITableViewDelegate {
             .disposed(by: disposeBag)
     }
     
-    private func calculateSegmentWidth(title: String) -> CGFloat {
-        let attributes = [NSAttributedString.Key.font: AFFont.titleRegular]
-        let size = (title as NSString).size(withAttributes: attributes as [NSAttributedString.Key : Any])
-        return size.width + 20
-    }
-    
-    private func configure() {
-        writtenPostTableView.delegate = self
-        writtenPostTableViewDataSource = RxTableViewSectionedReloadDataSource(configureCell: { data, tableView, indexPath, item in
-            let cell = tableView.dequeueReusableCell(withIdentifier: HomeTableViewCell.id, for: indexPath) as! HomeTableViewCell
-                cell.bindContents(item: item)
-            return cell
-
-        })
-        
-        writtenPostTableViewDataSource?.canMoveRowAtIndexPath = { _, _ in return false }
-        writtenPostTableViewDataSource?.canEditRowAtIndexPath = { dataSource, index in return true }
-    }
-    
-    private func bindUI() {
-        let input = InfoPostViewModel.Input(loadPost: loadWrittenPost.asObservable())
+    private func bind() {
+        let input = InfoPostViewModel.Input(loadPost: loadWrittenPost.asObservable(),
+                                            selectedSegment: segmentControlView.rx.selectedSegmentIndex.asObservable())
         
         let output = viewModel.transform(input)
-        
-        Observable.combineLatest(output.writtenList, segmentControlView.rx.selectedSegmentIndex)
-            .map({ [weak self] observe in
-                guard let self else { return [Recruit(dictionary: [:])] }
-                let recruits = observe.0
-                let index = observe.1
-                
-                if index == 0 {
-                    return recruits.filter { $0.recruitedPeopleCount > $0.acceptedApplicantsUID.count }
-                } else if index == 1 {
-                    return recruits.filter { $0.recruitedPeopleCount == $0.acceptedApplicantsUID.count }
-                }
-                return []
-            })
-            .map { [writtenPostSectionModel(model: "", items: $0)] }
-            .bind(to: writtenPostTableView.rx.items(dataSource: writtenPostTableViewDataSource))
-            .disposed(by: disposeBag)
-        
-        // MARK: - 기존 바인딩 코드
-        
-//        output
-//            .writtenList
-//            .observe(on: MainScheduler.instance)
-//            .do(onNext: { [weak self] recruits in
-//                guard let self else { return }
-//                emptyView.isHidden = recruits.isEmpty ? false : true
-//            })
-//            .bind(to: writtenPostTableView.rx.items(cellIdentifier: HomeTableViewCell.id,
-//                                             cellType: HomeTableViewCell.self)) { index, item, cell in
-//                cell.bindContents(item: item)
-//                cell.configureButtonTap()
-//            }.disposed(by: disposeBag)
-        
-        writtenPostTableView.rx.modelSelected(Recruit.self)
-            .subscribe(onNext: { [weak self] selectedRecruit in
-                guard let self else { return }
-                handleItemSelected(recruitItem: selectedRecruit)
-            })
+        bindRecruit(with: output.writtenList)
+        bindNavigateDetailView(with: output.writtenList)
+        bindTapSegmentControl()
+    }
+    
+    private func bindNavigateDetailView(with outputObservable: Observable<[Recruit]>) {
+        writtenPostTableView.rx.itemSelected
+            .withLatestFrom(outputObservable) { [weak self] (indexPath, recruits) -> Recruit in
+                self?.writtenPostTableView.deselectRow(at: indexPath, animated: true)
+                return recruits[indexPath.row]
+            }
+            .withUnretained(self)
+            .subscribe { (owner, recruit) in
+                owner.viewModel.showDetailView(recruit: recruit)
+            }
             .disposed(by: disposeBag)
     }
     
-    private func handleItemSelected(recruitItem: Recruit) {
-        viewModel.coordinator?.pushDetailCell(recruitItem: recruitItem)
+    private func bindRecruit(with outputObservable: Observable<[Recruit]>) {
+        outputObservable
+            .observe(on: MainScheduler.instance)
+            .do(onNext: { [weak self] recruits in
+                guard let self else { return }
+                emptyView.isHidden = recruits.isEmpty ? false : true
+            })
+            .bind(to: writtenPostTableView.rx.items(cellIdentifier: HomeTableViewCell.id,
+                                             cellType: HomeTableViewCell.self)) { index, item, cell in
+                cell.bindContents(item: item)
+                cell.configureButtonTap()
+            }.disposed(by: disposeBag)
     }
     
     private func configureUI() {
@@ -197,7 +161,7 @@ final class WrittenPostViewController: UIViewController, UITableViewDelegate {
             $0.top.leading.equalToSuperview()
             $0.centerY.equalToSuperview()
         }
-        let firstSegmentWidth = calculateSegmentWidth(title: "모집 중")
+        let firstSegmentWidth = calculateSegmentWidth(title: "모집 공고")
         let firstSegmentCenterX = firstSegmentWidth / 2
         
         underLineView.snp.makeConstraints {
@@ -208,33 +172,21 @@ final class WrittenPostViewController: UIViewController, UITableViewDelegate {
         }
         
         writtenPostTableView.snp.makeConstraints { make in
-            make.top.bottom.equalTo(segmentContainerView.snp.bottom).offset(10)
+            make.top.equalTo(segmentContainerView.snp.bottom).offset(10)
             make.leading.equalToSuperview().offset(SuperviewOffsets.leadingPadding)
             make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
+            make.bottom.equalToSuperview().offset(SuperviewOffsets.bottomPadding)
         }
         
         emptyView.snp.makeConstraints { make in
-            make.center.equalToSuperview()
+            make.top.equalTo(segmentContainerView.snp.bottom)
+            make.leading.bottom.trailing.equalToSuperview()
         }
     }
 }
 
-//extension WrittenPostViewController {
-//    func bindChannels() {
-//        Observable.combineLatest(viewModel.channels, segmentControlView.rx.selectedSegmentIndex.asObservable())
-//            .withUnretained(self)
-//            .map({ (owner, observe) in
-//                let channels = observe.0
-//                let index = observe.1
-//                if index == 0, let currentUser = try? owner.viewModel.currentUser.value() {
-//                    return channels.filter { $0.recruitUserID == currentUser.id }
-//                } else if let currentUser = try? owner.viewModel.currentUser.value() {
-//                   return channels.filter { $0.recruitUserID != currentUser.id}
-//                }
-//                return []
-//            })
-//            .map { [ChannelSectionModel(model: "", items: $0)] }
-//            .bind(to: channelTableView.rx.items(dataSource: channelTableViewDataSource))
-//            .disposed(by: disposeBag)
-//    }
-//}
+private func calculateSegmentWidth(title: String) -> CGFloat {
+    let attributes = [NSAttributedString.Key.font: AFFont.titleRegular]
+    let size = (title as NSString).size(withAttributes: attributes as [NSAttributedString.Key : Any])
+    return size.width + 20
+}
