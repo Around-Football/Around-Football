@@ -14,7 +14,7 @@ extension FieldDetailViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(
-            withIdentifier: FieldRecruitTableViewCell.cellID,
+            withIdentifier: FieldRecruitTableViewCell.identifier,
             for: indexPath
         ) as? FieldRecruitTableViewCell
         
