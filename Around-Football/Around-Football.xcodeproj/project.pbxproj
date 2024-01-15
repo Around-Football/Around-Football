@@ -149,10 +149,7 @@
 		7CB21BA52AC94EE4001D0058 /* DetailUserInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CB21BA42AC94EE4001D0058 /* DetailUserInfoView.swift */; };
 		7CBFED6C2AE6477700915D65 /* CalenderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CBFED6B2AE6477700915D65 /* CalenderViewController.swift */; };
 		7CBFED752AE69FE400915D65 /* UserModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CBFED742AE69FE400915D65 /* UserModel.swift */; };
-		7CC619742AD433760085DF90 /* ProfileAndEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CC619732AD433760085DF90 /* ProfileAndEditView.swift */; };
 		7CC619762AD448A90085DF90 /* InfoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CC619752AD448A90085DF90 /* InfoCell.swift */; };
-		7CC619782AD460D80085DF90 /* InfoArrangedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CC619772AD460D80085DF90 /* InfoArrangedView.swift */; };
-		7CE0143E2AF8C5B700ED77D2 /* EditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CE0143D2AF8C5B700ED77D2 /* EditViewController.swift */; };
 		7CE014402AF8C5C300ED77D2 /* SettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CE0143F2AF8C5C300ED77D2 /* SettingViewController.swift */; };
 		7CE25AE62ACABF620014132F /* AFButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CE25AE52ACABF620014132F /* AFButton.swift */; };
 		7CE2B4F72B06142B00ECF71C /* InviteCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CE2B4F62B06142B00ECF71C /* InviteCoordinator.swift */; };
@@ -285,10 +282,7 @@
 		7CB21BA42AC94EE4001D0058 /* DetailUserInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailUserInfoView.swift; sourceTree = "<group>"; };
 		7CBFED6B2AE6477700915D65 /* CalenderViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalenderViewController.swift; sourceTree = "<group>"; };
 		7CBFED742AE69FE400915D65 /* UserModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserModel.swift; sourceTree = "<group>"; };
-		7CC619732AD433760085DF90 /* ProfileAndEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileAndEditView.swift; sourceTree = "<group>"; };
 		7CC619752AD448A90085DF90 /* InfoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoCell.swift; sourceTree = "<group>"; };
-		7CC619772AD460D80085DF90 /* InfoArrangedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoArrangedView.swift; sourceTree = "<group>"; };
-		7CE0143D2AF8C5B700ED77D2 /* EditViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditViewController.swift; sourceTree = "<group>"; };
 		7CE0143F2AF8C5C300ED77D2 /* SettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingViewController.swift; sourceTree = "<group>"; };
 		7CE25AE52ACABF620014132F /* AFButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AFButton.swift; sourceTree = "<group>"; };
 		7CE2B4F62B06142B00ECF71C /* InviteCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InviteCoordinator.swift; sourceTree = "<group>"; };
@@ -692,9 +686,7 @@
 			children = (
 				669674922AC3E9DF0067FD48 /* InfoViewController.swift */,
 				7C732C772B3A69760007CF00 /* InfoHeaderView.swift */,
-				7CC619732AD433760085DF90 /* ProfileAndEditView.swift */,
 				7CC619752AD448A90085DF90 /* InfoCell.swift */,
-				7CC619772AD460D80085DF90 /* InfoArrangedView.swift */,
 				7C7A03A62B464969000457BB /* EmptyAFView.swift */,
 				7CE0143C2AF8C59D00ED77D2 /* InfoDetailView */,
 			);
@@ -865,7 +857,6 @@
 		7CE0143C2AF8C59D00ED77D2 /* InfoDetailView */ = {
 			isa = PBXGroup;
 			children = (
-				7CE0143D2AF8C5B700ED77D2 /* EditViewController.swift */,
 				7CE0143F2AF8C5C300ED77D2 /* SettingViewController.swift */,
 				7C5EEA892B42C381003A0010 /* SettingViewController+.swift */,
 				7C2F9FE22B25EFC200F1EF1B /* BookmarkPostViewController.swift */,
@@ -1035,8 +1026,6 @@
 				668EE4B22AFCBC09007A8844 /* ChannelTableViewCell.swift in Sources */,
 				7CBFED6C2AE6477700915D65 /* CalenderViewController.swift in Sources */,
 				7CE2B4F92B073B3500ECF71C /* DetailCoordinator.swift in Sources */,
-				7CC619782AD460D80085DF90 /* InfoArrangedView.swift in Sources */,
-				7CC619742AD433760085DF90 /* ProfileAndEditView.swift in Sources */,
 				7CE25AE62ACABF620014132F /* AFButton.swift in Sources */,
 				66656F9D2AD9219F00AE1AFA /* FieldDetailViewController.swift in Sources */,
 				668EE4C12B050305007A8844 /* ImageMessageViewController.swift in Sources */,
@@ -1125,7 +1114,6 @@
 				7929A3132ADEB319006ED4FA /* InputInfoViewController+.swift in Sources */,
 				66391CAD2B20158A00DB7249 /* CustomInfoMessageCell.swift in Sources */,
 				274C21C72ACFF902005469E6 /* TextFieldDelegateHandler.swift in Sources */,
-				7CE0143E2AF8C5B700ED77D2 /* EditViewController.swift in Sources */,
 				7C33060F2B109E780042A815 /* DetailView.swift in Sources */,
 				668EE4BF2B0500D5007A8844 /* ChatViewController+.swift in Sources */,
 				660932032B44090D000D7CFD /* NotificationType.swift in Sources */,

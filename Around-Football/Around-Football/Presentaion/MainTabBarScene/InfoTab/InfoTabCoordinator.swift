@@ -37,11 +37,6 @@ final class InfoTabCoordinator: BaseCoordinator {
         let coordinator = DetailCoordinator(navigationController: navigationController)
         childCoordinators.append(coordinator)
         coordinator.start(recruitItem: recruitItem)
-        
-//        let viewModel = DetailViewModel(coordinator: coordinator, recruitItem: recruitItem)
-//        let vc = DetailViewController(viewModel: viewModel)
-//        vc.setAFBackButton()
-//        navigationController?.pushViewController(vc, animated: true)
     }
 
     func popViewController() {
