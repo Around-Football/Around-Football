@@ -27,6 +27,7 @@ final class InviteViewModel {
     
     private var user: User?
     private var recruit: Recruit?
+    private var field: Field?
     private var disposeBag = DisposeBag()
     
     private var fieldID = UUID().uuidString
@@ -86,6 +87,7 @@ final class InviteViewModel {
     
     func createRecruitFieldData() {
         guard let user = user else { return }
+        
         let recruit = Recruit(userID: user.id,
                               userName: user.userName,
                               fieldID: fieldID,
