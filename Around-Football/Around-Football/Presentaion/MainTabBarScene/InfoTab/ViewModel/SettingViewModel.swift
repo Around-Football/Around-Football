@@ -14,8 +14,6 @@ final class SettingViewModel {
     // MARK: - Properties
     
     weak var coordinator: InfoTabCoordinator?
-    private let settingMenus = ["알림 설정", "1:1 문의", "약관 및 정책", "로그아웃", "탈퇴"]
-    lazy var settingMenusObserverble = Observable.just(settingMenus)
 
     // MARK: - Lifecycles
     
