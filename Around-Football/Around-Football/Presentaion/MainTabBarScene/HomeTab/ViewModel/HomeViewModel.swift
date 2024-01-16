@@ -7,8 +7,8 @@
 
 import UIKit
 
+import Kingfisher
 import RxSwift
-
 
 final class HomeViewModel {
     
@@ -48,22 +48,35 @@ final class HomeViewModel {
     }
     
     func setTitleImage(recruit: Recruit) -> UIImage {
-        guard 
-            let defaultImage = UIImage(named: AFIcon.fieldImage)
+        guard let defaultImage = UIImage(named: AFIcon.fieldImage)
         else {
             return UIImage()
         }
-        guard
-            let titleImageURL = recruit.recruitImages.first,
-            let url = URL(string: titleImageURL)
-        else {
-            return defaultImage
-        }
-        var titleImage: UIImage = UIImage()
-        StorageAPI.downloadImage(url: url) { image in
-            guard let image = image else { return }
-            titleImage = image
-        }
-        return titleImage
+        let imageView = UIImageView()
+        let placeHolder = UIImage(named: AFIcon.fieldImage)
+        imageView.kf.setImage(with: URL(string:recruit.recruitImages.first ?? AFIcon.defaultImageURL),
+                                        placeholder: placeHolder)
+        return imageView.image ?? defaultImage
     }
+    
+    
+    //    func setTitleImage(recruit: Recruit) -> UIImage {
+    //        guard
+    //            let defaultImage = UIImage(named: AFIcon.fieldImage)
+    //        else {
+    //            return UIImage()
+    //        }
+    //        guard
+    //            let titleImageURL = recruit.recruitImages.first,
+    //            let url = URL(string: titleImageURL)
+    //        else {
+    //            return defaultImage
+    //        }
+    //        var titleImage: UIImage = UIImage()
+    //        StorageAPI.downloadImage(url: url) { image in
+    //            guard let image = image else { return }
+    //            titleImage = image
+    //        }
+    //        return titleImage
+    //    }
 }

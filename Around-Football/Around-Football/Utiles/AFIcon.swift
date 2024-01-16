@@ -8,6 +8,7 @@
 import Foundation
 
 enum AFIcon {
+    static let defaultImageURL = "https://firebasestorage.googleapis.com/v0/b/around-football.appspot.com/o/AFFieldImage.png?alt=media&token=4f431f91-5cf9-4f6b-8398-34dd85b901f4"
     //tab
     static let home = "AFHome"
     static let homeSelect = "AFHomeSelect"

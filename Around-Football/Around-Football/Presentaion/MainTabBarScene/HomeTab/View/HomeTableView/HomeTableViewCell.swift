@@ -7,6 +7,7 @@
 
 import UIKit
 
+import Kingfisher
 import RxCocoa
 import RxSwift
 import Then
@@ -26,9 +27,9 @@ final class HomeTableViewCell: UITableViewCell {
     var isBookmarkCell: Bool?
     
     private let symbolConfiguration = UIImage.SymbolConfiguration(pointSize: 25, weight: .medium)
-    
-    //private let defaultFieldImage = UIImage(named: AFIcon.fieldImage)
+
     private let fieldImageView = UIImageView().then {
+        $0.image = UIImage(named: AFIcon.fieldImage)
         $0.clipsToBounds = true
         $0.layer.cornerRadius = 8
     }
