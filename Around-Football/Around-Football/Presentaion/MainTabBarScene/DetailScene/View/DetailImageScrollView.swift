@@ -85,7 +85,7 @@ final class DetailImageScrollView: UIView {
         for index in 0..<images.count {
             
             let imageView = UIImageView()
-            imageView.contentMode = .scaleAspectFit
+            imageView.contentMode = .scaleAspectFill
             imageView.clipsToBounds = true
             
             imageView.image = images[index]
