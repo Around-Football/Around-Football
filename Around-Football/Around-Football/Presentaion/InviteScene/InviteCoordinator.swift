@@ -18,14 +18,15 @@ final class InviteCoordinator: BaseCoordinator {
     lazy var searchCoordinator = SearchCoordinator(navigationController: navigationController)
     lazy var searchViewModel = SearchViewModel(coordinator: searchCoordinator)
     
-    override func start() {
-        let inviteViewModel = InviteViewModel(coordinator: self)
+    func start(recruit: Recruit? = nil) {
+        let inviteViewModel = InviteViewModel(coordinator: self, recruit: recruit)
 
         let controller = InviteViewController(inviteViewModel: inviteViewModel,
                                               searchViewModel: searchViewModel)
         controller.navigationController?.navigationBar.isHidden = false
         controller.setAFBackButton()
         navigationController?.pushViewController(controller, animated: true)
+
     }
     
     @objc
