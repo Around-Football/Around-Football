@@ -30,6 +30,7 @@ final class HomeTableViewCell: UITableViewCell {
 
     private let fieldImageView = UIImageView().then {
         $0.image = UIImage(named: AFIcon.fieldImage)
+        $0.contentMode = .scaleAspectFill
         $0.clipsToBounds = true
         $0.layer.cornerRadius = 8
     }
