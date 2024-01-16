@@ -33,8 +33,6 @@ final class InviteViewController: UIViewController, Searchable {
         $0.showsVerticalScrollIndicator = false
     }
     
-    private var selectedDate: Date?
-    
     private let dateTitleLabel = UILabel().then {
         $0.text = "날짜"
         $0.font = AFFont.titleCard
@@ -65,11 +63,11 @@ final class InviteViewController: UIViewController, Searchable {
         $0.layer.cornerRadius = 8
         $0.clipsToBounds = true
         $0.minimumDate = Date()
-        let titleDateformatter = DateFormatter()
-        titleDateformatter.locale = Locale(identifier: "ko_KR")
-        titleDateformatter.dateFormat = "M월 d일"
+        let titleDateformatter = viewModel.shortDateFormatter()
         let matchDateString = titleDateformatter.string(from: Date())
-        viewModel.matchDateString.accept(matchDateString)
+        if viewModel.recruit == nil {
+            viewModel.matchDateString.accept(matchDateString)
+        }
         let emptyView = UIView()
         emptyView.backgroundColor = .white
         $0.addSubviews(emptyView)
@@ -88,21 +86,23 @@ final class InviteViewController: UIViewController, Searchable {
         $0.font = AFFont.titleCard
     }
     
-    private lazy var startTimeString: String = setSelectedTime(input: startTimePicker.date)
-    private lazy var endTimeString: String = setSelectedTime(input: endTimePicker.date)
+    private lazy var startTimeString: String = viewModel.setSelectedTime(input: startTimePicker.date)
+    private lazy var endTimeString: String = viewModel.setSelectedTime(input: endTimePicker.date)
     
     private lazy var startTimePicker = UIDatePicker().then {
         $0.datePickerMode = .time
-        $0.locale = Locale(identifier: "ko_kr")
+        $0.locale = Locale(identifier: "ko_KR")
         $0.minuteInterval = 30
         $0.addTarget(self, action: #selector(startTimePickerSelected), for: .valueChanged)
     }
     
     private lazy var endTimePicker = UIDatePicker().then {
         $0.datePickerMode = .time
-        $0.locale = Locale(identifier: "ko_kr")
+        $0.locale = Locale(identifier: "ko_KR")
         $0.minuteInterval = 30
-        $0.minimumDate = Date(timeInterval: 1800, since: startTimePicker.date)
+        if self.viewModel.recruit == nil {
+            $0.minimumDate = Date(timeInterval: 1800, since: startTimePicker.date)
+        }
         $0.addTarget(self, action: #selector(endTimePickerSelected), for: .valueChanged)
     }
     
@@ -254,15 +254,14 @@ final class InviteViewController: UIViewController, Searchable {
         ]
         configureUI()
         keyboardController()
-        setAddButton()
-        setImages()
         setSearchFieldButton()
-        bindImageButtonEvent()
+        bind()
         NotificationCenter.default.addObserver(self, selector: #selector(updateUploadImages), name: .updateUploadImages, object: nil)
     }
     
     override func viewWillAppear(_ animated: Bool) {
         navigationController?.navigationBar.prefersLargeTitles = false
+        invokedViewWillAppear.onNext(())
     }
     
     // MARK: - Selectors
@@ -285,15 +284,12 @@ final class InviteViewController: UIViewController, Searchable {
     @objc
     func changeDate(_ sender: UIDatePicker) {
         dateFilterButton.isSelected.toggle()
-        selectedDate = sender.date
         
         let dateformatter = DateFormatter()
         dateformatter.locale = Locale(identifier: "ko_KR")
         dateformatter.dateFormat = "yyyy년 MM월 d일"
         
-        let titleDateformatter = DateFormatter()
-        titleDateformatter.locale = Locale(identifier: "ko_KR")
-        titleDateformatter.dateFormat = "M월 d일"
+        let titleDateformatter = viewModel.shortDateFormatter()
         let buttonTitleDate = titleDateformatter.string(from: sender.date)
         let matchDateString = dateformatter.string(from: sender.date)
         dateFilterButton.setTitle(buttonTitleDate, for: .normal)
@@ -302,13 +298,13 @@ final class InviteViewController: UIViewController, Searchable {
     
     @objc
     private func startTimePickerSelected() {
-        startTimeString = setSelectedTime(input: startTimePicker.date)
+        startTimeString = viewModel.setSelectedTime(input: startTimePicker.date)
         viewModel.startTime.accept(startTimeString)
     }
     
     @objc
     private func endTimePickerSelected() {
-        endTimeString = setSelectedTime(input: endTimePicker.date)
+        endTimeString = viewModel.setSelectedTime(input: endTimePicker.date)
         viewModel.endTime.accept(endTimeString)
     }
     
@@ -331,12 +327,53 @@ final class InviteViewController: UIViewController, Searchable {
     
     // MARK: - Helpers
     
-    private func setSelectedTime(input: Date) -> String {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "HH:mm" // 24시간 형식의 시간과 분만 표시
-        let result = dateFormatter.string(from: input)
-        print(result)
-        return result
+    private func bind() {
+        let input = InviteViewModel.Input(invokedViewWillAppear: invokedViewWillAppear)
+        let output = viewModel.transform(input: input)
+        setAddButton()
+        setImages()
+        bindImageButtonEvent()
+        bindRecruitData(recruit: output.recruit)
+    }
+    
+    private func bindRecruitData(recruit: Observable<Recruit?>) {
+        recruit
+            .take(1)
+            .withUnretained(self)
+            .subscribe(onNext: { (owner, recruit) in
+                guard let recruit = recruit,
+                      let startTime = owner.viewModel.stringToTimeFormatter(timeString: recruit.startTime),
+                      let endTime = owner.viewModel.stringToTimeFormatter(timeString: recruit.endTime) else { return }
+                        
+                owner.placeView.configure(fieldTitle: recruit.fieldName)
+                owner.peopleView.configure(count: recruit.recruitedPeopleCount)
+                let dateformatter = owner.viewModel.shortDateFormatter()
+                owner.dateFilterButton.setTitle(dateformatter.string(from: recruit.matchDate.dateValue()),
+                                                for: .normal)
+                owner.startTimeString = recruit.startTime
+                owner.endTimeString = recruit.endTime
+                owner.startTimePicker.date = startTime
+                owner.endTimePicker.date = endTime
+                if owner.viewModel.recruit != nil {
+                    owner.endTimePicker.minimumDate = Date(timeInterval: 1800, since: owner.startTimePicker.date)
+                }
+                var typeSegmentIndex = 0
+                var genderSegmentIndex = 0
+                recruit.type == "풋살" ? (typeSegmentIndex = 0) : (typeSegmentIndex = 1)
+                owner.typeSegmentedControl.selectedSegmentIndex = typeSegmentIndex
+                
+                switch recruit.gender {
+                case "남성": genderSegmentIndex = 0
+                case "여성": genderSegmentIndex = 1
+                case "무관": genderSegmentIndex = 2
+                default: break
+                }
+                
+                owner.genderSegmentedControl.selectedSegmentIndex = genderSegmentIndex
+                owner.gamePriceButton.setTitle(recruit.gamePrice, for: .normal)
+                owner.contentTextView.insertText(recruit.content)
+            })
+            .disposed(by: disposeBag)
     }
     
     private func setSearchFieldButton() {
@@ -470,33 +507,7 @@ final class InviteViewController: UIViewController, Searchable {
             
         }
     }
-    
-    private func keyboardController() {
-        //키보드 올리기
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(keyboardWillShow(_:)),
-            name: UIResponder.keyboardWillShowNotification,
-            object: nil
-        )
         
-        //키보드 내리기
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(keyboardWillHide(_:)),
-            name: UIResponder.keyboardWillHideNotification,
-            object: nil
-        )
-        
-        //화면 탭해서 키보드 내리기
-        let tapGesture = UITapGestureRecognizer(
-            target: self,
-            action: #selector(dismissKeyboard)
-        )
-        tapGesture.cancelsTouchesInView = false
-        view.addGestureRecognizer(tapGesture)
-    }
-    
     private func configureUI() {
         view.backgroundColor = .white
         navigationItem.title = "용병 구하기"
@@ -697,5 +708,31 @@ extension InviteViewController: PHPickerViewControllerDelegate {
             self.uploadedImages.onNext(images)
             picker.dismiss(animated: true)
         }
+    }
+    
+    func keyboardController() {
+        //키보드 올리기
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(keyboardWillShow(_:)),
+            name: UIResponder.keyboardWillShowNotification,
+            object: nil
+        )
+        
+        //키보드 내리기
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(keyboardWillHide(_:)),
+            name: UIResponder.keyboardWillHideNotification,
+            object: nil
+        )
+        
+        //화면 탭해서 키보드 내리기
+        let tapGesture = UITapGestureRecognizer(
+            target: self,
+            action: #selector(dismissKeyboard)
+        )
+        tapGesture.cancelsTouchesInView = false
+        view.addGestureRecognizer(tapGesture)
     }
 }

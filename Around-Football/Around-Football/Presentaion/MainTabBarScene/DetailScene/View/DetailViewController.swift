@@ -30,8 +30,7 @@ final class DetailViewController: UIViewController {
         button.setImage(UIImage(systemName: "ellipsis"), for: .normal)
         button.transform = .init(rotationAngle: 90 * .pi / 180.0)
         let actions: [UIAction] = [UIAction(title: "수정", handler: { [weak self] _ in
-            // TODO: - InviteView 완성되면 연결
-//            self?.viewModel.editDetailView
+            self?.viewModel.showEditDetailView()
         }), UIAction(title: "삭제", handler: { [weak self] _ in
             self?.showPopUp(title: "용병 게시글 삭제",
                       message: "삭제하시겠습니까?",
