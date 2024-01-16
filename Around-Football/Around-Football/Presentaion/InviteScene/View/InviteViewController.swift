@@ -13,6 +13,7 @@ import RxCocoa
 import RxSwift
 import SnapKit
 import Then
+import Kingfisher
 
 final class InviteViewController: UIViewController, Searchable {
     
@@ -372,6 +373,9 @@ final class InviteViewController: UIViewController, Searchable {
                 owner.genderSegmentedControl.selectedSegmentIndex = genderSegmentIndex
                 owner.gamePriceButton.setTitle(recruit.gamePrice, for: .normal)
                 owner.contentTextView.insertText(recruit.content)
+                owner.viewModel.downloadImages(imagesURL: recruit.recruitImages) { images in
+                    owner.uploadedImages.onNext(images.compactMap { $0 })
+                }
             })
             .disposed(by: disposeBag)
     }

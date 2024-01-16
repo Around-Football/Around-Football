@@ -212,4 +212,24 @@ final class InviteViewModel {
         print(result)
         return result
     }
+    
+    func downloadImages(imagesURL: [String], completion: @escaping(([UIImage?]) -> Void)) {
+        let group = DispatchGroup()
+        var images: [UIImage?] = []
+        
+        for urlString in imagesURL {
+            guard let url = URL(string: urlString) else { continue }
+            group.enter()
+            
+            StorageAPI.downloadImage(url: url) { image in
+                guard let image = image else { return }
+                images.append(image)
+                group.leave()
+            }
+        }
+        
+        group.notify(queue: .main) {
+            completion(images)
+        }
+    }
 }
