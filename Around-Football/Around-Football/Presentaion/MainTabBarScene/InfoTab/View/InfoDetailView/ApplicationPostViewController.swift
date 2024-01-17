@@ -45,11 +45,16 @@ final class ApplicationPostViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .red
+        
         configureUI()
         bindUI()
         loadApplicationPost.onNext(())
     }
+    
+//    override func viewWillAppear(_ animated: Bool) {
+//        super.viewWillAppear(animated)
+//        loadApplicationPost.onNext(())
+//    }
     
     // MARK: - Helpers
     
