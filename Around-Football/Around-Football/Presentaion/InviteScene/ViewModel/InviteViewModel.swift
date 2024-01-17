@@ -59,26 +59,36 @@ final class InviteViewModel {
     
     // MARK: - API
     
-    func setRecruitImages(_ uploadImages: BehaviorSubject<[UIImage?]>) {
-        uploadImages
-            .subscribe { [weak self] input in
-                guard let self = self else { return }
-                
-                StorageAPI.uploadRecruitImage(images: input) { [weak self] url in
-                    guard let url = url,
-                          let self else { return }
-                    recruitImages.append(url.absoluteString)
-                    if self.recruitImages.count == input.count {
-                        self.createRecruitFieldData()
-                    }
+    func uploadRecruit(_ uploadImages: [UIImage?]) {
+        let id: String = recruit?.id ?? UUID().uuidString
+        StorageAPI.deleteRefImages(id: id) { error in
+            if let error = error {
+                print("DEBUG - Error deleting file: \(error.localizedDescription)")
+                return
+            }
+            
+            self.recruitImages = []
+            
+            StorageAPI.uploadRecruitImage(images: uploadImages, id: id) { [weak self] urls in
+                guard let urls = urls,
+                      let self else { return }
+                recruitImages = urls.map { $0.absoluteString }
+                if self.recruit != nil {    // 수정 중인 경우, recruit가 존재
+                    self.updateRecruitData()
+                    return
                 }
-            }.disposed(by: disposeBag)
+                if self.recruitImages.count == uploadImages.count {    // 글 올리기인 경우
+                    self.createRecruitFieldData(id: id)
+                }
+            }
+        }
     }
-
-    func createRecruitFieldData() {
+    
+    func createRecruitFieldData(id: String) {
         guard let user = user else { return }
         
-        let recruit = Recruit(userID: user.id,
+        let recruit = Recruit(id: id,
+                              userID: user.id,
                               userName: user.userName,
                               fieldID: fieldID,
                               fieldName: fieldName.value,
@@ -106,12 +116,15 @@ final class InviteViewModel {
                 print("DEBUG - createRecruitFieldData Error: \(String(describing: error?.localizedDescription))")
                 //TODO: - 실패 알림창 띄워주기?
             }
+            self.coordinator.popInviteViewController()
         }
     }
     
     func updateRecruitData() {
-        guard let user = user else { return }
-        let recruit = Recruit(userID: user.id,
+        guard let user = user,
+              let recruit = recruit else { return }
+        let updatedRecruit = Recruit(id: recruit.id,
+                              userID: user.id,
                               userName: user.userName,
                               fieldID: fieldID,
                               fieldName: fieldName.value,
@@ -130,12 +143,13 @@ final class InviteViewModel {
                               pendingApplicantsUID: pendingApplicantsUID,
                               acceptedApplicantsUID: acceptedApplicantsUID,
                               recruitImages: recruitImages)
-        FirebaseAPI.shared.updateRecruitData(recruit: recruit) { error in
+        FirebaseAPI.shared.updateRecruitData(recruit: updatedRecruit) { error in
             if let error = error {
                 print("DEBUG - Error: \(error.localizedDescription)", #function)
             } else {
                 print("DEBUG - Update Recruit Data")
             }
+            self.coordinator.popInviteViewController()
         }
     }
 
@@ -183,7 +197,7 @@ final class InviteViewModel {
     func emitObservableRecruit(by inputObserver: Observable<Void>) -> Observable<Recruit?> {
         inputObserver
             .flatMap { _ -> Observable<Recruit?> in
-                guard let recruit = self.recruit else { return .just(nil) }
+                guard self.recruit != nil else { return .just(nil) }
                 return .just(self.recruit)
             }
     }

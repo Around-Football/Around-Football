@@ -160,7 +160,7 @@ final class InviteViewController: UIViewController, Searchable {
         return config
     }
     
-    private var uploadedImages = BehaviorSubject(value: [UIImage?]())
+    private var uploadedImages = BehaviorSubject(value: [UIImage?]()) //
 
     private lazy var imageButton: UIButton = {
         let button = UIButton(configuration: buttonConfig).then {
@@ -506,8 +506,8 @@ final class InviteViewController: UIViewController, Searchable {
             viewModel.endTime.accept(endTimeString)
             
             //올리기 함수
-            viewModel.setRecruitImages(uploadedImages)
-            viewModel.coordinator.popInviteViewController()
+            
+            viewModel.uploadRecruit(try! uploadedImages.value())
             
         }
     }
