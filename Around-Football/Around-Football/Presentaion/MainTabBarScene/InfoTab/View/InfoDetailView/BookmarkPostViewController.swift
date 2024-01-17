@@ -45,10 +45,16 @@ final class BookmarkPostViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         configureUI()
         bindUI()
         loadBookmarkPost.onNext(())
     }
+    
+//    override func viewWillAppear(_ animated: Bool) {
+//        super.viewWillAppear(animated)
+//        loadBookmarkPost.onNext(())
+//    }
     
     private func bindUI() {
         let input = InfoPostViewModel.Input(loadPost: loadBookmarkPost.asObservable())

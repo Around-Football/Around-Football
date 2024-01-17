@@ -75,11 +75,16 @@ final class WrittenPostViewController: UIViewController, UITableViewDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         configureUI()
         bind()
-
         loadWrittenPost.onNext(())
     }
+    
+//    override func viewWillAppear(_ animated: Bool) {
+//        super.viewWillAppear(animated)
+//        loadWrittenPost.onNext(())
+//    }
     
     // MARK: - Helpers
     

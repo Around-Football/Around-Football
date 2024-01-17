@@ -27,7 +27,7 @@ final class HomeTableViewCell: UITableViewCell {
     var isBookmarkCell: Bool?
     
     private let symbolConfiguration = UIImage.SymbolConfiguration(pointSize: 25, weight: .medium)
-
+    
     private let fieldImageView = UIImageView().then {
         $0.image = UIImage(named: AFIcon.fieldImage)
         $0.contentMode = .scaleAspectFill
@@ -186,7 +186,7 @@ final class HomeTableViewCell: UITableViewCell {
             typeLabel.text = item.type
             typeLabel.backgroundColor = item.type == "축구" ? AFColor.soccor : AFColor.futsal
         }
-
+        
         //시간이 과거면 마감으로 표시
         if isDateInFuture(targetDate: item.matchDate.dateValue()) {
             typeLabel.text = "마감"
@@ -197,7 +197,15 @@ final class HomeTableViewCell: UITableViewCell {
         fieldLabel.text = "\(item.fieldName)"
         recruitLabel.text = " \(item.acceptedApplicantsUID.count) / \(item.recruitedPeopleCount)명 모집"
         genderLabel.text = "\(item.gender)"
-        fieldImageView.image = viewModel?.setTitleImage(recruit: item)
+        
+        //각 뷰모델에 맞는 이미지구현
+        if let viewModel = viewModel {
+            fieldImageView.image = viewModel.setTitleImage(recruit: item)
+        }
+        
+        if let viewModel = infoPostViewModel {
+            fieldImageView.image = viewModel.setTitleImage(recruit: item)
+        }
     }
     
     //북마크 버튼 세팅
