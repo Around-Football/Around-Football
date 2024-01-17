@@ -61,6 +61,7 @@ final class InviteViewController: UIViewController, Searchable {
         $0.preferredDatePickerStyle = .compact
         $0.datePickerMode = .date
         $0.minimumDate = Date()
+        $0.tintColor = AFColor.futsal
         $0.locale = Locale(identifier: "ko_KR")
         $0.layer.cornerRadius = 8
         $0.clipsToBounds = true
