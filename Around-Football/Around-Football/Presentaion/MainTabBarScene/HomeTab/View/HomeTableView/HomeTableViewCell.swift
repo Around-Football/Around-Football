@@ -149,14 +149,6 @@ final class HomeTableViewCell: UITableViewCell {
             .disposed(by: disposeBag)
     }
     
-    func formatMatchDate(_ date: Date) -> String {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "MM/dd (E)"
-        dateFormatter.locale = Locale(identifier: "ko_KR")
-        let formattedDate = dateFormatter.string(from: date)
-        return formattedDate
-    }
-    
     //모집Date 비교
     func isDateInFuture(targetDate: Date) -> Bool {
         let currentDate = Date()
@@ -165,8 +157,7 @@ final class HomeTableViewCell: UITableViewCell {
     }
     
     func bindContents(item: Recruit, isBookmark: Bool? = false) {
-        let date = item.matchDate.dateValue()
-        let formattedCellDate = formatMatchDate(date)
+        let formattedCellDate = item.matchDayAndStartTime
         
         if let isBookmark,
            isBookmark == true {

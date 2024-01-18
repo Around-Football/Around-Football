@@ -131,9 +131,9 @@ final class ChannelViewModel {
                 let index = observe.1
                 guard let currentUser = try? owner.currentUser.value() else { return .just([]) }
                 if index == 0 {
-                    return .just(channels.filter { $0.recruitUserID == currentUser.id})
-                } else {
                     return .just(channels.filter { $0.recruitUserID != currentUser.id})
+                } else {
+                    return .just(channels.filter { $0.recruitUserID == currentUser.id})
                 }
             })
             .bind(to: result)
