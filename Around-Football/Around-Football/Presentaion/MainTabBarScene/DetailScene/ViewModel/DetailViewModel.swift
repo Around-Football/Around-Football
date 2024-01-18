@@ -225,6 +225,11 @@ final class DetailViewModel {
         guard let recruit = getRecruit() else { return }
         coordinator?.pushApplicationStatusViewController(recruit: recruit)
     }
+    
+    func showEditDetailView() {
+        guard let recruit = getRecruit() else { return }
+        coordinator?.showEditDetailView(recruit: recruit)
+    }
 }
 
 
