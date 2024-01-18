@@ -62,6 +62,11 @@ final class GroundTitleView: UIView {
     
     // MARK: - Helpers
     
+    func configure(fieldTitle: String) {
+        searchFieldButton.setTitle(fieldTitle, for: .normal)
+        searchFieldButton.setTitleColor(AFColor.grayScale400, for: .normal)
+    }
+    
     private func configureUI() {
         addSubviews(groundTitleLabel, searchFieldButton)
         

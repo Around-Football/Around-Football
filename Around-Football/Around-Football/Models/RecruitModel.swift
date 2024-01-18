@@ -64,8 +64,8 @@ struct Recruit: Codable, Identifiable {
         return rep
     }
     
-    init(userID: String, userName: String, fieldID: String, fieldName: String, fieldAddress: String, region: String, type: String, gender: String, recruitedPeopleCount: Int, gamePrice: String, title: String, content: String, matchDate: Timestamp, startTime: String, endTime: String, matchDateString: String, pendingApplicantsUID: [String], acceptedApplicantsUID: [String], recruitImages: [String]) {
-        self.id = UUID().uuidString
+    init(id: String, userID: String, userName: String, fieldID: String, fieldName: String, fieldAddress: String, region: String, type: String, gender: String, recruitedPeopleCount: Int, gamePrice: String, title: String, content: String, matchDate: Timestamp, startTime: String, endTime: String, matchDateString: String, pendingApplicantsUID: [String], acceptedApplicantsUID: [String], recruitImages: [String]) {
+        self.id = id
         self.userID = userID
         self.userName = userName
         self.fieldID = fieldID

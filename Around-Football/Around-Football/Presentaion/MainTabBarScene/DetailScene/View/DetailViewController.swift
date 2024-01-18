@@ -30,8 +30,7 @@ final class DetailViewController: UIViewController {
         button.setImage(UIImage(systemName: "ellipsis"), for: .normal)
         button.transform = .init(rotationAngle: 90 * .pi / 180.0)
         let actions: [UIAction] = [UIAction(title: "수정", handler: { [weak self] _ in
-            // TODO: - InviteView 완성되면 연결
-//            self?.viewModel.editDetailView
+            self?.viewModel.showEditDetailView()
         }), UIAction(title: "삭제", handler: { [weak self] _ in
             self?.showPopUp(title: "용병 게시글 삭제",
                       message: "삭제하시겠습니까?",
@@ -222,9 +221,6 @@ final class DetailViewController: UIViewController {
         
         detailImageScrollView.snp.makeConstraints { make in
             make.top.equalToSuperview().offset(14)
-//            make.leading.equalToSuperview()
-//            make.trailing.equalToSuperview()
-//            make.height.equalTo(220)
             make.width.equalToSuperview()
             make.height.equalTo(detailImageScrollView.snp.width).multipliedBy(0.54)
             
