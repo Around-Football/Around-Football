@@ -64,6 +64,7 @@ final class InputInfoView: UIView {
         $0.borderStyle = .roundedRect
         $0.layer.borderColor = AFColor.grayScale100.cgColor
         $0.font = AFFont.text
+        $0.returnKeyType = .done
     }
     
     // 나이

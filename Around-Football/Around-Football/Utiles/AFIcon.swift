@@ -5,9 +5,12 @@
 //  Created by Deokhun KIM on 12/18/23.
 //
 
-import Foundation
+import UIKit
 
 enum AFIcon {
+    static let defaultFieldImage = UIImage(named: Self.fieldImage)
+    
+    static let defaultImageURL = "https://firebasestorage.googleapis.com/v0/b/around-football.appspot.com/o/DefaultProfileImage.png?alt=media&token=9274520c-2134-489a-8665-59006714c8f2"
     //tab
     static let home = "AFHome"
     static let homeSelect = "AFHomeSelect"

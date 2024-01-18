@@ -8,6 +8,7 @@
 import UIKit
 
 import Firebase
+import Kingfisher
 import RxCocoa
 import RxSwift
 import SnapKit
@@ -25,6 +26,7 @@ final class DetailViewController: UIViewController {
     let detailView = DetailView()
     private let scrollView = UIScrollView()
     private let contentView = UIView()
+    
     lazy var navigationRightButton = UIBarButtonItem().then {
         var button = UIButton()
         button.setImage(UIImage(systemName: "ellipsis"), for: .normal)
@@ -33,10 +35,10 @@ final class DetailViewController: UIViewController {
             self?.viewModel.showEditDetailView()
         }), UIAction(title: "삭제", handler: { [weak self] _ in
             self?.showPopUp(title: "용병 게시글 삭제",
-                      message: "삭제하시겠습니까?",
-                      leftActionTitle: "취소",
-                      rightActionTitle: "삭제",
-                      rightActionCompletion: self?.viewModel.deleteRecruit)
+                            message: "삭제하시겠습니까?",
+                            leftActionTitle: "취소",
+                            rightActionTitle: "삭제",
+                            rightActionCompletion: self?.viewModel.deleteRecruit)
         })]
         button.menu = UIMenu(children: actions)
         button.showsMenuAsPrimaryAction = true
@@ -158,9 +160,20 @@ final class DetailViewController: UIViewController {
         guard let recruit = viewModel.getRecruit() else { return }
         dateLabel.text = recruit.matchDayAndStartTime
         groundLabel.text = recruit.fieldName
-        detailView.setValues(recruit: recruit)
-//        detailImageScrollView.configure(images: [UIImage(named: "DefaultRecruitImage"), UIImage(named: "CurrentPositionMark"), UIImage(named: "DefaultProfileImage"), UIImage(named: "DefaultRecruitImage")])
-        detailImageScrollView.configure(images: [])
+        detailView.setValues(recruit: recruit
+        )
+        //        detailImageScrollView.configure(images: [UIImage(named: "DefaultRecruitImage"), UIImage(named: "CurrentPositionMark"), UIImage(named: "DefaultProfileImage"), UIImage(named: "DefaultRecruitImage")])
+        var downloadImages = [UIImage?]()
+        
+        recruit.recruitImages.forEach { url in
+            let imageView: UIImageView = UIImageView()
+            imageView.contentMode = .scaleAspectFill
+            imageView.kf.setImage(with: URL(string: url),
+                                  placeholder: AFIcon.defaultFieldImage)
+            downloadImages.append(imageView.image)
+        }
+        
+        detailImageScrollView.configure(images: downloadImages)
     }
     
     func configureBookmarkStyle() {
@@ -221,6 +234,9 @@ final class DetailViewController: UIViewController {
         
         detailImageScrollView.snp.makeConstraints { make in
             make.top.equalToSuperview().offset(14)
+            //            make.leading.equalToSuperview()
+            //            make.trailing.equalToSuperview()
+            //            make.height.equalTo(220)
             make.width.equalToSuperview()
             make.height.equalTo(detailImageScrollView.snp.width).multipliedBy(0.54)
             

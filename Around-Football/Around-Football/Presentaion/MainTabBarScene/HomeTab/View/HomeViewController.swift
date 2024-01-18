@@ -266,6 +266,11 @@ final class HomeViewController: UIViewController {
             
             return recruits
         }
+        .map { recruits in
+            recruits.sorted { first, second in
+                first.matchDate.dateValue() > second.matchDate.dateValue()
+            }
+        }
         .bind(to: homeTableView.rx.items(cellIdentifier: HomeTableViewCell.id,
                                          cellType: HomeTableViewCell.self)) { [weak self] index, item, cell in
             guard let self else { return }
