@@ -7,6 +7,7 @@
 
 import UIKit
 
+import Kingfisher
 import SnapKit
 import Then
 
@@ -16,6 +17,7 @@ final class DetailUserInfoView: UIView {
     
     private let isInfoTab: Bool
     
+    //설정버튼 카메라
     private let cameraImage = UIImageView(image: UIImage(named: AFIcon.cameraButton))
     
     lazy var profileImageView = UIImageView().then {
@@ -66,7 +68,7 @@ final class DetailUserInfoView: UIView {
         $0.textColor = AFColor.grayScale300
         $0.font = AFFont.filterRegular
     }
-        
+    
     private lazy var userDetailInfoStackView = UIStackView().then { view in
         let subViews = [userGenderLabel,
                         createHDividerView(),
@@ -103,7 +105,7 @@ final class DetailUserInfoView: UIView {
         $0.distribution = .fill
         $0.alignment = .leading
     }
-
+    
     // MARK: - Lifecycles
     
     init(frame: CGRect = .zero, isInfoTab: Bool = false) {
@@ -138,8 +140,10 @@ final class DetailUserInfoView: UIView {
             userGenderLabel.text = user?.gender
             userAgeLabel.text = String(user?.age ?? "")
             userArea.text = user?.area
+            profileImageView.kf.setImage(with: URL(string: user?.profileImageUrl ?? AFIcon.defaultImageURL),
+                                         placeholder: AFIcon.defaultFieldImage)
         }
-
+        
         if isSettingView {
             userFoot.text = user?.mainUsedFeet
             userPosition.text = user?.position.joined(separator: " • ")
@@ -172,7 +176,7 @@ final class DetailUserInfoView: UIView {
                 make.width.equalTo(40)
             }
         }
-
+        
         userStackView.snp.makeConstraints { make in
             make.centerY.equalToSuperview()
             make.leading.equalTo(profileImageView.snp.trailing).offset(14)

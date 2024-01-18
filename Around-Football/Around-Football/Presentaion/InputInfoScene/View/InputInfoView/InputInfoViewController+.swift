@@ -8,13 +8,16 @@
 import UIKit
 
 extension InputInfoViewController: UITextFieldDelegate {
-    //텍스트필드 변경할때마다 변수로 수정하고 갱신
-    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        let userName = (textField.text as NSString?)?.replacingCharacters(in: range, with: string)
-        viewModel?.userName.accept(userName)
+    
+    // MARK: - 한글 마지막 자모 분리로 delegate함수 수정
+    
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        viewModel?.userName.accept(textField.text!)
         viewModel?.updateData()
-        
-        return true
+    }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        view.endEditing(true)
     }
     
     func keyboardController() {
