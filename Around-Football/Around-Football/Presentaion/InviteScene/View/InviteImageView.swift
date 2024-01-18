@@ -30,8 +30,8 @@ class InviteImageView: UIImageView {
     private func configureUI() {
         addSubview(deleteButton)
         deleteButton.snp.makeConstraints { make in
-            make.top.equalToSuperview().offset(5)
-            make.trailing.equalToSuperview().offset(-5)
+            make.top.equalToSuperview()
+            make.trailing.equalToSuperview()
             make.width.equalTo(30)
             make.height.equalTo(30)
         }
