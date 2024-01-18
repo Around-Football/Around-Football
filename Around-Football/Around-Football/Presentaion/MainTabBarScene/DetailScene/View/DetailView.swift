@@ -157,7 +157,6 @@ final class DetailView: UIView {
     func setValues(recruit: Recruit) {
         matchTimeLabel.text = "\(recruit.startTime) - \(recruit.endTime)"
         groundAddressLabel.text = recruit.fieldAddress
-        // TODO: - item에 추가되면 설정
         genderLabel.text = recruit.gender
         recruitingLabel.text = "\(recruit.acceptedApplicantsUID.count) / \(recruit.recruitedPeopleCount)" + " 명"
         gamePriceLabel.text = recruit.gamePrice
