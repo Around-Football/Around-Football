@@ -69,6 +69,10 @@ class PeopleCountView: UIView {
     
     // MARK: - Helpers
     
+    func configure(count: Int) {
+        self.count = count
+    }
+    
     private func configureUI() {
         addSubviews(peopleCountTitleLabel,
                     peopleCountLabel,

@@ -26,24 +26,37 @@ struct StorageAPI {
         }
     }
     
-    static func uploadRecruitImage(images: [UIImage?], completion: @escaping(URL?) -> Void) {
+    static func uploadRecruitImage(images: [UIImage?], id: String, completion: @escaping([URL]?) -> Void) {
+        var urls: [URL] = []
+        let group = DispatchGroup()
+        
         for image in images {
-            guard 
+            group.enter()
+            guard
                 let image = image,
                 let data = image.jpegData(compressionQuality: 0.4)
             else {
-                return completion(nil)
+                group.leave()
+                continue
             }
             let metaData = StorageMetadata()
             metaData.contentType = "image/jpeg"
             
             let imageName = UUID().uuidString + String(Date().timeIntervalSince1970)
-            let imageReference = Storage.storage().reference().child("\(imageName)")
+            let imageReference = Storage.storage().reference().child("\(id)/\(imageName)")
+            
             imageReference.putData(data, metadata: metaData) { _, _ in
                 imageReference.downloadURL { url, _ in
-                    completion(url)
+                    if let url = url {
+                        urls.append(url)
+                    }
+                    group.leave()
                 }
             }
+        }
+        
+        group.notify(queue: .main) {
+            completion(urls)
         }
     }
     
@@ -106,6 +119,28 @@ struct StorageAPI {
                 let tempImage = UIImage(named: "TempImageMessage")
                 completion(tempImage)
             }
+        }
+    }
+    
+    static func deleteRefImages(id: String?, completion: @escaping((Error?)) -> Void) {
+        guard let id = id else { return }
+        let ref = Storage.storage().reference().child(id)
+        
+        ref.listAll { result, error in
+            if let error = error {
+                print("DEBUG - Error getting files: \(error.localizedDescription)")
+                completion(error)
+                return
+            }
+            
+            if let result = result {
+                for image in result.items {
+                    Task {
+                        try? await image.delete()
+                    }
+                }
+            }
+            completion(nil)
         }
     }
 }
