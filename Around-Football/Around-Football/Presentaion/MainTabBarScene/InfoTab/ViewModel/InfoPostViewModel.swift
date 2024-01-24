@@ -5,8 +5,9 @@
 //  Created by Deokhun KIM on 12/11/23.
 //
 
-import Foundation
+import UIKit
 
+import Kingfisher
 import FirebaseAuth
 import RxSwift
 
@@ -64,6 +65,20 @@ final class InfoPostViewModel {
                 let recruitObservable = FirebaseAPI.shared.loadApplicationPostRx(userID: Auth.auth().currentUser?.uid)
                 return recruitObservable
             }
+    }
+    
+    // MARK: - Kingfisher
+    
+    func setTitleImage(recruit: Recruit) -> UIImage? {
+        guard let defaultImage = UIImage(named: AFIcon.fieldImage)
+        else {
+            return UIImage()
+        }
+        let imageView = UIImageView()
+        let placeHolder = UIImage(named: AFIcon.fieldImage)
+        imageView.kf.setImage(with: URL(string:recruit.recruitImages.first ?? AFIcon.defaultImageURL),
+                                        placeholder: placeHolder)
+        return imageView.image
     }
     
     private func emitSelectedSegmentRecruits(selectedSegment: Observable<Int>?, recruits: Observable<[Recruit]>) -> Observable<[Recruit]> {
