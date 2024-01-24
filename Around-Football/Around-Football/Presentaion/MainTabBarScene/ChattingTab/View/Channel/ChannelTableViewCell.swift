@@ -87,7 +87,7 @@ final class ChannelTableViewCell: UITableViewCell {
     // MARK: - Helpers
     
     func configure(channelInfo: ChannelInfo) {
-        channelInfo.downloadURL != nil ? (profileImageView.image = channelInfo.image) : (profileImageView.image = UIImage(systemName: "person"))
+        channelInfo.downloadURL != nil ? (profileImageView.image = channelInfo.image) : (profileImageView.image = AFIcon.defaultUserImage)
         
         userNameLabel.text = channelInfo.withUserName
         chatPreviewLabel.text = channelInfo.previewContent

@@ -65,6 +65,12 @@ final class DetailCoordinator: BaseCoordinator {
         }
     }
     
+    func showEditDetailView(recruit: Recruit) {
+        let coordinator = InviteCoordinator(navigationController: navigationController)
+        childCoordinators.append(coordinator)
+        coordinator.start(recruit: recruit)
+    }
+    
     func presentLoginViewController() {
         let coordinator = LoginCoordinator(navigationController: navigationController)
         coordinator.start() //여기서 모달뷰로 만듬
