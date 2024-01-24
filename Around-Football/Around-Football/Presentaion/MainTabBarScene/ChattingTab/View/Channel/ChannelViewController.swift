@@ -39,7 +39,7 @@ final class ChannelViewController: UIViewController {
         $0.setBackgroundImage(UIImage(), for: .normal, barMetrics: .default)
         $0.setDividerImage(UIImage(), forLeftSegmentState: .normal, rightSegmentState: .normal, barMetrics: .default)
         $0.insertSegment(withTitle: "용병 신청", at: 0, animated: true)
-        $0.insertSegment(withTitle: "용병 모집", at: 0, animated: true)
+        $0.insertSegment(withTitle: "용병 모집", at: 1, animated: true)
         $0.setWidth(calculateSegmentWidth(title: "용병 신청"), forSegmentAt: 0)
         $0.setWidth(calculateSegmentWidth(title: "용병 모집"), forSegmentAt: 1)
 
@@ -81,6 +81,8 @@ final class ChannelViewController: UIViewController {
         $0.textColor = AFColor.secondary
     }
     
+    let loginButton = AFButton(buttonTitle: "로그인하기", color: AFColor.primary)
+
     // MARK: - Lifecycles
     
     init(viewModel: ChannelViewModel) {
@@ -137,7 +139,8 @@ final class ChannelViewController: UIViewController {
             titleLabel,
             segmentContainerView,
             channelTableView,
-            loginLabel
+            loginLabel,
+            loginButton
         )
         
         titleLabel.snp.makeConstraints {
@@ -163,8 +166,8 @@ final class ChannelViewController: UIViewController {
         let firstSegmentCenterX = firstSegmentWidth / 2
 
         underLineView.snp.makeConstraints {
-            $0.top.equalTo(segmentControlView.snp.bottom)
-            $0.height.equalTo(5)
+            $0.top.equalTo(segmentControlView.snp.bottom).offset(5)
+            $0.height.equalTo(2)
             $0.width.equalTo(firstSegmentWidth - 20)
             $0.centerX.equalTo(segmentControlView.snp.leading).offset(firstSegmentCenterX)
         }
@@ -177,6 +180,13 @@ final class ChannelViewController: UIViewController {
         
         loginLabel.snp.makeConstraints {
             $0.center.equalToSuperview()
+        }
+        
+        loginButton.snp.makeConstraints {
+            $0.leading.equalTo(60)
+            $0.trailing.equalTo(-60)
+            $0.top.equalTo(loginLabel.snp.bottom).offset(60)
+            $0.height.equalTo(40)
         }
     }
     

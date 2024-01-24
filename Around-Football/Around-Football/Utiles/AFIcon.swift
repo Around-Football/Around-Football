@@ -9,6 +9,7 @@ import UIKit
 
 enum AFIcon {
     static let defaultFieldImage = UIImage(named: Self.fieldImage)
+    static let defaultUserImage = UIImage(named: Self.userLogo)
     
     static let defaultImageURL = "https://firebasestorage.googleapis.com/v0/b/around-football.appspot.com/o/DefaultProfileImage.png?alt=media&token=9274520c-2134-489a-8665-59006714c8f2"
     //tab
@@ -39,6 +40,7 @@ enum AFIcon {
     static let textLogo = "AFTextLogo"
     static let blackLlogo = "AFLogoBlack"
     static let greenLogo = "AFLogoGreen"
+    static let userLogo = "AFUserDefaultImage"
     
     //button
     static let plusButton = "AFPlusButton"
