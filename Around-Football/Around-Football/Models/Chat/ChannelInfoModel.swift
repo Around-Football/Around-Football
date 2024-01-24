@@ -60,16 +60,17 @@ struct ChannelInfo: ChannelProtocol {
         self.withUserAge = withUser.age
         self.withUserArea = withUser.area
         self.withUserMainUsedFeet = withUser.mainUsedFeet
-        self.withUserPosition = withUser.position
-        // FIXME: - user객체에 profileImage 필드 생성되면 교체
-//                self.downloadURL = withUser.profileImageUrl
-        self.downloadURL = URL(string: "https://firebasestorage.googleapis.com:443/v0/b/around-football.appspot.com/o/8930189C-6983-4A48-9E02-321C8484897E%2F846FF6B7-454F-4EAB-8C43-89DD402FE0D21703843637.667433?alt=media&token=5e8c3184-0dba-4cec-8b04-910c8e3c03e0")
+        self.withUserPosition = withUser.position        
+//        self.downloadURL = URL(string: "https://firebasestorage.googleapis.com:443/v0/b/around-football.appspot.com/o/8930189C-6983-4A48-9E02-321C8484897E%2F846FF6B7-454F-4EAB-8C43-89DD402FE0D21703843637.667433?alt=media&token=5e8c3184-0dba-4cec-8b04-910c8e3c03e0")
         self.recentDate = Date()
         self.previewContent = ""
         self.recruitID = recruitID
         self.recruitUserID = recruitUserID
         self.alarmNumber = 0
         self.isAvailable = true
+        if let url = URL(string: withUser.profileImageUrl) {
+            self.downloadURL = url
+        }
     }
     
     // subscribe ChannelInfoInit
