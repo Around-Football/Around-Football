@@ -95,7 +95,7 @@ final class FirebaseAPI {
             
             let documentsData = snapshot.documents.map { $0.data() }
             
-            completion(Field.convertToArray(documents: documentsData))
+            //completion(Field.convertToArray(documents: documentsData))
         }
     }
     
@@ -367,10 +367,6 @@ extension FirebaseAPI {
         REF_RECRUIT
             .document(recruit.id)
             .setData(recruit.representation, completion: completion)
-        
-//        REF_FIELD
-//            .document(recruit.fieldID)
-//            .setData(recruit.representation, completion: completion)
     }
     
     //date
@@ -397,12 +393,22 @@ extension FirebaseAPI {
 // MARK: - Field
 
 extension FirebaseAPI {
-    func fetchField(fieldID: String) async throws -> Field? {
-        guard let data = try await REF_RECRUIT.document(fieldID).getDocument().data() else { return nil }
+//    func fetchField(fieldID: String) async throws -> Field? {
+//        guard let data = try await REF_RECRUIT.document(fieldID).getDocument().data() else { return nil }
+//        
+//        let field = Field(dictionary: data)
+//        
+//        return field
+//    }
+    
+    func createFieldData(
+        field: Field,
+        completion: @escaping (Error?) -> Void
+    ) {
         
-        let field = Field(dictionary: data)
-        
-        return field
+        REF_FIELD
+            .document(field.id)
+            .setData(field.representation, completion: completion)
     }
     
     func fetchFieldData(fieldAddress: String) {
