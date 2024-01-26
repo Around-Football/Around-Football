@@ -22,7 +22,7 @@ final class InviteViewController: UIViewController, Searchable {
     private var searchViewModel: SearchViewModel
     private var invokedViewWillAppear = PublishSubject<Void>()
     private var disposeBag = DisposeBag()
-
+    
     let contentView = UIView()
     private let placeView = GroundTitleView()
     private let peopleView = PeopleCountView()
@@ -160,7 +160,7 @@ final class InviteViewController: UIViewController, Searchable {
     }
     
     private var uploadedImages = BehaviorSubject(value: [UIImage?]())
-
+    
     private lazy var imageButton: UIButton = {
         let button = UIButton(configuration: buttonConfig).then {
             $0.setImage(UIImage(named: AFIcon.imagePlaceholder), for: .normal)
@@ -220,7 +220,7 @@ final class InviteViewController: UIViewController, Searchable {
         $0.layer.borderWidth = 0.8
         $0.layer.borderColor = AFColor.grayScale100.cgColor
         $0.addSubview(contentPlaceHolderLabel)
-        contentPlaceHolderLabel.frame = CGRect(x: 5, 
+        contentPlaceHolderLabel.frame = CGRect(x: 5,
                                                y: 0,
                                                width: 300,
                                                height: 30)
@@ -417,7 +417,12 @@ final class InviteViewController: UIViewController, Searchable {
     private func setAddButton() {
         searchViewModel.dataSubject
             .subscribe(onNext: { [weak self] place in
-                guard let self else { return }
+                guard let self,
+                      let latitude = Double(place.y),
+                      let longitude = Double(place.x)
+                else { return }
+                viewModel.fieldID = place.id
+                viewModel.location = GeoPoint(latitude: latitude, longitude: longitude)
                 viewModel.fieldName.accept(place.name)
                 viewModel.fieldAddress.accept(place.address)
                 let region = String(place.address.split(separator: " ").first ?? "")
@@ -669,17 +674,17 @@ extension InviteViewController: PHPickerViewControllerDelegate {
     func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
         let dispatchGroup = DispatchGroup()
         var images: [UIImage?] = []
-
+        
         for result in results {
             let itemProvider = result.itemProvider
             var resultImage: UIImage?
-
+            
             guard itemProvider.canLoadObject(ofClass: UIImage.self) else {
                 images.append(nil)
                 continue
             }
             dispatchGroup.enter()
-
+            
             itemProvider.loadObject(ofClass: UIImage.self) { image, error in
                 defer {
                     dispatchGroup.leave()
@@ -692,7 +697,7 @@ extension InviteViewController: PHPickerViewControllerDelegate {
             dispatchGroup.wait()
             images.append(resultImage)
         }
-
+        
         dispatchGroup.notify(queue: .main) {
             self.uploadedImages.onNext(images)
             picker.dismiss(animated: true)
