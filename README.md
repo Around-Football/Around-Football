@@ -1,5 +1,6 @@
 # Around Football (어라운드 풋볼)⚽️
 `우리동네 풋살, 축구 용병은 어라운드 풋볼과 함께!` <br>
+`UIKit + MVVM-C + RxSwift` <br>
 
 ## 🔗 Links
 ### [📱 AppStore](https://추가하기)
@@ -13,7 +14,7 @@
 ![Realm](https://img.shields.io/badge/realm-39477F?style=for-the-badge&logo=Realm&logoColor=white)
 
 ## 📌 주요 기능
--
+- 
 -
 -
 <br>
