@@ -5,6 +5,7 @@
 //  Created by Deokhun KIM on 11/3/23.
 //
 
+import CoreLocation
 import Foundation
 
 import Firebase
@@ -31,7 +32,7 @@ final class InviteViewModel {
     private var disposeBag = DisposeBag()
     
     var fieldID: String = ""
-    var location: GeoPoint = GeoPoint(latitude: 0, longitude: 0)
+    var location = GeoPoint(latitude: 0, longitude: 0)
     var fieldName: BehaviorRelay<String> = BehaviorRelay(value: "")
     var fieldAddress: BehaviorRelay<String> = BehaviorRelay(value: "")
     var region: BehaviorRelay<String> = BehaviorRelay(value: "")
@@ -76,7 +77,7 @@ final class InviteViewModel {
                           let self else { return }
                     recruitImages.append(url.absoluteString)
                     if self.recruitImages.count == input.count {
-                        self.createRecruitFieldData()
+//                        self.createRecruitFieldData()
                     }
                 }
             }.disposed(by: disposeBag)
@@ -119,13 +120,14 @@ final class InviteViewModel {
             }
         }
         
-        let field = Field(id: fieldID, 
+        let field = Field(id: fieldID,
                           fieldName: fieldName.value,
                           fieldAddress: fieldAddress.value,
                           location: location,
-                          data: [fieldID : [recruit]])
+                          recruitList: [recruit.id]
+        )
         
-        FirebaseAPI.shared.createFieldData(field: field) { error in
+        FirebaseAPI.shared.createFieldData(field: field, recruit: recruit) { error in
             if error == nil {
                 print("DEBUG - 필드 올리기 성공")
                 //TODO: - 성공 알림창 띄워주기?

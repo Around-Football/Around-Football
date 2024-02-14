@@ -471,6 +471,7 @@ final class InviteViewController: UIViewController, Searchable {
             
             //올리기 함수
             viewModel.setRecruitImages(uploadedImages)
+            viewModel.createRecruitFieldData()
             viewModel.coordinator.popInviteViewController()
             
         }
