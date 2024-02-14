@@ -5,6 +5,7 @@
 //  Created by 강창현 on 2023/04/13.
 //
 
+import CoreLocation
 import Foundation
 
 import Firebase
@@ -16,24 +17,29 @@ struct Field: Codable, Identifiable {
     var fieldName: String //운동장 이름
     var fieldAddress: String //운동장 주소
     var location: GeoPoint //운동장 좌표
-    var data: [String:[Recruit]]
+    var recruitList: [String]
     
     var representation: [String: Any] {
         let rep = ["id": id,
                    "fieldName": fieldName,
                    "fieldAddress": fieldAddress,
                    "location": location,
-                   "data": data
+                   "recruitList": recruitList
                    ] as [String : Any]
         return rep
     }
     
-    init(id: String, fieldName: String, fieldAddress: String, location: GeoPoint, data: [String:[Recruit]] ) {
+    init(
+        id: String,
+        fieldName: String,
+        fieldAddress: String,
+        location: GeoPoint,
+        recruitList: [String]
+    ) {
         self.id = id
         self.fieldName = fieldName
         self.fieldAddress = fieldAddress
         self.location = location
-        self.data = data
+        self.recruitList = recruitList
     }
 }
-
