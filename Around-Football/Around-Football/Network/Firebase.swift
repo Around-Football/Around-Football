@@ -84,19 +84,14 @@ final class FirebaseAPI {
         }
     }
     
-    func fetchFields(completion: @escaping(([Field]) -> Void)) {
-        REF_FIELD.getDocuments { snapshot, error in
-            
-            guard let snapshot = snapshot else {
-                let errorMessage = error?.localizedDescription ?? "None ERROR"
-                print("DEBUG: fetchFields Error - \(errorMessage)")
-                return
-            }
-            
-            let documentsData = snapshot.documents.map { $0.data() }
-            
-            //completion(Field.convertToArray(documents: documentsData))
+    func fetchFields() async throws -> [Field] {
+        let documentsData = try await REF_FIELD.getDocuments().documents.map { $0.data() }
+        var fields = [Field]()
+        for data in documentsData {
+            let field = Field(dictionary: data)
+            fields.append(field)
         }
+        return fields
     }
     
     func fetchRecruit(recruitID: String, completion: @escaping(Recruit?, Error?) -> Void) {
@@ -371,12 +366,10 @@ extension FirebaseAPI {
     //date
     func fetchRecruitFieldData(
         fieldID: String,
-        date: Date,
         completion: @escaping(([Recruit]) -> Void)
     ) {
         REF_RECRUIT
             .whereField("fieldID", isEqualTo: fieldID)
-            .whereField("matchDateString", isEqualTo: date)
             .getDocuments { snapshot, error in
                 guard let snapshot = snapshot else {
                     let errorMessage = error?.localizedDescription ?? "None ERROR"
