@@ -112,13 +112,26 @@ final class MapViewController: UIViewController, Searchable {
         setLocationManager()
         bindSearch()
         
-        if let locationCoordinate = locationManager.location?.coordinate {
-            viewModel.setCurrentLocation(latitude: locationCoordinate.latitude,
-                                         longitude: locationCoordinate.longitude)
-            viewModel.fetchFields()
-            _ = getloadDatas(label: MapLabel(labelType: .fieldPosition,
-                                            poi: .fieldPosition(viewModel.fields.map{ $0.id })),
-                            fields: viewModel.fields)
+        guard
+            let locationCoordinate = self.locationManager.location?.coordinate
+        else {
+            return
+        }
+        viewModel.setCurrentLocation(latitude: locationCoordinate.latitude,
+                                     longitude: locationCoordinate.longitude)
+        Task {
+            do {
+                try await viewModel.fetchFields()
+                _ = loadFieldsData(
+                    label: MapLabel(
+                        labelType: .fieldPosition,
+                        poi: .fieldPosition(viewModel.fields.map{ $0.id })
+                    ),
+                    fields: viewModel.fields
+                )
+            } catch {
+                print("Error: \(error)")
+            }
         }
     }
     
@@ -146,26 +159,12 @@ final class MapViewController: UIViewController, Searchable {
         self.changeCurrentPoi()
         let location = viewModel.currentLocation
         self.moveCamera(latitude: location.latitude, longitude: location.longitude)
-        viewModel.coordinator?.presentDetailViewController()
-    }
-    
-    @objc
-    func changeDate(_ sender: UIDatePicker) {
-        viewModel.selectedDate = sender.date
     }
     
     func tapHandler(_ param: PoiInteractionEventParam) {
         let itemID = param.poiItem.itemID
         guard let field = viewModel.fields.filter({ $0.id == itemID }).first else { return }
-        let selectedDate = viewModel.selectedDate
-        
-//        let fieldViewModel = FieldDetailViewModel(field: field)
-//        self.modalViewController = FieldDetailViewController(viewModel: fieldViewModel)
-//        
-//        if let modalViewController = self.modalViewController {
-//            let navigation = UINavigationController(rootViewController: modalViewController)
-//            present(navigation, animated: true)
-//        }
+        viewModel.coordinator?.presentDetailViewController(field: field)
     }
     
     // MARK: - Helpers
