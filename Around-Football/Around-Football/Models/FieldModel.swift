@@ -42,4 +42,14 @@ struct Field: Codable, Identifiable {
         self.location = location
         self.recruitList = recruitList
     }
+    
+    init(
+        dictionary: [String: Any]
+    ) {
+        self.id = dictionary["id"] as? String ?? ""
+        self.fieldName = dictionary["fieldName"] as? String ?? ""
+        self.fieldAddress = dictionary["fieldAddress"] as? String ?? ""
+        self.location = dictionary["id"] as? GeoPoint ?? GeoPoint(latitude: 0.0, longitude: 0.0)
+        self.recruitList = dictionary["id"] as? [String] ?? []
+    }
 }
