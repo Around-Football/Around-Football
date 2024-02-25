@@ -177,7 +177,6 @@ extension MapViewController: MapControllerDelegate, KakaoMapEventDelegate {
             )
             let _ = manager.addLodLabelLayer(option: layerOptions)
         }
-        
     }
     
     func createPoiStyle(label: MapLabel) {
@@ -212,7 +211,6 @@ extension MapViewController: MapControllerDelegate, KakaoMapEventDelegate {
             poiOption.rank = label.poiRank
             let poi1 = layer?.addPoi(option: poiOption, at: mapPoint)
             poi1?.show()
-            
             return
         }
         
@@ -229,16 +227,15 @@ extension MapViewController: MapControllerDelegate, KakaoMapEventDelegate {
                     handler: MapViewController.tapHandler
                 )
             }
-            
             layer?.showAllLodPois()
         }
-        
     }
     
     func loadFieldsData(label: MapLabel, fields: [Field]) -> ([PoiOptions], [MapPoint]) {
         var options: [PoiOptions] = []
         var positions: [MapPoint] = []
-        
+        createLabelLayer(label: label)
+        createPoiStyle(label: label)
         for field in fields {
             let option = PoiOptions(styleID: label.poiStyle, poiID: field.id)
             option.rank = label.poiRank
@@ -251,7 +248,8 @@ extension MapViewController: MapControllerDelegate, KakaoMapEventDelegate {
             options.append(option)
             positions.append(position)
         }
-        createPois(label: label, datas: (options, positions), fields: fields)
+        
+        createPois(label: label, fields: fields)
         return (options, positions)
     }
     
