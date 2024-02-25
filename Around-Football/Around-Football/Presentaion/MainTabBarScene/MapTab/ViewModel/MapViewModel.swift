@@ -46,12 +46,15 @@ final class MapViewModel {
     
     // MARK: - API
     
-    func fetchFields() {
-        firebaseAPI.fetchFields { fields in
-            self.fields = fields
-            
-        }
+    func fetchFields() async throws {
+        self.fields = try await firebaseAPI.fetchFields()
     }
+    
+//    func fetchFields() {
+//        firebaseAPI.fetchFields { fields in
+//            self.fields = fields
+//        }
+//    }
     
     // MARK: - Helpers
     
