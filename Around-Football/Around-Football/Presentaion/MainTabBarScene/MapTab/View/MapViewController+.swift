@@ -87,12 +87,12 @@ extension MapViewController: MapControllerDelegate, KakaoMapEventDelegate {
             // GUI
             //            createSpriteGUI()
             
-            let fields = self.viewModel.fields
-            let idArray = fields.map { $0.id }
-            let fieldsMapLabel = MapLabel(labelType: .fieldPosition, poi: .fieldPosition(idArray))
-            createLabelLayer(label: fieldsMapLabel)
-            createPoiStyle(label: fieldsMapLabel)
-            createPois(label: fieldsMapLabel, fields: fields)
+//            let fields = self.viewModel.fields
+//            let idArray = fields.map { $0.id }
+//            let fieldsMapLabel = MapLabel(labelType: .fieldPosition, poi: .fieldPosition(idArray))
+//            createLabelLayer(label: fieldsMapLabel)
+//            createPoiStyle(label: fieldsMapLabel)
+//            createPois(label: fieldsMapLabel, fields: fields)
         }
     }
     
@@ -197,9 +197,12 @@ extension MapViewController: MapControllerDelegate, KakaoMapEventDelegate {
         
     }
     
-    func createPois(label: MapLabel,
-                    mapPoint: MapPoint = MapPoint(longitude: 0, latitude: 0),
-                    fields: [Field] = []) {
+    func createPois(
+        label: MapLabel,
+        datas: ([PoiOptions], [MapPoint])? = nil,
+        mapPoint: MapPoint = MapPoint(longitude: 0, latitude: 0),
+        fields: [Field] = []
+    ) {
         let mapView: KakaoMap = mapController?.getView("mapview") as! KakaoMap
         let manager = mapView.getLabelManager()
         
@@ -214,8 +217,10 @@ extension MapViewController: MapControllerDelegate, KakaoMapEventDelegate {
         }
         
         if label.labelType == .fieldPosition {
+            guard let datas else { return }
             let layer = manager.getLodLabelLayer(layerID: label.layerID)
-            let datas = getloadDatas(label: label, fields: fields)
+//            let datas = loadFieldsData(label: label, fields: fields)
+            
             let lodPois = layer?.addLodPois(options: datas.0, at: datas.1)
             guard let lodPois = lodPois else { return }
             let _ = lodPois.map {
@@ -230,7 +235,7 @@ extension MapViewController: MapControllerDelegate, KakaoMapEventDelegate {
         
     }
     
-    func getloadDatas( label: MapLabel, fields: [Field]) -> ([PoiOptions], [MapPoint]) {
+    func loadFieldsData(label: MapLabel, fields: [Field]) -> ([PoiOptions], [MapPoint]) {
         var options: [PoiOptions] = []
         var positions: [MapPoint] = []
         
@@ -246,7 +251,7 @@ extension MapViewController: MapControllerDelegate, KakaoMapEventDelegate {
             options.append(option)
             positions.append(position)
         }
-        
+        createPois(label: label, datas: (options, positions), fields: fields)
         return (options, positions)
     }
     
