@@ -14,7 +14,7 @@ final class FieldDetailViewController: UIViewController {
     
     // MARK: - Properties
     
-    //    var viewModel: FieldDetailViewModel
+    private let viewModel: FieldDetailViewModel
     
     private let headerStackView = UIStackView().then {
         $0.axis = .vertical
@@ -47,7 +47,8 @@ final class FieldDetailViewController: UIViewController {
     
     // MARK: - Lifecycles
     
-    init() {
+    init(viewModel: FieldDetailViewModel) {
+        self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
     
