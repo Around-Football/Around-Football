@@ -49,7 +49,7 @@ struct Field: Codable, Identifiable {
         self.id = dictionary["id"] as? String ?? ""
         self.fieldName = dictionary["fieldName"] as? String ?? ""
         self.fieldAddress = dictionary["fieldAddress"] as? String ?? ""
-        self.location = dictionary["id"] as? GeoPoint ?? GeoPoint(latitude: 0.0, longitude: 0.0)
-        self.recruitList = dictionary["id"] as? [String] ?? []
+        self.location = dictionary["location"] as? GeoPoint ?? GeoPoint(latitude: 0.0, longitude: 0.0)
+        self.recruitList = dictionary["recruitList"] as? [String] ?? []
     }
 }
