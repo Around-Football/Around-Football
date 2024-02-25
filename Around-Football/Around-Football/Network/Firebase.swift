@@ -84,14 +84,14 @@ final class FirebaseAPI {
         }
     }
     
-    func fetchFields() async throws -> [Field] {
+    func fetchFields(completion: @escaping ([Field]) -> Void) async throws {
         let documentsData = try await REF_FIELD.getDocuments().documents.map { $0.data() }
         var fields = [Field]()
         for data in documentsData {
             let field = Field(dictionary: data)
             fields.append(field)
         }
-        return fields
+        completion(fields)
     }
     
     func fetchRecruit(recruitID: String, completion: @escaping(Recruit?, Error?) -> Void) {

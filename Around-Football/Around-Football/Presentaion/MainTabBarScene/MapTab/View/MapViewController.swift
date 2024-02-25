@@ -121,14 +121,15 @@ final class MapViewController: UIViewController, Searchable {
                                      longitude: locationCoordinate.longitude)
         Task {
             do {
-                try await viewModel.fetchFields()
-                _ = loadFieldsData(
-                    label: MapLabel(
-                        labelType: .fieldPosition,
-                        poi: .fieldPosition(viewModel.fields.map{ $0.id })
-                    ),
-                    fields: viewModel.fields
-                )
+                try await viewModel.fetchFields { [weak self] fields in
+                    _ = self?.loadFieldsData(
+                        label: MapLabel(
+                            labelType: .fieldPosition,
+                            poi: .fieldPosition(fields.map{ $0.id })
+                        ),
+                        fields: fields
+                    )                    
+                }
             } catch {
                 print("Error: \(error)")
             }

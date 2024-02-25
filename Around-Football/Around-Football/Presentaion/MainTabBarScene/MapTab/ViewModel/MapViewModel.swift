@@ -46,8 +46,11 @@ final class MapViewModel {
     
     // MARK: - API
     
-    func fetchFields() async throws {
-        self.fields = try await firebaseAPI.fetchFields()
+    func fetchFields(completion: @escaping ([Field]) -> Void) async throws {
+        try await firebaseAPI.fetchFields { fields in
+            self.fields = fields
+            completion(fields)
+        }
     }
     
 //    func fetchFields() {
