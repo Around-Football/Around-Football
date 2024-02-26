@@ -7,6 +7,7 @@
 
 import UIKit
 
+import RxSwift
 import Then
 import SnapKit
 
@@ -68,6 +69,13 @@ final class FieldRecruitTableViewCell: UITableViewCell {
         self.matchDateLabel.text = recruit.matchDate.dateValue().toString()
         self.playTimeLabel.text = recruit.startTime
         self.recruitNumber.text = "\(recruit.acceptedApplicantsUID.count)/\(recruit.recruitedPeopleCount)명"
+    }
+    
+    func bindButton(disposeBag: DisposeBag, completion: @escaping () -> Void) {
+        self.chattingButton.rx.tap
+            .bind {
+                completion()
+            }.disposed(by: disposeBag)
     }
     
     private func configureUI() {

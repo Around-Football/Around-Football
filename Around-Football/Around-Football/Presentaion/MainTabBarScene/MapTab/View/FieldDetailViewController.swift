@@ -17,7 +17,7 @@ final class FieldDetailViewController: UIViewController {
     // MARK: - Properties
     
     let viewModel: FieldDetailViewModel
-    
+    let disposeBag = DisposeBag()
     private let headerStackView = UIStackView().then {
         $0.axis = .vertical
         $0.spacing = 10
@@ -65,6 +65,7 @@ final class FieldDetailViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         configurePresentStyle()
+        setUpTableView()
         setUpContents()
         configureUI()
     }
@@ -84,7 +85,11 @@ final class FieldDetailViewController: UIViewController {
         guard let fieldData = viewModel.fetchFieldData() else { return }
         fieldNameLabel.text = fieldData.fieldName
         addressLabel.text = fieldData.fieldAddress
+    }
+    
+    private func setUpTableView() {
         tableView.dataSource = self
+        tableView.delegate = self
     }
     
     private func configureUI() {
