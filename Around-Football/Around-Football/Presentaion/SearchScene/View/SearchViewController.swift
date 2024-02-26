@@ -10,7 +10,7 @@ import UIKit
 import RxSwift
 import SnapKit
 import Then
-
+// TODO: - Rx 바인딩 후 데이터 처리 확인: 창현
 final class SearchViewController: UIViewController {
     
     // MARK: - Properties
@@ -52,7 +52,7 @@ final class SearchViewController: UIViewController {
         configureUI()
         setTableView()
         setUpKeyboard()
-        applyUpdateSearchPlace()
+//        applyUpdateSearchPlace()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -98,7 +98,7 @@ final class SearchViewController: UIViewController {
     private func setTableView() {
         tableView.register(SearchTableViewCell.self,
                            forCellReuseIdentifier: SearchTableViewCell.identifier)
-        tableView.dataSource = dataSource
+        tableView.dataSource = nil
         
         let selectedItem = tableView.rx.modelSelected(Place.self)
         
@@ -110,10 +110,18 @@ final class SearchViewController: UIViewController {
                 searchViewModel.coordinator?.dismissSearchViewController()
             })
             .disposed(by: disposeBag)
+        
+        _ = searchViewModel.searchResults
+            .bind(to: tableView.rx.items(
+                cellIdentifier: SearchTableViewCell.identifier,
+                cellType: SearchTableViewCell.self)) { index, place, cell in
+                    cell.fieldNameLabel.text = place.name
+                    cell.fieldAddressLabel.text = place.address
+                }
+                .disposed(by: disposeBag)
     }
     
     private func applyUpdateSearchPlace() {
-        
         _ = searchViewModel.searchResults
             .bind(onNext: { places in
                 DispatchQueue.main.async {
@@ -125,15 +133,11 @@ final class SearchViewController: UIViewController {
             })
             .disposed(by: disposeBag)
     }
-            
+    
+    // TODO: - 쓰로틀
     @objc
     private func textFieldDidChange(_ sender: Any?) {
-        guard
-            let keyword = searchTextField.text
-        else {
-            searchViewModel.setEmptySearchResults()
-            return
-        }
+        guard let keyword = searchTextField.text else { return }
         searchViewModel.searchFields(keyword: keyword, disposeBag: disposeBag)
     }
 }

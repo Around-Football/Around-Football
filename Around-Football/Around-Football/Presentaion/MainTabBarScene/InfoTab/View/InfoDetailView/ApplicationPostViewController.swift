@@ -93,6 +93,7 @@ final class ApplicationPostViewController: UIViewController {
         viewModel.coordinator?.pushDetailCell(recruitItem: recruitItem)
     }
     
+    // TODO: - 신청 글 아래 선 삭제: 창현
     private func configureUI() {
         title = "신청 글"
         view.backgroundColor = .white

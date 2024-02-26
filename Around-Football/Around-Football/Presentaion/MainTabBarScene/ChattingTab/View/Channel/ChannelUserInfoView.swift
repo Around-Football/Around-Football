@@ -90,6 +90,7 @@ class ChannelUserInfoView: UIView {
         }
     }
     
+    // TODO: - height 줄이기
     private func createHDividerView() -> UIView {
         return UIView().then {
             $0.backgroundColor = AFColor.grayScale300

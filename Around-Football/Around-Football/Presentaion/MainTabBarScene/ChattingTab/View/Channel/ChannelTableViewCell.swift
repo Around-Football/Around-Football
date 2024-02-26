@@ -138,6 +138,7 @@ final class ChannelTableViewCell: UITableViewCell {
             $0.top.equalTo(upperStackView.snp.bottom).offset(4)
             $0.leading.equalTo(profileImageView.snp.trailing).offset(20)
             $0.trailing.equalToSuperview().offset(-20)
+            $0.height.equalTo(18)
         }
         
         underStackView.snp.makeConstraints {
