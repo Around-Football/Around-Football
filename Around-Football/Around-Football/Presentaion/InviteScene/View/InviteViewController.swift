@@ -456,6 +456,7 @@ final class InviteViewController: UIViewController, Searchable {
             .disposed(by: disposeBag)
     }
     
+    // TODO: - 업로드 시 indicator 추가: 덕훈
     private func setAddButton() {
         searchViewModel.dataSubject
             .subscribe(onNext: { [weak self] place in

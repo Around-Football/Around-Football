@@ -93,6 +93,7 @@ final class BookmarkPostViewController: UIViewController {
         viewModel.coordinator?.pushDetailCell(recruitItem: recruitItem)
     }
     
+    // TODO: - 마감된 공고 상관없이 다 보여주기: 태영
     private func configureUI() {
         title = "관심 글"
         view.backgroundColor = .white
