@@ -13,12 +13,16 @@ extension FieldDetailViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(
+        guard 
+            let cell = tableView.dequeueReusableCell(
             withIdentifier: FieldRecruitTableViewCell.identifier,
             for: indexPath
-        ) as? FieldRecruitTableViewCell
+        ) as? FieldRecruitTableViewCell 
+        else {
+            return FieldRecruitTableViewCell()
+        }
         
-        guard let cell = cell else { fatalError("FieldDetail TableView Cell Error") }
+        cell.configure(playTime: viewModel.playTime, recruitNumber: viewModel.recruitNumber)
         
         return cell
     }

@@ -35,8 +35,8 @@ final class MapTabCoordinator: BaseCoordinator {
         self.searchCoordinator.start(viewModel: self.searchViewModel)
     }
     
-    func presentDetailViewController(field: Field) {
-        let fieldViewModel = FieldDetailViewModel(field: field)
+    func presentDetailViewController(recruit: Recruit) {
+        let fieldViewModel = FieldDetailViewModel(recruit: recruit)
         let modalViewController = FieldDetailViewController(viewModel: fieldViewModel)
         let navigation = UINavigationController(rootViewController: modalViewController)
         navigationController?.present(navigation, animated: true)
