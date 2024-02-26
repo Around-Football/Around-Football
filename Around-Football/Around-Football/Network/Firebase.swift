@@ -393,7 +393,7 @@ extension FirebaseAPI {
         REF_FIELD
             .whereField("id", isEqualTo: field.id)
             .getDocuments { snapshot, error in
-                guard error != nil else {
+                guard error == nil else {
                     completion(error)
                     return
                 }
