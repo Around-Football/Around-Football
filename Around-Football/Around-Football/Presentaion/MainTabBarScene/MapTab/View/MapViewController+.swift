@@ -211,10 +211,11 @@ extension MapViewController: MapControllerDelegate, KakaoMapEventDelegate {
             poi1?.show()
             return
         }
-        
+        print("DEBUG - LAST: \(label.layerID)")
         if label.labelType == .fieldPosition {
             guard let datas else { return }
             let layer = manager.getLodLabelLayer(layerID: label.layerID)
+            print("DEBUG - layer: \(layer?.layerID)")
             let lodPois = layer?.addLodPois(options: datas.0, at: datas.1)
             guard let lodPois = lodPois else { return }
             let _ = lodPois.map {
@@ -223,6 +224,9 @@ extension MapViewController: MapControllerDelegate, KakaoMapEventDelegate {
                     handler: MapViewController.tapHandler
                 )
             }
+            
+            print("DEBUG - POSITIOPN: \(lodPois.map { $0.itemID})")
+            print("DEBUG - ldpois: \(lodPois.count)")
             layer?.showAllLodPois()
         }
     }
@@ -230,6 +234,7 @@ extension MapViewController: MapControllerDelegate, KakaoMapEventDelegate {
     func loadFieldsData(label: MapLabel, fields: [Field]) -> ([PoiOptions], [MapPoint]) {
         var options: [PoiOptions] = []
         var positions: [MapPoint] = []
+        print("DEBUG - data: \(label.layerID)")
         createLabelLayer(label: label)
         createPoiStyle(label: label)
         for field in fields {
@@ -241,6 +246,8 @@ extension MapViewController: MapControllerDelegate, KakaoMapEventDelegate {
                 longitude: field.location.longitude,
                 latitude: field.location.latitude
             )
+            print("DEBUG - longitude: \(field.location.longitude)")
+            print("DEBUG - latitude: \(field.location.latitude)")
             options.append(option)
             positions.append(position)
         }

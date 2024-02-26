@@ -122,6 +122,7 @@ final class MapViewController: UIViewController, Searchable {
         Task {
             do {
                 try await viewModel.fetchFields { [weak self] fields in
+                    print("DEBUG - 1")
                     _ = self?.loadFieldsData(
                         label: MapLabel(
                             labelType: .fieldPosition,
