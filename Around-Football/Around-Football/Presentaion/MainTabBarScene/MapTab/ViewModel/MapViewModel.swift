@@ -53,13 +53,10 @@ final class MapViewModel {
         }
     }
     
-    func presentDetailViewController(itemID: String) async throws {
-        guard
-            let recruit = try await FirebaseAPI.shared.fetchRecruit(recruitID: itemID)
-        else {
-            return
+    func presentDetailViewController(itemID: String) {
+        FirebaseAPI.shared.fetchRecruitFieldData(fieldID: itemID) { [weak self] recruits in
+            self?.coordinator?.presentDetailViewController(recruits: recruits)
         }
-        self.coordinator?.presentDetailViewController(recruit: recruit)
     }
     
     // MARK: - Helpers

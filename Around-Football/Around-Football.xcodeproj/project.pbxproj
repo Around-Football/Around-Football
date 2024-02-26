@@ -34,6 +34,7 @@
 		274C22112AD6D6EF005469E6 /* HomeTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 274C22102AD6D6EF005469E6 /* HomeTableViewCell.swift */; };
 		274C22132AD7C16A005469E6 /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 274C22122AD7C169005469E6 /* HomeViewModel.swift */; };
 		277DCD2E2B4BFCCD0076784E /* UITextField+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 277DCD2D2B4BFCCD0076784E /* UITextField+.swift */; };
+		2780DFF12B8C80720066549E /* Date+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2780DFF02B8C80720066549E /* Date+.swift */; };
 		278225182B5290E6000A5EEE /* NotificationName+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 278225172B5290E6000A5EEE /* NotificationName+.swift */; };
 		27B86A302B45778D0081F621 /* InviteImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27B86A2F2B45778D0081F621 /* InviteImageView.swift */; };
 		660932032B44090D000D7CFD /* NotificationType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 660932022B44090D000D7CFD /* NotificationType.swift */; };
@@ -178,6 +179,7 @@
 		274C22102AD6D6EF005469E6 /* HomeTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeTableViewCell.swift; sourceTree = "<group>"; };
 		274C22122AD7C169005469E6 /* HomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewModel.swift; sourceTree = "<group>"; };
 		277DCD2D2B4BFCCD0076784E /* UITextField+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITextField+.swift"; sourceTree = "<group>"; };
+		2780DFF02B8C80720066549E /* Date+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+.swift"; sourceTree = "<group>"; };
 		278225172B5290E6000A5EEE /* NotificationName+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NotificationName+.swift"; sourceTree = "<group>"; };
 		27B86A2F2B45778D0081F621 /* InviteImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InviteImageView.swift; sourceTree = "<group>"; };
 		660932022B44090D000D7CFD /* NotificationType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationType.swift; sourceTree = "<group>"; };
@@ -896,6 +898,7 @@
 				661D31B32B355403006CA8FF /* UIViewController+.swift */,
 				277DCD2D2B4BFCCD0076784E /* UITextField+.swift */,
 				278225172B5290E6000A5EEE /* NotificationName+.swift */,
+				2780DFF02B8C80720066549E /* Date+.swift */,
 			);
 			path = Utiles;
 			sourceTree = "<group>";
@@ -1100,6 +1103,7 @@
 				2736744D2AC3061C003ADE3F /* AppDelegate.swift in Sources */,
 				668EE4C52B05038B007A8844 /* DisMissAnimation.swift in Sources */,
 				66C5AFB82B3D691800A95460 /* ChannelUserInfoView.swift in Sources */,
+				2780DFF12B8C80720066549E /* Date+.swift in Sources */,
 				7C5F77602AC9DA08004CE48F /* GroundTitleView.swift in Sources */,
 				7CB21BA52AC94EE4001D0058 /* DetailUserInfoView.swift in Sources */,
 				7C2F9FE72B25EFF500F1EF1B /* ApplicationPostViewController.swift in Sources */,

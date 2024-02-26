@@ -13,30 +13,29 @@ final class FieldDetailViewModel {
     
     // MARK: - Properties
     
-//    private let field: Field
-    private var recruit: Recruit
+    private var recruits: [Recruit]
     private let firebaseAPI = FirebaseAPI.shared
-    var playTime: String {
-        let startTime = self.recruit.startTime
-        let endTime = self.recruit.endTime
-        return startTime + "-" + endTime
+    var recruitsCount: Int {
+        return recruits.count
     }
-    var fieldName: String {
-        return recruit.fieldName
-    }
-    var addressLabel: String {
-        return recruit.fieldAddress
-    }
-    var recruitNumber: String {
-        let number = self.recruit.recruitedPeopleCount
-        return "0 / \(number)"
-    }
-
+    
     // MARK: - Lifecycles
 
-    init(recruit: Recruit) {
-        self.recruit = recruit
+    init(recruits: [Recruit]) {
+        self.recruits = recruits
     }
+    
+    // MARK: - Helpers
+    
+    func fetchRecruit(row: Int) -> Recruit {
+        return self.recruits[row]
+    }
+    
+    func fetchFieldData() -> Recruit? {
+        guard let fieldData = recruits.first else { return nil }
+        return fieldData
+    }
+    
     // MARK: - API
 //    func fetchRecruitFieldData(completion: @escaping(([Recruit]) -> Void)) {
 //        firebaseAPI.fetchRecruitFieldData(fieldID: field.id) { recruits in

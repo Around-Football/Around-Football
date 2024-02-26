@@ -163,15 +163,8 @@ final class MapViewController: UIViewController, Searchable {
     }
     
     func tapHandler(_ param: PoiInteractionEventParam) {
-        Task.detached {
-            do {
-                let itemID = param.poiItem.itemID
-                try await self.viewModel.presentDetailViewController(itemID: itemID)
-            } catch {
-                // 에러 처리
-                print("에러: \(error)")
-            }
-        }
+        let itemID = param.poiItem.itemID
+        viewModel.presentDetailViewController(itemID: itemID)
     }
     
     // MARK: - Helpers
