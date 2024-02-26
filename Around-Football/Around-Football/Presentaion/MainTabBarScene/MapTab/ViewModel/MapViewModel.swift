@@ -46,10 +46,16 @@ final class MapViewModel {
     
     // MARK: - API
     
-    func fetchFields() {
-        firebaseAPI.fetchFields { fields in
+    func fetchFields(completion: @escaping ([Field]) -> Void) async throws {
+        try await firebaseAPI.fetchFields { fields in
             self.fields = fields
-            
+            completion(fields)
+        }
+    }
+    
+    func presentDetailViewController(itemID: String) {
+        FirebaseAPI.shared.fetchRecruitFieldData(fieldID: itemID) { [weak self] recruits in
+            self?.coordinator?.presentDetailViewController(recruits: recruits)
         }
     }
     

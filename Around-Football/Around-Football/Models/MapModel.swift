@@ -27,8 +27,8 @@ struct MapLabel {
     
     var poiImage: UIImage? {
         switch self.poi {
-        case .currentPosition: return UIImage(named: "CurrentPositionMark")
-        case .fieldPosition(_): return UIImage(named: "FieldPositionMark")
+        case .currentPosition: return UIImage(named: AFIcon.trackingPoint)
+        case .fieldPosition(_): return UIImage(named: AFIcon.marker)
         }
     }
     

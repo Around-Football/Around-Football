@@ -19,7 +19,7 @@ final class SearchViewModel {
     
     weak var coordinator: SearchCoordinator?
     var dataSubject: PublishSubject = PublishSubject<Place>()
-    let searchResults = BehaviorSubject<[Place]>(value: [])
+    var searchResults = BehaviorSubject<[Place]>(value: [])
     private let disposeBag = DisposeBag()
     
     init(coordinator: SearchCoordinator?) {
@@ -28,5 +28,9 @@ final class SearchViewModel {
     
     func searchFields(keyword: String, disposeBag: DisposeBag) {
         KakaoService.shared.searchField(keyword, searchResults, disposeBag)
+    }
+    
+    func setEmptySearchResults() {
+        self.searchResults = BehaviorSubject<[Place]>(value: [])
     }
 }
