@@ -6,12 +6,12 @@
       "scale" : "1x"
     },
     {
-      "filename" : "AFMarker.png",
+      "filename" : "AFMarker@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "AFMarker 1.png",
+      "filename" : "AFMarker@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

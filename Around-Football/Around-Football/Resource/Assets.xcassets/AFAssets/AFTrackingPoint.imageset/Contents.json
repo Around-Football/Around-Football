@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "AFTrackingPoint 1.png",
+      "filename" : "tracker.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "AFTrackingPoint.png",
+      "filename" : "tracker 1.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "AFTrackingPoint 2.png",
+      "filename" : "tracker 2.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

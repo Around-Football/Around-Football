@@ -53,11 +53,11 @@ final class MapViewModel {
         }
     }
     
-//    func fetchFields() {
-//        firebaseAPI.fetchFields { fields in
-//            self.fields = fields
-//        }
-//    }
+    func presentDetailViewController(itemID: String) {
+        FirebaseAPI.shared.fetchRecruitFieldData(fieldID: itemID) { [weak self] recruits in
+            self?.coordinator?.presentDetailViewController(recruits: recruits)
+        }
+    }
     
     // MARK: - Helpers
     
