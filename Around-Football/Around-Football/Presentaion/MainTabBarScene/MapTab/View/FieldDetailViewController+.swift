@@ -13,11 +13,11 @@ extension FieldDetailViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard 
+        guard
             let cell = tableView.dequeueReusableCell(
-            withIdentifier: FieldRecruitTableViewCell.identifier,
-            for: indexPath
-        ) as? FieldRecruitTableViewCell 
+                withIdentifier: FieldRecruitTableViewCell.identifier,
+                for: indexPath
+            ) as? FieldRecruitTableViewCell
         else {
             return FieldRecruitTableViewCell()
         }
