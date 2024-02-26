@@ -119,6 +119,23 @@ final class InviteViewModel {
             }
             self.coordinator.popInviteViewController()
         }
+        
+        let field = Field(id: fieldID,
+                          fieldName: fieldName.value,
+                          fieldAddress: fieldAddress.value,
+                          location: location,
+                          recruitList: [recruit.id]
+        )
+        
+        FirebaseAPI.shared.createFieldData(field: field, recruit: recruit) { error in
+            if error == nil {
+                print("DEBUG - 필드 올리기 성공")
+                //TODO: - 성공 알림창 띄워주기?
+            } else {
+                print("DEBUG - createRecruitFieldData Error: \(String(describing: error?.localizedDescription))")
+                //TODO: - 실패 알림창 띄워주기?
+            }
+        }
     }
     
     func updateRecruitData() {
@@ -245,23 +262,6 @@ final class InviteViewModel {
         
         group.notify(queue: .main) {
             completion(images)
-        }
-        
-        let field = Field(id: fieldID,
-                          fieldName: fieldName.value,
-                          fieldAddress: fieldAddress.value,
-                          location: location,
-                          recruitList: [recruit.id]
-        )
-        
-        FirebaseAPI.shared.createFieldData(field: field, recruit: recruit) { error in
-            if error == nil {
-                print("DEBUG - 필드 올리기 성공")
-                //TODO: - 성공 알림창 띄워주기?
-            } else {
-                print("DEBUG - createRecruitFieldData Error: \(String(describing: error?.localizedDescription))")
-                //TODO: - 실패 알림창 띄워주기?
-            }
         }
     }
 }
