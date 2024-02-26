@@ -114,8 +114,8 @@ final class ChannelAPI {
             "withUserAge": withUser.age,
             "withUserArea": withUser.area,
             "withUserMainUsedFeet": withUser.mainUsedFeet,
-            "withUserPosition": withUser.position
-            //            "downloadURL:" withUser.profileURL,"
+            "withUserPosition": withUser.position,
+            "downloadURL:": withUser.profileImageUrl
         ] as [String: Any]
         
         let updateWithUserData = [

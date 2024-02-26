@@ -26,10 +26,10 @@
                                 <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                             </imageView>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="AFSmallLogo" translatesAutoresizingMaskIntoConstraints="NO" id="J02-NO-1mn">
-                                <rect key="frame" x="171.66666666666666" y="206" width="50" height="100"/>
+                                <rect key="frame" x="171.66666666666666" y="231" width="50" height="75"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="50" id="29w-uG-Tu1"/>
-                                    <constraint firstAttribute="width" secondItem="J02-NO-1mn" secondAttribute="height" multiplier="1:2" id="Rfj-mz-Q5B"/>
+                                    <constraint firstAttribute="width" secondItem="J02-NO-1mn" secondAttribute="height" multiplier="1:1.5" id="Rfj-mz-Q5B"/>
                                 </constraints>
                             </imageView>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="AFTextLogo" translatesAutoresizingMaskIntoConstraints="NO" id="3H7-4t-cZn">

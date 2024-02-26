@@ -350,7 +350,7 @@ extension FirebaseAPI {
     }
 }
 
-// MARK: - Recruit create 함수
+// MARK: - Recruit 함수
 
 extension FirebaseAPI {
     
@@ -381,6 +381,12 @@ extension FirebaseAPI {
                 }
                 completion(recruits)
             }
+    }
+    
+    func updateRecruitData(recruit: Recruit, completion: @escaping (Error?) -> Void) {
+        let ref = REF_RECRUIT.document(recruit.id)
+        let data = recruit.representation
+        updateRefData(ref: ref, data: data, completion: completion)
     }
 }
 
