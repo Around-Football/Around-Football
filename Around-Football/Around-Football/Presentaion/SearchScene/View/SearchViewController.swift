@@ -110,15 +110,6 @@ final class SearchViewController: UIViewController {
                 searchViewModel.coordinator?.dismissSearchViewController()
             })
             .disposed(by: disposeBag)
-        
-//        _ = searchViewModel.searchResults
-//            .bind(to: tableView.rx.items(
-//                cellIdentifier: SearchTableViewCell.identifier,
-//                cellType: SearchTableViewCell.self)) { index, place, cell in
-//                    cell.fieldNameLabel.text = place.name
-//                    cell.fieldAddressLabel.text = place.address
-//                }
-//                .disposed(by: disposeBag)
     }
     
     private func applyUpdateSearchPlace() {
