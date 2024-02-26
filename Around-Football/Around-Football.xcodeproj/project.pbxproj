@@ -35,6 +35,7 @@
 		274C22132AD7C16A005469E6 /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 274C22122AD7C169005469E6 /* HomeViewModel.swift */; };
 		277DCD2E2B4BFCCD0076784E /* UITextField+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 277DCD2D2B4BFCCD0076784E /* UITextField+.swift */; };
 		2780DFF12B8C80720066549E /* Date+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2780DFF02B8C80720066549E /* Date+.swift */; };
+		2780DFF32B8C9C340066549E /* SearchListDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2780DFF22B8C9C340066549E /* SearchListDataSource.swift */; };
 		278225182B5290E6000A5EEE /* NotificationName+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 278225172B5290E6000A5EEE /* NotificationName+.swift */; };
 		27B86A302B45778D0081F621 /* InviteImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27B86A2F2B45778D0081F621 /* InviteImageView.swift */; };
 		660932032B44090D000D7CFD /* NotificationType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 660932022B44090D000D7CFD /* NotificationType.swift */; };
@@ -180,6 +181,7 @@
 		274C22122AD7C169005469E6 /* HomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewModel.swift; sourceTree = "<group>"; };
 		277DCD2D2B4BFCCD0076784E /* UITextField+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITextField+.swift"; sourceTree = "<group>"; };
 		2780DFF02B8C80720066549E /* Date+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+.swift"; sourceTree = "<group>"; };
+		2780DFF22B8C9C340066549E /* SearchListDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchListDataSource.swift; sourceTree = "<group>"; };
 		278225172B5290E6000A5EEE /* NotificationName+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NotificationName+.swift"; sourceTree = "<group>"; };
 		27B86A2F2B45778D0081F621 /* InviteImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InviteImageView.swift; sourceTree = "<group>"; };
 		660932022B44090D000D7CFD /* NotificationType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationType.swift; sourceTree = "<group>"; };
@@ -340,6 +342,7 @@
 			isa = PBXGroup;
 			children = (
 				2729185A2B022E84009C9042 /* SearchViewController.swift */,
+				2780DFF22B8C9C340066549E /* SearchListDataSource.swift */,
 				2729186E2B035CFE009C9042 /* SearchTableViewCell.swift */,
 			);
 			path = View;
@@ -1018,6 +1021,7 @@
 			files = (
 				7C2B1AE22AF4B6180052EC64 /* MainTabViewModel.swift in Sources */,
 				7C7A03A72B464969000457BB /* EmptyAFView.swift in Sources */,
+				2780DFF32B8C9C340066549E /* SearchListDataSource.swift in Sources */,
 				668EE4C72B05048C007A8844 /* StorageAPI.swift in Sources */,
 				663417CA2AD682AB002FE2CA /* Firebase.swift in Sources */,
 				66A1CB212B302DD400F3E01E /* MessageViewController+.swift in Sources */,
