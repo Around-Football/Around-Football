@@ -11,7 +11,7 @@ import RxSwift
 import SnapKit
 import Then
 
-class SearchViewController: UIViewController {
+final class SearchViewController: UIViewController {
     
     // MARK: - Properties
     
@@ -21,11 +21,9 @@ class SearchViewController: UIViewController {
             edge.right = 0
         })
     }
-    
+    private lazy var dataSource = SearchListDataSource(tableView)
     private let disposeBag = DisposeBag()
-    
-    var searchViewModel: SearchViewModel
-    
+    private var searchViewModel: SearchViewModel
     private lazy var searchTextField = UITextField().then {
         $0.placeholder = "장소를 검색해주세요."
         guard let image = UIImage(systemName: "magnifyingglass") else { return }
@@ -53,6 +51,8 @@ class SearchViewController: UIViewController {
         super.viewDidLoad()
         configureUI()
         setTableView()
+        setUpKeyboard()
+        applyUpdateSearchPlace()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -97,8 +97,8 @@ class SearchViewController: UIViewController {
     
     private func setTableView() {
         tableView.register(SearchTableViewCell.self,
-                           forCellReuseIdentifier: SearchTableViewCell.cellID)
-        tableView.dataSource = nil
+                           forCellReuseIdentifier: SearchTableViewCell.identifier)
+        tableView.dataSource = dataSource
         
         let selectedItem = tableView.rx.modelSelected(Place.self)
         
@@ -111,19 +111,52 @@ class SearchViewController: UIViewController {
             })
             .disposed(by: disposeBag)
         
+//        _ = searchViewModel.searchResults
+//            .bind(to: tableView.rx.items(
+//                cellIdentifier: SearchTableViewCell.identifier,
+//                cellType: SearchTableViewCell.self)) { index, place, cell in
+//                    cell.fieldNameLabel.text = place.name
+//                    cell.fieldAddressLabel.text = place.address
+//                }
+//                .disposed(by: disposeBag)
+    }
+    
+    private func applyUpdateSearchPlace() {
+        
         _ = searchViewModel.searchResults
-            .bind(to: tableView.rx.items(
-                cellIdentifier: SearchTableViewCell.cellID,
-                cellType: SearchTableViewCell.self)) { index, place, cell in
-                    cell.fieldNameLabel.text = place.name
-                    cell.fieldAddressLabel.text = place.address
+            .bind(onNext: { places in
+                DispatchQueue.main.async {
+                    var snapshot = SearchListSnapShot()
+                    snapshot.appendSections([.place])
+                    snapshot.appendItems(places, toSection: .place)
+                    self.dataSource.apply(snapshot)
                 }
-                .disposed(by: disposeBag)
+            })
+            .disposed(by: disposeBag)
+    }
+            
+    @objc
+    private func textFieldDidChange(_ sender: Any?) {
+        guard
+            let keyword = searchTextField.text
+        else {
+            searchViewModel.setEmptySearchResults()
+            return
+        }
+        searchViewModel.searchFields(keyword: keyword, disposeBag: disposeBag)
+    }
+}
+
+// MARK: - Keyboard Setting
+extension SearchViewController {
+    private func setUpKeyboard() {
+        searchTextField.becomeFirstResponder()
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTap))
+        view.addGestureRecognizer(tapGesture)
     }
     
     @objc
-    private func textFieldDidChange(_ sender: Any?) {
-        guard let keyword = searchTextField.text else { return }
-        searchViewModel.searchFields(keyword: keyword, disposeBag: disposeBag)
+    private func handleTap() {
+        view.endEditing(true)
     }
 }

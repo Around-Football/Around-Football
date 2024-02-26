@@ -7,6 +7,8 @@
 
 import UIKit
 
+import RxCocoa
+import RxSwift
 import Then
 import SnapKit
 
@@ -14,8 +16,8 @@ final class FieldDetailViewController: UIViewController {
     
     // MARK: - Properties
     
-    //    var viewModel: FieldDetailViewModel
-    
+    let viewModel: FieldDetailViewModel
+    let disposeBag = DisposeBag()
     private let headerStackView = UIStackView().then {
         $0.axis = .vertical
         $0.spacing = 10
@@ -43,11 +45,16 @@ final class FieldDetailViewController: UIViewController {
             FieldRecruitTableViewCell.self,
             forCellReuseIdentifier: FieldRecruitTableViewCell.identifier
         )
+        $0.separatorInset = UIEdgeInsets().with({ edge in
+            edge.left = 0
+            edge.right = 0
+        })
     }
     
     // MARK: - Lifecycles
     
-    init() {
+    init(viewModel: FieldDetailViewModel) {
+        self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -58,7 +65,8 @@ final class FieldDetailViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         configurePresentStyle()
-        configureCell()
+        setUpTableView()
+        setUpContents()
         configureUI()
     }
     
@@ -73,17 +81,24 @@ final class FieldDetailViewController: UIViewController {
         }
     }
     
-    private  func configureCell() {
-        fieldNameLabel.text = "구장이름"
-        addressLabel.text = "주소"
+    private func setUpContents() {
+        guard let fieldData = viewModel.fetchFieldData() else { return }
+        fieldNameLabel.text = fieldData.fieldName
+        addressLabel.text = fieldData.fieldAddress
+    }
+    
+    private func setUpTableView() {
         tableView.dataSource = self
+        tableView.delegate = self
     }
     
     private func configureUI() {
         view.backgroundColor = .white
         
-        headerStackView.addArrangedSubviews(fieldNameLabel,
-                                            addressLabel)
+        headerStackView.addArrangedSubviews(
+            fieldNameLabel,
+            addressLabel
+        )
         
         view.addSubviews(
             headerStackView,

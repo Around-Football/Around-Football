@@ -7,6 +7,7 @@
 
 import UIKit
 
+import RxSwift
 import Then
 import SnapKit
 
@@ -18,18 +19,31 @@ final class FieldRecruitTableViewCell: UITableViewCell {
         return String(describing: self)
     }
     
-    private let playTimeLabel = UILabel().then {
-        $0.text = "00:00 - 11:00"
+    private let matchDateLabel = UILabel().then {
+        $0.text = "12/15(금)"
         $0.textAlignment = .center
+        $0.font = AFFont.titleCard
+    }
+    
+    private let playTimeLabel = UILabel().then {
+        $0.text = "00:00"
+        $0.textAlignment = .center
+        $0.font = AFFont.text
     }
     
     private let recruitNumber = UILabel().then {
         $0.text = "0/2명"
         $0.textAlignment = .center
-        $0.sizeToFit()
+        $0.font = AFFont.text
     }
     
-    lazy var chattingButton = UIButton().then {
+    private let stackView = UIStackView().then {
+        $0.axis = .horizontal
+        $0.spacing = 5
+        $0.distribution = .fillEqually
+    }
+    
+    private lazy var chattingButton = UIButton().then {
         $0.backgroundColor = AFColor.secondary
         $0.setTitle("채팅하기", for: .normal)
         $0.setTitleColor(AFColor.white, for: .normal)
@@ -51,33 +65,34 @@ final class FieldRecruitTableViewCell: UITableViewCell {
     
     // MARK: - Helpers
     
-    func configureUI() {
+    func configure(recruit: Recruit) {
+        self.matchDateLabel.text = recruit.matchDate.dateValue().toString()
+        self.playTimeLabel.text = recruit.startTime
+        self.recruitNumber.text = "\(recruit.acceptedApplicantsUID.count)/\(recruit.recruitedPeopleCount)명"
+    }
+    
+    func bindButton(disposeBag: DisposeBag, completion: @escaping () -> Void) {
+        self.chattingButton.rx.tap
+            .bind {
+                completion()
+            }.disposed(by: disposeBag)
+    }
+    
+    private func configureUI() {
+        contentView.addSubview(stackView)
         
-        contentView.addSubviews(
+        stackView.addArrangedSubviews(
+            matchDateLabel,
             playTimeLabel,
             recruitNumber,
             chattingButton
         )
         
-        playTimeLabel.snp.makeConstraints { make in
+        stackView.snp.makeConstraints { make in
             make.leading.equalToSuperview()
-            make.top.equalToSuperview().offset(15)
-            make.bottom.equalToSuperview().offset(-15)
-            make.trailing.equalTo(recruitNumber.snp.leading).offset(-10)
-        }
-        
-        recruitNumber.snp.makeConstraints { make in
-            make.centerX.equalToSuperview()
-            make.centerY.equalToSuperview()
-            make.top.equalToSuperview().offset(15)
-            make.bottom.equalToSuperview().offset(-15)
-        }
-        
-        chattingButton.snp.makeConstraints { make in
-            make.leading.equalTo(recruitNumber.snp.trailing).offset(50)
-            make.top.equalToSuperview().offset(15)
-            make.bottom.equalToSuperview().offset(-15)
-            make.trailing.equalToSuperview().offset(SuperviewOffsets.trailingPadding)
+            make.trailing.equalToSuperview()
+            make.top.equalToSuperview().offset(10)
+            make.bottom.equalToSuperview().offset(-10)
         }
     }
 }

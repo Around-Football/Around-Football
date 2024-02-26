@@ -63,4 +63,8 @@ enum AFIcon {
     
     //Search
     static let searchItem = "AFSearchItem"
+    
+    //Map
+    static let trackingPoint = "AFTrackingPoint"
+    static let marker = "AFMarker"
 }

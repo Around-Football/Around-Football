@@ -87,12 +87,12 @@ extension MapViewController: MapControllerDelegate, KakaoMapEventDelegate {
             // GUI
             //            createSpriteGUI()
             
-            let fields = self.viewModel.fields
-            let idArray = fields.map { $0.id }
-            let fieldsMapLabel = MapLabel(labelType: .fieldPosition, poi: .fieldPosition(idArray))
-            createLabelLayer(label: fieldsMapLabel)
-            createPoiStyle(label: fieldsMapLabel)
-            createPois(label: fieldsMapLabel, fields: fields)
+//            let fields = self.viewModel.fields
+//            let idArray = fields.map { $0.id }
+//            let fieldsMapLabel = MapLabel(labelType: .fieldPosition, poi: .fieldPosition(idArray))
+//            createLabelLayer(label: fieldsMapLabel)
+//            createPoiStyle(label: fieldsMapLabel)
+//            createPois(label: fieldsMapLabel, fields: fields)
         }
     }
     
@@ -177,7 +177,6 @@ extension MapViewController: MapControllerDelegate, KakaoMapEventDelegate {
             )
             let _ = manager.addLodLabelLayer(option: layerOptions)
         }
-        
     }
     
     func createPoiStyle(label: MapLabel) {
@@ -188,18 +187,19 @@ extension MapViewController: MapControllerDelegate, KakaoMapEventDelegate {
         case .currentPosition: anchorPoint = CGPoint(x: 0.5, y: 0.5)
         case .fieldPosition: anchorPoint = CGPoint(x: 0.5, y: 1)
         }
-        
         let iconStyle = PoiIconStyle(symbol: label.poiImage, anchorPoint: anchorPoint)
         let poiStyle = PoiStyle(styleID: label.poiStyle, styles: [
             PerLevelPoiStyle(iconStyle: iconStyle, level: 0)
         ])
         manager.addPoiStyle(poiStyle)
-        
     }
     
-    func createPois(label: MapLabel,
-                    mapPoint: MapPoint = MapPoint(longitude: 0, latitude: 0),
-                    fields: [Field] = []) {
+    func createPois(
+        label: MapLabel,
+        datas: ([PoiOptions], [MapPoint])? = nil,
+        mapPoint: MapPoint = MapPoint(longitude: 0, latitude: 0),
+        fields: [Field] = []
+    ) {
         let mapView: KakaoMap = mapController?.getView("mapview") as! KakaoMap
         let manager = mapView.getLabelManager()
         
@@ -209,13 +209,13 @@ extension MapViewController: MapControllerDelegate, KakaoMapEventDelegate {
             poiOption.rank = label.poiRank
             let poi1 = layer?.addPoi(option: poiOption, at: mapPoint)
             poi1?.show()
-            
             return
         }
-        
+        print("DEBUG - LAST: \(label.layerID)")
         if label.labelType == .fieldPosition {
+            guard let datas else { return }
             let layer = manager.getLodLabelLayer(layerID: label.layerID)
-            let datas = getloadDatas(label: label, fields: fields)
+            print("DEBUG - layer: \(layer?.layerID)")
             let lodPois = layer?.addLodPois(options: datas.0, at: datas.1)
             guard let lodPois = lodPois else { return }
             let _ = lodPois.map {
@@ -225,15 +225,18 @@ extension MapViewController: MapControllerDelegate, KakaoMapEventDelegate {
                 )
             }
             
+            print("DEBUG - POSITIOPN: \(lodPois.map { $0.itemID})")
+            print("DEBUG - ldpois: \(lodPois.count)")
             layer?.showAllLodPois()
         }
-        
     }
     
-    func getloadDatas( label: MapLabel, fields: [Field]) -> ([PoiOptions], [MapPoint]) {
+    func loadFieldsData(label: MapLabel, fields: [Field]) -> ([PoiOptions], [MapPoint]) {
         var options: [PoiOptions] = []
         var positions: [MapPoint] = []
-        
+        print("DEBUG - data: \(label.layerID)")
+        createLabelLayer(label: label)
+        createPoiStyle(label: label)
         for field in fields {
             let option = PoiOptions(styleID: label.poiStyle, poiID: field.id)
             option.rank = label.poiRank
@@ -243,10 +246,12 @@ extension MapViewController: MapControllerDelegate, KakaoMapEventDelegate {
                 longitude: field.location.longitude,
                 latitude: field.location.latitude
             )
+            print("DEBUG - longitude: \(field.location.longitude)")
+            print("DEBUG - latitude: \(field.location.latitude)")
             options.append(option)
             positions.append(position)
         }
-        
+        createPois(label: label, datas: (options, positions), fields: fields)
         return (options, positions)
     }
     
