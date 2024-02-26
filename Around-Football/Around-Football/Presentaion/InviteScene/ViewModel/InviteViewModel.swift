@@ -30,7 +30,8 @@ final class InviteViewModel {
     private var field: Field?
     private var disposeBag = DisposeBag()
     
-    private var fieldID = UUID().uuidString
+    var fieldID: String = ""
+    var location = GeoPoint(latitude: 0, longitude: 0)
     var fieldName: BehaviorRelay<String> = BehaviorRelay(value: "")
     var fieldAddress: BehaviorRelay<String> = BehaviorRelay(value: "")
     var region: BehaviorRelay<String> = BehaviorRelay(value: "")
@@ -58,7 +59,7 @@ final class InviteViewModel {
     }
     
     // MARK: - API
-    
+ 
     func uploadRecruit(_ uploadImages: [UIImage?]) {
         let id: String = recruit?.id ?? UUID().uuidString
         StorageAPI.deleteRefImages(id: id) { error in
@@ -117,6 +118,23 @@ final class InviteViewModel {
                 //TODO: - 실패 알림창 띄워주기?
             }
             self.coordinator.popInviteViewController()
+        }
+        
+        let field = Field(id: fieldID,
+                          fieldName: fieldName.value,
+                          fieldAddress: fieldAddress.value,
+                          location: location,
+                          recruitList: [recruit.id]
+        )
+        
+        FirebaseAPI.shared.createFieldData(field: field, recruit: recruit) { error in
+            if error == nil {
+                print("DEBUG - 필드 올리기 성공")
+                //TODO: - 성공 알림창 띄워주기?
+            } else {
+                print("DEBUG - createRecruitFieldData Error: \(String(describing: error?.localizedDescription))")
+                //TODO: - 실패 알림창 띄워주기?
+            }
         }
     }
     

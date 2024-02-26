@@ -84,19 +84,14 @@ final class FirebaseAPI {
         }
     }
     
-    func fetchFields(completion: @escaping(([Field]) -> Void)) {
-        REF_FIELD.getDocuments { snapshot, error in
-            
-            guard let snapshot = snapshot else {
-                let errorMessage = error?.localizedDescription ?? "None ERROR"
-                print("DEBUG: fetchFields Error - \(errorMessage)")
-                return
-            }
-            
-            let documentsData = snapshot.documents.map { $0.data() }
-            
-            completion(Field.convertToArray(documents: documentsData))
+    func fetchFields(completion: @escaping ([Field]) -> Void) async throws {
+        let documentsData = try await REF_FIELD.getDocuments().documents.map { $0.data() }
+        var fields = [Field]()
+        for data in documentsData {
+            let field = Field(dictionary: data)
+            fields.append(field)
         }
+        completion(fields)
     }
     
     func fetchRecruit(recruitID: String, completion: @escaping(Recruit?, Error?) -> Void) {
@@ -149,7 +144,7 @@ final class FirebaseAPI {
         let data = ["fcmToken": fcmToken]
         updateRefData(ref: ref, data: data, completion: completion)
     }
-        
+    
     func updateRefData(ref: DocumentReference, data: [String: Any], completion: @escaping ((Error?) -> Void)) {
         ref.updateData(data) { error in
             if let error = error {
@@ -257,7 +252,7 @@ extension FirebaseAPI {
                     guard let documents = snapshot?.documents else { return }
                     let writtenPost = documents.map {
                         Recruit(dictionary: $0.data())
-                        }
+                    }
                     observer.onNext(writtenPost)
                     observer.onCompleted()
                 }
@@ -293,7 +288,7 @@ extension FirebaseAPI {
             return Disposables.create()
         }
     }
-
+    
     //유저 추가
     func appendPendingApplicant(recruitID: String, userID: String, completion: @escaping((Error?) -> Void )) {
         REF_RECRUIT.document(recruitID).getDocument { snapshot, error in
@@ -326,8 +321,8 @@ extension FirebaseAPI {
             }
             
             guard let self = self,
-                var data = snapshot?.data(),
-                var acceptedApplicants = data["acceptedApplicantsUID"] as? [String]
+                  var data = snapshot?.data(),
+                  var acceptedApplicants = data["acceptedApplicantsUID"] as? [String]
             else { return }
             //승인한 유저 acceptedApplicantsUID 배열에 추가
             acceptedApplicants.append(userID)
@@ -363,33 +358,28 @@ extension FirebaseAPI {
         recruit: Recruit,
         completion: @escaping (Error?) -> Void
     ) {
-        
         REF_RECRUIT
             .document(recruit.id)
             .setData(recruit.representation, completion: completion)
-        
-//        REF_FIELD
-//            .document(recruit.fieldID)
-//            .setData(recruit.representation, completion: completion)
     }
     
     //date
     func fetchRecruitFieldData(
         fieldID: String,
-        date: Date,
         completion: @escaping(([Recruit]) -> Void)
     ) {
         REF_RECRUIT
             .whereField("fieldID", isEqualTo: fieldID)
-            .whereField("matchDateString", isEqualTo: date)
             .getDocuments { snapshot, error in
                 guard let snapshot = snapshot else {
                     let errorMessage = error?.localizedDescription ?? "None ERROR"
                     print("DEBUG: fetchRecruitFieldData Error - \(errorMessage)")
                     return
                 }
-                
-                _ = snapshot.documents.map { $0.data() }
+                let recruits = snapshot.documents.compactMap { document -> Recruit? in
+                    Recruit(dictionary: document.data())
+                }
+                completion(recruits)
             }
     }
     
@@ -403,17 +393,46 @@ extension FirebaseAPI {
 // MARK: - Field
 
 extension FirebaseAPI {
-    func fetchField(fieldID: String) async throws -> Field? {
-        guard let data = try await REF_RECRUIT.document(fieldID).getDocument().data() else { return nil }
-        
-        let field = Field(dictionary: data)
-        
-        return field
+    func createFieldData(
+        field: Field,
+        recruit: Recruit,
+        completion: @escaping (Error?) -> Void
+    ) {
+        REF_FIELD
+            .whereField("id", isEqualTo: field.id)
+            .getDocuments { snapshot, error in
+                guard error == nil else {
+                    completion(error)
+                    return
+                }
+                
+                guard 
+                    let recruitListDocument = snapshot?.documents.first
+                else {
+                    REF_FIELD.document(field.id).setData(
+                        field.representation,
+                        completion: completion
+                    )
+                    return
+                }
+                
+                guard 
+                    var updatedRecruitList = recruitListDocument.data()["recruitList"] as? [String]
+                else
+                {
+                    return
+                }
+                updatedRecruitList.append(recruit.id)
+                recruitListDocument.reference.updateData(
+                    ["recruitList": updatedRecruitList],
+                    completion: completion
+                )
+            }
     }
     
-    func fetchFieldData(fieldAddress: String) {
-        REF_RECRUIT
-            .whereField("fieldAddress", isEqualTo: fieldAddress)
+    func fetchFieldData(fieldID: String) {
+        REF_FIELD
+            .whereField(fieldID, isEqualTo: fieldID)
             .getDocuments { snapshot, error in
                 guard let snapshot = snapshot else {
                     let errorMessage = error?.localizedDescription ?? "None ERROR"
