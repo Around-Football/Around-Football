@@ -75,11 +75,16 @@ final class WrittenPostViewController: UIViewController, UITableViewDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         configureUI()
         bind()
-
         loadWrittenPost.onNext(())
     }
+    
+//    override func viewWillAppear(_ animated: Bool) {
+//        super.viewWillAppear(animated)
+//        loadWrittenPost.onNext(())
+//    }
     
     // MARK: - Helpers
     
@@ -132,6 +137,11 @@ final class WrittenPostViewController: UIViewController, UITableViewDelegate {
                 guard let self else { return }
                 emptyView.isHidden = recruits.isEmpty ? false : true
             })
+            .map { recruits in
+                recruits.sorted { first, second in
+                    first.matchDate.dateValue() > second.matchDate.dateValue()
+                }
+            }
             .bind(to: writtenPostTableView.rx.items(cellIdentifier: HomeTableViewCell.id,
                                              cellType: HomeTableViewCell.self)) { index, item, cell in
                 cell.bindContents(item: item)

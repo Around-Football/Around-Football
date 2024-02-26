@@ -54,7 +54,7 @@ final class HomeTabCoordinator: BaseCoordinator {
     func pushInviteView() {
         let coordinator = InviteCoordinator(navigationController: navigationController)
         childCoordinators.append(coordinator)
-        coordinator.start()
+        coordinator.start(recruit: nil)
     }
     
     func presentLoginViewController() {

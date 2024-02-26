@@ -16,12 +16,21 @@ extension ChannelViewController {
     func bindContentView() {
         viewModel.currentUser
             .map { $0 != nil }
-            .bind(to: loginLabel.rx.isHidden)
+            .subscribe(onNext: { isLoggedIn in
+                self.loginLabel.isHidden = isLoggedIn
+                self.loginButton.isHidden = isLoggedIn
+            })
             .disposed(by: disposeBag)
         
         viewModel.currentUser
             .map { $0 == nil }
             .bind(to: channelTableView.rx.isHidden)
+            .disposed(by: disposeBag)
+        
+        loginButton.rx.tap
+            .bind { _ in
+                self.viewModel.showLoginView()
+            }
             .disposed(by: disposeBag)
     }
     
