@@ -129,7 +129,7 @@ final class MapViewController: UIViewController, Searchable {
                             poi: .fieldPosition(fields.map{ $0.id })
                         ),
                         fields: fields
-                    )                    
+                    )
                 }
             } catch {
                 print("Error: \(error)")
@@ -165,8 +165,7 @@ final class MapViewController: UIViewController, Searchable {
     
     func tapHandler(_ param: PoiInteractionEventParam) {
         let itemID = param.poiItem.itemID
-        guard let field = viewModel.fields.filter({ $0.id == itemID }).first else { return }
-        viewModel.coordinator?.presentDetailViewController(field: field)
+        viewModel.presentDetailViewController(itemID: itemID)
     }
     
     // MARK: - Helpers

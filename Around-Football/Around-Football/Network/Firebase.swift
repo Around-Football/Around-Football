@@ -376,8 +376,10 @@ extension FirebaseAPI {
                     print("DEBUG: fetchRecruitFieldData Error - \(errorMessage)")
                     return
                 }
-                
-                _ = snapshot.documents.map { $0.data() }
+                let recruits = snapshot.documents.compactMap { document -> Recruit? in
+                    Recruit(dictionary: document.data())
+                }
+                completion(recruits)
             }
     }
 }
@@ -393,7 +395,7 @@ extension FirebaseAPI {
         REF_FIELD
             .whereField("id", isEqualTo: field.id)
             .getDocuments { snapshot, error in
-                guard error != nil else {
+                guard error == nil else {
                     completion(error)
                     return
                 }

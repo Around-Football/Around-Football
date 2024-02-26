@@ -187,13 +187,11 @@ extension MapViewController: MapControllerDelegate, KakaoMapEventDelegate {
         case .currentPosition: anchorPoint = CGPoint(x: 0.5, y: 0.5)
         case .fieldPosition: anchorPoint = CGPoint(x: 0.5, y: 1)
         }
-        print("DEBUG - IMAGE: \(label.poiImage.debugDescription)")
-        let iconStyle = PoiIconStyle(symbol: label.poiImage?.resized(to: CGSize(width: 48, height: 48)), anchorPoint: anchorPoint)
+        let iconStyle = PoiIconStyle(symbol: label.poiImage, anchorPoint: anchorPoint)
         let poiStyle = PoiStyle(styleID: label.poiStyle, styles: [
             PerLevelPoiStyle(iconStyle: iconStyle, level: 0)
         ])
         manager.addPoiStyle(poiStyle)
-        
     }
     
     func createPois(
@@ -217,7 +215,6 @@ extension MapViewController: MapControllerDelegate, KakaoMapEventDelegate {
         if label.labelType == .fieldPosition {
             guard let datas else { return }
             let layer = manager.getLodLabelLayer(layerID: label.layerID)
-//            let datas = loadFieldsData(label: label, fields: fields)
             print("DEBUG - layer: \(layer?.layerID)")
             let lodPois = layer?.addLodPois(options: datas.0, at: datas.1)
             guard let lodPois = lodPois else { return }
@@ -254,7 +251,6 @@ extension MapViewController: MapControllerDelegate, KakaoMapEventDelegate {
             options.append(option)
             positions.append(position)
         }
-        
         createPois(label: label, datas: (options, positions), fields: fields)
         return (options, positions)
     }
