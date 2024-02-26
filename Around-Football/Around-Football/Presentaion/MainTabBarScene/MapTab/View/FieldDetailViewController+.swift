@@ -9,7 +9,7 @@ import UIKit
 
 extension FieldDetailViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 10
+        return viewModel.recruitsCount
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -21,15 +21,14 @@ extension FieldDetailViewController: UITableViewDataSource {
         else {
             return FieldRecruitTableViewCell()
         }
-        
-        cell.configure(playTime: viewModel.playTime, recruitNumber: viewModel.recruitNumber)
-        
+        let recruit = viewModel.fetchRecruit(row: indexPath.row)
+        cell.configure(recruit: recruit)
         return cell
     }
 }
 
 extension FieldDetailViewController: UITableViewDelegate {
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 48
-    }
+//    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+//        tableView.
+//    }
 }

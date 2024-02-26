@@ -65,15 +65,11 @@ final class FieldDetailViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         configurePresentStyle()
-        configureCell()
+        setUpContents()
         configureUI()
     }
     
     // MARK: - Helpers
-    
-    private func bindUI() {
-        
-    }
     
     private func configurePresentStyle() {
         if let sheetPresentationController = sheetPresentationController {
@@ -84,9 +80,10 @@ final class FieldDetailViewController: UIViewController {
         }
     }
     
-    private func configureCell() {
-        fieldNameLabel.text = viewModel.fieldName
-        addressLabel.text = viewModel.addressLabel
+    private func setUpContents() {
+        guard let fieldData = viewModel.fetchFieldData() else { return }
+        fieldNameLabel.text = fieldData.fieldName
+        addressLabel.text = fieldData.fieldAddress
         tableView.dataSource = self
     }
     
