@@ -36,9 +36,28 @@ final class MapTabCoordinator: BaseCoordinator {
     }
     
     func presentDetailViewController(recruits: [Recruit]) {
-        let fieldViewModel = FieldDetailViewModel(recruits: recruits)
+        let fieldViewModel = FieldDetailViewModel(coordinator: self, recruits: recruits)
         let modalViewController = FieldDetailViewController(viewModel: fieldViewModel)
         let navigation = UINavigationController(rootViewController: modalViewController)
         navigationController?.present(navigation, animated: true)
+    }
+    
+    // TODO: - FieldDetailCoordinator 필요 여부
+    func pushToDetailView(recruitItem: Recruit) {
+        let coordinator = DetailCoordinator(navigationController: navigationController)
+        childCoordinators.append(coordinator)
+        navigationController?.navigationBar.isHidden = false
+        coordinator.start(recruitItem: recruitItem)
+    }
+    
+    func clickSendMessageButton(channelInfo: ChannelInfo, isNewChat: Bool = false) {
+        if navigationController?.viewControllers.first(where: { $0 is ChatViewController }) != nil {
+            navigationController?.popViewController(animated: true)
+            removeThisChildCoordinators(coordinator: self)
+        } else {
+            let coordinator = ChatCoordinator(navigationController: navigationController)
+            coordinator.start(channelInfo: channelInfo, isNewChat: isNewChat)
+            childCoordinators.append(coordinator)
+        }
     }
 }

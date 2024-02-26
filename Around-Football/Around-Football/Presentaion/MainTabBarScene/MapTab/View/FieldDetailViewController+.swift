@@ -23,6 +23,19 @@ extension FieldDetailViewController: UITableViewDataSource {
         }
         let recruit = viewModel.fetchRecruit(row: indexPath.row)
         cell.configure(recruit: recruit)
+        cell.bindButton(disposeBag: disposeBag) { [weak self] in
+            self?.viewModel.checkChannelAndPushChatViewController(recruit: recruit)
+        }
         return cell
+    }
+}
+
+extension FieldDetailViewController: UITableViewDelegate {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        // TODO: - dismiss도 coordinator 통해서? -> 그러면 FieldDetailViewCoordinator 있어야할 듯?
+        self.dismiss(animated: true) {
+            let recruit = self.viewModel.fetchRecruit(row: indexPath.row)
+            self.viewModel.pushRecruitDetailView(recruit: recruit)
+        }
     }
 }
