@@ -7,6 +7,8 @@
 
 import UIKit
 
+import RxCocoa
+import RxSwift
 import Then
 import SnapKit
 
@@ -14,7 +16,7 @@ final class FieldDetailViewController: UIViewController {
     
     // MARK: - Properties
     
-    private let viewModel: FieldDetailViewModel
+    let viewModel: FieldDetailViewModel
     
     private let headerStackView = UIStackView().then {
         $0.axis = .vertical
@@ -43,6 +45,10 @@ final class FieldDetailViewController: UIViewController {
             FieldRecruitTableViewCell.self,
             forCellReuseIdentifier: FieldRecruitTableViewCell.identifier
         )
+        $0.separatorInset = UIEdgeInsets().with({ edge in
+            edge.left = 0
+            edge.right = 0
+        })
     }
     
     // MARK: - Lifecycles
@@ -65,6 +71,10 @@ final class FieldDetailViewController: UIViewController {
     
     // MARK: - Helpers
     
+    private func bindUI() {
+        
+    }
+    
     private func configurePresentStyle() {
         if let sheetPresentationController = sheetPresentationController {
             sheetPresentationController.detents = [.medium(), .large()]
@@ -74,17 +84,19 @@ final class FieldDetailViewController: UIViewController {
         }
     }
     
-    private  func configureCell() {
-        fieldNameLabel.text = "구장이름"
-        addressLabel.text = "주소"
+    private func configureCell() {
+        fieldNameLabel.text = viewModel.fieldName
+        addressLabel.text = viewModel.addressLabel
         tableView.dataSource = self
     }
     
     private func configureUI() {
         view.backgroundColor = .white
         
-        headerStackView.addArrangedSubviews(fieldNameLabel,
-                                            addressLabel)
+        headerStackView.addArrangedSubviews(
+            fieldNameLabel,
+            addressLabel
+        )
         
         view.addSubviews(
             headerStackView,

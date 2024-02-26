@@ -50,9 +50,12 @@ final class FieldRecruitTableViewCell: UITableViewCell {
     }
     
     // MARK: - Helpers
+    func configure(playTime: String, recruitNumber: String) {
+        self.playTimeLabel.text = playTime
+        self.recruitNumber.text = recruitNumber
+    }
     
-    func configureUI() {
-        
+    private func configureUI() {
         contentView.addSubviews(
             playTimeLabel,
             recruitNumber,

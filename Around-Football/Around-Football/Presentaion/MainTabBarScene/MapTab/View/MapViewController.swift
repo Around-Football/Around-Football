@@ -128,7 +128,7 @@ final class MapViewController: UIViewController, Searchable {
                             poi: .fieldPosition(fields.map{ $0.id })
                         ),
                         fields: fields
-                    )                    
+                    )
                 }
             } catch {
                 print("Error: \(error)")
@@ -163,9 +163,15 @@ final class MapViewController: UIViewController, Searchable {
     }
     
     func tapHandler(_ param: PoiInteractionEventParam) {
-        let itemID = param.poiItem.itemID
-        guard let field = viewModel.fields.filter({ $0.id == itemID }).first else { return }
-        viewModel.coordinator?.presentDetailViewController(field: field)
+        Task.detached {
+            do {
+                let itemID = param.poiItem.itemID
+                try await self.viewModel.presentDetailViewController(itemID: itemID)
+            } catch {
+                // 에러 처리
+                print("에러: \(error)")
+            }
+        }
     }
     
     // MARK: - Helpers
