@@ -26,9 +26,3 @@ extension FieldDetailViewController: UITableViewDataSource {
         return cell
     }
 }
-
-extension FieldDetailViewController: UITableViewDelegate {
-//    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-//        tableView.
-//    }
-}
