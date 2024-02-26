@@ -14,7 +14,9 @@ final class SearchTableViewCell: UITableViewCell {
     
     // MARK: - Properties
     
-    static let cellID: String = "SearchTableViewCell"
+    static var identifier: String {
+        return String(describing: self)
+    }
     
     private let searchImageView = UIImageView().then {
         $0.image = UIImage(named: AFIcon.searchItem)
@@ -47,7 +49,7 @@ final class SearchTableViewCell: UITableViewCell {
     // MARK: - Helpers
     
     func configureCell(with place: Place) {
-        fieldNameLabel.text = place.address
+        fieldNameLabel.text = place.name
         fieldAddressLabel.text = place.address
     }
     
