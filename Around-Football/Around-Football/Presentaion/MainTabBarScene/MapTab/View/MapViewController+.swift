@@ -84,15 +84,6 @@ extension MapViewController: MapControllerDelegate, KakaoMapEventDelegate {
             createPoiStyle(label: currentMapLabel)
             createPois(label: currentMapLabel, mapPoint: mapPoint)
             moveCamera(latitude: location.latitude, longitude: location.longitude)
-            // GUI
-            //            createSpriteGUI()
-            
-//            let fields = self.viewModel.fields
-//            let idArray = fields.map { $0.id }
-//            let fieldsMapLabel = MapLabel(labelType: .fieldPosition, poi: .fieldPosition(idArray))
-//            createLabelLayer(label: fieldsMapLabel)
-//            createPoiStyle(label: fieldsMapLabel)
-//            createPois(label: fieldsMapLabel, fields: fields)
         }
     }
     
@@ -211,11 +202,9 @@ extension MapViewController: MapControllerDelegate, KakaoMapEventDelegate {
             poi1?.show()
             return
         }
-        print("DEBUG - LAST: \(label.layerID)")
         if label.labelType == .fieldPosition {
             guard let datas else { return }
             let layer = manager.getLodLabelLayer(layerID: label.layerID)
-            print("DEBUG - layer: \(layer?.layerID)")
             let lodPois = layer?.addLodPois(options: datas.0, at: datas.1)
             guard let lodPois = lodPois else { return }
             let _ = lodPois.map {
@@ -224,9 +213,6 @@ extension MapViewController: MapControllerDelegate, KakaoMapEventDelegate {
                     handler: MapViewController.tapHandler
                 )
             }
-            
-            print("DEBUG - POSITIOPN: \(lodPois.map { $0.itemID})")
-            print("DEBUG - ldpois: \(lodPois.count)")
             layer?.showAllLodPois()
         }
     }
@@ -269,51 +255,6 @@ extension MapViewController: MapControllerDelegate, KakaoMapEventDelegate {
     }
     
 }
-
-/*
- extension MapViewController: GuiEventDelegate {
- // MARK: - SpriteGUI
- func createSpriteGUI() {
- guard let mapView: KakaoMap = mapController?.getView("mapview") as? KakaoMap else { return }
- let guiManager = mapView.getGuiManager()
- let spriteGui = SpriteGui("PositionToolSprite")
- 
- spriteGui.arrangement = .horizontal
- spriteGui.bgColor = UIColor.clear
- spriteGui.splitLineColor = UIColor.white
- spriteGui.origin = GuiAlignment(vAlign: .bottom, hAlign: .left)
- spriteGui.position = CGPoint(x: 50, y: 50)
- 
- let trackingButtonName: GuiButtonComponent = .trackingPosition
- let currentPositionButton = GuiButton(trackingButtonName.name)
- let locationImage = UIImage(systemName: "location")
- currentPositionButton.image = UIImage(systemName: "location")
- currentPositionButton.imageSize = GuiSize(width: 20, height: 20)
- currentPositionButton.padding = GuiPadding(left: 10, right: 10, top: 10, bottom: 10)
- 
- spriteGui.addChild(currentPositionButton)
- 
- guiManager.spriteGuiLayer.addSpriteGui(spriteGui)
- spriteGui.delegate = self
- spriteGui.show()
- }
- 
- func guiDidTapped(_ gui: GuiBase, componentName: String) {
- print("Gui: \(gui.name), Component: \(componentName) tapped")
- 
- guard let viewModel = self.viewModel else { return }
- 
- switch componentName {
- case GuiButtonComponent.trackingPosition.name:
- let location = viewModel.currentLocation
- changeCurrentPoi()
- moveCamera(latitude: location.latitude, longitude: location.longitude)
- default: break
- }
- 
- }
- }
- */
 
 extension MapViewController: CLLocationManagerDelegate {
     func setLocationManager() {
