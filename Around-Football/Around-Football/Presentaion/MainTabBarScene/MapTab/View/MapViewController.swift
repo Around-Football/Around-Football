@@ -13,25 +13,6 @@ import RxSwift
 import SnapKit
 import Then
 
-protocol Searchable {
-    func updateSearchBar(dataSubject: PublishSubject<Place>,
-                         searchBarButton: UIButton,
-                         disposeBag: DisposeBag)
-}
-
-extension Searchable {
-    func updateSearchBar(dataSubject: PublishSubject<Place>,
-                         searchBarButton: UIButton,
-                         disposeBag: DisposeBag) {
-        dataSubject
-            .bind(onNext: { place in
-                searchBarButton.setTitle(place.name, for: .normal)
-                searchBarButton.setTitleColor(AFColor.grayScale400, for: .normal)
-            })
-            .disposed(by: disposeBag)
-    }
-}
-
 final class MapViewController: UIViewController, Searchable {
     
     // MARK: - Properties
@@ -60,10 +41,12 @@ final class MapViewController: UIViewController, Searchable {
     
     private var buttonConfig: UIButton.Configuration {
         var config = UIButton.Configuration.plain()
-        config.contentInsets = NSDirectionalEdgeInsets(top: 10,
-                                                       leading: 10,
-                                                       bottom: 10,
-                                                       trailing: 10)
+        config.contentInsets = NSDirectionalEdgeInsets(
+            top: 10,
+            leading: 10,
+            bottom: 10,
+            trailing: 10
+        )
         config.imagePadding = 5
         config.titleAlignment = .leading
         return config
@@ -172,14 +155,18 @@ final class MapViewController: UIViewController, Searchable {
     
     private func bindSearch() {
         guard let searchViewModel = searchViewModel else { return }
-        updateSearchBar(dataSubject: searchViewModel.dataSubject,
-                        searchBarButton: searchFieldButton,
-                        disposeBag: disposeBag)
+        updateSearchBar(
+            dataSubject: searchViewModel.dataSubject,
+            searchBarButton: searchFieldButton,
+            disposeBag: disposeBag
+        )
         searchViewModel.dataSubject
             .subscribe(onNext: { [weak self] place in
                 guard let self else { return }
-                moveCamera(latitude: Double(place.y) ?? 127,
-                           longitude: Double(place.x) ?? 38)
+                moveCamera(
+                    latitude: Double(place.y) ?? 127,
+                    longitude: Double(place.x) ?? 38
+                )
             })
             .disposed(by: disposeBag)
     }
