@@ -121,19 +121,6 @@ final class SearchViewController: UIViewController {
                 .disposed(by: disposeBag)
     }
     
-    private func applyUpdateSearchPlace() {
-        _ = searchViewModel.searchResults
-            .bind(onNext: { places in
-                DispatchQueue.main.async {
-                    var snapshot = SearchListSnapShot()
-                    snapshot.appendSections([.place])
-                    snapshot.appendItems(places, toSection: .place)
-                    self.dataSource.apply(snapshot)
-                }
-            })
-            .disposed(by: disposeBag)
-    }
-    
     // TODO: - 쓰로틀
     @objc
     private func textFieldDidChange(_ sender: Any?) {
