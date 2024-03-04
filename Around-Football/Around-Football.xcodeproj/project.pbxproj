@@ -146,6 +146,7 @@
 		7C88C1B12B2DA40900FB7385 /* AFColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C88C1B02B2DA40900FB7385 /* AFColor.swift */; };
 		7C94EBD52B01BF0600A7E42A /* InfoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C94EBD42B01BF0600A7E42A /* InfoViewModel.swift */; };
 		7C9930512B3BB8D600CDD5FC /* SettingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C9930502B3BB8D600CDD5FC /* SettingViewModel.swift */; };
+		7CA12BE22B95D602003E9478 /* JGProgressHUD in Frameworks */ = {isa = PBXBuildFile; productRef = 7CA12BE12B95D602003E9478 /* JGProgressHUD */; };
 		7CADB9302B4312EC003F61B7 /* WebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CADB92F2B4312EC003F61B7 /* WebViewController.swift */; };
 		7CB21BA32AC94D36001D0058 /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CB21BA22AC94D36001D0058 /* DetailViewController.swift */; };
 		7CB21BA52AC94EE4001D0058 /* DetailUserInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CB21BA42AC94EE4001D0058 /* DetailUserInfoView.swift */; };
@@ -311,6 +312,7 @@
 				2736746C2AC3071A003ADE3F /* RxSwift in Frameworks */,
 				2736746F2AC30786003ADE3F /* RxAlamofire in Frameworks */,
 				7C141C672ADA6008002CF180 /* KakaoSDKAuth in Frameworks */,
+				7CA12BE22B95D602003E9478 /* JGProgressHUD in Frameworks */,
 				668EE4A12AFCAC2C007A8844 /* MessageKit in Frameworks */,
 				668EE4BD2B04E3A6007A8844 /* FirebaseStorage in Frameworks */,
 				66C374362B0B010800DB2C2A /* FirebaseMessaging in Frameworks */,
@@ -945,6 +947,7 @@
 				66C374352B0B010800DB2C2A /* FirebaseMessaging */,
 				66AE74FE2B1476A900D08B5C /* RxDataSources */,
 				66AE75022B14907C00D08B5C /* Differentiator */,
+				7CA12BE12B95D602003E9478 /* JGProgressHUD */,
 			);
 			productName = "Around-Football";
 			productReference = 273674492AC3061C003ADE3F /* Around-Football.app */;
@@ -986,6 +989,7 @@
 				668EE49F2AFCAC2C007A8844 /* XCRemoteSwiftPackageReference "MessageKit" */,
 				668EE4C82B0504CB007A8844 /* XCRemoteSwiftPackageReference "Kingfisher" */,
 				66AE74FD2B1476A900D08B5C /* XCRemoteSwiftPackageReference "RxDataSources" */,
+				7CA12BE02B95D602003E9478 /* XCRemoteSwiftPackageReference "JGProgressHUD" */,
 			);
 			productRefGroup = 2736744A2AC3061C003ADE3F /* Products */;
 			projectDirPath = "";
@@ -1448,6 +1452,14 @@
 				minimumVersion = 2.18.0;
 			};
 		};
+		7CA12BE02B95D602003E9478 /* XCRemoteSwiftPackageReference "JGProgressHUD" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/JonasGessner/JGProgressHUD.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.2.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -1560,6 +1572,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 7C141C632ADA6008002CF180 /* XCRemoteSwiftPackageReference "kakao-ios-sdk" */;
 			productName = KakaoSDKFriendCore;
+		};
+		7CA12BE12B95D602003E9478 /* JGProgressHUD */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 7CA12BE02B95D602003E9478 /* XCRemoteSwiftPackageReference "JGProgressHUD" */;
+			productName = JGProgressHUD;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

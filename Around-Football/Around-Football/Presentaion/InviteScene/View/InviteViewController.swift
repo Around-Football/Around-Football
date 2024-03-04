@@ -14,6 +14,7 @@ import RxSwift
 import SnapKit
 import Then
 import Kingfisher
+import JGProgressHUD
 
 final class InviteViewController: UIViewController, Searchable {
     
@@ -24,6 +25,7 @@ final class InviteViewController: UIViewController, Searchable {
     private var invokedViewWillAppear = PublishSubject<Void>()
     private var disposeBag = DisposeBag()
     
+    let hud = JGProgressHUD(style: .dark)
     let contentView = UIView()
     private let placeView = GroundTitleView()
     private let peopleView = PeopleCountView()
@@ -338,6 +340,7 @@ final class InviteViewController: UIViewController, Searchable {
             guard let self else { return }
 //            addButton.configuration?.indicator = .none
             print(#function)
+            hud.dismiss()
             viewModel.coordinator.popInviteViewController()
             
         }.disposed(by: disposeBag)
@@ -509,7 +512,7 @@ final class InviteViewController: UIViewController, Searchable {
                 } else {
                     addButton.setTitle("모든 항목을 작성해주세요", for: .normal)
                     addButton.setTitleColor(.gray, for: .normal)
-//                    addButton.isEnabled = false
+                    addButton.isEnabled = false
                 }
             }).disposed(by: disposeBag)
         
@@ -524,6 +527,8 @@ final class InviteViewController: UIViewController, Searchable {
             
             //올리기 함수            
             viewModel.uploadRecruit(try! uploadedImages.value())
+            hud.show(in: view)
+            addButton.isSelected = false
         }
     }
         
