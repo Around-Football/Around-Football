@@ -332,6 +332,16 @@ final class InviteViewController: UIViewController, Searchable {
     private func bind() {
         let input = InviteViewModel.Input(invokedViewWillAppear: invokedViewWillAppear)
         let output = viewModel.transform(input: input)
+        
+        output.createDone.bind { [weak self] in
+            //TODO: -여기에서 버튼 인디케이터 끄기
+            guard let self else { return }
+//            addButton.configuration?.indicator = .none
+            print(#function)
+            viewModel.coordinator.popInviteViewController()
+            
+        }.disposed(by: disposeBag)
+        
         setAddButton()
         setImages()
         bindImageButtonEvent()
@@ -499,7 +509,7 @@ final class InviteViewController: UIViewController, Searchable {
                 } else {
                     addButton.setTitle("모든 항목을 작성해주세요", for: .normal)
                     addButton.setTitleColor(.gray, for: .normal)
-                    addButton.isEnabled = false
+//                    addButton.isEnabled = false
                 }
             }).disposed(by: disposeBag)
         
