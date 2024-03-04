@@ -263,7 +263,7 @@ final class HomeViewController: UIViewController {
                     selectedDateSet.contains(recruit.matchDateString)
                 }
             }
-            
+            self?.resetButton.isSelected = true
             return recruits
         }
         .map { recruits in
