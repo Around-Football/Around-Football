@@ -173,7 +173,7 @@ final class InviteViewModel {
             }
             // MARK: - 여기서 뷰컨에 전달
             self.createButtonSubject.onNext(())
-            self.coordinator.popInviteViewController()
+//            self.coordinator.popInviteViewController()
         }
     }
 
