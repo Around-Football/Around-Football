@@ -19,6 +19,7 @@ final class FieldDetailViewModel {
     private let channelAPI = ChannelAPI.shared
     private let currentUser = UserService.shared.currentUser_Rx
     var recruitUser: BehaviorSubject<User?> = BehaviorSubject(value: nil)
+    var recruitItem = BehaviorSubject<Recruit?>(value: nil)
     var recruitsCount: Int {
         return recruits.count
     }
@@ -28,6 +29,8 @@ final class FieldDetailViewModel {
     init(coordinator: MapTabCoordinator, recruits: [Recruit]) {
         self.coordinator = coordinator
         self.recruits = recruits
+        fetchUser()
+        fetchRecruit()
     }
     
     // MARK: - Helpers
@@ -58,19 +61,58 @@ final class FieldDetailViewModel {
             owner: currentUser,
             recruitID: recruit.id
         ) { [weak self] isAvailable, channelId in
-            guard let self = self else { return }
-            print("DEBUG - ", #function, isAvailable)
-            if isAvailable, let channelId = channelId {
-                let channelInfo = ChannelInfo(id: channelId, withUser: recruitUser, recruitID: recruit.id, recruitUserID: recruitUser.id)
-                self.coordinator.clickSendMessageButton(channelInfo: channelInfo)
-            } else {
+            guard 
+                isAvailable,
+                let channelId = channelId
+            else {
                 let channelInfo = ChannelInfo(id: UUID().uuidString, withUser: recruitUser, recruitID: recruit.id, recruitUserID: recruitUser.id)
-                self.coordinator.clickSendMessageButton(channelInfo: channelInfo, isNewChat: true)
+                self?.coordinator.clickSendMessageButton(channelInfo: channelInfo, isNewChat: true)
+                return
             }
+            let channelInfo = ChannelInfo(id: channelId, withUser: recruitUser, recruitID: recruit.id, recruitUserID: recruitUser.id)
+            self?.coordinator.clickSendMessageButton(channelInfo: channelInfo)
         }
     }
     
-    private func getCurrentUser() -> User? {
+    func checkMyRecruit(recruit: Recruit) -> Bool {
+        let currentUser = getCurrentUser()
+        return currentUser?.id == recruit.userID ? true : false
+    }
+}
+
+// MARK: - Private Methods
+
+private extension FieldDetailViewModel {
+    func getCurrentUser() -> User? {
         return try? currentUser.value()
+    }
+    
+    func getRecruit() -> Recruit? {
+        _ = recruits.map { recruit in
+            recruitItem = BehaviorSubject(value: recruit)
+        }
+        return try? recruitItem.value()
+    }
+    
+    func fetchUser() {
+        guard let recruitUserId = getRecruit()?.userID else { return }
+        FirebaseAPI.shared.fetchUser(uid: recruitUserId) { [weak self] user in
+            guard let self = self else { return }
+            self.recruitUser.onNext(user)
+        }
+    }
+    
+    func fetchRecruit() {
+        guard let recruit = getRecruit() else { return }
+        FirebaseAPI.shared.fetchRecruit(recruitID: recruit.id) { [weak self] recruit, error in
+            guard let self = self else { return }
+            if let error = error {
+                print("DEBUG - Error: \(error.localizedDescription)", #function)
+            }
+            
+            if let recruit = recruit {
+                self.recruitItem.onNext(recruit)
+            }
+        }
     }
 }
