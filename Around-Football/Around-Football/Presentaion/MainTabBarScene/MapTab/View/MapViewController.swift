@@ -13,7 +13,7 @@ import RxSwift
 import SnapKit
 import Then
 
-final class MapViewController: UIViewController, Searchable {
+final class MapViewController: UIViewController {
     
     // MARK: - Properties
     
@@ -94,30 +94,8 @@ final class MapViewController: UIViewController, Searchable {
         configureUI()
         setLocationManager()
         bindSearch()
-        
-        guard
-            let locationCoordinate = self.locationManager.location?.coordinate
-        else {
-            return
-        }
-        viewModel.setCurrentLocation(latitude: locationCoordinate.latitude,
-                                     longitude: locationCoordinate.longitude)
-        Task {
-            do {
-                try await viewModel.fetchFields { [weak self] fields in
-                    print("DEBUG - 1")
-                    _ = self?.loadFieldsData(
-                        label: MapLabel(
-                            labelType: .fieldPosition,
-                            poi: .fieldPosition(fields.map{ $0.id })
-                        ),
-                        fields: fields
-                    )
-                }
-            } catch {
-                print("Error: \(error)")
-            }
-        }
+        setUserLocation()
+        fetchFieldData()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -171,6 +149,34 @@ final class MapViewController: UIViewController, Searchable {
             .disposed(by: disposeBag)
     }
     
+    private func setUserLocation() {
+        guard
+            let locationCoordinate = self.locationManager.location?.coordinate
+        else {
+            return
+        }
+        viewModel.setCurrentLocation(latitude: locationCoordinate.latitude,
+                                     longitude: locationCoordinate.longitude)
+    }
+    
+    private func fetchFieldData() {
+        Task {
+            do {
+                try await viewModel.fetchFields { [weak self] fields in
+                    _ = self?.loadFieldsData(
+                        label: MapLabel(
+                            labelType: .fieldPosition,
+                            poi: .fieldPosition(fields.map{ $0.id })
+                        ),
+                        fields: fields
+                    )
+                }
+            } catch {
+                print("Error: \(error)")
+            }
+        }
+    }
+    
     private func configureUI() {
         view.backgroundColor = .systemBackground
         
@@ -199,3 +205,5 @@ final class MapViewController: UIViewController, Searchable {
         }
     }
 }
+
+extension MapViewController: Searchable { }
