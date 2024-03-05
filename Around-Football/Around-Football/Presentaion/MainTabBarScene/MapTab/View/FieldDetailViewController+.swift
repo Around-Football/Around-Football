@@ -23,8 +23,9 @@ extension FieldDetailViewController: UITableViewDataSource {
         }
         let recruit = viewModel.fetchRecruit(row: indexPath.row)
         cell.configure(recruit: recruit)
-        cell.bindButton(disposeBag: disposeBag) { [weak self] in
-            self?.viewModel.checkChannelAndPushChatViewController(recruit: recruit)
+        cell.checkMyRecruit(result: viewModel.checkMyRecruit(recruit: recruit))
+        cell.bindButton(disposeBag: disposeBag) {
+            self.viewModel.checkChannelAndPushChatViewController(recruit: recruit)
         }
         return cell
     }
