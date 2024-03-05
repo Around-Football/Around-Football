@@ -13,34 +13,39 @@ final class FieldDetailViewModel {
     
     // MARK: - Properties
     
-    private var recruits: [Recruit]
     private let firebaseAPI = FirebaseAPI.shared
     private let coordinator: MapTabCoordinator
     private let channelAPI = ChannelAPI.shared
     private let currentUser = UserService.shared.currentUser_Rx
+    var recruits: BehaviorSubject<[Recruit]>
     var recruitUser: BehaviorSubject<User?> = BehaviorSubject(value: nil)
     var recruitItem = BehaviorSubject<Recruit?>(value: nil)
-    var recruitsCount: Int {
-        return recruits.count
+    var recruitsCount: Int? {
+        return try? recruits.value().count
     }
     
     // MARK: - Lifecycles
 
     init(coordinator: MapTabCoordinator, recruits: [Recruit]) {
         self.coordinator = coordinator
-        self.recruits = recruits
+        self.recruits = BehaviorSubject(value: recruits)
         fetchUser()
         fetchRecruit()
     }
     
     // MARK: - Helpers
     
-    func fetchRecruit(row: Int) -> Recruit {
-        return self.recruits[row]
+    func fetchRecruit(row: Int) -> Recruit? {
+        return try? self.recruits.value()[row]
     }
     
     func fetchFieldData() -> Recruit? {
-        guard let fieldData = recruits.first else { return nil }
+        guard
+            let recruits = fetchRecruits(),
+            let fieldData = recruits.first
+        else {
+            return nil
+        }
         return fieldData
     }
     
@@ -88,10 +93,19 @@ private extension FieldDetailViewModel {
     }
     
     func getRecruit() -> Recruit? {
+        guard 
+            let recruits = fetchRecruits()
+        else {
+            return nil
+        }
         _ = recruits.map { recruit in
             recruitItem = BehaviorSubject(value: recruit)
         }
         return try? recruitItem.value()
+    }
+    
+    func fetchRecruits() -> [Recruit]? {
+        return try? recruits.value()
     }
     
     func fetchUser() {
