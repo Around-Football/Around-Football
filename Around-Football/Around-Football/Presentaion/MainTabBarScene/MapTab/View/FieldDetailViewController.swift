@@ -75,7 +75,6 @@ final class FieldDetailViewController: UIViewController {
     private func configurePresentStyle() {
         if let sheetPresentationController = sheetPresentationController {
             sheetPresentationController.detents = [.medium(), .large()]
-            
             sheetPresentationController.prefersScrollingExpandsWhenScrolledToEdge = false
             sheetPresentationController.prefersGrabberVisible = true
         }
@@ -88,8 +87,32 @@ final class FieldDetailViewController: UIViewController {
     }
     
     private func setUpTableView() {
-        tableView.dataSource = self
-        tableView.delegate = self
+        let selectedItem = tableView.rx.modelSelected(Recruit.self)
+        selectedItem
+            .subscribe { recruit in
+                self.dismiss(animated: true) {
+                    self.viewModel.pushRecruitDetailView(recruit: recruit)
+                }
+            }.disposed(by: disposeBag)
+            
+        _ = viewModel.recruits
+            .map { recruits in
+                recruits.sorted { first, second in
+                    first.matchDate.dateValue() > second.matchDate.dateValue()
+                }
+            }
+            .bind(to: tableView.rx.items(
+                cellIdentifier: FieldRecruitTableViewCell.identifier,
+                cellType: FieldRecruitTableViewCell.self
+            )) { [ weak self ] index, recruit, cell in
+                guard let self else { return }
+                cell.configure(recruit: recruit)
+                cell.checkMyRecruit(result: viewModel.checkMyRecruit(recruit: recruit))
+                cell.bindButton() {
+                    self.viewModel.checkChannelAndPushChatViewController(recruit: recruit)
+                    self.dismiss(animated: true)
+                }
+            }.disposed(by: disposeBag)
     }
     
     private func configureUI() {
