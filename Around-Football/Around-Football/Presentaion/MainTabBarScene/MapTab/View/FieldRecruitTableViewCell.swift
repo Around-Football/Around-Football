@@ -52,6 +52,16 @@ final class FieldRecruitTableViewCell: UITableViewCell {
         $0.clipsToBounds = true
     }
     
+    private let myRecruitLabel = UILabel().then {
+        $0.backgroundColor = AFColor.primary
+        $0.text = "나의 공고"
+        $0.textColor = AFColor.secondary
+        $0.textAlignment = .center
+        $0.font = AFFont.filterMedium
+        $0.layer.cornerRadius = 8
+        $0.clipsToBounds = true
+    }
+    
     // MARK: - Lifecycles
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -78,14 +88,17 @@ final class FieldRecruitTableViewCell: UITableViewCell {
             }.disposed(by: disposeBag)
     }
     
+    func checkMyRecruit(result: Bool) {
+        result ? stackView.addArrangedSubview(myRecruitLabel) : stackView.addArrangedSubview(chattingButton)
+    }
+    
     private func configureUI() {
         contentView.addSubview(stackView)
         
         stackView.addArrangedSubviews(
             matchDateLabel,
             playTimeLabel,
-            recruitNumber,
-            chattingButton
+            recruitNumber
         )
         
         stackView.snp.makeConstraints { make in
