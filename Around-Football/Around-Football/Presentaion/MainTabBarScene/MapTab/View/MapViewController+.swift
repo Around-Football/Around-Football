@@ -62,7 +62,6 @@ extension MapViewController: MapControllerDelegate, KakaoMapEventDelegate {
         //여기에서 그릴 View(KakaoMap, Roadview)들을 추가한다.
         let location = self.viewModel.currentLocation
         
-        
         let defaultPosition: MapPoint = MapPoint(
             longitude: location.longitude,
             latitude: location.latitude
@@ -220,7 +219,6 @@ extension MapViewController: MapControllerDelegate, KakaoMapEventDelegate {
     func loadFieldsData(label: MapLabel, fields: [Field]) -> ([PoiOptions], [MapPoint]) {
         var options: [PoiOptions] = []
         var positions: [MapPoint] = []
-        print("DEBUG - data: \(label.layerID)")
         createLabelLayer(label: label)
         createPoiStyle(label: label)
         for field in fields {
@@ -232,8 +230,6 @@ extension MapViewController: MapControllerDelegate, KakaoMapEventDelegate {
                 longitude: field.location.longitude,
                 latitude: field.location.latitude
             )
-            print("DEBUG - longitude: \(field.location.longitude)")
-            print("DEBUG - latitude: \(field.location.latitude)")
             options.append(option)
             positions.append(position)
         }
@@ -253,7 +249,6 @@ extension MapViewController: MapControllerDelegate, KakaoMapEventDelegate {
         let newPoint = MapPoint(longitude: location.longitude, latitude: location.latitude)
         poi?.moveAt(newPoint, duration: 1000)
     }
-    
 }
 
 extension MapViewController: CLLocationManagerDelegate {
@@ -276,21 +271,10 @@ extension MapViewController: CLLocationManagerDelegate {
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         guard let location = locations.first else { return }
-        print("현재 위치 업데이트")
-        print("위도: \(location.coordinate.latitude)")
-        print("경도: \(location.coordinate.longitude)")
-        // 현재 고유위치  37.253463   127.036306
-//        guard let viewModel = viewModel else { return }
-        //        // 현재 위치로 카메라 이동
-        //        if viewModel.isSearchCurrentLocation {
         viewModel.setCurrentLocation(
             latitude: location.coordinate.latitude,
             longitude: location.coordinate.longitude
         )
-        //            changeCurrentPoi()
-        //            moveCamera(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude)
-        //            viewModel.isSearchCurrentLocation = false
-        //        }
     }
     
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
