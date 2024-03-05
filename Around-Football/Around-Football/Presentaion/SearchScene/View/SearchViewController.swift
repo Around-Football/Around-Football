@@ -136,8 +136,8 @@ extension SearchViewController {
             target: self,
             action: #selector(handleTap)
         )
-        view.addGestureRecognizer(tapGesture)
         tapGesture.cancelsTouchesInView = false
+        view.addGestureRecognizer(tapGesture)
     }
     
     @objc
