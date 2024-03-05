@@ -27,13 +27,6 @@ final class MapViewModel {
     private let disposeBag = DisposeBag()
     private let firebaseAPI = FirebaseAPI.shared
     var fields: [Field] = []
-    var selectedDate: Date = Date() {
-        didSet {
-            let formatter = DateFormatter()
-            formatter.dateFormat = "yyyy / MM / dd"
-            print(formatter.string(from: selectedDate))
-        }
-    }
     
     // MARK: - Lifecycles
     
@@ -41,7 +34,6 @@ final class MapViewModel {
         self.coordinator = coordinator
         self.currentLocation = GeoPoint(latitude: latitude, longitude: longitude)
         self.searchLocation = searchLocation
-        selectedDate = Date()
     }
     
     // MARK: - API
@@ -54,7 +46,7 @@ final class MapViewModel {
     }
     
     func presentDetailViewController(itemID: String) {
-        FirebaseAPI.shared.fetchRecruitFieldData(fieldID: itemID) { [weak self] recruits in
+        firebaseAPI.fetchRecruitFieldData(fieldID: itemID) { [weak self] recruits in
             self?.coordinator?.presentDetailViewController(recruits: recruits)
         }
     }
