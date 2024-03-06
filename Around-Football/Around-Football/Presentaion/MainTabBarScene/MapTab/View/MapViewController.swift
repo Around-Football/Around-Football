@@ -13,26 +13,7 @@ import RxSwift
 import SnapKit
 import Then
 
-protocol Searchable {
-    func updateSearchBar(dataSubject: PublishSubject<Place>,
-                         searchBarButton: UIButton,
-                         disposeBag: DisposeBag)
-}
-
-extension Searchable {
-    func updateSearchBar(dataSubject: PublishSubject<Place>,
-                         searchBarButton: UIButton,
-                         disposeBag: DisposeBag) {
-        dataSubject
-            .bind(onNext: { place in
-                searchBarButton.setTitle(place.name, for: .normal)
-                searchBarButton.setTitleColor(AFColor.grayScale400, for: .normal)
-            })
-            .disposed(by: disposeBag)
-    }
-}
-
-final class MapViewController: UIViewController, Searchable {
+final class MapViewController: UIViewController {
     
     // MARK: - Properties
     
@@ -60,10 +41,12 @@ final class MapViewController: UIViewController, Searchable {
     
     private var buttonConfig: UIButton.Configuration {
         var config = UIButton.Configuration.plain()
-        config.contentInsets = NSDirectionalEdgeInsets(top: 10,
-                                                       leading: 10,
-                                                       bottom: 10,
-                                                       trailing: 10)
+        config.contentInsets = NSDirectionalEdgeInsets(
+            top: 10,
+            leading: 10,
+            bottom: 10,
+            trailing: 10
+        )
         config.imagePadding = 5
         config.titleAlignment = .leading
         return config
@@ -111,30 +94,8 @@ final class MapViewController: UIViewController, Searchable {
         configureUI()
         setLocationManager()
         bindSearch()
-        
-        guard
-            let locationCoordinate = self.locationManager.location?.coordinate
-        else {
-            return
-        }
-        viewModel.setCurrentLocation(latitude: locationCoordinate.latitude,
-                                     longitude: locationCoordinate.longitude)
-        Task {
-            do {
-                try await viewModel.fetchFields { [weak self] fields in
-                    print("DEBUG - 1")
-                    _ = self?.loadFieldsData(
-                        label: MapLabel(
-                            labelType: .fieldPosition,
-                            poi: .fieldPosition(fields.map{ $0.id })
-                        ),
-                        fields: fields
-                    )
-                }
-            } catch {
-                print("Error: \(error)")
-            }
-        }
+        setUserLocation()
+        fetchFieldData()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -172,16 +133,48 @@ final class MapViewController: UIViewController, Searchable {
     
     private func bindSearch() {
         guard let searchViewModel = searchViewModel else { return }
-        updateSearchBar(dataSubject: searchViewModel.dataSubject,
-                        searchBarButton: searchFieldButton,
-                        disposeBag: disposeBag)
+        updateSearchBar(
+            dataSubject: searchViewModel.dataSubject,
+            searchBarButton: searchFieldButton,
+            disposeBag: disposeBag
+        )
         searchViewModel.dataSubject
             .subscribe(onNext: { [weak self] place in
                 guard let self else { return }
-                moveCamera(latitude: Double(place.y) ?? 127,
-                           longitude: Double(place.x) ?? 38)
+                moveCamera(
+                    latitude: Double(place.y) ?? 127,
+                    longitude: Double(place.x) ?? 38
+                )
             })
             .disposed(by: disposeBag)
+    }
+    
+    private func setUserLocation() {
+        guard
+            let locationCoordinate = self.locationManager.location?.coordinate
+        else {
+            return
+        }
+        viewModel.setCurrentLocation(latitude: locationCoordinate.latitude,
+                                     longitude: locationCoordinate.longitude)
+    }
+    
+    private func fetchFieldData() {
+        Task {
+            do {
+                try await viewModel.fetchFields { [weak self] fields in
+                    _ = self?.loadFieldsData(
+                        label: MapLabel(
+                            labelType: .fieldPosition,
+                            poi: .fieldPosition(fields.map{ $0.id })
+                        ),
+                        fields: fields
+                    )
+                }
+            } catch {
+                print("Error: \(error)")
+            }
+        }
     }
     
     private func configureUI() {
@@ -212,3 +205,5 @@ final class MapViewController: UIViewController, Searchable {
         }
     }
 }
+
+extension MapViewController: Searchable { }

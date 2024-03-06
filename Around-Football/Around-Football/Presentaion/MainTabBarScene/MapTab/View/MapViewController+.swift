@@ -62,7 +62,6 @@ extension MapViewController: MapControllerDelegate, KakaoMapEventDelegate {
         //여기에서 그릴 View(KakaoMap, Roadview)들을 추가한다.
         let location = self.viewModel.currentLocation
         
-        
         let defaultPosition: MapPoint = MapPoint(
             longitude: location.longitude,
             latitude: location.latitude
@@ -84,15 +83,6 @@ extension MapViewController: MapControllerDelegate, KakaoMapEventDelegate {
             createPoiStyle(label: currentMapLabel)
             createPois(label: currentMapLabel, mapPoint: mapPoint)
             moveCamera(latitude: location.latitude, longitude: location.longitude)
-            // GUI
-            //            createSpriteGUI()
-            
-//            let fields = self.viewModel.fields
-//            let idArray = fields.map { $0.id }
-//            let fieldsMapLabel = MapLabel(labelType: .fieldPosition, poi: .fieldPosition(idArray))
-//            createLabelLayer(label: fieldsMapLabel)
-//            createPoiStyle(label: fieldsMapLabel)
-//            createPois(label: fieldsMapLabel, fields: fields)
         }
     }
     
@@ -211,11 +201,9 @@ extension MapViewController: MapControllerDelegate, KakaoMapEventDelegate {
             poi1?.show()
             return
         }
-        print("DEBUG - LAST: \(label.layerID)")
         if label.labelType == .fieldPosition {
             guard let datas else { return }
             let layer = manager.getLodLabelLayer(layerID: label.layerID)
-            print("DEBUG - layer: \(layer?.layerID)")
             let lodPois = layer?.addLodPois(options: datas.0, at: datas.1)
             guard let lodPois = lodPois else { return }
             let _ = lodPois.map {
@@ -224,9 +212,6 @@ extension MapViewController: MapControllerDelegate, KakaoMapEventDelegate {
                     handler: MapViewController.tapHandler
                 )
             }
-            
-            print("DEBUG - POSITIOPN: \(lodPois.map { $0.itemID})")
-            print("DEBUG - ldpois: \(lodPois.count)")
             layer?.showAllLodPois()
         }
     }
@@ -234,7 +219,6 @@ extension MapViewController: MapControllerDelegate, KakaoMapEventDelegate {
     func loadFieldsData(label: MapLabel, fields: [Field]) -> ([PoiOptions], [MapPoint]) {
         var options: [PoiOptions] = []
         var positions: [MapPoint] = []
-        print("DEBUG - data: \(label.layerID)")
         createLabelLayer(label: label)
         createPoiStyle(label: label)
         for field in fields {
@@ -246,8 +230,6 @@ extension MapViewController: MapControllerDelegate, KakaoMapEventDelegate {
                 longitude: field.location.longitude,
                 latitude: field.location.latitude
             )
-            print("DEBUG - longitude: \(field.location.longitude)")
-            print("DEBUG - latitude: \(field.location.latitude)")
             options.append(option)
             positions.append(position)
         }
@@ -267,53 +249,7 @@ extension MapViewController: MapControllerDelegate, KakaoMapEventDelegate {
         let newPoint = MapPoint(longitude: location.longitude, latitude: location.latitude)
         poi?.moveAt(newPoint, duration: 1000)
     }
-    
 }
-
-/*
- extension MapViewController: GuiEventDelegate {
- // MARK: - SpriteGUI
- func createSpriteGUI() {
- guard let mapView: KakaoMap = mapController?.getView("mapview") as? KakaoMap else { return }
- let guiManager = mapView.getGuiManager()
- let spriteGui = SpriteGui("PositionToolSprite")
- 
- spriteGui.arrangement = .horizontal
- spriteGui.bgColor = UIColor.clear
- spriteGui.splitLineColor = UIColor.white
- spriteGui.origin = GuiAlignment(vAlign: .bottom, hAlign: .left)
- spriteGui.position = CGPoint(x: 50, y: 50)
- 
- let trackingButtonName: GuiButtonComponent = .trackingPosition
- let currentPositionButton = GuiButton(trackingButtonName.name)
- let locationImage = UIImage(systemName: "location")
- currentPositionButton.image = UIImage(systemName: "location")
- currentPositionButton.imageSize = GuiSize(width: 20, height: 20)
- currentPositionButton.padding = GuiPadding(left: 10, right: 10, top: 10, bottom: 10)
- 
- spriteGui.addChild(currentPositionButton)
- 
- guiManager.spriteGuiLayer.addSpriteGui(spriteGui)
- spriteGui.delegate = self
- spriteGui.show()
- }
- 
- func guiDidTapped(_ gui: GuiBase, componentName: String) {
- print("Gui: \(gui.name), Component: \(componentName) tapped")
- 
- guard let viewModel = self.viewModel else { return }
- 
- switch componentName {
- case GuiButtonComponent.trackingPosition.name:
- let location = viewModel.currentLocation
- changeCurrentPoi()
- moveCamera(latitude: location.latitude, longitude: location.longitude)
- default: break
- }
- 
- }
- }
- */
 
 extension MapViewController: CLLocationManagerDelegate {
     func setLocationManager() {
@@ -335,21 +271,10 @@ extension MapViewController: CLLocationManagerDelegate {
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         guard let location = locations.first else { return }
-        print("현재 위치 업데이트")
-        print("위도: \(location.coordinate.latitude)")
-        print("경도: \(location.coordinate.longitude)")
-        // 현재 고유위치  37.253463   127.036306
-//        guard let viewModel = viewModel else { return }
-        //        // 현재 위치로 카메라 이동
-        //        if viewModel.isSearchCurrentLocation {
         viewModel.setCurrentLocation(
             latitude: location.coordinate.latitude,
             longitude: location.coordinate.longitude
         )
-        //            changeCurrentPoi()
-        //            moveCamera(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude)
-        //            viewModel.isSearchCurrentLocation = false
-        //        }
     }
     
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
