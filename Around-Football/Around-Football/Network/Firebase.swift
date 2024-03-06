@@ -85,13 +85,18 @@ final class FirebaseAPI {
     }
     
     func fetchFields(completion: @escaping ([Field]) -> Void) async throws {
-        let documentsData = try await REF_FIELD.getDocuments().documents.map { $0.data() }
-        var fields = [Field]()
-        for data in documentsData {
-            let field = Field(dictionary: data)
-            fields.append(field)
+        Task {
+            var fields = [Field]()
+            let documentsData = try await REF_FIELD.getDocuments().documents.map { $0.data() }
+            for data in documentsData {
+                let field = Field(dictionary: data)
+                try await fetchAvailableRecruitFieldData(fieldID: field.id) { recruits in
+                    guard !recruits.isEmpty else { return }
+                    fields.append(field)
+                }
+            }
+            completion(fields)
         }
-        completion(fields)
     }
     
     func fetchRecruit(recruitID: String, completion: @escaping(Recruit?, Error?) -> Void) {
@@ -363,13 +368,14 @@ extension FirebaseAPI {
             .setData(recruit.representation, completion: completion)
     }
     
-    //date
     func fetchRecruitFieldData(
         fieldID: String,
         completion: @escaping(([Recruit]) -> Void)
     ) {
+        let currentDate = Date()
         REF_RECRUIT
             .whereField("fieldID", isEqualTo: fieldID)
+            .whereField("matchDate", isGreaterThan: currentDate)
             .getDocuments { snapshot, error in
                 guard let snapshot = snapshot else {
                     let errorMessage = error?.localizedDescription ?? "None ERROR"
@@ -393,6 +399,22 @@ extension FirebaseAPI {
 // MARK: - Field
 
 extension FirebaseAPI {
+    func fetchAvailableRecruitFieldData(
+        fieldID: String,
+        completion: @escaping(([Recruit]) -> Void)
+    ) async throws {
+        let currentDate = Date()
+        let snapshot = try await REF_RECRUIT
+            .whereField("fieldID", isEqualTo: fieldID)
+            .whereField("matchDate", isGreaterThan: currentDate)
+            .getDocuments()
+        
+        let recruits = snapshot.documents.compactMap { document -> Recruit? in
+            Recruit(dictionary: document.data())
+        }
+        completion(recruits)
+    }
+    
     func createFieldData(
         field: Field,
         recruit: Recruit,
