@@ -13,31 +13,39 @@ final class FieldDetailViewModel {
     
     // MARK: - Properties
     
-    private var recruits: [Recruit]
     private let firebaseAPI = FirebaseAPI.shared
     private let coordinator: MapTabCoordinator
     private let channelAPI = ChannelAPI.shared
     private let currentUser = UserService.shared.currentUser_Rx
+    var recruits: BehaviorSubject<[Recruit]>
     var recruitUser: BehaviorSubject<User?> = BehaviorSubject(value: nil)
-    var recruitsCount: Int {
-        return recruits.count
+    var recruitItem = BehaviorSubject<Recruit?>(value: nil)
+    var recruitsCount: Int? {
+        return try? recruits.value().count
     }
     
     // MARK: - Lifecycles
 
     init(coordinator: MapTabCoordinator, recruits: [Recruit]) {
         self.coordinator = coordinator
-        self.recruits = recruits
+        self.recruits = BehaviorSubject(value: recruits)
+        fetchUser()
+        fetchRecruit()
     }
     
     // MARK: - Helpers
     
-    func fetchRecruit(row: Int) -> Recruit {
-        return self.recruits[row]
+    func fetchRecruit(row: Int) -> Recruit? {
+        return try? self.recruits.value()[row]
     }
     
     func fetchFieldData() -> Recruit? {
-        guard let fieldData = recruits.first else { return nil }
+        guard
+            let recruits = fetchRecruits(),
+            let fieldData = recruits.first
+        else {
+            return nil
+        }
         return fieldData
     }
     
@@ -58,19 +66,67 @@ final class FieldDetailViewModel {
             owner: currentUser,
             recruitID: recruit.id
         ) { [weak self] isAvailable, channelId in
-            guard let self = self else { return }
-            print("DEBUG - ", #function, isAvailable)
-            if isAvailable, let channelId = channelId {
-                let channelInfo = ChannelInfo(id: channelId, withUser: recruitUser, recruitID: recruit.id, recruitUserID: recruitUser.id)
-                self.coordinator.clickSendMessageButton(channelInfo: channelInfo)
-            } else {
+            guard 
+                isAvailable,
+                let channelId = channelId
+            else {
                 let channelInfo = ChannelInfo(id: UUID().uuidString, withUser: recruitUser, recruitID: recruit.id, recruitUserID: recruitUser.id)
-                self.coordinator.clickSendMessageButton(channelInfo: channelInfo, isNewChat: true)
+                self?.coordinator.clickSendMessageButton(channelInfo: channelInfo, isNewChat: true)
+                return
             }
+            let channelInfo = ChannelInfo(id: channelId, withUser: recruitUser, recruitID: recruit.id, recruitUserID: recruitUser.id)
+            self?.coordinator.clickSendMessageButton(channelInfo: channelInfo)
         }
     }
     
-    private func getCurrentUser() -> User? {
+    func checkMyRecruit(recruit: Recruit) -> Bool {
+        let currentUser = getCurrentUser()
+        return currentUser?.id == recruit.userID ? true : false
+    }
+}
+
+// MARK: - Private Methods
+
+private extension FieldDetailViewModel {
+    func getCurrentUser() -> User? {
         return try? currentUser.value()
+    }
+    
+    func getRecruit() -> Recruit? {
+        guard 
+            let recruits = fetchRecruits()
+        else {
+            return nil
+        }
+        _ = recruits.map { recruit in
+            recruitItem = BehaviorSubject(value: recruit)
+        }
+        return try? recruitItem.value()
+    }
+    
+    func fetchRecruits() -> [Recruit]? {
+        return try? recruits.value()
+    }
+    
+    func fetchUser() {
+        guard let recruitUserId = getRecruit()?.userID else { return }
+        FirebaseAPI.shared.fetchUser(uid: recruitUserId) { [weak self] user in
+            guard let self = self else { return }
+            self.recruitUser.onNext(user)
+        }
+    }
+    
+    func fetchRecruit() {
+        guard let recruit = getRecruit() else { return }
+        FirebaseAPI.shared.fetchRecruit(recruitID: recruit.id) { [weak self] recruit, error in
+            guard let self = self else { return }
+            if let error = error {
+                print("DEBUG - Error: \(error.localizedDescription)", #function)
+            }
+            
+            if let recruit = recruit {
+                self.recruitItem.onNext(recruit)
+            }
+        }
     }
 }

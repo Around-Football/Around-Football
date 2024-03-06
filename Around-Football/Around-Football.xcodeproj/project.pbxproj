@@ -35,7 +35,7 @@
 		274C22132AD7C16A005469E6 /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 274C22122AD7C169005469E6 /* HomeViewModel.swift */; };
 		277DCD2E2B4BFCCD0076784E /* UITextField+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 277DCD2D2B4BFCCD0076784E /* UITextField+.swift */; };
 		2780DFF12B8C80720066549E /* Date+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2780DFF02B8C80720066549E /* Date+.swift */; };
-		2780DFF32B8C9C340066549E /* SearchListDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2780DFF22B8C9C340066549E /* SearchListDataSource.swift */; };
+		2780DFF62B9069E50066549E /* Searchable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2780DFF52B9069E50066549E /* Searchable.swift */; };
 		278225182B5290E6000A5EEE /* NotificationName+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 278225172B5290E6000A5EEE /* NotificationName+.swift */; };
 		27B86A302B45778D0081F621 /* InviteImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27B86A2F2B45778D0081F621 /* InviteImageView.swift */; };
 		660932032B44090D000D7CFD /* NotificationType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 660932022B44090D000D7CFD /* NotificationType.swift */; };
@@ -146,6 +146,7 @@
 		7C88C1B12B2DA40900FB7385 /* AFColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C88C1B02B2DA40900FB7385 /* AFColor.swift */; };
 		7C94EBD52B01BF0600A7E42A /* InfoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C94EBD42B01BF0600A7E42A /* InfoViewModel.swift */; };
 		7C9930512B3BB8D600CDD5FC /* SettingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C9930502B3BB8D600CDD5FC /* SettingViewModel.swift */; };
+		7CA12BE22B95D602003E9478 /* JGProgressHUD in Frameworks */ = {isa = PBXBuildFile; productRef = 7CA12BE12B95D602003E9478 /* JGProgressHUD */; };
 		7CADB9302B4312EC003F61B7 /* WebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CADB92F2B4312EC003F61B7 /* WebViewController.swift */; };
 		7CB21BA32AC94D36001D0058 /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CB21BA22AC94D36001D0058 /* DetailViewController.swift */; };
 		7CB21BA52AC94EE4001D0058 /* DetailUserInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CB21BA42AC94EE4001D0058 /* DetailUserInfoView.swift */; };
@@ -181,7 +182,7 @@
 		274C22122AD7C169005469E6 /* HomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewModel.swift; sourceTree = "<group>"; };
 		277DCD2D2B4BFCCD0076784E /* UITextField+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITextField+.swift"; sourceTree = "<group>"; };
 		2780DFF02B8C80720066549E /* Date+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+.swift"; sourceTree = "<group>"; };
-		2780DFF22B8C9C340066549E /* SearchListDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchListDataSource.swift; sourceTree = "<group>"; };
+		2780DFF52B9069E50066549E /* Searchable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Searchable.swift; sourceTree = "<group>"; };
 		278225172B5290E6000A5EEE /* NotificationName+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NotificationName+.swift"; sourceTree = "<group>"; };
 		27B86A2F2B45778D0081F621 /* InviteImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InviteImageView.swift; sourceTree = "<group>"; };
 		660932022B44090D000D7CFD /* NotificationType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationType.swift; sourceTree = "<group>"; };
@@ -311,6 +312,7 @@
 				2736746C2AC3071A003ADE3F /* RxSwift in Frameworks */,
 				2736746F2AC30786003ADE3F /* RxAlamofire in Frameworks */,
 				7C141C672ADA6008002CF180 /* KakaoSDKAuth in Frameworks */,
+				7CA12BE22B95D602003E9478 /* JGProgressHUD in Frameworks */,
 				668EE4A12AFCAC2C007A8844 /* MessageKit in Frameworks */,
 				668EE4BD2B04E3A6007A8844 /* FirebaseStorage in Frameworks */,
 				66C374362B0B010800DB2C2A /* FirebaseMessaging in Frameworks */,
@@ -332,6 +334,7 @@
 			isa = PBXGroup;
 			children = (
 				27058ED02B06814F00C107F9 /* SearchCoordinator.swift */,
+				2780DFF42B9069C50066549E /* Protocol */,
 				27058ECF2B06810000C107F9 /* ViewModel */,
 				27058ECE2B0680FC00C107F9 /* View */,
 			);
@@ -342,7 +345,6 @@
 			isa = PBXGroup;
 			children = (
 				2729185A2B022E84009C9042 /* SearchViewController.swift */,
-				2780DFF22B8C9C340066549E /* SearchListDataSource.swift */,
 				2729186E2B035CFE009C9042 /* SearchTableViewCell.swift */,
 			);
 			path = View;
@@ -418,6 +420,14 @@
 				7C141C612ADA5F38002CF180 /* LoginViewController.swift */,
 			);
 			path = View;
+			sourceTree = "<group>";
+		};
+		2780DFF42B9069C50066549E /* Protocol */ = {
+			isa = PBXGroup;
+			children = (
+				2780DFF52B9069E50066549E /* Searchable.swift */,
+			);
+			path = Protocol;
 			sourceTree = "<group>";
 		};
 		663417C82AD68299002FE2CA /* Network */ = {
@@ -945,6 +955,7 @@
 				66C374352B0B010800DB2C2A /* FirebaseMessaging */,
 				66AE74FE2B1476A900D08B5C /* RxDataSources */,
 				66AE75022B14907C00D08B5C /* Differentiator */,
+				7CA12BE12B95D602003E9478 /* JGProgressHUD */,
 			);
 			productName = "Around-Football";
 			productReference = 273674492AC3061C003ADE3F /* Around-Football.app */;
@@ -986,6 +997,7 @@
 				668EE49F2AFCAC2C007A8844 /* XCRemoteSwiftPackageReference "MessageKit" */,
 				668EE4C82B0504CB007A8844 /* XCRemoteSwiftPackageReference "Kingfisher" */,
 				66AE74FD2B1476A900D08B5C /* XCRemoteSwiftPackageReference "RxDataSources" */,
+				7CA12BE02B95D602003E9478 /* XCRemoteSwiftPackageReference "JGProgressHUD" */,
 			);
 			productRefGroup = 2736744A2AC3061C003ADE3F /* Products */;
 			projectDirPath = "";
@@ -1021,7 +1033,6 @@
 			files = (
 				7C2B1AE22AF4B6180052EC64 /* MainTabViewModel.swift in Sources */,
 				7C7A03A72B464969000457BB /* EmptyAFView.swift in Sources */,
-				2780DFF32B8C9C340066549E /* SearchListDataSource.swift in Sources */,
 				668EE4C72B05048C007A8844 /* StorageAPI.swift in Sources */,
 				663417CA2AD682AB002FE2CA /* Firebase.swift in Sources */,
 				66A1CB212B302DD400F3E01E /* MessageViewController+.swift in Sources */,
@@ -1042,6 +1053,7 @@
 				667ABD672B1EBEE700142940 /* AppDelegate+.swift in Sources */,
 				660932052B468606000D7CFD /* DetailImageScrollView.swift in Sources */,
 				7C322F122B304C6900D7897B /* AFIcon.swift in Sources */,
+				2780DFF62B9069E50066549E /* Searchable.swift in Sources */,
 				661D31B22B3553E0006CA8FF /* UIControl+.swift in Sources */,
 				7C5F775E2AC9CE8A004CE48F /* DateCell.swift in Sources */,
 				66BD8DB82B3174850094C78B /* ChatCoordinator.swift in Sources */,
@@ -1448,6 +1460,14 @@
 				minimumVersion = 2.18.0;
 			};
 		};
+		7CA12BE02B95D602003E9478 /* XCRemoteSwiftPackageReference "JGProgressHUD" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/JonasGessner/JGProgressHUD.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.2.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -1560,6 +1580,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 7C141C632ADA6008002CF180 /* XCRemoteSwiftPackageReference "kakao-ios-sdk" */;
 			productName = KakaoSDKFriendCore;
+		};
+		7CA12BE12B95D602003E9478 /* JGProgressHUD */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 7CA12BE02B95D602003E9478 /* XCRemoteSwiftPackageReference "JGProgressHUD" */;
+			productName = JGProgressHUD;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

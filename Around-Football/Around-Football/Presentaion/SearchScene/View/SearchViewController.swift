@@ -10,7 +10,7 @@ import UIKit
 import RxSwift
 import SnapKit
 import Then
-// TODO: - Rx 바인딩 후 데이터 처리 확인: 창현
+
 final class SearchViewController: UIViewController {
     
     // MARK: - Properties
@@ -21,7 +21,7 @@ final class SearchViewController: UIViewController {
             edge.right = 0
         })
     }
-    private lazy var dataSource = SearchListDataSource(tableView)
+    
     private let disposeBag = DisposeBag()
     private var searchViewModel: SearchViewModel
     private lazy var searchTextField = UITextField().then {
@@ -52,7 +52,6 @@ final class SearchViewController: UIViewController {
         configureUI()
         setTableView()
         setUpKeyboard()
-//        applyUpdateSearchPlace()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -104,10 +103,9 @@ final class SearchViewController: UIViewController {
         
         selectedItem
             .subscribe(onNext: { [weak self] place in
-                guard let self = self else { return }
-                searchViewModel.dataSubject
+                self?.searchViewModel.dataSubject
                     .onNext(place)
-                searchViewModel.coordinator?.dismissSearchViewController()
+                self?.searchViewModel.coordinator?.dismissSearchViewController()
             })
             .disposed(by: disposeBag)
         
@@ -121,19 +119,6 @@ final class SearchViewController: UIViewController {
                 .disposed(by: disposeBag)
     }
     
-    private func applyUpdateSearchPlace() {
-        _ = searchViewModel.searchResults
-            .bind(onNext: { places in
-                DispatchQueue.main.async {
-                    var snapshot = SearchListSnapShot()
-                    snapshot.appendSections([.place])
-                    snapshot.appendItems(places, toSection: .place)
-                    self.dataSource.apply(snapshot)
-                }
-            })
-            .disposed(by: disposeBag)
-    }
-    
     // TODO: - 쓰로틀
     @objc
     private func textFieldDidChange(_ sender: Any?) {
@@ -143,10 +128,15 @@ final class SearchViewController: UIViewController {
 }
 
 // MARK: - Keyboard Setting
+
 extension SearchViewController {
     private func setUpKeyboard() {
         searchTextField.becomeFirstResponder()
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTap))
+        let tapGesture = UITapGestureRecognizer(
+            target: self,
+            action: #selector(handleTap)
+        )
+        tapGesture.cancelsTouchesInView = false
         view.addGestureRecognizer(tapGesture)
     }
     

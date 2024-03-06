@@ -100,7 +100,6 @@ final class HomeViewController: UIViewController {
         bindUI()
         bindScrollButtons()
         setUserInfo()
-
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -174,6 +173,9 @@ final class HomeViewController: UIViewController {
         let region = UserDefaults.standard.string(forKey: FilterRequest.region.rawValue)
         let type = UserDefaults.standard.string(forKey: FilterRequest.type.rawValue)
         let gender = UserDefaults.standard.string(forKey: FilterRequest.gender.rawValue)
+        if (region == nil) && (type == nil) && gender == nil {
+            resetButton.isSelected = true
+        }
         self.filterRequest = RecruitFilter(region: region, type: type, gender: gender)
     }
     
@@ -263,7 +265,6 @@ final class HomeViewController: UIViewController {
                     selectedDateSet.contains(recruit.matchDateString)
                 }
             }
-            
             return recruits
         }
         .map { recruits in

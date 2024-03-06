@@ -235,9 +235,8 @@ final class HomeTableViewCell: UITableViewCell {
         fieldImageView.snp.makeConstraints { make in
             make.top.equalToSuperview().offset(16)
             make.leading.equalToSuperview()
-            make.bottom.equalToSuperview().offset(-16)
-            make.width.equalTo(80)
-            make.height.equalTo(80)
+            make.bottom.lessThanOrEqualToSuperview().offset(-16)
+            make.size.equalTo(80)
         }
         
         typeLabel.snp.makeConstraints { make in
@@ -250,7 +249,7 @@ final class HomeTableViewCell: UITableViewCell {
         dateLabel.snp.makeConstraints { make in
             make.top.equalTo(typeLabel.snp.top)
             make.leading.equalTo(typeLabel.snp.trailing).offset(8)
-            make.trailing.equalToSuperview()
+            make.trailing.lessThanOrEqualToSuperview()
         }
         
         fieldLabel.snp.makeConstraints { make in
@@ -275,6 +274,7 @@ final class HomeTableViewCell: UITableViewCell {
             make.centerY.equalTo(recruitLabel.snp.centerY)
             make.height.equalTo(recruitLabel.snp.height)
             make.leading.equalTo(line.snp.trailing).offset(8)
+            make.trailing.lessThanOrEqualToSuperview()
         }
         
         contentView.addSubview(bookmarkButton)
