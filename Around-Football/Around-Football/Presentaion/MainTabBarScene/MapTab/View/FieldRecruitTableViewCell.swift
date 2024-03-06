@@ -81,9 +81,9 @@ final class FieldRecruitTableViewCell: UITableViewCell {
         self.recruitNumber.text = "\(recruit.acceptedApplicantsUID.count)/\(recruit.recruitedPeopleCount)명"
     }
     
-    func bindButton(completion: @escaping () -> Void) {
-        let disposeBag = DisposeBag()
+    func bindButton(disposeBag: DisposeBag, completion: @escaping () -> Void) {
         self.chattingButton.rx.tap
+            .debug()
             .bind {
                 completion()
             }.disposed(by: disposeBag)

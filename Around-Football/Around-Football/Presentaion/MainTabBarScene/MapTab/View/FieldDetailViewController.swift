@@ -45,6 +45,7 @@ final class FieldDetailViewController: UIViewController {
             FieldRecruitTableViewCell.self,
             forCellReuseIdentifier: FieldRecruitTableViewCell.identifier
         )
+        $0.rowHeight = 50
         $0.separatorInset = UIEdgeInsets().with({ edge in
             edge.left = 0
             edge.right = 0
@@ -108,7 +109,7 @@ final class FieldDetailViewController: UIViewController {
                 guard let self else { return }
                 cell.configure(recruit: recruit)
                 cell.checkMyRecruit(result: viewModel.checkMyRecruit(recruit: recruit))
-                cell.bindButton() {
+                cell.bindButton(disposeBag: disposeBag) {
                     self.viewModel.checkChannelAndPushChatViewController(recruit: recruit)
                     self.dismiss(animated: true)
                 }
