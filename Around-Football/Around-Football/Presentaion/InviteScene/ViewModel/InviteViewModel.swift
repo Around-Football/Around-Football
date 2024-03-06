@@ -17,10 +17,12 @@ final class InviteViewModel {
     
     struct Input {
         let invokedViewWillAppear: Observable<Void>
+
     }
     
     struct Output {
         let recruit: Observable<Recruit?>
+        let createDone: Observable<Void>
     }
     
     // MARK: - Properties
@@ -29,7 +31,7 @@ final class InviteViewModel {
     var recruit: Recruit?
     private var field: Field?
     private var disposeBag = DisposeBag()
-    
+    let createButtonSubject = PublishSubject<Void>()
     var fieldID: String = ""
     var location = GeoPoint(latitude: 0, longitude: 0)
     var fieldName: BehaviorRelay<String> = BehaviorRelay(value: "")
@@ -117,7 +119,9 @@ final class InviteViewModel {
                 print("DEBUG - createRecruitFieldData Error: \(String(describing: error?.localizedDescription))")
                 //TODO: - 실패 알림창 띄워주기?
             }
-            self.coordinator.popInviteViewController()
+            
+//            self.coordinator.popInviteViewController()
+            self.createButtonSubject.onNext(())
         }
         
         let field = Field(id: fieldID,
@@ -167,7 +171,9 @@ final class InviteViewModel {
             } else {
                 print("DEBUG - Update Recruit Data")
             }
-            self.coordinator.popInviteViewController()
+            // MARK: - 여기서 뷰컨에 전달
+            self.createButtonSubject.onNext(())
+//            self.coordinator.popInviteViewController()
         }
     }
 
@@ -209,7 +215,15 @@ final class InviteViewModel {
     
     func transform(input: Input) -> Output {
         let recruit = emitObservableRecruit(by: input.invokedViewWillAppear)
-        return Output(recruit: recruit)
+        let createDone = uploadDone(input: createButtonSubject.asObservable())
+        return Output(recruit: recruit, createDone: createDone)
+    }
+    
+    private func uploadDone(input: Observable<Void>) -> Observable<Void> {
+        return input.flatMap {
+            
+            return Observable.just(())
+        }
     }
     
     func emitObservableRecruit(by inputObserver: Observable<Void>) -> Observable<Recruit?> {
