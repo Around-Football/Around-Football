@@ -125,6 +125,7 @@ final class ApplicantListViewModel {
             guard let self = self else { return }
             self.fetchRecruit()
             NotiManager.shared.pushAcceptNotification(recruit: recruit, receiverFcmToken: user.fcmToken)
+            
             print("DEBUG - ACCEPT")
         }
     }
@@ -143,7 +144,14 @@ final class ApplicantListViewModel {
         }
     }
     
-    func checkChannelAndPushChatViewController(user: User) {
+    func sendMessage() {
+        guard let currentUser = try? UserService.shared.currentUser_Rx.value() else {
+            return
+        }
+        
+    }
+    
+    private func checkChannel(user: User, completion: @escaping((ChannelInfo, Bool) -> Void)) {
         let currentUser = getCurrentUser()
         let recruit = getRecruit()
         channelAPI.checkExistAvailableChannel(owner: currentUser,
@@ -152,12 +160,52 @@ final class ApplicantListViewModel {
             print("DEBUG - ", #function, isAvailable)
             if isAvailable, let channelId = channelId {
                 let channelInfo = ChannelInfo(id: channelId, withUser: user, recruitID: recruit.id, recruitUserID: recruit.userID)
-                self.coordinator?.clickSendMessageButton(channelInfo: channelInfo)
+                completion(channelInfo, true)
             } else {
                 let channelInfo = ChannelInfo(id: UUID().uuidString, withUser: user, recruitID: recruit.id, recruitUserID: recruit.userID)
-                self.coordinator?.clickSendMessageButton(channelInfo: channelInfo, isNewChat: true)
+                completion(channelInfo, false)
             }
         }
+    }
+    
+    func checkChannelAndSendApproveMessage(user: User) {
+        let currentUser = getCurrentUser()
+        let recruit = getRecruit()
+        checkChannel(user: user) { channelInfo, isAvailable in
+            let message = Message(user: currentUser, content: "\(recruit.matchDayAndStartTime) 건에 대한 용병 신청이 수락되었습니다.", messageType: .inform)
+            if isAvailable {
+                ChatAPI.shared.save([message], channelId: channelInfo.id)
+                self.channelAPI.updateChannelInfo(owner: currentUser,
+                                             withUser: user,
+                                             channelId: channelInfo.id,
+                                             message: message)
+                self.channelAPI.updateTotalAlarmNumber(uid: user.id, alarmNumber: 1)
+
+            } else {
+                self.channelAPI.createChannel(channelInfo: channelInfo) {
+                    ChatAPI.shared.save([message], channelId: channelInfo.id)
+                    self.channelAPI.updateChannelInfo(owner: currentUser,
+                                                 withUser: user,
+                                                 channelId: channelInfo.id,
+                                                 message: message)
+                    self.channelAPI.updateTotalAlarmNumber(uid: user.id, alarmNumber: 1)
+                }
+            }
+        }
+    }
+    
+    func checkChannelAndPushChatViewController(user: User) {
+        checkChannel(user: user) { channelInfo, isAvailable in
+            if isAvailable {
+                self.pushChatViewcontroller(channelInfo: channelInfo)
+            } else {
+                self.pushChatViewcontroller(channelInfo: channelInfo, isNewChat: true)
+            }
+        }
+    }
+    
+    private func pushChatViewcontroller(channelInfo: ChannelInfo, isNewChat: Bool = false) {
+        coordinator?.clickSendMessageButton(channelInfo: channelInfo, isNewChat: isNewChat)
     }
     
     func removeChildCoordinator() {
