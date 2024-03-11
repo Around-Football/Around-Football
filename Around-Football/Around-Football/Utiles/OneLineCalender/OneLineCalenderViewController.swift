@@ -37,6 +37,18 @@ struct HCalendarView: View {
                 }
                 
                 ForEach(components, id: \.self) { date in
+                    //월 바뀔때 월 표시
+                    if calendar.component(.day, from: date) == 1 {
+                        VStack {
+                            Text("\(calendar.component(.month, from: date))월")
+                                .font(Font(AFFont.titleCard ?? UIFont()))
+                                .padding(.bottom, 4)
+                        }
+                        .frame(width: 50, height: 65)
+                        .background(Color(uiColor: AFColor.primary))
+                        .cornerRadius(30)
+                    }
+                    
                     VStack {
                         Text("\(calendar.component(.day, from: date))")
                             .font(Font(AFFont.titleCard ?? UIFont()))
