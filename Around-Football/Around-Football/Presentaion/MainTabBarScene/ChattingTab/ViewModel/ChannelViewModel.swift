@@ -160,7 +160,7 @@ final class ChannelViewModel {
                     if channelInfo.isAvailable {
                         owner.channelAPI.updateDeleteChannelInfo(withUserId: withUserId, channelId: channelId)
                         
-                        let deleteChannelMessage = Message(user: currentUser, content: "", messageType: .inform)
+                        let deleteChannelMessage = Message(user: currentUser, content: "delete", messageType: .inform)
                         ChatAPI.shared.save([deleteChannelMessage], channelId: channelId)
                     } else {
                         owner.channelAPI.deleteChannel(channelId: channelId)

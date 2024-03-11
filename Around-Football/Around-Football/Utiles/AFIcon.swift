@@ -10,8 +10,13 @@ import UIKit
 enum AFIcon {
     static let defaultFieldImage = UIImage(named: Self.fieldImage)
     static let defaultUserImage = UIImage(named: Self.userLogo)
+    static let defaultfootballImage = UIImage(named: Self.footballDefaultImage)
+    static let defaultRecruitFootballImage = UIImage(named: Self.defaultRecruitFootball)
+    static let defaultRecruitImage = UIImage(named: Self.defaultRecruit)
     
     static let defaultImageURL = "https://firebasestorage.googleapis.com/v0/b/around-football.appspot.com/o/DefaultProfileImage.png?alt=media&token=9274520c-2134-489a-8665-59006714c8f2"
+    static let defaultFootballImageURL =  "https://firebasestorage.googleapis.com/v0/b/around-football.appspot.com/o/FootballImage.png?alt=media&token=46431259-7b11-410b-9707-c10e4e79c642"
+    
     //tab
     static let home = "AFHome"
     static let homeSelect = "AFHomeSelect"
@@ -24,9 +29,11 @@ enum AFIcon {
     
     //homeCell
     static let fieldImage = "AFFieldImage"
+    static let footballDefaultImage = "AFFootballImage"
     static let bookmark = "AFBookmark"
     static let bookmarkSelect = "AFBookmarkSelect"
-
+    static let defaultRecruitFootball = "AFDefaultRecruitFootball"
+    static let defaultRecruit = "DefaultRecruitImage"
     //component
     static let downCaret = "AFDownCaret"
     static let leftArrow = "AFLeftArrow"
