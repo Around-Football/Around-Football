@@ -57,7 +57,6 @@ final class InfoViewController: UIViewController {
         bindUserInfo()
         bindTableView()
         configureSettingButton()
-        setUserImage()
     }
     
     // MARK: - Selectors
@@ -72,6 +71,34 @@ final class InfoViewController: UIViewController {
         picker.delegate = self
         
         viewModel.coordinator?.presentPHPickerView(picker: picker)
+    }
+    
+    @objc
+    func detailUserInfoViewTapped() {
+        guard let _ = try? UserService.shared.currentUser_Rx.value() else {
+            viewModel.coordinator?.presentLoginViewController()
+            return
+        }
+    }
+    
+    func setDetailUserInfoViewGesture() {
+            detailUserInfoView.profileImageView.isUserInteractionEnabled = false
+            detailUserInfoView.isUserInteractionEnabled = true
+            detailUserInfoView.addGestureRecognizer(
+                UITapGestureRecognizer(
+                    target: self,
+                    action: #selector(detailUserInfoViewTapped)
+                )
+            )
+    }
+    
+    func removeDetailInfoViewGesture() {
+        detailUserInfoView.removeGestureRecognizer(
+            UITapGestureRecognizer(
+                target: self,
+                action: #selector(detailUserInfoViewTapped)
+            )
+        )
     }
     
     @objc
@@ -146,10 +173,16 @@ final class InfoViewController: UIViewController {
             viewModel.user = user
             
             //user 사진 업데이트시 반영
-            guard let user else { return }
-            detailUserInfoView.profileImageView.kf.setImage(with: URL(string: user.profileImageUrl) ?? URL(string: "https://firebasestorage.googleapis.com:443/v0/b/around-football.appspot.com/o/8930189C-6983-4A48-9E02-321C8484897E%2F846FF6B7-454F-4EAB-8C43-89DD402FE0D21703843637.667433?alt=media&token=5e8c3184-0dba-4cec-8b04-910c8e3c03e0")!,
-                                                            placeholder: UIImage(named: AFIcon.fieldImage))
-            
+            guard let user else {
+                setDetailUserInfoViewGesture()
+                return
+            }
+            removeDetailInfoViewGesture()
+            setUserImage()
+            detailUserInfoView.profileImageView.kf.setImage(
+                with: URL(string: user.profileImageUrl) ?? URL(string: AFIcon.defaultImageURL),
+                placeholder: UIImage(named: AFIcon.fieldImage)
+            )
         }.disposed(by: disposeBag)
     }
     

@@ -70,13 +70,22 @@ final class InfoPostViewModel {
     // MARK: - Kingfisher
     
     func setTitleImage(recruit: Recruit) -> UIImage? {
-        guard let defaultImage = UIImage(named: AFIcon.fieldImage)
-        else {
-            return UIImage()
-        }
+        return recruit.type == "풋살" ? setFutsalImage(recruit: recruit) : setFootballImage(recruit: recruit)
+    }
+    
+    // MARK: - ImageRender
+    private func setFutsalImage(recruit: Recruit) -> UIImage? {
         let imageView = UIImageView()
         let placeHolder = UIImage(named: AFIcon.fieldImage)
         imageView.kf.setImage(with: URL(string:recruit.recruitImages.first ?? AFIcon.defaultImageURL),
+                                        placeholder: placeHolder)
+        return imageView.image
+    }
+    
+    private func setFootballImage(recruit: Recruit) -> UIImage? {
+        let imageView = UIImageView()
+        let placeHolder = AFIcon.defaultfootballImage
+        imageView.kf.setImage(with: URL(string:recruit.recruitImages.first ?? AFIcon.defaultFootballImageURL),
                                         placeholder: placeHolder)
         return imageView.image
     }

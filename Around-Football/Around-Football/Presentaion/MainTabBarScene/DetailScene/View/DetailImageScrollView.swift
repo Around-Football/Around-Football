@@ -68,14 +68,15 @@ final class DetailImageScrollView: UIView {
     
     // MARK: - Helpers
     
-    func configure(images: [UIImage?]) {
+    func configure(type: String, images: [UIImage?]) {
         imageScrollView.delegate = self
 
         if images.isEmpty {
             let imageView = UIImageView()
             imageView.contentMode = .scaleAspectFill
             imageView.clipsToBounds = true
-            imageView.image = UIImage(named: "DefaultRecruitImage")
+            // MARK: - ImageRender
+            type == "풋살" ? (imageView.image = AFIcon.defaultRecruitImage) : (imageView.image = AFIcon.defaultRecruitFootballImage)
             imageScrollView.addSubview(imageView)
             configureImageViewUI(imageView: imageView, index: 0, count: 1)
             
