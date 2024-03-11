@@ -17,6 +17,7 @@ import KakaoSDKAuth
 import KakaoSDKCommon
 import KakaoSDKUser
 import RxSwift
+import KakaoMapsSDK
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -25,7 +26,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         //Firebase 구성
         FirebaseApp.configure()
         //kakao 초기화
-        KakaoSDK.initSDK(appKey: "d120f29f71b1903d6e9191768dbdfdb2")
+//        KakaoSDK.initSDK(appKey: "d120f29f71b1903d6e9191768dbdfdb2")
+        SDKInitializer.InitSDK(appKey: "d120f29f71b1903d6e9191768dbdfdb2")
         
         setupFCM(application)
         let _ = UserService.shared
