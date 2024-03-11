@@ -133,6 +133,8 @@ final class DetailUserInfoView: UIView {
         if user == nil {
             userNameLabel.text = "로그인 해주세요"
             userDetailInfoStackView.isHidden = true
+            profileImageView.kf.setImage(with: URL(string: AFIcon.defaultImageURL),
+                                         placeholder: AFIcon.defaultFieldImage)
         } else {
             userDetailInfoStackView.isHidden = false
             userDetailInfoSettingViewStackView.isHidden = true
