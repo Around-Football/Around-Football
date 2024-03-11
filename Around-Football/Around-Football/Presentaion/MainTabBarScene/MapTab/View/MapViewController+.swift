@@ -53,7 +53,7 @@ extension MapViewController: MapControllerDelegate, KakaoMapEventDelegate {
     
     func configureMap() {
         //KMController 생성.
-        mapController = KMController(viewContainer: mapContainer)!
+        mapController = KMController(viewContainer: mapContainer)
         mapController!.delegate = self
         mapController?.initEngine() //엔진 초기화. 엔진 내부 객체 생성 및 초기화가 진행된다.
     }
@@ -74,16 +74,22 @@ extension MapViewController: MapControllerDelegate, KakaoMapEventDelegate {
             defaultLevel: 14
         )
         //KakaoMap 추가.
-        if mapController?.addView(mapviewInfo) == Result.OK {
-            print("OK") //추가 성공. 성공시 추가적으로 수행할 작업을 진행한다.
+        mapController?.addView(mapviewInfo)
+    }
+    
+    func addViewFailed(_ viewName: String, viewInfoName: String) {
+        print("DEBUG - Failed AddMapView")
+    }
+    
+    func addViewSucceeded(_ viewName: String, viewInfoName: String) {
+        let location = self.viewModel.currentLocation
+        let currentMapLabel = MapLabel(labelType: .currentPosition, poi: .currentPosition)
+        let mapPoint = MapPoint(longitude: location.longitude, latitude: location.latitude)
+        createLabelLayer(label: currentMapLabel)
+        createPoiStyle(label: currentMapLabel)
+        createPois(label: currentMapLabel, mapPoint: mapPoint)
+        moveCamera(latitude: location.latitude, longitude: location.longitude)
 
-            let currentMapLabel = MapLabel(labelType: .currentPosition, poi: .currentPosition)
-            let mapPoint = MapPoint(longitude: location.longitude, latitude: location.latitude)
-            createLabelLayer(label: currentMapLabel)
-            createPoiStyle(label: currentMapLabel)
-            createPois(label: currentMapLabel, mapPoint: mapPoint)
-            moveCamera(latitude: location.latitude, longitude: location.longitude)
-        }
     }
     
     /**
