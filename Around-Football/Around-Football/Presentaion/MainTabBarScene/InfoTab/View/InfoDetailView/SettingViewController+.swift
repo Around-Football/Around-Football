@@ -18,7 +18,7 @@ extension SettingViewController: MFMailComposeViewControllerDelegate {
             
             //TODO: -AroundFootball이메일 계정으로 업데이트
             
-            mailController.setToRecipients(["thekoon0456@gmail.com"]) // 수신자 이메일 주소
+            mailController.setToRecipients(["aroundfootball2024@gmail.com"]) // 수신자 이메일 주소
             mailController.setSubject("[어라운드풋볼 1:1문의]") // 이메일 제목
 //            mailController.setMessageBody("내용을 입력해주세요", isHTML: false) // 이메일 내용
             
