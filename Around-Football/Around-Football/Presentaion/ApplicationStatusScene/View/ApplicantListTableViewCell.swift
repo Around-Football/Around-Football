@@ -165,6 +165,7 @@ final class ApplicantListTableViewCell: UITableViewCell {
     }
     
     func configure(user: User) {
+        profileImage.kf.setImage(with: URL(string: user.profileImageUrl), placeholder: AFIcon.defaultFieldImage)
         userNameLabel.text = user.userName
         userGenderLabel.text = user.gender
         userAgeLabel.text = String(user.age)
