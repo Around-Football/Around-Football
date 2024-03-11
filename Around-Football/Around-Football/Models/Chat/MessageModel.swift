@@ -79,7 +79,11 @@ struct Message: MessageType {
             self.content = dateString
         case .inform:
             sentDate = Date()
-            self.content = "\(sender.displayName)님이 채팅방을 나가셨습니다.\n상대방이 메시지를 확인할 수 없습니다."
+            if content == "delete" {
+                self.content = "\(sender.displayName)님이 채팅방을 나가셨습니다.\n상대방이 메시지를 확인할 수 없습니다."
+            } else {
+                self.content = content
+            }
         }
     }
     

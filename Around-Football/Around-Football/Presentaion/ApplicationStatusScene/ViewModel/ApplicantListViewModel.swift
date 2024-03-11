@@ -125,6 +125,7 @@ final class ApplicantListViewModel {
             guard let self = self else { return }
             self.fetchRecruit()
             NotiManager.shared.pushAcceptNotification(recruit: recruit, receiverFcmToken: user.fcmToken)
+            checkChannelAndSendApproveMessage(user: user)
             
             print("DEBUG - ACCEPT")
         }
@@ -143,14 +144,7 @@ final class ApplicantListViewModel {
             print("DEBUG - CANCEL")
         }
     }
-    
-    func sendMessage() {
-        guard let currentUser = try? UserService.shared.currentUser_Rx.value() else {
-            return
-        }
         
-    }
-    
     private func checkChannel(user: User, completion: @escaping((ChannelInfo, Bool) -> Void)) {
         let currentUser = getCurrentUser()
         let recruit = getRecruit()
@@ -168,7 +162,7 @@ final class ApplicantListViewModel {
         }
     }
     
-    func checkChannelAndSendApproveMessage(user: User) {
+    private func checkChannelAndSendApproveMessage(user: User) {
         let currentUser = getCurrentUser()
         let recruit = getRecruit()
         checkChannel(user: user) { channelInfo, isAvailable in
