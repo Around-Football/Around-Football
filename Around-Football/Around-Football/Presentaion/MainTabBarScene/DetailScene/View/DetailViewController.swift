@@ -173,7 +173,7 @@ final class DetailViewController: UIViewController {
             downloadImages.append(imageView.image)
         }
         
-        detailImageScrollView.configure(images: downloadImages)
+        detailImageScrollView.configure(type: recruit.type, images: downloadImages)
     }
     
     func configureBookmarkStyle() {
