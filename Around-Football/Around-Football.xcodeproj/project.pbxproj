@@ -1331,7 +1331,7 @@
 				INFOPLIST_FILE = "Around-Football/Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "어라운드풋볼";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.sports";
-				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "\"현재 위치사용을 허용하시겠습니까?\"";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "주변 모집공고를 보기 위해 위치정보가 필요해요. 동의해주세요";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = "Launch Screen";
 				INFOPLIST_KEY_UIStatusBarStyle = UIStatusBarStyleLightContent;
@@ -1372,7 +1372,7 @@
 				INFOPLIST_FILE = "Around-Football/Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "어라운드풋볼";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.sports";
-				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "\"현재 위치사용을 허용하시겠습니까?\"";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "주변 모집공고를 보기 위해 위치정보가 필요해요. 동의해주세요";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = "Launch Screen";
 				INFOPLIST_KEY_UIStatusBarStyle = UIStatusBarStyleLightContent;
