@@ -77,7 +77,7 @@ final class SettingViewController: UIViewController {
                         sendEmail()
                     case 1:
                         print("약관 및 정책 뷰로")
-                        viewModel?.coordinator?.pushWebViewController(url: "https://www.notion.so/thekoon0456/899108fe75174f91b09294adfae9de06")
+                        viewModel?.coordinator?.pushWebViewController(url: "https://thekoon0456.notion.site/AroundFootball-500672607c244999934b3a53f9cac0ae?pvs=4")
                     default:
                         return
                     }
@@ -141,7 +141,8 @@ extension SettingViewController {
             case .normal:
                 return ["알림 설정"]
             case .service:
-                return ["1:1 문의", "약관 및 정책"]
+                //TODO: -약관, 정책뷰 추가
+                return ["1:1 문의"]
             case .account:
                 return ["로그아웃", "회원 탈퇴"]
             }
