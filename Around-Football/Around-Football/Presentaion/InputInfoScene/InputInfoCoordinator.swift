@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 
 protocol InputInfoCoordinatorDelegate {
     func loginDone()
@@ -24,14 +25,12 @@ final class InputInfoCoordinator: BaseCoordinator {
         let inputInfoViewModel = InputInfoViewModel(coordinator: self)
         let controller = InputInfoViewController(viewModel: inputInfoViewModel)
         
-        if isHidesBackButton == false {
-            controller.setAFBackButton()
+        switch isHidesBackButton {
+        case true:
+            startWithLoginViewController(controller: controller, isHidesBackButton: isHidesBackButton)
+        case false:
+            startWithInfoViewController(controller: controller, isHidesBackButton: isHidesBackButton)
         }
-        controller.navigationItem.hidesBackButton = isHidesBackButton
-        
-        childCoordinators.append(self)
-        navigationController?.navigationBar.prefersLargeTitles = true
-        navigationController?.pushViewController(controller, animated: true)
     }
     
     deinit {
@@ -50,5 +49,26 @@ final class InputInfoCoordinator: BaseCoordinator {
     
     func removeThisChildCoordinators() {
         removeThisChildCoordinators(coordinator: self)
+    }
+    
+    private func startWithLoginViewController(
+        controller: UIViewController,
+        isHidesBackButton: Bool
+    ) {
+        controller.navigationItem.hidesBackButton = isHidesBackButton
+        childCoordinators.append(self)
+        controller.modalPresentationStyle = .fullScreen
+        navigationController?.present(controller, animated: true)
+    }
+    
+    private func startWithInfoViewController(
+        controller: UIViewController,
+        isHidesBackButton: Bool
+    ) {
+        controller.setAFBackButton()
+        controller.navigationItem.hidesBackButton = isHidesBackButton
+        childCoordinators.append(self)
+        navigationController?.navigationBar.prefersLargeTitles = true
+        navigationController?.pushViewController(controller, animated: true)
     }
 }
