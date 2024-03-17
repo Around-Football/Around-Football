@@ -32,6 +32,7 @@ final class UserService: NSObject {
     var isLoginObservable: BehaviorSubject<Void> = BehaviorSubject(value: ())
     var isLogoutObservable: PublishSubject<Void> = PublishSubject()
     var checkUserInfoExist: PublishSubject<Bool> = PublishSubject()
+    var isLoginProcess: PublishSubject<Bool> = PublishSubject()
     private let disposeBag = DisposeBag()
     
     // MARK: - Lifecycles
@@ -58,6 +59,7 @@ final class UserService: NSObject {
                 currentUser_Rx.onNext(user)
                 checkUserInfoExist.onNext(true)
                 NotiManager.shared.setAppIconBadgeNumber(number: user?.totalAlarmNumber ?? 0)
+                isLoginProcess.onNext(false)
             })
             .disposed(by: disposeBag)
     }
@@ -117,7 +119,7 @@ final class UserService: NSObject {
         let config = GIDConfiguration(clientID: clientID)
         GIDSignIn.sharedInstance.configuration = config
         
-        GIDSignIn.sharedInstance.signIn(withPresenting: controller) { result, error in
+        GIDSignIn.sharedInstance.signIn(withPresenting: controller) { [weak self] result, error in
             guard error == nil else {
                 // ...
                 print("signIn ERROR: \(String(describing: error?.localizedDescription))")
@@ -134,7 +136,7 @@ final class UserService: NSObject {
             print("구글 로그인 Flow 진행")
             let credential = GoogleAuthProvider.credential(withIDToken: idToken,
                                                            accessToken: user.accessToken.tokenString)
-            
+            self?.isLoginProcess.onNext(true)
             Auth.auth().signIn(with: credential) { result, error in
                 if let error = error {
                     print ("Error Apple sign in: %@", error)
@@ -153,7 +155,7 @@ final class UserService: NSObject {
                             .setData(["id": uid]) { [weak self] error in
                                 guard let self else { return }
                                 if error != nil {
-                                    print("setUserDataError: \(error?.localizedDescription)")
+                                    print("setUserDataError: \(String(describing: error?.localizedDescription))")
                                     return
                                 }
                                 
@@ -179,23 +181,21 @@ final class UserService: NSObject {
     }
     
     func loginKakaoApp() {
-        UserApi.shared.loginWithKakaoTalk {(oauthToken, error) in
+        UserApi.shared.loginWithKakaoTalk { [weak self] (oauthToken, error) in
+            self?.isLoginProcess.onNext(true)
             guard error == nil else {
                 print("\(String(describing: error))")
                 return
             }
-            
             print("loginWithKakaoTalk() success.")
-            
-            //do something
             _ = oauthToken
-            
-            self.getKakaoUserInfo()
+            self?.getKakaoUserInfo()
         }
     }
     
     func loginKakaoAccount() {
-        UserApi.shared.loginWithKakaoAccount {oauthToken, error in
+        UserApi.shared.loginWithKakaoAccount { [weak self] oauthToken, error in
+            self?.isLoginProcess.onNext(true)
             guard error == nil else {
                 print("\(String(describing: error))")
                 return
@@ -205,8 +205,7 @@ final class UserService: NSObject {
             
             //do something
             _ = oauthToken
-            
-            self.getKakaoUserInfo()
+            self?.getKakaoUserInfo()
         }
     }
     
@@ -359,7 +358,7 @@ extension UserService {
                 createGoogleUser(email: email, password: password)
                 return
             }
-            
+            isLoginProcess.onNext(true)
             if result == nil {
                 createGoogleUser(email: email, password: password)
                 print("유저 만들고 로그인 성공")
@@ -379,7 +378,7 @@ extension UserService {
 
 extension UserService: ASAuthorizationControllerDelegate {
     func authorizationController(controller: ASAuthorizationController, didCompleteWithAuthorization authorization: ASAuthorization) {
-        
+        isLoginProcess.onNext(true)
         if let appleIDCredential = authorization.credential as? ASAuthorizationAppleIDCredential {
             guard let nonce = self.currentNonce else {
                 fatalError("Invalid state: A login callback was received, but no login request was sent.")
@@ -395,7 +394,7 @@ extension UserService: ASAuthorizationControllerDelegate {
             
             let credential = OAuthProvider.credential(withProviderID: "apple.com", idToken: idTokenString, rawNonce: nonce)
             
-            Auth.auth().signIn(with: credential) { authResult, error in
+            Auth.auth().signIn(with: credential) { [weak self] authResult, error in
                 if let error = error {
                     print ("Error Apple sign in: %@", error)
                     return

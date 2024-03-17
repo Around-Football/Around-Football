@@ -31,6 +31,7 @@ final class FirebaseAPI {
         }
         print("유저 업데이트 됨")
         UserService.shared.currentUser_Rx.onNext(user) //유저 업데이트하고 업데이트한 유저정보 보내줌
+        UserService.shared.checkUserInfoExist.onNext(true)
     }
     
     //회원 탈퇴
