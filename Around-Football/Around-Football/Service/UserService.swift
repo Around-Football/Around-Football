@@ -155,7 +155,7 @@ final class UserService: NSObject {
                             .setData(["id": uid]) { [weak self] error in
                                 guard let self else { return }
                                 if error != nil {
-                                    print("setUserDataError: \(error?.localizedDescription)")
+                                    print("setUserDataError: \(String(describing: error?.localizedDescription))")
                                     return
                                 }
                                 
