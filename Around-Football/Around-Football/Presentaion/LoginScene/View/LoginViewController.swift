@@ -15,6 +15,7 @@ import KakaoSDKUser
 import RxSwift
 import SnapKit
 import Then
+import JGProgressHUD
 
 final class LoginViewController: UIViewController {
     
@@ -24,7 +25,7 @@ final class LoginViewController: UIViewController {
     private var disposeBag = DisposeBag()
     private let smallLogo = UIImageView(image: UIImage(named: AFIcon.smallLogo))
     private let backgroundView = UIImageView(image: UIImage(named: AFIcon.loginBackgroundImage))
-    
+    private let hud = JGProgressHUD(style: .dark)
     private let logoImageView = UIImageView().then {
         $0.image = UIImage(named: AFIcon.textLogo)
         $0.contentMode = .scaleAspectFit
@@ -78,6 +79,7 @@ final class LoginViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         configureUI()
+        bindLoadingIndicator()
         bindInputUserData()
     }
     
@@ -88,30 +90,39 @@ final class LoginViewController: UIViewController {
     // MARK: - Selectors
     
     @objc
-    func kakaoLoginButtonTapped() {
+    private func kakaoLoginButtonTapped() {
         UserService.shared.kakaoSignIn()
     }
     
     @objc
-    func googleLoginButtonTapped() {
+    private func googleLoginButtonTapped() {
         UserService.shared.googleSignIn(self)
     }
     
     @objc
-    func appleLoginButtonTapped() {
+    private func appleLoginButtonTapped() {
         UserService.shared.appleSignIn()
     }
     
     @objc
-    func closeButtonTapped() {
+    private func closeButtonTapped() {
         dismiss(animated: true)
     }
     
     // MARK: - Helpers
     
+    private func bindLoadingIndicator() {
+        _ = UserService.shared.isLoginProcess.bind { [weak self] bool in
+            guard let self else { return }
+            if bool == false {
+                hud.dismiss()
+            }
+            hud.show(in: view)   
+        }
+    }
+    
     private func bindInputUserData() {
         UserService.shared.checkUserInfoExist
-            .take(1)
             .subscribe(onNext: { [weak self] bool in
                 guard let self else { return }
                 if bool == true {

@@ -18,7 +18,7 @@ final class InputInfoView: UIView {
     private lazy var mainScrollView = UIScrollView()
     private let contentView = UIView()
     
-    private let userNameLabel = AFTitleSmall(title: "이름")
+    private let userNameLabel = AFTitleSmall(title: "닉네임")
     private let userAgeLabel = AFTitleSmall(title: "나이")
     private let userAreaLabel = AFTitleSmall(title: "지역")
     
@@ -60,7 +60,7 @@ final class InputInfoView: UIView {
     
     let userNameTextField = UITextField().then {
         $0.layer.cornerRadius = LayoutOptions.cornerRadious
-        $0.placeholder = "이름을 입력해주세요"
+        $0.placeholder = "닉네임을 입력해주세요"
         $0.borderStyle = .roundedRect
         $0.layer.borderColor = AFColor.grayScale100.cgColor
         $0.font = AFFont.text

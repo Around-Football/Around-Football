@@ -1042,7 +1042,8 @@
 /* Begin PBXShellScriptBuildPhase section */
 		7C3BF9D22B9C5CA5009D8006 /* Run Script */ = {
 			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
+			alwaysOutOfDate = 1;
+			buildActionMask = 8;
 			files = (
 			);
 			inputFileListPaths = (
@@ -1059,7 +1060,7 @@
 			);
 			outputPaths = (
 			);
-			runOnlyForDeploymentPostprocessing = 0;
+			runOnlyForDeploymentPostprocessing = 1;
 			shellPath = /bin/sh;
 			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n\"${BUILD_DIR%/Build/*}/SourcePackages/checkouts/firebase-ios-sdk/Crashlytics/run\"\n";
 		};
@@ -1331,11 +1332,12 @@
 				INFOPLIST_FILE = "Around-Football/Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "어라운드풋볼";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.sports";
-				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "\"현재 위치사용을 허용하시겠습니까?\"";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "주변 모집공고를 보기 위해 위치정보가 필요해요. 동의해주세요";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = "Launch Screen";
 				INFOPLIST_KEY_UIStatusBarStyle = UIStatusBarStyleLightContent;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UIUserInterfaceStyle = Light;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1372,11 +1374,12 @@
 				INFOPLIST_FILE = "Around-Football/Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "어라운드풋볼";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.sports";
-				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "\"현재 위치사용을 허용하시겠습니까?\"";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "주변 모집공고를 보기 위해 위치정보가 필요해요. 동의해주세요";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = "Launch Screen";
 				INFOPLIST_KEY_UIStatusBarStyle = UIStatusBarStyleLightContent;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UIUserInterfaceStyle = Light;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
