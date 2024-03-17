@@ -336,9 +336,7 @@ final class InviteViewController: UIViewController, Searchable {
         let output = viewModel.transform(input: input)
         
         output.createDone.bind { [weak self] in
-            //TODO: -여기에서 버튼 인디케이터 끄기
             guard let self else { return }
-//            addButton.configuration?.indicator = .none
             print(#function)
             hud.dismiss()
             viewModel.coordinator.popInviteViewController()
@@ -469,7 +467,6 @@ final class InviteViewController: UIViewController, Searchable {
             .disposed(by: disposeBag)
     }
     
-    // TODO: - 업로드 시 indicator 추가: 덕훈
     private func setAddButton() {
         searchViewModel.dataSubject
             .subscribe(onNext: { [weak self] place in
