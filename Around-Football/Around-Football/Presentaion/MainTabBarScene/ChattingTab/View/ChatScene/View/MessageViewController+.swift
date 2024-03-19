@@ -15,7 +15,7 @@ extension MessageViewController: UIViewControllerTransitioningDelegate {
     }
     
     func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-        return DisMissAnim()
+        return DismissAnimation()
     }
 }
 

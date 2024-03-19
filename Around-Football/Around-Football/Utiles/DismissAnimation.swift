@@ -1,5 +1,5 @@
 //
-//  DisMissAnimation.swift
+//  DismissAnimation.swift
 //  Around-Football
 //
 //  Created by 진태영 on 11/15/23.
@@ -7,11 +7,11 @@
 
 import UIKit
 
-class DisMissAnim: UIPercentDrivenInteractiveTransition {
+final class DismissAnimation: UIPercentDrivenInteractiveTransition {
     
 }
 
-extension DisMissAnim: UIViewControllerAnimatedTransitioning {
+extension DismissAnimation: UIViewControllerAnimatedTransitioning {
     func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
         return 0.2
     }
