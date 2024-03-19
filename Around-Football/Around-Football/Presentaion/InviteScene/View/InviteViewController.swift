@@ -97,17 +97,24 @@ final class InviteViewController: UIViewController, Searchable {
         $0.datePickerMode = .time
         $0.locale = Locale(identifier: "ko_KR")
         $0.minuteInterval = 30
+        $0.date = datePicker.date
         $0.addTarget(self, action: #selector(startTimePickerSelected), for: .valueChanged)
+        if self.viewModel.recruit == nil {
+            let startTimeString = viewModel.setSelectedTime(input: $0.date)
+            viewModel.startTime.accept(startTimeString)
+        }
     }
     
     private lazy var endTimePicker = UIDatePicker().then {
         $0.datePickerMode = .time
         $0.locale = Locale(identifier: "ko_KR")
         $0.minuteInterval = 30
-        if self.viewModel.recruit == nil {
-            $0.minimumDate = Date(timeInterval: 1800, since: startTimePicker.date)
-        }
+        $0.date = Date(timeInterval: 1800, since: startTimePicker.date)
         $0.addTarget(self, action: #selector(endTimePickerSelected), for: .valueChanged)
+        if self.viewModel.recruit == nil {
+            let endTimeString = viewModel.setSelectedTime(input: $0.date)
+            viewModel.endTime.accept(endTimeString)
+        }
     }
     
     private let timePickerSeperator = UILabel().then {
