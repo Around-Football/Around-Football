@@ -9,9 +9,9 @@ import UIKit
 
 import SnapKit
 
-class ImageTransition: UIPercentDrivenInteractiveTransition {
-    var originPoint: CGPoint?
-    var originFrame: CGRect?
+final class ImageTransition: UIPercentDrivenInteractiveTransition {
+    private var originPoint: CGPoint?
+    private var originFrame: CGRect?
     
     func setPoint(point: CGPoint?) {
         self.originPoint = point
