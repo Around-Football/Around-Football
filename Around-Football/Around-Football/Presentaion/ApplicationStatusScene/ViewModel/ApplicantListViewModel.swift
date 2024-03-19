@@ -149,8 +149,7 @@ final class ApplicantListViewModel {
         let currentUser = getCurrentUser()
         let recruit = getRecruit()
         channelAPI.checkExistAvailableChannel(owner: currentUser,
-                                              recruitID: recruit.id) { [weak self] isAvailable, channelId in
-            guard let self = self else { return }
+                                              recruitID: recruit.id) { isAvailable, channelId in
             print("DEBUG - ", #function, isAvailable)
             if isAvailable, let channelId = channelId {
                 let channelInfo = ChannelInfo(id: channelId, withUser: user, recruitID: recruit.id, recruitUserID: recruit.userID)
