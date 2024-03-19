@@ -110,4 +110,3 @@ struct Recruit: Codable, Identifiable {
         self.recruitImages = dictionary["recruitImages"] as? [String] ?? []
     }
 }
-
