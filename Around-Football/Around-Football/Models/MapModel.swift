@@ -51,18 +51,8 @@ enum LabelType {
     case currentPosition
     case fieldPosition
 }
-// TODO: - Poi 객체 정의하여 PoiID + StyleID 묶기
+
 enum Poi {
     case currentPosition
     case fieldPosition([String])
 }
-
-//enum GuiButtonComponent: String {
-//    case trackingPosition
-//    
-//    var name: String {
-//        switch self {
-//        case .trackingPosition: return "trackingPosition"
-//        }
-//    }
-//}
