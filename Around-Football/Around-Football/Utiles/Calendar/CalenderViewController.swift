@@ -7,8 +7,6 @@
 
 import UIKit
 
-//TODO: - 달력 바꾸기
-
 final class CalenderViewController: UIViewController {
     
     // MARK: - Properties
