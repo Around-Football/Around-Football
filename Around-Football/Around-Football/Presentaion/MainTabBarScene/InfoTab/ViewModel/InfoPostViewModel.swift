@@ -85,8 +85,12 @@ final class InfoPostViewModel {
     private func setFootballImage(recruit: Recruit) -> UIImage? {
         let imageView = UIImageView()
         let placeHolder = AFIcon.defaultfootballImage
-        imageView.kf.setImage(with: URL(string:recruit.recruitImages.first ?? AFIcon.defaultFootballImageURL),
-                                        placeholder: placeHolder)
+        imageView.kf.setImage(
+            with: URL(
+                string: recruit.recruitImages.first ?? AFIcon.defaultFootballImageURL
+            ),
+            placeholder: placeHolder
+        )
         return imageView.image
     }
     
@@ -98,11 +102,11 @@ final class InfoPostViewModel {
                 let recruits = observe.1
                 if index == 0 { // 모집 중
                     return .just(recruits.filter {
-                        $0.matchDate.dateValue() > Date() && $0.acceptedApplicantsUID.count < $0.pendingApplicantsUID.count
+                        $0.matchDate.dateValue() > Date() && $0.acceptedApplicantsUID.count < $0.recruitedPeopleCount
                     })
                 } else { // 마감
                     return .just(recruits.filter {
-                        $0.matchDate.dateValue() <= Date() || $0.acceptedApplicantsUID.count >= $0.pendingApplicantsUID.count
+                        $0.matchDate.dateValue() <= Date() || $0.acceptedApplicantsUID.count >= $0.recruitedPeopleCount
                     })
                 }
             }
