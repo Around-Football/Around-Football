@@ -24,7 +24,7 @@ final class WrittenPostViewController: UIViewController, UITableViewDelegate {
     private lazy var emptyView = EmptyAFView(type: EmptyAFView.SettingTitle.written).then {
         $0.isHidden = true
     }
-
+    
     private var writtenPostTableView = UITableView().then {
         $0.register(HomeTableViewCell.self, forCellReuseIdentifier: HomeTableViewCell.id)
         $0.separatorInset = UIEdgeInsets().with({ edge in
@@ -36,7 +36,7 @@ final class WrittenPostViewController: UIViewController, UITableViewDelegate {
     private let segmentContainerView = UIView().then {
         $0.backgroundColor = .systemBackground
     }
- 
+    
     lazy var segmentControlView = UISegmentedControl().then {
         $0.selectedSegmentTintColor = .clear
         $0.setBackgroundImage(UIImage(), for: .normal, barMetrics: .default)
@@ -45,14 +45,12 @@ final class WrittenPostViewController: UIViewController, UITableViewDelegate {
         $0.insertSegment(withTitle: "마감 공고", at: 1, animated: true)
         $0.setWidth(calculateSegmentWidth(title: "모집 공고"), forSegmentAt: 0)
         $0.setWidth(calculateSegmentWidth(title: "마감 공고"), forSegmentAt: 1)
-
         $0.selectedSegmentIndex = 0
-        
         $0.setTitleTextAttributes([
             NSAttributedString.Key.foregroundColor: AFColor.grayScale100,
             NSAttributedString.Key.font: AFFont.titleRegular as Any
         ], for: .normal)
-
+        
         $0.setTitleTextAttributes([
             NSAttributedString.Key.foregroundColor: AFColor.secondary,
             NSAttributedString.Key.font: AFFont.titleRegular as Any], for: .selected)
@@ -81,10 +79,10 @@ final class WrittenPostViewController: UIViewController, UITableViewDelegate {
         loadWrittenPost.onNext(())
     }
     
-//    override func viewWillAppear(_ animated: Bool) {
-//        super.viewWillAppear(animated)
-//        loadWrittenPost.onNext(())
-//    }
+    //    override func viewWillAppear(_ animated: Bool) {
+    //        super.viewWillAppear(animated)
+    //        loadWrittenPost.onNext(())
+    //    }
     
     // MARK: - Helpers
     
@@ -96,20 +94,23 @@ final class WrittenPostViewController: UIViewController, UITableViewDelegate {
                 let segmentWidth = segmentControlView.frame.width / CGFloat(segmentControlView.numberOfSegments)
                 let selectedSegmentCenterX = segmentWidth * CGFloat(index) + segmentWidth / 2
                 let underlineViewWidth = underLineView.frame.width
-
+                
                 DispatchQueue.main.async {
                     UIView.animate(withDuration: 0.2, animations: {
                         self.underLineView.frame.origin.x = selectedSegmentCenterX - underlineViewWidth / 2
                         self.view.layoutIfNeeded()
                     })
                 }
+                
             }
             .disposed(by: disposeBag)
     }
     
     private func bind() {
-        let input = InfoPostViewModel.Input(loadPost: loadWrittenPost.asObservable(),
-                                            selectedSegment: segmentControlView.rx.selectedSegmentIndex.asObservable())
+        let input = InfoPostViewModel.Input(
+            loadPost: loadWrittenPost.asObservable(),
+            selectedSegment: segmentControlView.rx.selectedSegmentIndex.asObservable()
+        )
         
         let output = viewModel.transform(input)
         bindRecruit(with: output.writtenList)
@@ -142,8 +143,11 @@ final class WrittenPostViewController: UIViewController, UITableViewDelegate {
                     first.matchDate.dateValue() > second.matchDate.dateValue()
                 }
             }
-            .bind(to: writtenPostTableView.rx.items(cellIdentifier: HomeTableViewCell.id,
-                                             cellType: HomeTableViewCell.self)) { index, item, cell in
+            .bind(to: writtenPostTableView.rx.items(
+                cellIdentifier: HomeTableViewCell.id,
+                cellType: HomeTableViewCell.self)
+            ) { index, item, cell in
+                
                 cell.bindContents(item: item)
                 cell.configureButtonTap()
             }.disposed(by: disposeBag)
@@ -158,7 +162,7 @@ final class WrittenPostViewController: UIViewController, UITableViewDelegate {
                          emptyView)
         
         segmentContainerView.addSubviews(segmentControlView,
-                                       underLineView)
+                                         underLineView)
         
         segmentContainerView.snp.makeConstraints {
             $0.top.equalTo(view.safeAreaLayoutGuide)
