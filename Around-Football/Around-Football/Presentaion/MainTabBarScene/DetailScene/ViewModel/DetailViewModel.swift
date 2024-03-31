@@ -78,6 +78,10 @@ final class DetailViewModel {
         }
     }
     
+    func fetchRecruitUser() -> String? {
+        return self.getRecruit()?.userName
+    }
+    
     func checkChannelAndPushChatViewController() {
         guard let currentUser = getCurrentUser(),
               let recruitUser = try? recruitUser.value(),
