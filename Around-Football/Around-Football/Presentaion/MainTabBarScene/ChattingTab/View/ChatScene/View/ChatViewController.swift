@@ -113,7 +113,7 @@ class ChatViewController: UIViewController {
                 handler: { [weak self] _ in
                     self?.sendEmail(
                         message: """
-신고 유저: \(String(describing: self?.viewModel.withUser.value?.userName))\n
+신고 유저: \(self?.viewModel.fetchReportUser() ?? "직접 입력")\n
 신고 사유:\n
 신고 내용:
 """
