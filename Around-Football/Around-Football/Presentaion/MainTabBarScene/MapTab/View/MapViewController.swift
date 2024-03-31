@@ -124,7 +124,7 @@ final class MapViewController: UIViewController {
         self.moveCamera(latitude: location.latitude, longitude: location.longitude)
     }
     
-    func tapHandler(_ param: PoiInteractionEventParam) {
+    func poiTappedHandler(_ param: PoiInteractionEventParam) {
         let itemID = param.poiItem.itemID
         viewModel.presentDetailViewController(itemID: itemID)
     }

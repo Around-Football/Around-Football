@@ -74,7 +74,6 @@ extension MapViewController: MapControllerDelegate, KakaoMapEventDelegate {
         //KMController 생성.
         mapController = KMController(viewContainer: mapContainer)
         mapController!.delegate = self
-//        mapController?.initEngine() //엔진 초기화. 엔진 내부 객체 생성 및 초기화가 진행된다.
     }
     
     func addViews() {
@@ -101,6 +100,8 @@ extension MapViewController: MapControllerDelegate, KakaoMapEventDelegate {
     }
     
     func addViewSucceeded(_ viewName: String, viewInfoName: String) {
+        let view = mapController?.getView("mapview") as! KakaoMap
+        view.eventDelegate = self
         let location = self.viewModel.currentLocation
         let currentMapLabel = MapLabel(labelType: .currentPosition, poi: .currentPosition)
         let mapPoint = MapPoint(longitude: location.longitude, latitude: location.latitude)
@@ -108,7 +109,6 @@ extension MapViewController: MapControllerDelegate, KakaoMapEventDelegate {
         createPoiStyle(label: currentMapLabel)
         createPois(label: currentMapLabel, mapPoint: mapPoint)
         moveCamera(latitude: location.latitude, longitude: location.longitude)
-
     }
     
     /**
@@ -232,9 +232,9 @@ extension MapViewController: MapControllerDelegate, KakaoMapEventDelegate {
             let lodPois = layer?.addLodPois(options: datas.0, at: datas.1)
             guard let lodPois = lodPois else { return }
             let _ = lodPois.map {
-                let _ = $0.addPoiTappedEventHandler(
+                _ = $0.addPoiTappedEventHandler(
                     target: self,
-                    handler: MapViewController.tapHandler
+                    handler: MapViewController.poiTappedHandler
                 )
             }
             layer?.showAllLodPois()
