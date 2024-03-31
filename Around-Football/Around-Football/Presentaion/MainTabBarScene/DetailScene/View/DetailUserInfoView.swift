@@ -18,7 +18,7 @@ final class DetailUserInfoView: UIView {
     private let isInfoTab: Bool
     
     //설정버튼 카메라
-    private let cameraImage = UIImageView(image: UIImage(named: AFIcon.cameraButton))
+    private lazy var cameraImage = UIImageView(image: UIImage(named: AFIcon.cameraButton))
     
     lazy var profileImageView = UIImageView().then {
         $0.image = UIImage(named: AFIcon.fieldImage)
