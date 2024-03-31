@@ -84,8 +84,8 @@ final class MapViewController: UIViewController {
     // MARK: - Lifecycle
     
     deinit {
-        mapController?.stopRendering()
-        mapController?.stopEngine()
+        mapController?.pauseEngine()
+        mapController?.resetEngine()
     }
     
     override func viewDidLoad() {
@@ -101,12 +101,12 @@ final class MapViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         addObservers()
         _appear = true
-        if mapController?.engineStarted == false {
-            mapController?.startEngine()
+        if mapController?.isEnginePrepared == false {
+            mapController?.prepareEngine()
         }
         
-        if mapController?.rendering == false {
-            mapController?.startRendering()
+        if mapController?.isEngineActive == false {
+            mapController?.activateEngine()
         }
     }
     
@@ -149,7 +149,7 @@ final class MapViewController: UIViewController {
             .disposed(by: disposeBag)
     }
     
-    private func setUserLocation() {
+    func setUserLocation() {
         guard
             let locationCoordinate = self.locationManager.location?.coordinate
         else {
