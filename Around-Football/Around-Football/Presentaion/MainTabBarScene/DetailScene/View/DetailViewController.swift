@@ -226,7 +226,11 @@ final class DetailViewController: UIViewController {
             style: .destructive,
             handler: { [weak self] _ in
                 self?.sendEmail(
-                    message: "신고 유저: \(self?.viewModel.fetchRecruitUser() ?? "직접 입력")\n신고 사유:\n신고 내용:"
+                    message: """
+신고 유저: \(self?.viewModel.fetchRecruitUser() ?? "직접 입력")\n
+신고 사유:\n
+신고 내용:
+"""
                 )
             }
         )
