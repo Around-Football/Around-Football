@@ -102,6 +102,7 @@ extension MapViewController: MapControllerDelegate, KakaoMapEventDelegate {
     func addViewSucceeded(_ viewName: String, viewInfoName: String) {
         let view = mapController?.getView("mapview") as! KakaoMap
         view.eventDelegate = self
+        view.viewRect = mapContainer.bounds
         let location = self.viewModel.currentLocation
         let currentMapLabel = MapLabel(labelType: .currentPosition, poi: .currentPosition)
         let mapPoint = MapPoint(longitude: location.longitude, latitude: location.latitude)
@@ -187,7 +188,7 @@ extension MapViewController: MapControllerDelegate, KakaoMapEventDelegate {
                 competitionType: .none,
                 competitionUnit: .symbolFirst,
                 orderType: .rank,
-                zOrder: 0,
+                zOrder: 5000,
                 radius: 20.0
             )
             let _ = manager.addLodLabelLayer(option: layerOptions)
@@ -227,9 +228,9 @@ extension MapViewController: MapControllerDelegate, KakaoMapEventDelegate {
             return
         }
         if label.labelType == .fieldPosition {
-            guard let datas else { return }
+            guard let (options, positions) = datas else { return }
             let layer = manager.getLodLabelLayer(layerID: label.layerID)
-            let lodPois = layer?.addLodPois(options: datas.0, at: datas.1)
+            let lodPois = layer?.addLodPois(options: options, at: positions)
             guard let lodPois = lodPois else { return }
             let _ = lodPois.map {
                 _ = $0.addPoiTappedEventHandler(
