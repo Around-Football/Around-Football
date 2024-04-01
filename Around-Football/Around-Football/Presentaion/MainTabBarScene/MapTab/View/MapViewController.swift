@@ -31,7 +31,14 @@ final class MapViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
-    lazy var mapContainer: KMViewContainer = KMViewContainer(frame: self.view.frame)
+    lazy var mapContainer: KMViewContainer = KMViewContainer(
+        frame: CGRect(
+            x: 0,
+            y: 0,
+            width: UIScreen.main.bounds.width,
+            height: UIScreen.main.bounds.height
+        )
+    )
     var mapController: KMController?
     var _observerAdded: Bool = false
     var _auth: Bool = false
