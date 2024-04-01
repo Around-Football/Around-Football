@@ -234,13 +234,14 @@ final class InviteViewController: UIViewController, Searchable {
         contentPlaceHolderLabel.frame = CGRect(x: 5,
                                                y: 0,
                                                width: 300,
-                                               height: 30)
+                                               height: 70)
     }
     
     let contentPlaceHolderLabel = UILabel().then {
-        $0.text = "추가 내용을 작성해주세요."
+        $0.text = "추가 내용을 작성해주세요.\n부적절하거나 불쾌감을 줄 수 있는 컨텐츠는 제재를 받을 수 있습니다"
         $0.font = AFFont.text?.withSize(16)
         $0.textColor = AFColor.grayScale100
+        $0.numberOfLines = 0
         $0.textAlignment = .left
     }
     
