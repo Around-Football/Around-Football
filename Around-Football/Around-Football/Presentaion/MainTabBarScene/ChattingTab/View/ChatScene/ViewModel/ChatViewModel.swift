@@ -105,6 +105,10 @@ final class ChatViewModel {
         self.messages.accept([])
     }
     
+    func fetchReportUser() -> String? {
+        return self.withUser.value?.userName
+    }
+    
     private func fetchWithUser(by inputObserver: Observable<Void>) {
         inputObserver
             .withUnretained(self)

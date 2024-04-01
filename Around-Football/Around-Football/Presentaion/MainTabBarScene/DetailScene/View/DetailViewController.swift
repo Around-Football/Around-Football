@@ -93,6 +93,17 @@ final class DetailViewController: UIViewController {
         $0.alignment = .center
     }
     
+    private lazy var navigationRightBarButton: UIBarButtonItem = {
+        let barButton = UIBarButtonItem(
+            image: UIImage(systemName: "ellipsis"),
+            style: .plain,
+            target: self,
+            action: #selector(tappedNavigationRightBarButton)
+        )
+        barButton.tintColor = AFColor.grayScale200
+        return barButton
+    }()
+    
     // MARK: - Lifecycles
     
     init(viewModel: DetailViewModel) {
@@ -162,7 +173,6 @@ final class DetailViewController: UIViewController {
         groundLabel.text = recruit.fieldName
         detailView.setValues(recruit: recruit
         )
-        //        detailImageScrollView.configure(images: [UIImage(named: "DefaultRecruitImage"), UIImage(named: "CurrentPositionMark"), UIImage(named: "DefaultProfileImage"), UIImage(named: "DefaultRecruitImage")])
         var downloadImages = [UIImage?]()
         
         recruit.recruitImages.forEach { url in
@@ -204,8 +214,42 @@ final class DetailViewController: UIViewController {
         }
     }
     
+    @objc
+    private func tappedNavigationRightBarButton() {
+        let actionSheet = UIAlertController(
+            title: nil,
+            message: "내부 검토 후  24시간 이내 해당 유저의 이용제한 절차가 진행됩니다. 허위 신고 시 서비스 이용제한 등의 불이익을 받을 수 있으니 주의해 주세요.",
+            preferredStyle: .actionSheet
+        )
+        let action = UIAlertAction(
+            title: "신고하기",
+            style: .destructive,
+            handler: { [weak self] _ in
+                self?.sendEmail(
+                    message: """
+신고 유저: \(self?.viewModel.fetchRecruitUser() ?? "직접 입력")\n
+신고 사유:\n
+신고 내용:
+"""
+                )
+            }
+        )
+        actionSheet.addAction(action)
+        
+        actionSheet.addAction(
+            UIAlertAction(
+                title: "취소",
+                style: .cancel,
+                handler: nil
+            )
+        )
+        
+        self.present(actionSheet, animated: true, completion: nil)
+    }
+    
     private func configeUI() {
         view.backgroundColor = .white
+        navigationItem.rightBarButtonItem = navigationRightBarButton
         view.addSubviews(scrollView,
                          bottomDivider,
                          bottomStackView)
