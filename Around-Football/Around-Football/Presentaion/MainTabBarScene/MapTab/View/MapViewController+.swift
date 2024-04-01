@@ -16,24 +16,43 @@ extension MapViewController: MapControllerDelegate, KakaoMapEventDelegate {
     
     // 인증 성공시 delegate 호출.
     func authenticationSucceeded() {
-        _auth = true
-        print("인증 성공")
+        if _auth == false {
+            _auth = true
+        }
         
-        //엔진 시작 및 렌더링 준비. 준비가 끝나면 MapControllerDelegate의 addViews 가 호출된다.
-        mapController?.startEngine()
-        mapController?.startRendering() //렌더링 시작.
+        if _appear && mapController?.isEngineActive == false {
+            mapController?.activateEngine()
+        }
     }
     
     // 인증 실패시 호출.
     func authenticationFailed(_ errorCode: Int, desc: String) {
         print("error code: \(errorCode)")
-        print("\(desc)")
-        
-        // 인증 실패 delegate 호출 이후 5초뒤에 재인증 시도..
-        DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
-            print("retry auth...")
-            
-            self.mapController?.authenticate()
+        print("desc: \(desc)")
+        _auth = false
+        switch errorCode {
+        case 400:
+            print("지도 종료(API인증 파라미터 오류)")
+            break
+        case 401:
+            print("지도 종료(API인증 키 오류)")
+            break
+        case 403:
+            print("지도 종료(API인증 권한 오류)")
+            break
+        case 429:
+            print("지도 종료(API 사용쿼터 초과)")
+            break
+        case 499:
+            print("지도 종료(네트워크 오류) 5초 후 재시도..")
+            // 인증 실패 delegate 호출 이후 5초뒤에 재인증 시도..
+            DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
+                print("retry auth...")
+                self.mapController?.prepareEngine()
+            }
+            break
+        default:
+            break
         }
     }
     
@@ -41,12 +60,12 @@ extension MapViewController: MapControllerDelegate, KakaoMapEventDelegate {
     
     @objc 
     func willResignActive(){
-        mapController?.stopRendering()  //뷰가 inactive 상태로 전환되는 경우 렌더링 중인 경우 렌더링을 중단.
+        mapController?.pauseEngine()  //뷰가 inactive 상태로 전환되는 경우 렌더링 중인 경우 렌더링을 중단.
     }
     
     @objc 
     func didBecomeActive(){
-        mapController?.startRendering() //뷰가 active 상태가 되면 렌더링 시작. 엔진은 미리 시작된 상태여야 함.
+        mapController?.activateEngine() //뷰가 active 상태가 되면 렌더링 시작. 엔진은 미리 시작된 상태여야 함.
     }
     
     // MARK: - Helpers
@@ -55,7 +74,6 @@ extension MapViewController: MapControllerDelegate, KakaoMapEventDelegate {
         //KMController 생성.
         mapController = KMController(viewContainer: mapContainer)
         mapController!.delegate = self
-        mapController?.initEngine() //엔진 초기화. 엔진 내부 객체 생성 및 초기화가 진행된다.
     }
     
     func addViews() {
@@ -82,6 +100,9 @@ extension MapViewController: MapControllerDelegate, KakaoMapEventDelegate {
     }
     
     func addViewSucceeded(_ viewName: String, viewInfoName: String) {
+        let view = mapController?.getView("mapview") as! KakaoMap
+        view.eventDelegate = self
+        view.viewRect = mapContainer.bounds
         let location = self.viewModel.currentLocation
         let currentMapLabel = MapLabel(labelType: .currentPosition, poi: .currentPosition)
         let mapPoint = MapPoint(longitude: location.longitude, latitude: location.latitude)
@@ -89,7 +110,6 @@ extension MapViewController: MapControllerDelegate, KakaoMapEventDelegate {
         createPoiStyle(label: currentMapLabel)
         createPois(label: currentMapLabel, mapPoint: mapPoint)
         moveCamera(latitude: location.latitude, longitude: location.longitude)
-
     }
     
     /**
@@ -168,7 +188,7 @@ extension MapViewController: MapControllerDelegate, KakaoMapEventDelegate {
                 competitionType: .none,
                 competitionUnit: .symbolFirst,
                 orderType: .rank,
-                zOrder: 0,
+                zOrder: 5000,
                 radius: 20.0
             )
             let _ = manager.addLodLabelLayer(option: layerOptions)
@@ -208,14 +228,14 @@ extension MapViewController: MapControllerDelegate, KakaoMapEventDelegate {
             return
         }
         if label.labelType == .fieldPosition {
-            guard let datas else { return }
+            guard let (options, positions) = datas else { return }
             let layer = manager.getLodLabelLayer(layerID: label.layerID)
-            let lodPois = layer?.addLodPois(options: datas.0, at: datas.1)
+            let lodPois = layer?.addLodPois(options: options, at: positions)
             guard let lodPois = lodPois else { return }
             let _ = lodPois.map {
-                let _ = $0.addPoiTappedEventHandler(
+                _ = $0.addPoiTappedEventHandler(
                     target: self,
-                    handler: MapViewController.tapHandler
+                    handler: MapViewController.poiTappedHandler
                 )
             }
             layer?.showAllLodPois()
@@ -271,6 +291,7 @@ extension MapViewController: CLLocationManagerDelegate {
             locationManager.authorizationStatus == .authorizedWhenInUse {
             locationManager.startUpdatingLocation()
         } else {
+            locationManager.requestWhenInUseAuthorization()
             print("위치 서비스 허용 OFF")
         }
     }
@@ -281,6 +302,29 @@ extension MapViewController: CLLocationManagerDelegate {
             latitude: location.coordinate.latitude,
             longitude: location.coordinate.longitude
         )
+    }
+    
+    func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
+        switch manager.authorizationStatus {
+        case .notDetermined:
+            break
+        case .restricted:
+            break
+        case .denied:
+            break
+        case .authorizedAlways:
+            guard let location = locationManager.location?.coordinate else { return }
+            self.moveCamera(latitude: location.latitude, longitude: location.longitude)
+            setUserLocation()
+            changeCurrentPoi()
+        case .authorizedWhenInUse:
+            guard let location = locationManager.location?.coordinate else { return }
+            self.moveCamera(latitude: location.latitude, longitude: location.longitude)
+            setUserLocation()
+            changeCurrentPoi()
+        @unknown default:
+            break
+        }
     }
     
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
