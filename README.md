@@ -38,19 +38,95 @@
 
 - 최소 지원 버전: iOS 15.0+
 - Xcode Version 15.0.0
-- iPhone 15 Pro에서 최적화됨, iPhone SE3까지 호환 가능
-- 다크모드 지원, 가로모드 미지원
+- iPhone 15 Pro, iPhone 15 Pro Max, iPhone SE3등 전 기종 호환 가능
+<br>
+
+## 💡 기술 소개
+
+### MVVM
+- 사용자 입력 및 뷰의 로직과 비즈니스에 관련된 로직을 분리하기 위해 MVVM을 도입
+- Input, Output 패턴을 활용해 데이터의 흐름을 전달받을 값과, 전달할 값을 명확하게 나누고 관리
+<br>
+
+### Coordinator 패턴
+- 회원가입과 Login, 채팅 Alert시 DeepLink 등 복잡한 화면이동을 관리하기 위해 뷰 컨트롤러와 화면 전환 로직을 분리
+- Coordinator 생성, ViewModel 생성, ViewController 생성하는 패턴으로 의존성 주입
+- ViewController의 Input이 ViewModel의 Coordinator로 전달하여 화면 전환
+<br>
+
+### RxSwift
+- 음악 앱의 특성상 네트워크 요청이 많고, 비동기적으로 작동하기 때문에 비동기 처리와 Thread 관리가 중요
+- RxSwift를 활용해 앱 내의 일관성 있는 비동기 처리와 Traits를 활용하여 Thread 관리
+<br>
+
+### Firebase
+- 사용자 인증, 게시글 작성, 사용자 정보 저장, 실시간 채팅 등의 기능 구현을 위해 별도의 서버 구현없이 빠르게 Firebase를 활용해 구현
+- Analytics, Crashlytics를 활용해 실시간 앱 상태 관리와 Crash를 관리하고 Bug Fix
 <br>
 
 ## ✅ 트러블 슈팅
 
 ### 트러블 슈팅 1
 <div markdown="1">
-내용
+SwiftUi에서 구현했던 Calander를 Custom해서 UIKiT Project에 적용하기 위해 
+UIHostingController를 활용해 적용하고, 선택한 날짜를 RxSwift의 combineLatest를 활용해 관리했습니다.
 <br>
 
 ```swift
+//HCalendarView (SwiftUI)
+ScrollView(.horizontal, showsIndicators: false) {
+    HStack(spacing: 8) {
+        let components = (0...14) .map {
+            calendar.date(byAdding: .day, value: $0, to: startDate) ?? Date()
+        }
+        
+        ForEach(components, id: \.self) { date in
+            if calendar.component(.day, from: date) == 1 {
+                VStack {
+                    Text("\(calendar.component(.month, from: date))월")
+                        .font(Font(AFFont.titleCard ?? UIFont()))
+                        .padding(.bottom, 4)
+                }
+                .frame(width: 50, height: 65)
+                .background(Color(uiColor: AFColor.primary))
+                .cornerRadius(30)
+            }
+            //...
+            .onTapGesture {
+                let dateString = setDateToString(input: date)
+                if observableViewModel.selectedDateSet.contains(dateString) {
+                    observableViewModel.selectedDateSet.remove(dateString)
+                } else {
+                    observableViewModel.selectedDateSet.insert(dateString)
+                }
+                viewModel.selectedDateSubject.accept(observableViewModel.selectedDateSet)
+            }
+        }
+    }
+}
 
+//HomeViewController
+private func bindUI() {
+  Observable.combineLatest(
+            output.recruitList,
+            oneLIneCalender.rootView.viewModel.selectedDateSubject.asObservable()
+        )
+        .map { [weak self] (recruits, selectedDateSet) in
+            if !selectedDateSet.isEmpty {
+                self?.resetButton.isSelected = false
+                return recruits.filter { recruit in
+                    selectedDateSet.contains(recruit.matchDateString)
+                }
+            }
+            return recruits
+        }
+        .map { recruits in
+            recruits.sorted { first, second in
+                first.matchDate.dateValue() > second.matchDate.dateValue()
+            }
+        }
+        //...
+}
 ```
 </div>
 <br>
@@ -66,7 +142,7 @@
 </div>
 <br>
 
-### 트러블 슈팅 3
+### 트러블 슈팅 (창현1)
 <div markdown="1">
 내용
 <br>
@@ -77,7 +153,7 @@
 </div>
 <br>
 
-### 트러블 슈팅 4
+### 트러블 슈팅 (창현2)
 <div markdown="1">
 내용
 <br>
@@ -88,7 +164,7 @@
 </div>
 <br>
 
-### 트러블 슈팅 5
+### 트러블 슈팅 (진태1)
 <div markdown="1">
 내용
 <br>
@@ -99,7 +175,7 @@
 </div>
 <br>
 
-### 트러블 슈팅 6
+### 트러블 슈팅 6 (진태2)
 <div markdown="1">
 내용
 <br>
