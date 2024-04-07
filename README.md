@@ -1,43 +1,32 @@
 # Around Football (어라운드 풋볼)⚽️
-`우리동네 풋살, 축구 용병은 어라운드 풋볼과 함께!` <br>
-`UIKit + MVVM-C + RxSwift` <br>
+우리 동네 풋살, 축구 용병은 어라운드 풋볼과 함께! <br>
+필터 기능을 통해 내게 맞는 적합한 경기를 추천받아 빠르게 신청이 가능하며, 간편하게 용병을 구할 수도 있습니다. <br>
+위치 기반으로 사용자들이 보다 쉽게 가까운 경기장을 찾을 수 있으며, 용병 필수 정보와 모집 현황을 직관적으로 제공하여 빠른 용병 매칭이 가능합니다. <br>
+실시간 채팅 기능을 통해 주최자와 신청자 간의 빠른 문의도 가능합니다. <br>
+<br>
 
 ## 🔗 Links
 ### [📱 AppStore](https://추가하기)
 ### [💻 GitHub](https://github.com/Around-Football/Around-Football)
 
-## 🧑🏻‍💻 핵심 키워드
-![iOS](https://img.shields.io/badge/iOS-000000?style=for-the-badge&logo=ios&logoColor=white)
-![Swift](https://img.shields.io/badge/swift-F54A2A?style=for-the-badge&logo=swift&logoColor=white)
-![UIKit](https://img.shields.io/badge/UIkit-2396F3?style=for-the-badge&logo=UIKit&logoColor=white)
-![Xcode](https://img.shields.io/badge/Xcode-007ACC?style=for-the-badge&logo=Xcode&logoColor=white)
-![Realm](https://img.shields.io/badge/realm-39477F?style=for-the-badge&logo=Realm&logoColor=white)
-
 ## 📌 주요 기능
-- 
--
--
+- 예정된 풋살 경기와 용병 모집 공고를 올리고 용병 모집
+- 지역, 매치유형, 성별, 날짜 필터링 검색 제공
+- KakaoMap을 기반으로 주변 매칭 검색 가능
+- 채팅을 통해 주최자와 대화 가능
+- Apple, Google, Kakao 3가지 SocialLogin을 통한 빠른 회원가입
+- 관심 글, 신청 글, 작성 글 등 한 눈에 모아서 관리 가능
+<br>
+
+## 기술 스택
+- UIKit, MVVM-C, Input-Output, Singleton, CodeBasedUI
+- RxSwift, RxAlamofire, RxDataSource
+- Firebase Store, Auth, Storage, Analytics, Crashlytics
+- Kingfisher, SnapKit
 <br>
 
 
 ## 📱시연 영상
-
-
-
-## ✅ 트러블 슈팅
-
-
-## 📂 폴더 트리
-<details>
-<summary>폴더 트리 열어보기 </summary>
-<div markdown=“1”>
-<pre>
-  AroundFootball/
-├─ AppDelegate.swift
-├─ SceneDelegate.swift
-</pre>
-</div>
-</details>
 <br>
 
 ## 💻 앱 개발 환경
@@ -47,3 +36,6 @@
 - iPhone 15 Pro에서 최적화됨, iPhone SE3까지 호환 가능
 - 다크모드 지원, 가로모드 미지원
 <br>
+
+## ✅ 트러블 슈팅
+
