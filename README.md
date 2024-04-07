@@ -68,9 +68,9 @@
 
 ## ✅ 트러블 슈팅
 
-### 트러블 슈팅 1
+### SwiftUI와 UIKit, RxSwift와 연동
 <div markdown="1">
-SwiftUI에서 구현했던 Custom Calander를 UIKit Project에 적용하기 위해<br>
+빠른 개발을 위해 SwiftUI에서 구현했던 Custom Calander를 UIKit Project에 적용하려 했습니다.<br>
 UIHostingController를 활용하고, 선택한 날짜를 RxSwift의 combineLatest를 활용해 가공해서 사용했습니다.<br>
 <br>
 
