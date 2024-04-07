@@ -31,7 +31,7 @@
 <br>
 
 ## 📱시연 영상
-영상 첨부
+영상 첨부 예정
 <br>
 
 ## 💻 앱 개발 환경
@@ -64,11 +64,13 @@
 - Analytics, Crashlytics를 활용해 실시간 앱 상태 관리와 Crash를 관리하고 Bug Fix
 <br>
 
+### 기술 추가할거있으면 하기
+
 ## ✅ 트러블 슈팅
 
 ### 트러블 슈팅 1
 <div markdown="1">
-SwiftUi에서 구현했던 Custom Calander를 UIKit Project에 적용하기 위해<br>
+SwiftUI에서 구현했던 Custom Calander를 UIKit Project에 적용하기 위해<br>
 UIHostingController를 활용하고, 선택한 날짜를 RxSwift의 combineLatest를 활용해 가공해서 사용했습니다.<br>
 <br>
 
