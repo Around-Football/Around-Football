@@ -89,10 +89,6 @@ ScrollView(.horizontal, showsIndicators: false) {
                         .font(Font(AFFont.titleCard ?? UIFont()))
                         .padding(.bottom, 4)
                 }
-                .frame(width: 50, height: 65)
-                .background(Color(uiColor: AFColor.primary))
-                .cornerRadius(30)
-            }
             //...
             .onTapGesture {
                 let dateString = setDateToString(input: date)
