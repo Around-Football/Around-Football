@@ -5,15 +5,20 @@
 실시간 채팅 기능을 통해 주최자와 신청자 간의 빠른 문의도 가능합니다. <br>
 <br>
 
+## 📱스크린샷
+<img src="https://github.com/Around-Football/Around-Football/assets/106993057/b0401b0d-d5eb-4225-ab06-eaa77556f5ca" width="800"></img>
+
+
 ## 🔗 Links
 ### [📱 AppStore](https://추가하기)
 ### [💻 GitHub](https://github.com/Around-Football/Around-Football)
+<br>
 
 ## 📌 주요 기능
 - 예정된 풋살 경기와 용병 모집 공고를 올리고 용병 모집
-- 지역, 매치유형, 성별, 날짜 필터링 검색 제공
+- 지역, 매치 유형, 성별, 날짜 필터링 검색 제공
 - KakaoMap을 기반으로 주변 매칭 검색 가능
-- 채팅을 통해 주최자와 대화 가능
+- 채팅을 통해 주최자와 실시간 대화 가능
 - Apple, Google, Kakao 3가지 SocialLogin을 통한 빠른 회원가입
 - 관심 글, 신청 글, 작성 글 등 한 눈에 모아서 관리 가능
 <br>
@@ -25,8 +30,8 @@
 - Kingfisher, SnapKit
 <br>
 
-
 ## 📱시연 영상
+영상 첨부
 <br>
 
 ## 💻 앱 개발 환경
@@ -38,4 +43,70 @@
 <br>
 
 ## ✅ 트러블 슈팅
+
+### 트러블 슈팅 1
+<div markdown="1">
+내용
+<br>
+
+```swift
+
+```
+</div>
+<br>
+
+### 트러블 슈팅 2
+<div markdown="1">
+내용
+<br>
+
+```swift
+
+```
+</div>
+<br>
+
+### 트러블 슈팅 3
+<div markdown="1">
+내용
+<br>
+
+```swift
+
+```
+</div>
+<br>
+
+### 트러블 슈팅 4
+<div markdown="1">
+내용
+<br>
+
+```swift
+
+```
+</div>
+<br>
+
+### 트러블 슈팅 5
+<div markdown="1">
+내용
+<br>
+
+```swift
+
+```
+</div>
+<br>
+
+### 트러블 슈팅 6
+<div markdown="1">
+내용
+<br>
+
+```swift
+
+```
+</div>
+<br>
 
