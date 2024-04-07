@@ -68,8 +68,8 @@
 
 ### 트러블 슈팅 1
 <div markdown="1">
-SwiftUi에서 구현했던 Calander를 Custom해서 UIKiT Project에 적용하기 위해 
-UIHostingController를 활용해 적용하고, 선택한 날짜를 RxSwift의 combineLatest를 활용해 관리했습니다.
+SwiftUi에서 구현했던 Custom Calander를 UIKit Project에 적용하기 위해<br>
+UIHostingController를 활용하고, 선택한 날짜를 RxSwift의 combineLatest를 활용해 가공해서 사용했습니다.
 <br>
 
 ```swift
@@ -142,7 +142,7 @@ private func bindUI() {
 </div>
 <br>
 
-### 트러블 슈팅 (창현1)
+### 트러블 슈팅 3
 <div markdown="1">
 내용
 <br>
@@ -153,7 +153,7 @@ private func bindUI() {
 </div>
 <br>
 
-### 트러블 슈팅 (창현2)
+### 트러블 슈팅 4
 <div markdown="1">
 내용
 <br>
@@ -163,26 +163,3 @@ private func bindUI() {
 ```
 </div>
 <br>
-
-### 트러블 슈팅 (진태1)
-<div markdown="1">
-내용
-<br>
-
-```swift
-
-```
-</div>
-<br>
-
-### 트러블 슈팅 6 (진태2)
-<div markdown="1">
-내용
-<br>
-
-```swift
-
-```
-</div>
-<br>
-
