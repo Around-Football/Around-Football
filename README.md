@@ -27,11 +27,7 @@
 - UIKit, MVVM-C, Input-Output, Singleton, CodeBasedUI
 - RxSwift, RxAlamofire, RxDataSource
 - Firebase Store, Auth, Storage, Analytics, Crashlytics
-- Kingfisher, SnapKit
-<br>
-
-## 📱시연 영상
-영상 첨부 예정
+- Kingfisher, SnapKit, MessageKit
 <br>
 
 ## 💻 앱 개발 환경
