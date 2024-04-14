@@ -27,11 +27,7 @@
 - UIKit, MVVM-C, Input-Output, Singleton, CodeBasedUI
 - RxSwift, RxAlamofire, RxDataSource
 - Firebase Store, Auth, Storage, Analytics, Crashlytics
-- Kingfisher, SnapKit
-<br>
-
-## 📱시연 영상
-영상 첨부 예정
+- Kingfisher, SnapKit, MessageKit
 <br>
 
 ## 💻 앱 개발 환경
@@ -63,8 +59,6 @@
 - 사용자 인증, 게시글 작성, 사용자 정보 저장, 실시간 채팅 등의 기능 구현을 위해 별도의 서버 구현없이 빠르게 Firebase를 활용해 구현
 - Analytics, Crashlytics를 활용해 실시간 앱 상태 관리와 Crash를 관리하고 Bug Fix
 <br>
-
-### 기술 추가할거있으면 하기
 
 ## ✅ 트러블 슈팅
 
@@ -166,17 +160,6 @@ extension Coordinator {
         childCoordinators.removeAll()
     }
 }
-```
-</div>
-<br>
-
-### 트러블 슈팅 4
-<div markdown="1">
-내용
-<br>
-
-```swift
-
 ```
 </div>
 <br>
