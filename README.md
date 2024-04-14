@@ -64,8 +64,6 @@
 - Analytics, Crashlytics를 활용해 실시간 앱 상태 관리와 Crash를 관리하고 Bug Fix
 <br>
 
-### 기술 추가할거있으면 하기
-
 ## ✅ 트러블 슈팅
 
 ### SwiftUI와 UIKit, RxSwift와 연동
@@ -166,17 +164,6 @@ extension Coordinator {
         childCoordinators.removeAll()
     }
 }
-```
-</div>
-<br>
-
-### 트러블 슈팅 4
-<div markdown="1">
-내용
-<br>
-
-```swift
-
 ```
 </div>
 <br>
