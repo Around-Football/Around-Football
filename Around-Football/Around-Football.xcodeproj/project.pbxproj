@@ -101,6 +101,7 @@
 		7929A31D2ADFFB15006ED4FA /* ApplicantListViewController+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7929A31C2ADFFB15006ED4FA /* ApplicantListViewController+.swift */; };
 		7C0684B92B2E20A60052F9A6 /* UIButton+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C0684B82B2E20A60052F9A6 /* UIButton+.swift */; };
 		7C141C622ADA5F38002CF180 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C141C612ADA5F38002CF180 /* LoginViewController.swift */; };
+		7C1C4FE22BCC24420066CBCA /* APIKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C1C4FE12BCC24420066CBCA /* APIKey.swift */; };
 		7C2B1AC72AF4B10B0052EC64 /* LoginCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C2B1AC62AF4B10B0052EC64 /* LoginCoordinator.swift */; };
 		7C2B1ACB2AF4B1530052EC64 /* MainTabBarCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C2B1ACA2AF4B1530052EC64 /* MainTabBarCoordinator.swift */; };
 		7C2B1ADE2AF4B2DA0052EC64 /* InputInfoCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C2B1ADD2AF4B2DA0052EC64 /* InputInfoCoordinator.swift */; };
@@ -245,6 +246,7 @@
 		7929A31C2ADFFB15006ED4FA /* ApplicantListViewController+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ApplicantListViewController+.swift"; sourceTree = "<group>"; };
 		7C0684B82B2E20A60052F9A6 /* UIButton+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIButton+.swift"; sourceTree = "<group>"; };
 		7C141C612ADA5F38002CF180 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
+		7C1C4FE12BCC24420066CBCA /* APIKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIKey.swift; sourceTree = "<group>"; };
 		7C2B1AC62AF4B10B0052EC64 /* LoginCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginCoordinator.swift; sourceTree = "<group>"; };
 		7C2B1ACA2AF4B1530052EC64 /* MainTabBarCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabBarCoordinator.swift; sourceTree = "<group>"; };
 		7C2B1ADD2AF4B2DA0052EC64 /* InputInfoCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputInfoCoordinator.swift; sourceTree = "<group>"; };
@@ -447,6 +449,7 @@
 				668EE4B92B04E37C007A8844 /* ChatAPI.swift */,
 				668EE4C62B05048C007A8844 /* StorageAPI.swift */,
 				667ABD682B1EE8CD00142940 /* NotiManager.swift */,
+				7C1C4FE12BCC24420066CBCA /* APIKey.swift */,
 			);
 			path = Network;
 			sourceTree = "<group>";
@@ -1077,6 +1080,7 @@
 				663417CA2AD682AB002FE2CA /* Firebase.swift in Sources */,
 				66A1CB212B302DD400F3E01E /* MessageViewController+.swift in Sources */,
 				7CE563AA2AD140A9005DE2DF /* LayoutOptions.swift in Sources */,
+				7C1C4FE22BCC24420066CBCA /* APIKey.swift in Sources */,
 				2729185F2B0236A7009C9042 /* SearchViewModel.swift in Sources */,
 				7CE014402AF8C5C300ED77D2 /* SettingViewController.swift in Sources */,
 				27058ECC2B0656ED00C107F9 /* KakaoService.swift in Sources */,
