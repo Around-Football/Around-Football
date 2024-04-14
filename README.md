@@ -131,7 +131,7 @@ private func bindUI() {
 
 ### UITableView가 갱신될 때마다 버튼 Binding이 중복 등록되던 현상
 <div markdown="1">
-내용
+
 <br>
 
 UITableViewCell에서 UIButton에 대한 Tap 액션 바인딩 코드를 작성하고 UITableView가 갱신될 때마다 Binding 함수가 다시 호출되면서 한번에 탭으로 2번 이상의 Binding 함수가 실행되는 현상이 나타남
@@ -149,7 +149,7 @@ UITableViewCell 객체 내에서 prepareForReuse 함수를 호출하고 함수 �
 
 ### 알림 등의 deepLink 로직 적용시, 일부의 시나리오에서 Coordinator의 순환참조 발생
 <div markdown="1">
-내용
+
 <br>
 
 딥 링크 코드에서 navigationControllers 배열을 검사하고 Pop되는 Coordinator의 하위 Coordinator를 모두 순회하여 직접 메모리 해제 하는 코드 추가
