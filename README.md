@@ -129,24 +129,43 @@ private func bindUI() {
 </div>
 <br>
 
-### 트러블 슈팅 2
+### UITableView가 갱신될 때마다 버튼 Binding이 중복 등록되던 현상
 <div markdown="1">
 내용
 <br>
 
-```swift
+UITableViewCell에서 UIButton에 대한 Tap 액션 바인딩 코드를 작성하고 UITableView가 갱신될 때마다 Binding 함수가 다시 호출되면서 한번에 탭으로 2번 이상의 Binding 함수가 실행되는 현상이 나타남
 
+```swift
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        disposeBag = DisposeBag()
+    }
 ```
+UITableViewCell 객체 내에서 prepareForReuse 함수를 호출하고 함수 내부에 disposeBag을 할당하여 Cell 재사용에 대한 환경을 마련하는 것으로 Binding이 중복으로 메모리 상에 남아있도록 하는 것을 해제함.
+
 </div>
 <br>
 
-### 트러블 슈팅 3
+### 알림 등의 deepLink 로직 적용시, 일부의 시나리오에서 Coordinator의 순환참조 발생
 <div markdown="1">
 내용
 <br>
 
-```swift
+딥 링크 코드에서 navigationControllers 배열을 검사하고 Pop되는 Coordinator의 하위 Coordinator를 모두 순회하여 직접 메모리 해제 하는 코드 추가
 
+```swift
+extension Coordinator {
+    // 자식 코디네이터와 코디네이터의 navigationController 해제
+    func deinitCoordinator() {
+        childCoordinators.forEach {
+            print("DEINIT COORDINATOR \($0.self)")
+            $0.navigationController = nil
+            $0.deinitCoordinator()
+        }
+        childCoordinators.removeAll()
+    }
+}
 ```
 </div>
 <br>
