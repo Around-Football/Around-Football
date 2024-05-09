@@ -12,8 +12,8 @@ import Then
 import RxSwift
 import RxCocoa
 
-class ChatViewController: UIViewController {
-
+final class ChatViewController: UIViewController {
+    
     // MARK: - Properties
     let viewModel: ChatViewModel
     let tapGesture = UITapGestureRecognizer()
@@ -44,7 +44,7 @@ class ChatViewController: UIViewController {
         barButton.tintColor = AFColor.grayScale200
         return barButton
     }()
-
+    
     // Rx
     let disposeBag = DisposeBag()
     private let invokedViewWillAppear = PublishSubject<Void>()
@@ -175,7 +175,7 @@ class ChatViewController: UIViewController {
         bindRecruitInfo(by: output.recruitStatus)
         bindRecruitInfoTapEvent()
         bindNavigationTitle()
-
+        
         // MARK: - Bind MessageViewController
         bindCameraBarButtonEvent()
         bindMessages()
