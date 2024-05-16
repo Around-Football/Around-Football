@@ -16,6 +16,7 @@
 		2729186F2B035CFE009C9042 /* SearchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2729186E2B035CFE009C9042 /* SearchTableViewCell.swift */; };
 		272B448B2ADD375700ACEC41 /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = 272B448A2ADD375700ACEC41 /* GoogleSignIn */; };
 		272B448D2ADD375700ACEC41 /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 272B448C2ADD375700ACEC41 /* GoogleSignInSwift */; };
+		2732B51E2BF5D975000F8271 /* AlertMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2732B51D2BF5D975000F8271 /* AlertMessage.swift */; };
 		2736744D2AC3061C003ADE3F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2736744C2AC3061C003ADE3F /* AppDelegate.swift */; };
 		2736744F2AC3061C003ADE3F /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2736744E2AC3061C003ADE3F /* SceneDelegate.swift */; };
 		273674562AC3061E003ADE3F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 273674552AC3061E003ADE3F /* Assets.xcassets */; };
@@ -173,6 +174,7 @@
 		2729185C2B023682009C9042 /* SearchModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchModel.swift; sourceTree = "<group>"; };
 		2729185E2B0236A7009C9042 /* SearchViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewModel.swift; sourceTree = "<group>"; };
 		2729186E2B035CFE009C9042 /* SearchTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchTableViewCell.swift; sourceTree = "<group>"; };
+		2732B51D2BF5D975000F8271 /* AlertMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertMessage.swift; sourceTree = "<group>"; };
 		273674492AC3061C003ADE3F /* Around-Football.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Around-Football.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2736744C2AC3061C003ADE3F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		2736744E2AC3061C003ADE3F /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -905,6 +907,7 @@
 				7C40F6F12B33FCAD00D87626 /* OneLineCalender */,
 				7C2B1AF22AF4BD8F0052EC64 /* Calendar */,
 				7CE563A92AD140A9005DE2DF /* LayoutOptions.swift */,
+				2732B51D2BF5D975000F8271 /* AlertMessage.swift */,
 				274C21C62ACFF901005469E6 /* TextFieldDelegateHandler.swift */,
 				663417CB2AD68413002FE2CA /* Constants.swift */,
 				668EE4C22B050373007A8844 /* ImageTransition.swift */,
@@ -1085,6 +1088,7 @@
 				668EE4B22AFCBC09007A8844 /* ChannelTableViewCell.swift in Sources */,
 				7CBFED6C2AE6477700915D65 /* CalenderViewController.swift in Sources */,
 				7CE2B4F92B073B3500ECF71C /* DetailCoordinator.swift in Sources */,
+				2732B51E2BF5D975000F8271 /* AlertMessage.swift in Sources */,
 				7CE25AE62ACABF620014132F /* AFButton.swift in Sources */,
 				66656F9D2AD9219F00AE1AFA /* FieldDetailViewController.swift in Sources */,
 				668EE4C12B050305007A8844 /* ImageMessageViewController.swift in Sources */,
