@@ -39,8 +39,7 @@ final class KakaoService {
             return Observable.empty()
         }
         
-        let apiKey = "07874a02a8d48af697b51048893c3d70"
-        let headers: HTTPHeaders = ["Authorization": "KakaoAK \(apiKey)"]
+        let headers: HTTPHeaders = ["Authorization": "KakaoAK \(APIKey.kakaoRESTKey)"]
         
         return RxAlamofire
             .data(.get, apiUrl, headers: headers)

@@ -27,6 +27,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         FirebaseApp.configure()
         //kakao 초기화
         SDKInitializer.InitSDK(appKey: APIKey.kakaoKey)
+        KakaoSDK.initSDK(appKey: APIKey.kakaoKey)
         
         setupFCM(application)
         let _ = UserService.shared
