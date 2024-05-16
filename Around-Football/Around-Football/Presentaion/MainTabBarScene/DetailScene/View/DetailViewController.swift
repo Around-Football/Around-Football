@@ -216,35 +216,39 @@ final class DetailViewController: UIViewController {
     
     @objc
     private func tappedNavigationRightBarButton() {
-        let actionSheet = UIAlertController(
-            title: nil,
-            message: "내부 검토 후  24시간 이내 해당 유저의 이용제한 절차가 진행됩니다. 허위 신고 시 서비스 이용제한 등의 불이익을 받을 수 있으니 주의해 주세요.",
-            preferredStyle: .actionSheet
+        alertActionSheet(
+            message:
+                    .actionSheet,
+            actions:
+                [
+                    UIAlertAction(
+                        title: "차단하기",
+                        style: .destructive,
+                        handler: { [weak self] _ in
+                            self?.showPopUp(
+                                title: "사용자 차단",
+                                message: "정말로 차단하시겠습니까?"
+                            )
+                        }
+                    ),
+                    UIAlertAction(
+                        title: "신고하기",
+                        style: .default,
+                        handler: { [weak self] _ in
+                            self?.sendEmail(
+                                message: .userBlock(
+                                    userName: self?.viewModel.fetchRecruitUser() ?? "직접 입력"
+                                )
+                            )
+                        }
+                    ),
+                    UIAlertAction(
+                        title: "취소",
+                        style: .cancel,
+                        handler: nil
+                    )
+                ]
         )
-        let action = UIAlertAction(
-            title: "신고하기",
-            style: .destructive,
-            handler: { [weak self] _ in
-                self?.sendEmail(
-                    message: """
-신고 유저: \(self?.viewModel.fetchRecruitUser() ?? "직접 입력")\n
-신고 사유:\n
-신고 내용:
-"""
-                )
-            }
-        )
-        actionSheet.addAction(action)
-        
-        actionSheet.addAction(
-            UIAlertAction(
-                title: "취소",
-                style: .cancel,
-                handler: nil
-            )
-        )
-        
-        self.present(actionSheet, animated: true, completion: nil)
     }
     
     private func configeUI() {
